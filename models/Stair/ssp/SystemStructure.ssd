@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="Stair" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T12:30:04.683493">
+  <ssd:System name="Stair">
+    <ssd:Connectors>
+      <ssd:Connector name="counter" kind="output">
+        <ssc:Integer/>
+      </ssd:Connector>
+    </ssd:Connectors>
+    <ssd:Elements>
+      <ssd:Component name="Stair" source="resources/Stair.fmu">
+        <ssd:Connectors>
+          <ssd:Connector name="counter" kind="output">
+            <ssc:Integer/>
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+    </ssd:Elements>
+    <ssd:Connections>
+      <ssd:Connection startElement="Stair" startConnector="counter" endConnector="counter"/>
+    </ssd:Connections>
+  </ssd:System>
+</ssd:SystemStructureDescription>

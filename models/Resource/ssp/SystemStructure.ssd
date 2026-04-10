@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="Resource" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T12:30:04.366019">
+  <ssd:System name="Resource">
+    <ssd:Connectors>
+      <ssd:Connector name="y" kind="output">
+        <ssc:Integer/>
+      </ssd:Connector>
+    </ssd:Connectors>
+    <ssd:Elements>
+      <ssd:Component name="Resource" source="resources/Resource.fmu">
+        <ssd:Connectors>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Integer/>
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+    </ssd:Elements>
+    <ssd:Connections>
+      <ssd:Connection startElement="Resource" startConnector="y" endConnector="y"/>
+    </ssd:Connections>
+  </ssd:System>
+</ssd:SystemStructureDescription>

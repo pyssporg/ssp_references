@@ -17,7 +17,7 @@ from pyssp_standard.ssd import Component, Connection, Connector, SSD, System
 
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_OUTPUT_DIR = REPO_ROOT / "reference_fmus" / "ssps"
+DEFAULT_MODELS_DIR = REPO_ROOT / "models"
 
 
 def parse_args() -> argparse.Namespace:
@@ -29,7 +29,7 @@ def parse_args() -> argparse.Namespace:
         "-o",
         "--output",
         type=Path,
-        help="Output .ssp path. Defaults to reference_fmus/ssps/<fmu-stem>.ssp.",
+        help="Output .ssp path. Defaults to models/reference_fmus/<fmu-stem>/<fmu-stem>.ssp.",
     )
     parser.add_argument(
         "--system-name",
@@ -148,7 +148,11 @@ def main() -> int:
     with FMU(fmu_path, mode="r") as fmu:
         model_name = fmu.model_description.model_name or fmu_path.stem
 
-    output_path = args.output.resolve() if args.output else DEFAULT_OUTPUT_DIR / f"{fmu_path.stem}.ssp"
+    output_path = (
+        args.output.resolve()
+        if args.output
+        else DEFAULT_MODELS_DIR / fmu_path.stem / f"{fmu_path.stem}.ssp"
+    )
     system_name = args.system_name or model_name
     component_name = args.component_name or model_name
 

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="Dahlquist" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T12:30:03.750716">
+  <ssd:System name="Dahlquist">
+    <ssd:Connectors>
+      <ssd:Connector name="k" kind="parameter">
+        <ssc:Real/>
+      </ssd:Connector>
+      <ssd:Connector name="x" kind="output">
+        <ssc:Real/>
+      </ssd:Connector>
+    </ssd:Connectors>
+    <ssd:Elements>
+      <ssd:Component name="Dahlquist" source="resources/Dahlquist.fmu">
+        <ssd:Connectors>
+          <ssd:Connector name="k" kind="parameter">
+            <ssc:Real/>
+          </ssd:Connector>
+          <ssd:Connector name="x" kind="output">
+            <ssc:Real/>
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+    </ssd:Elements>
+    <ssd:Connections>
+      <ssd:Connection startConnector="k" endElement="Dahlquist" endConnector="k"/>
+      <ssd:Connection startElement="Dahlquist" startConnector="x" endConnector="x"/>
+    </ssd:Connections>
+  </ssd:System>
+</ssd:SystemStructureDescription>

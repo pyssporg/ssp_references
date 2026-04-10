@@ -72,7 +72,8 @@ def unpack_nested_fmus(ssp_root: Path, prune: bool) -> None:
         temp_unpack_dir = fmu_archive.parent / f"{fmu_archive.name}.tmp-unpack"
         unpack_fmu_dir(fmu_archive, temp_unpack_dir, prune=prune)
         fmu_archive.unlink()
-        temp_unpack_dir.rename(unpack_dir)
+        # print(unpack_dir)
+        temp_unpack_dir.rename(unpack_dir.parent / unpack_dir.stem)
 
 
 def unpack_archive(archive_path: Path, output_dir: Path, prune: bool, recursive_fmus: bool) -> None:

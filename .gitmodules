@@ -1,3 +1,6 @@
 [submodule "3rd_party/reference_fmus"]
 	path = 3rd_party/reference_fmus
 	url = git@github.com:modelica/Reference-FMUs.git
+[submodule "3rd_party/OMSimulator"]
+	path = 3rd_party/OMSimulator
+	url = git@github.com:OpenModelica/OMSimulator.git

@@ -3,7 +3,8 @@
   fmiVersion="2.0"
   modelName="Feedthrough"
   description="A model to test different variable types, causalities, and variabilities"
-  generationTool="Reference FMUs (development build)"
+  generationTool="Reference FMUs (v0.0.36)"
+  generationDateAndTime="2024-10-14T12:04:16.571660+00:00"
   guid="{37B954F1-CC86-4D8F-B97F-C7C36F6670D2}"
   numberOfEventIndicators="0">
 
@@ -78,16 +79,13 @@
     <ScalarVariable name="Boolean_output" valueReference="28" causality="output" variability="discrete" initial="calculated">
       <Boolean/>
     </ScalarVariable>
-    <ScalarVariable name="String_input" valueReference="29" causality="input" variability="discrete">
-        <String start="Set me!"/>
+    <ScalarVariable name="String_parameter" valueReference="29" causality="parameter" variability="fixed">
+      <String start="Set me!"/>
     </ScalarVariable>
-    <ScalarVariable name="String_output" valueReference="30" causality="output" variability="discrete">
-        <String/>
-    </ScalarVariable>
-    <ScalarVariable name="Enumeration_input" valueReference="33" causality="input" variability="discrete">
+    <ScalarVariable name="Enumeration_input" valueReference="32" causality="input" variability="discrete">
       <Enumeration declaredType="Option" start="1"/>
     </ScalarVariable>
-    <ScalarVariable name="Enumeration_output" valueReference="34" causality="output" variability="discrete" initial="calculated">
+    <ScalarVariable name="Enumeration_output" valueReference="33" causality="output" variability="discrete" initial="calculated">
       <Enumeration declaredType="Option"/>
     </ScalarVariable>
   </ModelVariables>
@@ -97,17 +95,15 @@
       <Unknown index="5" dependencies="2 3 4" dependenciesKind="constant constant constant"/>
       <Unknown index="7" dependencies="6" dependenciesKind="constant"/>
       <Unknown index="9" dependencies="8" dependenciesKind="constant"/>
-      <Unknown index="11" dependencies="10 12" dependenciesKind="constant"/>
-      <Unknown index="13" dependencies="12" dependenciesKind="constant"/>
-      <Unknown index="15" dependencies="14" dependenciesKind="constant"/>
+      <Unknown index="11" dependencies="10 12" dependenciesKind="constant constant"/>
+      <Unknown index="14" dependencies="13" dependenciesKind="constant"/>
     </Outputs>
     <InitialUnknowns>
       <Unknown index="5" dependencies="2 3 4" dependenciesKind="constant constant constant"/>
       <Unknown index="7" dependencies="6" dependenciesKind="constant"/>
       <Unknown index="9" dependencies="8" dependenciesKind="constant"/>
-      <Unknown index="11" dependencies="10 12" dependenciesKind="constant"/>
-      <Unknown index="13" dependencies="12" dependenciesKind="constant"/>
-      <Unknown index="15" dependencies="14" dependenciesKind="constant"/>
+      <Unknown index="11" dependencies="10 12" dependenciesKind="constant constant"/>
+      <Unknown index="14" dependencies="13" dependenciesKind="constant"/>
     </InitialUnknowns>
   </ModelStructure>
 

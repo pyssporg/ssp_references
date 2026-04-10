@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="Van der Pol oscillator" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T12:30:04.992676">
-  <ssd:System name="Van der Pol oscillator">
+<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="VanDerPol" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T15:17:18.594350">
+  <ssd:System name="VanDerPol">
     <ssd:Connectors>
       <ssd:Connector name="mu" kind="parameter">
         <ssc:Real/>
@@ -13,7 +13,7 @@
       </ssd:Connector>
     </ssd:Connectors>
     <ssd:Elements>
-      <ssd:Component name="Van der Pol oscillator" source="resources/VanDerPol.fmu">
+      <ssd:Component name="VanDerPol" source="resources/VanDerPol.fmu">
         <ssd:Connectors>
           <ssd:Connector name="mu" kind="parameter">
             <ssc:Real/>
@@ -28,9 +28,9 @@
       </ssd:Component>
     </ssd:Elements>
     <ssd:Connections>
-      <ssd:Connection startConnector="mu" endElement="Van der Pol oscillator" endConnector="mu"/>
-      <ssd:Connection startElement="Van der Pol oscillator" startConnector="x0" endConnector="x0"/>
-      <ssd:Connection startElement="Van der Pol oscillator" startConnector="x1" endConnector="x1"/>
+      <ssd:Connection startConnector="mu" endElement="VanDerPol" endConnector="mu"/>
+      <ssd:Connection startElement="VanDerPol" startConnector="x0" endConnector="x0"/>
+      <ssd:Connection startElement="VanDerPol" startConnector="x1" endConnector="x1"/>
     </ssd:Connections>
   </ssd:System>
 </ssd:SystemStructureDescription>

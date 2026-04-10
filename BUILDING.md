@@ -39,13 +39,72 @@ Run:
 
 This builds from [`3rd_party/reference_fmus`](/home/eriro/pwa/2_work/ssp_references/3rd_party/reference_fmus), places temporary build output in [`build/reference_fmus/fmi2-export`](/home/eriro/pwa/2_work/ssp_references/build/reference_fmus/fmi2-export), and writes consumable model artifacts under [`models`](/home/eriro/pwa/2_work/ssp_references/models).
 
+## Workflow methodology and traceability
+
+OMSimulator resources are not uniform enough for one hardcoded build path. The repository therefore uses:
+
+- one shared population chain: `acquire -> build -> package -> unpack`
+- one per-model workflow script: [`models/<model_name>/workflow.py`](/home/eriro/pwa/2_work/ssp_references/models)
+- one shared helper library: [`scripts/workflow_lib.py`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow_lib.py)
+
+This is intentional traceability back to the repository methodology:
+
+- keep the actual model logic readable at the model location
+- keep shared code limited to low-level operations
+- normalize outputs under [`models`](/home/eriro/pwa/2_work/ssp_references/models)
+- treat built artifacts in `models/` as the canonical consumable outputs
+
+The main workflow patterns are:
+
+- models built from an unpacked upstream FMU directory
+- models built from an existing upstream SSP directory
+- models that will eventually need custom tool calls in their own workflow script
+
+Each populated model should end up with:
+
+```text
+models/<model_name>/
+├── workflow.py
+├── <model_name>.ssp
+├── fmus/                    # when the workflow builds FMUs explicitly
+└── ssp/
+```
+
+## Manage OMSimulator-derived artifacts
+
+Run one model directly:
+
+```bash
+python3 models/BouncingBall/workflow.py
+```
+
+List models that provide `workflow.py`:
+
+```bash
+python3 scripts/run_model_workflows.py list
+```
+
+Run several model workflows through the thin wrapper:
+
+```bash
+python3 scripts/run_model_workflows.py run BouncingBall LinearTransformation PWMTest
+```
+
+Run every discovered model workflow:
+
+```bash
+python3 scripts/run_model_workflows.py run-all
+```
+
 ## Helper scripts
 
 Available helper scripts:
 
 - [`3rd_party/build_fmi2_fmus.sh`](/home/eriro/pwa/2_work/ssp_references/3rd_party/build_fmi2_fmus.sh)
 - [`scripts/package_fmu_as_ssp.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/package_fmu_as_ssp.sh)
+- [`scripts/run_model_workflows.py`](/home/eriro/pwa/2_work/ssp_references/scripts/run_model_workflows.py)
 - [`scripts/unpack_model_archive.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/unpack_model_archive.sh)
+- [`scripts/workflow_lib.py`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow_lib.py)
 
 Examples:
 

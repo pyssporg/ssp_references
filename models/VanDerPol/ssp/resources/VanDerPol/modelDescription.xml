@@ -3,7 +3,8 @@
   fmiVersion="2.0"
   modelName="Van der Pol oscillator"
   description="This model implements the van der Pol oscillator"
-  generationTool="Reference FMUs (development build)"
+  generationTool="Reference FMUs (v0.0.36)"
+  generationDateAndTime="2024-10-14T12:04:16.416653+00:00"
   guid="{BD403596-3166-4232-ABC2-132BDF73E644}"
   numberOfEventIndicators="0">
 

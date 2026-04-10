@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import zipfile
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 from pyssp_standard import FMU, SSP
 from pyssp_standard.common_content_ssc import (
@@ -57,11 +59,50 @@ def clone_type(type_):
     if isinstance(type_, TypeString):
         return TypeString()
     if isinstance(type_, TypeEnumeration):
+        if not type_.name:
+            raise ValueError("Enumeration connector is missing a declared type name")
         return TypeEnumeration(type_.name)
     raise TypeError(f"Unsupported FMU variable type: {type(type_).__name__}")
 
 
-def add_system_mapping(system: System, component: Component, causality: str, variables) -> None:
+def read_enumeration_type_names(fmu_path: Path) -> dict[str, str]:
+    with zipfile.ZipFile(fmu_path, "r") as archive:
+        root = ET.fromstring(archive.read("modelDescription.xml"))
+
+    type_names: dict[str, str] = {}
+    model_variables = root.find("ModelVariables")
+    if model_variables is None:
+        return type_names
+
+    for scalar_variable in model_variables.findall("ScalarVariable"):
+        name = scalar_variable.attrib.get("name")
+        if not name:
+            continue
+        enumeration = scalar_variable.find("Enumeration")
+        if enumeration is None:
+            continue
+        declared_type = enumeration.attrib.get("declaredType")
+        if declared_type:
+            type_names[name] = declared_type
+    return type_names
+
+
+def clone_variable_type(variable, enumeration_type_names: dict[str, str]):
+    type_ = variable.type_
+    if isinstance(type_, TypeEnumeration) and not type_.name:
+        enum_name = enumeration_type_names.get(variable.name)
+        if enum_name:
+            return TypeEnumeration(enum_name)
+    return clone_type(type_)
+
+
+def add_system_mapping(
+    system: System,
+    component: Component,
+    causality: str,
+    variables,
+    enumeration_type_names: dict[str, str],
+) -> None:
     if causality == "output":
         system_kind = "output"
     elif causality == "input":
@@ -76,14 +117,14 @@ def add_system_mapping(system: System, component: Component, causality: str, var
             Connector(
                 name=variable.name,
                 kind=system_kind,
-                type_=clone_type(variable.type_),
+                type_=clone_variable_type(variable, enumeration_type_names),
             )
         )
         system.connectors.append(
             Connector(
                 name=variable.name,
                 kind=system_kind,
-                type_=clone_type(variable.type_),
+                type_=clone_variable_type(variable, enumeration_type_names),
             )
         )
         if causality == "output":
@@ -107,15 +148,34 @@ def add_system_mapping(system: System, component: Component, causality: str, var
 def build_ssd(ssd: SSD, component_name: str, resource_name: str, fmu_path: Path) -> None:
     with FMU(fmu_path, mode="r") as fmu:
         model_description = fmu.model_description
+    enumeration_type_names = read_enumeration_type_names(fmu_path)
 
     system = System(name=ssd.name)
     component = Component()
     component.name = component_name
     component.source = f"resources/{resource_name}"
 
-    add_system_mapping(system, component, "parameter", model_description.parameters)
-    add_system_mapping(system, component, "input", model_description.inputs)
-    add_system_mapping(system, component, "output", model_description.outputs)
+    add_system_mapping(
+        system,
+        component,
+        "parameter",
+        model_description.parameters,
+        enumeration_type_names,
+    )
+    add_system_mapping(
+        system,
+        component,
+        "input",
+        model_description.inputs,
+        enumeration_type_names,
+    )
+    add_system_mapping(
+        system,
+        component,
+        "output",
+        model_description.outputs,
+        enumeration_type_names,
+    )
 
     system.elements.append(component)
     ssd.system = system
@@ -123,9 +183,11 @@ def build_ssd(ssd: SSD, component_name: str, resource_name: str, fmu_path: Path)
 
 def package_fmu(fmu_path: Path, output_path: Path, system_name: str, component_name: str) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
+    if output_path.exists():
+        output_path.unlink()
 
     with SSP(output_path, mode="w") as ssp:
-        ssp.add_resource(fmu_path, overwrite=True)
+        ssp.add_resource(fmu_path)
         with ssp.system_structure as ssd:
             ssd.name = system_name
             ssd.version = "1.0"

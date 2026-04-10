@@ -1,0 +1,1845 @@
+{
+  "generated_from": "scripts/sync_omsimulator_models.py",
+  "entries": [
+    {
+      "name": "A",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/A",
+      "model_dir": "models/A",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator.Atmosphere_Model_FMU_sf",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/AircraftVehicleDemonstrator.Atmosphere_Model_FMU_sf",
+      "model_dir": "models/AircraftVehicleDemonstrator.Atmosphere_Model_FMU_sf",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator.bC",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/AircraftVehicleDemonstrator.bC",
+      "model_dir": "models/AircraftVehicleDemonstrator.bC",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator.cockpit",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/AircraftVehicleDemonstrator.cockpit",
+      "model_dir": "models/AircraftVehicleDemonstrator.cockpit",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator.consumer_A",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/AircraftVehicleDemonstrator.consumer_A",
+      "model_dir": "models/AircraftVehicleDemonstrator.consumer_A",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator.consumer_B",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/AircraftVehicleDemonstrator.consumer_B",
+      "model_dir": "models/AircraftVehicleDemonstrator.consumer_B",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator.eCS_Generic_Export",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/AircraftVehicleDemonstrator.eCS_Generic_Export",
+      "model_dir": "models/AircraftVehicleDemonstrator.eCS_Generic_Export",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator.eCS_SW",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/AircraftVehicleDemonstrator.eCS_SW",
+      "model_dir": "models/AircraftVehicleDemonstrator.eCS_SW",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator.engine",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/AircraftVehicleDemonstrator.engine",
+      "model_dir": "models/AircraftVehicleDemonstrator.engine",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "B",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/B",
+      "model_dir": "models/B",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "BouncingBall",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/BouncingBall",
+      "model_dir": "models/BouncingBall",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "BouncingBall3",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/BouncingBall3",
+      "model_dir": "models/BouncingBall3",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Dahlquist",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Dahlquist",
+      "model_dir": "models/Dahlquist",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Dahlquist3",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Dahlquist3",
+      "model_dir": "models/Dahlquist3",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "DualMassOscillator.System1",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/DualMassOscillator.System1",
+      "model_dir": "models/DualMassOscillator.System1",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "DualMassOscillator.System2",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/DualMassOscillator.System2",
+      "model_dir": "models/DualMassOscillator.System2",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Enum1",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Enum1",
+      "model_dir": "models/Enum1",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "EventTest",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/EventTest",
+      "model_dir": "models/EventTest",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Feedthrough",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Feedthrough",
+      "model_dir": "models/Feedthrough",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Feedthrough3",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Feedthrough3",
+      "model_dir": "models/Feedthrough3",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "HelloWorld",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/HelloWorld",
+      "model_dir": "models/HelloWorld",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "HelloWorldWithInput",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/HelloWorldWithInput",
+      "model_dir": "models/HelloWorldWithInput",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Int1",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Int1",
+      "model_dir": "models/Int1",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "LOC",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/LOC",
+      "model_dir": "models/LOC",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains no embedded FMUs.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Lin2DimODE",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Lin2DimODE",
+      "model_dir": "models/Lin2DimODE",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "LinearTransformation",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/LinearTransformation",
+      "model_dir": "models/LinearTransformation",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 2
+    },
+    {
+      "name": "LinearTransformation3",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/LinearTransformation3",
+      "model_dir": "models/LinearTransformation3",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 2
+    },
+    {
+      "name": "Modelica.Blocks.Continuous.Integrator",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Continuous.Integrator",
+      "model_dir": "models/Modelica.Blocks.Continuous.Integrator",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Math.Add",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Math.Add",
+      "model_dir": "models/Modelica.Blocks.Math.Add",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Math.Add3",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Math.Add3",
+      "model_dir": "models/Modelica.Blocks.Math.Add3",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Math.Feedback",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Math.Feedback",
+      "model_dir": "models/Modelica.Blocks.Math.Feedback",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Math.Gain",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Math.Gain",
+      "model_dir": "models/Modelica.Blocks.Math.Gain",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Math.Product",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Math.Product",
+      "model_dir": "models/Modelica.Blocks.Math.Product",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Nonlinear.Limiter",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Nonlinear.Limiter",
+      "model_dir": "models/Modelica.Blocks.Nonlinear.Limiter",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Sources.Constant",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Sources.Constant",
+      "model_dir": "models/Modelica.Blocks.Sources.Constant",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Sources.ContinuousClock",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Sources.ContinuousClock",
+      "model_dir": "models/Modelica.Blocks.Sources.ContinuousClock",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Sources.Sine",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Sources.Sine",
+      "model_dir": "models/Modelica.Blocks.Sources.Sine",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Blocks.Sources.Step",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Blocks.Sources.Step",
+      "model_dir": "models/Modelica.Blocks.Sources.Step",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Modelica.Electrical.Analog.Examples.CauerLowPassAnalog",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Modelica.Electrical.Analog.Examples.CauerLowPassAnalog",
+      "model_dir": "models/Modelica.Electrical.Analog.Examples.CauerLowPassAnalog",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "ParkerSimPack",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/ParkerSimPack",
+      "model_dir": "models/ParkerSimPack",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 5
+    },
+    {
+      "name": "QuarterCarModel.DisplacementDisplacement.Chassis",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/QuarterCarModel.DisplacementDisplacement.Chassis",
+      "model_dir": "models/QuarterCarModel.DisplacementDisplacement.Chassis",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "QuarterCarModel.DisplacementDisplacement.Wheel",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/QuarterCarModel.DisplacementDisplacement.Wheel",
+      "model_dir": "models/QuarterCarModel.DisplacementDisplacement.Wheel",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "QuarterCarModel.DisplacementForce.Chassis",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/QuarterCarModel.DisplacementForce.Chassis",
+      "model_dir": "models/QuarterCarModel.DisplacementForce.Chassis",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "QuarterCarModel.DisplacementForce.Wheel",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/QuarterCarModel.DisplacementForce.Wheel",
+      "model_dir": "models/QuarterCarModel.DisplacementForce.Wheel",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Resource",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Resource",
+      "model_dir": "models/Resource",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Resource3",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Resource3",
+      "model_dir": "models/Resource3",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Stair",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Stair",
+      "model_dir": "models/Stair",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "Stair3",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/Stair3",
+      "model_dir": "models/Stair3",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "VanDerPol",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/VanDerPol",
+      "model_dir": "models/VanDerPol",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "VanDerPol3",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/VanDerPol3",
+      "model_dir": "models/VanDerPol3",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "acvs_compositeModel",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/acvs_compositeModel",
+      "model_dir": "models/acvs_compositeModel",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 12
+    },
+    {
+      "name": "dcmotor",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/dcmotor",
+      "model_dir": "models/dcmotor",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 3
+    },
+    {
+      "name": "embrace",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/embrace",
+      "model_dir": "models/embrace",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 5
+    },
+    {
+      "name": "embrace_TwoConf",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/embrace_TwoConf",
+      "model_dir": "models/embrace_TwoConf",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 5
+    },
+    {
+      "name": "equationPair.equation1",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/equationPair.equation1",
+      "model_dir": "models/equationPair.equation1",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "equationPair.equation2",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/equationPair.equation2",
+      "model_dir": "models/equationPair.equation2",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "fmi_attributes_19",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/fmi_attributes_19",
+      "model_dir": "models/fmi_attributes_19",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "fmidertest",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/fmidertest",
+      "model_dir": "models/fmidertest",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "importExportAllResources",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/importExportAllResources",
+      "model_dir": "models/importExportAllResources",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains no embedded FMUs.",
+      "fmu_count": 0
+    },
+    {
+      "name": "importParameterMapping",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/importParameterMapping",
+      "model_dir": "models/importParameterMapping",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains no embedded FMUs.",
+      "fmu_count": 0
+    },
+    {
+      "name": "importParameterMappingInline",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/importParameterMappingInline",
+      "model_dir": "models/importParameterMappingInline",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains no embedded FMUs.",
+      "fmu_count": 0
+    },
+    {
+      "name": "importStartValues",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/importStartValues",
+      "model_dir": "models/importStartValues",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains no embedded FMUs.",
+      "fmu_count": 0
+    },
+    {
+      "name": "importStartValues1",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/importStartValues1",
+      "model_dir": "models/importStartValues1",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains no embedded FMUs.",
+      "fmu_count": 0
+    },
+    {
+      "name": "import_export_parameters1",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/import_export_parameters1",
+      "model_dir": "models/import_export_parameters1",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 3
+    },
+    {
+      "name": "import_export_parameters2",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/import_export_parameters2",
+      "model_dir": "models/import_export_parameters2",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 3
+    },
+    {
+      "name": "import_export_parameters3",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/import_export_parameters3",
+      "model_dir": "models/import_export_parameters3",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 3
+    },
+    {
+      "name": "import_hierarchical_ssv_sources",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/import_hierarchical_ssv_sources",
+      "model_dir": "models/import_hierarchical_ssv_sources",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains no embedded FMUs.",
+      "fmu_count": 0
+    },
+    {
+      "name": "invalidSSD",
+      "category": "resource_model",
+      "source_kind": "invalid_ssp_fixture",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/invalidSSD",
+      "model_dir": null,
+      "status": "skipped",
+      "note": "Intentionally invalid SSP fixture; tracked for traceability but not incorporated.",
+      "fmu_count": 0
+    },
+    {
+      "name": "invalidSSM",
+      "category": "resource_model",
+      "source_kind": "invalid_ssp_fixture",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/invalidSSM",
+      "model_dir": null,
+      "status": "skipped",
+      "note": "Intentionally invalid SSP fixture; tracked for traceability but not incorporated.",
+      "fmu_count": 0
+    },
+    {
+      "name": "invalidSSV",
+      "category": "resource_model",
+      "source_kind": "invalid_ssp_fixture",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/invalidSSV",
+      "model_dir": null,
+      "status": "skipped",
+      "note": "Intentionally invalid SSP fixture; tracked for traceability but not incorporated.",
+      "fmu_count": 0
+    },
+    {
+      "name": "nls.cs",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/nls.cs",
+      "model_dir": "models/nls.cs",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "nls.me",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/nls.me",
+      "model_dir": "models/nls.me",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "PWMTest",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/pwmtest",
+      "model_dir": "models/PWMTest",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 2
+    },
+    {
+      "name": "replaceA",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/replaceA",
+      "model_dir": "models/replaceA",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "replaceA_extended",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/replaceA_extended",
+      "model_dir": "models/replaceA_extended",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "replaceB",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/replaceB",
+      "model_dir": "models/replaceB",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "replaceSubmodel4",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/replaceSubmodel4",
+      "model_dir": "models/replaceSubmodel4",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 2
+    },
+    {
+      "name": "replaceSubmodel5",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/replaceSubmodel5",
+      "model_dir": "models/replaceSubmodel5",
+      "status": "incorporated",
+      "note": "Workflow ran successfully and populated the model directory.",
+      "fmu_count": 2
+    },
+    {
+      "name": "str_hello_world",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/str_hello_world",
+      "model_dir": "models/str_hello_world",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "tank1",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/tank1",
+      "model_dir": "models/tank1",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "tank2",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/tank2",
+      "model_dir": "models/tank2",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "tank3",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/tank3",
+      "model_dir": "models/tank3",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "testArray",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/testArray",
+      "model_dir": "models/testArray",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "toplevelparameter1",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/toplevelparameter1",
+      "model_dir": "models/toplevelparameter1",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains only one FMU, so the co-simulation intent is weak.",
+      "fmu_count": 1
+    },
+    {
+      "name": "toplevelparameter2",
+      "category": "resource_model",
+      "source_kind": "ready_ssp_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/toplevelparameter2",
+      "model_dir": "models/toplevelparameter2",
+      "status": "not_selected",
+      "note": "Excluded because the SSP directory contains only one FMU, so the co-simulation intent is weak.",
+      "fmu_count": 1
+    },
+    {
+      "name": "ypipe",
+      "category": "resource_model",
+      "source_kind": "single_fmu_dir",
+      "source_path": "3rd_party/OMSimulator/testsuite/resources/ypipe",
+      "model_dir": "models/ypipe",
+      "status": "not_selected",
+      "note": "Standalone FMU resource; excluded because it does not express a clear co-simulation system.",
+      "fmu_count": 0
+    },
+    {
+      "name": "AircraftVehicleDemonstrator",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/AircraftVehicleDemonstrator/AircraftVehicleDemonstrator.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "acvs_simulate",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/AircraftVehicleDemonstrator/acvs_simulate.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "embrace1",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/AircraftVehicleDemonstrator/embrace1.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "embrace2",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/AircraftVehicleDemonstrator/embrace2.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "FeedthroughConnections",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/CompositeModels/FeedthroughConnections.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "FeedthroughSetValue1",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/CompositeModels/FeedthroughSetValue1.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "FeedthroughSetValue2",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/CompositeModels/FeedthroughSetValue2.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "connectFmi2AndFmi3",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/CompositeModels/connectFmi2AndFmi3.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "LOC",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/LOC.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "NestedSystem",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/NestedSystem.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "NewSSP",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/NewSSP.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "NewSSP2",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/NewSSP2.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "NewSSP3",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/NewSSP3.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "ResultReader",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/ResultReader.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "addMetaData",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/addMetaData.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "create_ssp_file",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/create_ssp_file.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "cref",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/cref.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "deleteConnector1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/deleteConnector1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "deleteResources1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/deleteResources1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "deleteSystem1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/deleteSystem1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "duplicateVariant1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/duplicateVariant1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "duplicateVariant2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/duplicateVariant2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "enumTest1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/enumTest1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "exportSSMTemplate1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/exportSSMTemplate1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "exportSSMTemplate2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/exportSSMTemplate2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "exportSSVTemplate1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/exportSSVTemplate1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "exportSSVTemplate2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/exportSSVTemplate2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "fmuinfo",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/fmuinfo.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "invalidSSD",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/invalidSSD.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "invalidSSV",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/invalidSSV.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "listSSVReference1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/listSSVReference1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setMappingSSM1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setMappingSSM1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setMappingSSM2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setMappingSSM2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setMappingSSM3",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setMappingSSM3.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setSolver1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setSolver1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setSolver2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setSolver2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setValue1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setValue1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setValue2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setValue2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setValue3",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setValue3.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setValue4",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setValue4.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setValueSSV1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setValueSSV1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setValueSSV2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setValueSSV2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "setValueSSV3",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/setValueSSV3.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "swapSSV1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/swapSSV1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "swapSSV2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/swapSSV2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "swapSSV3",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/swapSSV3.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "swapSSV4",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/api/swapSSV4.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "dcmotor",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/dcmotor/dcmotor.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "dcmotorMETest",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/dcmotor/dcmotorMETest.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "ParkerSim",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/parker/ParkerSim.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "ParkerSimSimulation",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/parker/ParkerSimSimulation.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "BouncingBall",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/3.0/BouncingBall.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "Dahlquist",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/3.0/Dahlquist.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "Feedthrough",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/3.0/Feedthrough.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "Resource",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/3.0/Resource.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "Stair",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/3.0/Stair.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "VanDerPol",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/3.0/VanDerPol.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "BouncingBall",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/BouncingBall.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "Dahlquist",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/Dahlquist.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "Feedthrough",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/Feedthrough.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "Resource",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/Resource.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "Stair",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/Stair.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "VanDerPol",
+      "category": "python_test",
+      "source_kind": "reference_fmu_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/reference-fmus/VanDerPol.py",
+      "model_dir": null,
+      "status": "excluded",
+      "note": "Reference FMU test; intentionally excluded from OMSimulator model incorporation.",
+      "fmu_count": null
+    },
+    {
+      "name": "DualMassOscillator",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/DualMassOscillator.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "FMI3_SimpleSimulation1",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/FMI3_SimpleSimulation1.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "FMI3_SimpleSimulation2",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/FMI3_SimpleSimulation2.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "FMI3_SimpleSimulation3",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/FMI3_SimpleSimulation3.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "LinearTransformation1",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/LinearTransformation1.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "LinearTransformation2",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/LinearTransformation2.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "LinearTransformation3",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/LinearTransformation3.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "NestedSystemSimulation1",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/NestedSystemSimulation1.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "NestedSystemSimulation2",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/NestedSystemSimulation2.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "NestedSystemSimulation3",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/NestedSystemSimulation3.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "PIController",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/PIController.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "QuarterCarModel",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/QuarterCarModel.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation10",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation10.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation11",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation11.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation12",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation12.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation13",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation13.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation14",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation14.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation15",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation15.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation16",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation16.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation3",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation3.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation4",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation4.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation5",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation5.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation6",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation6.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation7",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation7.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation8",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation8.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "SimpleSimulation9",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/SimpleSimulation9.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "exportJson1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/exportJson1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "exportJson2",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/exportJson2.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "exportJson4",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/exportJson4.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "fmuSimulation1",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/fmuSimulation1.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "pwmtest",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/pwmtest.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    },
+    {
+      "name": "stepUntil",
+      "category": "python_test",
+      "source_kind": "non_model_test",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/stepUntil.py",
+      "model_dir": null,
+      "status": "not_a_model",
+      "note": "Utility or API test script rather than a standalone model artifact.",
+      "fmu_count": null
+    },
+    {
+      "name": "tankYPipe",
+      "category": "python_test",
+      "source_kind": "script_constructed",
+      "source_path": "3rd_party/OMSimulator/testsuite/simulation/tankYPipe.py",
+      "model_dir": null,
+      "status": "todo",
+      "note": "Python test constructs or exercises a model workflow that still needs a dedicated model directory.",
+      "fmu_count": null
+    }
+  ]
+}

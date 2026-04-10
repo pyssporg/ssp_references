@@ -112,3 +112,36 @@ def unpack_archive_to_runtime_layout(archive_path: Path, output_dir: Path) -> No
         prune=True,
         recursive_fmus=True,
     )
+
+
+def populate_from_fmu_directory(
+    *,
+    model_name: str,
+    model_dir: Path,
+    source_dir: Path,
+    fmu_name: str | None = None,
+) -> None:
+    paths = model_paths(model_dir, model_name)
+    actual_fmu_name = fmu_name or model_name
+    if not source_dir.is_dir():
+        raise FileNotFoundError(f"Source directory not found: {source_dir}")
+    build_fmu_from_directory(source_dir, paths.fmu_path(actual_fmu_name))
+    package_single_fmu_as_ssp(
+        fmu_path=paths.fmu_path(actual_fmu_name),
+        ssp_path=paths.ssp_path,
+        system_name=model_name,
+        component_name=model_name,
+    )
+    unpack_archive_to_runtime_layout(paths.ssp_path, paths.unpacked_ssp_dir)
+
+
+def populate_from_ssp_directory(
+    *,
+    model_name: str,
+    model_dir: Path,
+    source_dir: Path,
+) -> None:
+    paths = model_paths(model_dir, model_name)
+    copy_tree(source_dir, paths.unpacked_ssp_dir)
+    package_ssp_from_directory(paths.unpacked_ssp_dir, paths.ssp_path)
+    unpack_archive_to_runtime_layout(paths.ssp_path, paths.unpacked_ssp_dir)

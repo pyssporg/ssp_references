@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription modelName="FMU_16_aero_stimuli" fmiVersion="2.0" generationTool="Hopsan2.23.0.20250820.1508" generationDateAndTime="2025-09-19T12:03:13Z" variableNamingConvention="flat" guid="{b9f4ea0b-fdc9-4f11-804b-2d2b1e8e07af}" numberOfEventIndicators="0">
+    <CoSimulation modelIdentifier="FMU_16_aero_stimuli" canHandleVariableCommunicationStepSize="true"/>
+    <UnitDefinitions>
+        <Unit name="s"/>
+        <Unit name="bar"/>
+    </UnitDefinitions>
+    <DefaultExperiment startTime="20"/>
+    <ModelVariables>
+        <ScalarVariable name="timestep" valueReference="0" causality="parameter" variability="fixed" description="Hopsan time step">
+            <Real start="0.001" unit="s"/>
+        </ScalarVariable>
+        <ScalarVariable name="p1.in.y" valueReference="1" causality="output" variability="continuous">
+            <Real/>
+        </ScalarVariable>
+        <ScalarVariable name="p2.in.y" valueReference="2" causality="output" variability="continuous">
+            <Real/>
+        </ScalarVariable>
+        <ScalarVariable name="p3.in.y" valueReference="3" causality="output" variability="continuous">
+            <Real/>
+        </ScalarVariable>
+        <ScalarVariable name="u.in.y" valueReference="4" causality="output" variability="continuous">
+            <Real/>
+        </ScalarVariable>
+        <ScalarVariable name="p1_max" valueReference="5" causality="parameter" variability="fixed" description="p1 Ramp max value">
+            <Real start="100" unit="bar"/>
+        </ScalarVariable>
+        <ScalarVariable name="p2_const" valueReference="6" causality="parameter" variability="fixed" description="p2 pressure (constant)">
+            <Real start="1" unit="bar"/>
+        </ScalarVariable>
+    </ModelVariables>
+    <ModelStructure>
+        <Outputs>
+            <Unknown index="2" dependencies=""/>
+            <Unknown index="3" dependencies=""/>
+            <Unknown index="4" dependencies=""/>
+            <Unknown index="5" dependencies=""/>
+        </Outputs>
+        <InitialUnknowns>
+            <Unknown index="2" dependencies=""/>
+            <Unknown index="3" dependencies=""/>
+            <Unknown index="4" dependencies=""/>
+            <Unknown index="5" dependencies=""/>
+        </InitialUnknowns>
+    </ModelStructure>
+</fmiModelDescription>

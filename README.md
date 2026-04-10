@@ -4,17 +4,12 @@ Reference SSP and FMU artifacts for evaluating simulation engines.
 
 ## Available models
 
-The repository currently provides these models under [`models`](/home/eriro/pwa/2_work/ssp_references/models):
+The repository currently provides OMSimulator-derived model directories under [`models`](/home/eriro/pwa/2_work/ssp_references/models).
 
-- `BouncingBall`
-- `Dahlquist`
-- `Feedthrough`
-- `LinearTransformation`
-- `PWMTest`
-- `Resource`
-- `Stair`
-- `VanDerPol`
-- `importParameterMapping`
+For the full tracked inventory and incorporation status, see:
+
+- [`docs/omsimulator_model_status.md`](/home/eriro/pwa/2_work/ssp_references/docs/omsimulator_model_status.md)
+- [`docs/omsimulator_model_status.json`](/home/eriro/pwa/2_work/ssp_references/docs/omsimulator_model_status.json)
 
 ## Model layout
 
@@ -64,6 +59,18 @@ Current workflow patterns in the repository:
 - single unpacked FMU directory: zip to `fmus/<name>.fmu`, package as a one-component SSP, then unpack
 - existing SSP directory: copy into `ssp/`, archive into `<name>.ssp`, then unpack again into runtime layout
 - future custom models: write the exact tool calls directly in that model's `workflow.py`
+
+The full OMSimulator inventory, todo list, and incorporation status are regenerated with:
+
+```text
+python3 scripts/sync_omsimulator_models.py
+```
+
+The sync script applies a co-simulation filter:
+
+- it only copies resource-backed systems with a clear co-simulation intent
+- in practice that means `SystemStructure.ssd` plus more than one embedded `.fmu`
+- standalone FMUs and single-FMU SSP systems are still tracked in the status files, but are not copied by the sync step
 
 ## How to use the models
 

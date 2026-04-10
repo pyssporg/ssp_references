@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  fmiVersion="2.0"
+  modelName="AdaptionUnit"
+  guid="{4878b6d4-a52a-415c-9f5e-76a77e9f734d}"
+  generationTool="Dymola Version 2025x, 2024-12-20"
+  generationDateAndTime="2025-10-29T10:17:41Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="6">
+  <CoSimulation
+    modelIdentifier="AdaptionUnit"
+    canHandleVariableCommunicationStepSize="true"
+    canInterpolateInputs="true"
+    maxOutputDerivativeOrder="1"
+    canNotUseMemoryManagementFunctions="true"
+    canGetAndSetFMUstate="true"
+    canSerializeFMUstate="true"
+    providesDirectionalDerivative="true"/>
+  <TypeDefinitions>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.IntegerOutput">
+      <Integer/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.RealInput">
+      <Real/>
+    </SimpleType>
+    <SimpleType
+      name="Modelica.Blocks.Interfaces.RealOutput">
+      <Real/>
+    </SimpleType>
+  </TypeDefinitions>
+  <DefaultExperiment startTime="0.0"
+    stopTime="1.0"
+    tolerance="0.0001"/>
+  <ModelVariables>
+    <!-- Index for next variable = 1 -->
+    <ScalarVariable
+      name="sWsignals.TLiquid"
+      valueReference="603979776"
+      causality="output">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 2 -->
+    <ScalarVariable
+      name="sWsignals.Aircraft_State"
+      valueReference="603979777"
+      causality="output"
+      variability="discrete">
+      <Integer
+        declaredType="Modelica.Blocks.Interfaces.IntegerOutput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 3 -->
+    <ScalarVariable
+      name="Aircraft_State"
+      valueReference="620756992"
+      causality="input">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 4 -->
+    <ScalarVariable
+      name="LHexTout"
+      valueReference="620756993"
+      causality="input">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"
+        start="0.0"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 5 -->
+    <ScalarVariable
+      name="realToInteger.u"
+      valueReference="1711276032"
+      description="Connector of Real input signal">
+      <Real
+        declaredType="Modelica.Blocks.Interfaces.RealInput"/>
+    </ScalarVariable>
+    <!-- Index for next variable = 6 -->
+    <ScalarVariable
+      name="realToInteger.y"
+      valueReference="603979777"
+      description="Connector of Integer output signal"
+      variability="discrete">
+      <Integer
+        declaredType="Modelica.Blocks.Interfaces.IntegerOutput"/>
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="1"
+        dependencies="4"
+        dependenciesKind="fixed"/>
+      <Unknown index="2"
+        dependencies="3"
+        dependenciesKind="dependent"/>
+    </Outputs>
+    <InitialUnknowns>
+      <Unknown index="1"
+        dependencies="4"
+        dependenciesKind="dependent"/>
+      <Unknown index="2"
+        dependencies="3"
+        dependenciesKind="dependent"/>
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

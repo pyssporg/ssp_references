@@ -96,6 +96,23 @@ Run every discovered model workflow:
 python3 scripts/run_model_workflows.py run-all
 ```
 
+Regenerate the OMSimulator resource-backed model workflows and the status registry:
+
+```bash
+python3 scripts/sync_omsimulator_models.py
+```
+
+This sync uses a co-simulation filter:
+
+- only resource-backed systems with clear co-simulation intent are copied
+- in practice, the resource must contain `SystemStructure.ssd` and more than one `.fmu`
+- standalone FMUs and single-FMU SSP systems remain documented in the status registry but are not copied into `models/` by the sync step
+
+The generated traceability files are:
+
+- [`docs/omsimulator_model_status.md`](/home/eriro/pwa/2_work/ssp_references/docs/omsimulator_model_status.md)
+- [`docs/omsimulator_model_status.json`](/home/eriro/pwa/2_work/ssp_references/docs/omsimulator_model_status.json)
+
 ## Helper scripts
 
 Available helper scripts:
@@ -103,6 +120,7 @@ Available helper scripts:
 - [`3rd_party/build_fmi2_fmus.sh`](/home/eriro/pwa/2_work/ssp_references/3rd_party/build_fmi2_fmus.sh)
 - [`scripts/package_fmu_as_ssp.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/package_fmu_as_ssp.sh)
 - [`scripts/run_model_workflows.py`](/home/eriro/pwa/2_work/ssp_references/scripts/run_model_workflows.py)
+- [`scripts/sync_omsimulator_models.py`](/home/eriro/pwa/2_work/ssp_references/scripts/sync_omsimulator_models.py)
 - [`scripts/unpack_model_archive.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/unpack_model_archive.sh)
 - [`scripts/workflow_lib.py`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow_lib.py)
 

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="BouncingBall" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T11:58:22.013678">
+  <ssd:System name="BouncingBall">
+    <ssd:Connectors>
+      <ssd:Connector name="g" kind="parameter">
+        <ssc:Real/>
+      </ssd:Connector>
+      <ssd:Connector name="e" kind="parameter">
+        <ssc:Real/>
+      </ssd:Connector>
+      <ssd:Connector name="h" kind="output">
+        <ssc:Real/>
+      </ssd:Connector>
+      <ssd:Connector name="v" kind="output">
+        <ssc:Real/>
+      </ssd:Connector>
+    </ssd:Connectors>
+    <ssd:Elements>
+      <ssd:Component name="BouncingBall" source="resources/BouncingBall.fmu">
+        <ssd:Connectors>
+          <ssd:Connector name="g" kind="parameter">
+            <ssc:Real/>
+          </ssd:Connector>
+          <ssd:Connector name="e" kind="parameter">
+            <ssc:Real/>
+          </ssd:Connector>
+          <ssd:Connector name="h" kind="output">
+            <ssc:Real/>
+          </ssd:Connector>
+          <ssd:Connector name="v" kind="output">
+            <ssc:Real/>
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+    </ssd:Elements>
+    <ssd:Connections>
+      <ssd:Connection startConnector="g" endElement="BouncingBall" endConnector="g"/>
+      <ssd:Connection startConnector="e" endElement="BouncingBall" endConnector="e"/>
+      <ssd:Connection startElement="BouncingBall" startConnector="h" endConnector="h"/>
+      <ssd:Connection startElement="BouncingBall" startConnector="v" endConnector="v"/>
+    </ssd:Connections>
+  </ssd:System>
+</ssd:SystemStructureDescription>

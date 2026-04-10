@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 MODEL_DIR = Path(__file__).resolve().parent
-REPO_ROOT = MODEL_DIR.parents[1]
+REPO_ROOT = MODEL_DIR.parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from workflow_lib import populate_from_ssp_directory

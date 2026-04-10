@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="BouncingBall" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T15:17:16.142152">
+<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="BouncingBall" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T16:06:22.139457">
   <ssd:System name="BouncingBall">
     <ssd:Connectors>
       <ssd:Connector name="g" kind="parameter">

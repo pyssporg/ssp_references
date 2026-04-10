@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="Dahlquist" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T15:17:16.514214">
+<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="Dahlquist" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T16:07:09.162678">
   <ssd:System name="Dahlquist">
     <ssd:Connectors>
       <ssd:Connector name="k" kind="parameter">

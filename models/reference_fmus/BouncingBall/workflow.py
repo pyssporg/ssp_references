@@ -7,10 +7,10 @@ from pathlib import Path
 
 
 MODEL_DIR = Path(__file__).resolve().parent
-REPO_ROOT = MODEL_DIR.parents[1]
+REPO_ROOT = MODEL_DIR.parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from workflow_lib import build_fmu_from_directory, model_paths, package_single_fmu_as_ssp, unpack_archive_to_runtime_layout
+from workflow_lib import build_fmu_from_directory, copy_reference_results, model_paths, package_single_fmu_as_ssp, unpack_archive_to_runtime_layout
 
 
 MODEL_NAME = "BouncingBall"
@@ -40,11 +40,16 @@ def unpack() -> None:
     unpack_archive_to_runtime_layout(PATHS.ssp_path, PATHS.unpacked_ssp_dir)
 
 
+def copy_references() -> None:
+    copy_reference_results(MODEL_DIR, ["BouncingBall-cs.mat", "BouncingBall-me.mat"])
+
+
 def main() -> int:
     acquire()
     build()
     package()
     unpack()
+    copy_references()
     print(f"Populated {MODEL_NAME}")
     return 0
 

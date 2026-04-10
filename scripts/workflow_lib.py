@@ -11,6 +11,7 @@ from unpack_model_archive import unpack_archive
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 MODELS_DIR = REPO_ROOT / "models"
+TESTSUITE_REFERENCES_DIR = REPO_ROOT / "3rd_party" / "OMSimulator" / "testsuite" / "references"
 
 
 @dataclass(frozen=True)
@@ -29,6 +30,10 @@ class ModelPaths:
     @property
     def fmus_dir(self) -> Path:
         return self.model_dir / "fmus"
+
+    @property
+    def references_dir(self) -> Path:
+        return self.model_dir / "references"
 
     def fmu_path(self, fmu_name: str | None = None) -> Path:
         actual_name = fmu_name or self.name
@@ -68,6 +73,14 @@ def copy_file(source: Path, target: Path) -> None:
         raise FileNotFoundError(f"Source file not found: {source}")
     ensure_parent(target)
     shutil.copy2(source, target)
+
+
+def copy_reference_results(model_dir: Path, filenames: list[str]) -> None:
+    target_dir = model_dir / "references"
+    remove_path(target_dir)
+    target_dir.mkdir(parents=True, exist_ok=True)
+    for filename in filenames:
+        copy_file(TESTSUITE_REFERENCES_DIR / filename, target_dir / filename)
 
 
 def zip_directory(source_dir: Path, archive_path: Path) -> None:

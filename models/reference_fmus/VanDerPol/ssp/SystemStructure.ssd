@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="VanDerPol" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T15:17:18.594350">
+<ssd:SystemStructureDescription xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0" name="VanDerPol" generationTool="pyssp_standard" generationDateAndTime="2026-04-10T16:07:09.184709">
   <ssd:System name="VanDerPol">
     <ssd:Connectors>
       <ssd:Connector name="mu" kind="parameter">

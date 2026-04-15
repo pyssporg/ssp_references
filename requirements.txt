@@ -1,1 +1,3 @@
 pyssp_standard
+numpy
+scipy

@@ -1,64 +1,94 @@
 # `ssp_references`
 
-Reference SSP and FMU artifacts for evaluating SSP-capable and FMI-capable tools.
+Curated SSP model fixtures plus the scripts used to prepare them, simulate them,
+and compare results across engines.
 
-The repository curates a set of reusable model directories together with the
-workflow code used to assemble them from vendored upstream sources.
+The repository is primarily a working collection of reference models under
+`models/ssp/`. Most source material comes from vendored upstream projects in
+`3rd_party/`, while the checked-in model directories hold the packaged SSPs,
+their unpacked layouts, copied references, and any manual adjustments kept as
+part of the repo.
 
-## Repository Structure
-
-Model workflows are organized by category:
+## Layout
 
 ```text
-models/
-├── ssp/
-│   └── <model_name>/
-│       ├── workflow.py
-│       ├── metadata.json
-│       ├── <model_name>.ssp
-│       ├── ssp/
-│       ├── fmus/                  # optional, generated when packaging from FMU sources
-│       └── references/            # optional, copied from upstream reference results
-└── fmu/
-    └── <model_name>/              # reserved for FMU-centric models
+.
+├── models/
+│   └── ssp/
+│       └── <model_name>/
+│           ├── workflow.py
+│           ├── metadata.json
+│           ├── <model_name>.ssp
+│           ├── ssp/
+│           ├── fmus/              # only when the model starts from FMU sources
+│           ├── references/        # copied reference trajectories when available
+│           └── simulation_results/
+├── scripts/
+│   ├── run_model_workflows.py
+│   ├── cli/
+│   └── workflow/
+├── 3rd_party/
+│   ├── OMSimulator
+│   ├── reference_fmus
+│   └── pyfmu_csv
+└── requirements.txt
 ```
 
-The workflow runner discovers models from `models/*/*/workflow.py`. A model
-directory placed directly under `models/` will not be picked up.
+## What Lives Where
 
-Other top-level directories:
+- `models/ssp/` is the main output of the repo. Each model directory is both a
+  reusable fixture and the place where model-specific artifacts are kept.
+- `workflow.py` is the per-model executable entrypoint discovered by
+  `scripts/run_model_workflows.py`.
+- `metadata.json` declares the upstream SSP, FMU, and reference-result sources
+  used by the shared workflow code.
+- `scripts/workflow/` contains the common implementation for setup, packaging,
+  unpacking, simulation, and comparison.
+- `scripts/cli/` contains small task-focused helpers for comparing engines,
+  unpacking archives, packaging a single FMU as an SSP, and converting MAT
+  results to CSV.
+- `3rd_party/` is upstream source material. In normal repo work, it is input
+  data, not the main place to edit behavior.
 
-- `scripts/`: repository tooling for packaging, unpacking, and model setup.
-- `3rd_party/`: vendored upstream assets used as the source material for models.
-- `docs/`: generated or auxiliary documentation artifacts when present.
+## Model Workflow
 
-## Model Contract
+Each model directory under `models/ssp/<model_name>/` follows the same basic
+contract:
 
-Each model directory is expected to contain:
+- `workflow.py` calls the shared setup flow for that model.
+- `metadata.json` points at the upstream source artifacts.
+- Running the workflow prepares the local fixture by validating sources,
+  building or copying FMUs when needed, packaging the `.ssp`, unpacking it into
+  `ssp/`, and copying reference trajectories into `references/`.
 
-- `workflow.py`: executable entrypoint for setting up that model directory.
-- `metadata.json`: required model metadata and source declarations.
+The workflow runner discovers models from `models/*/*/workflow.py`:
 
-The workflow uses `metadata.json` to locate upstream sources and produce local
-artifacts. Missing metadata is a hard error.
+```bash
+python3 scripts/run_model_workflows.py list
+python3 scripts/run_model_workflows.py run BouncingBall
+python3 scripts/run_model_workflows.py run-all
+```
 
-Common generated or copied artifacts:
+## Simulation And Comparison
 
-- `<model_name>.ssp`: packaged SSP archive for the model.
-- `ssp/`: unpacked view of the packaged SSP, including recursively unpacked FMUs.
-- `fmus/`: generated FMUs when the source material starts as an FMU directory or
-  FMU archive rather than an SSP.
-- `references/`: copied upstream reference trajectories. When `.mat` files are
-  present, the workflow also emits adjacent `.csv` files.
-- `simulation_results/`: engine-specific result files and cross-engine
-  comparison reports produced by the comparison tooling.
+Simulation execution is automated separately from model setup.
 
-Artifacts such as `fmus/` and `references/` are optional and depend on the
-model's declared sources. They are not required for every model.
+- `scripts/cli/compare_engines.py` runs OMSimulator and `ssp4sim` for one or
+  more prepared models, collects result CSVs, resamples onto a common time
+  grid, and writes pairwise comparison reports.
+- Raw outputs are written to
+  `models/ssp/<model_name>/simulation_results/<engine>/`.
+- Pairwise metrics are written to
+  `models/ssp/<model_name>/simulation_results/comparisons/`.
 
-## Metadata Schema
+Example:
 
-Each model uses a `metadata.json` file with this structure:
+```bash
+python3 scripts/cli/compare_engines.py embrace \
+  --ssp4sim-app ../ssp4sim/build/public/ssp4sim_app/sim_app
+```
+
+## Metadata Shape
 
 ```json
 {
@@ -77,67 +107,14 @@ Each model uses a `metadata.json` file with this structure:
 }
 ```
 
-Source entries are repository-relative paths. The workflow supports exactly one
-primary source for `ssp` or `fmu`, plus zero or more `results` files.
+Source entries are repository-relative. The current setup flow expects exactly
+one primary `ssp` or `fmu` source and zero or more `results` files.
 
-## Quick Start
+## Environment Notes
 
-Create a virtual environment and install the Python dependencies:
+`requirements.txt` currently targets Linux `x86_64`:
 
-```bash
-python3 -m venv venv
-. venv/bin/activate
-pip install -r requirements.txt
-```
+- `pyssp4sim` is pinned to a Linux `x86_64` wheel.
+- `OMSimulator` is installed from PyPI.
 
-Inspect the available model workflows:
-
-```bash
-python3 scripts/run_model_workflows.py list
-```
-
-Set up one model:
-
-```bash
-python3 scripts/run_model_workflows.py run BouncingBall
-```
-
-Set up all discovered models:
-
-```bash
-python3 scripts/run_model_workflows.py run-all
-```
-
-Compare two engines on a model:
-
-```bash
-python3 scripts/cli/compare_engines.py embrace \
-  --ssp4sim-app ../ssp4sim/build/public/ssp4sim_app/sim_app
-```
-
-This writes raw results under
-`models/ssp/<model_name>/simulation_results/<engine>/` and comparison reports
-under `models/ssp/<model_name>/simulation_results/comparisons/`.
-
-## Platform Notes
-
-`requirements.txt` currently assumes a Linux `x86_64` environment:
-
-- `pyssp4sim` is installed from a Linux `x86_64` wheel hosted on GitHub Releases.
-- `OMSimulator` is installed from PyPI and may pull build-time dependencies.
-
-If you are working on another platform, expect to replace or omit the
-`pyssp4sim` wheel entry and validate the rest of the toolchain manually.
-
-## Tooling Notes
-
-The repository contains small CLI helpers under `scripts/cli/` for packaging and
-unpacking archives. The main supported entrypoint for repository setup is still
-`scripts/run_model_workflows.py`.
-
-## Supported Model Categories
-
-- `models/ssp/`: packaged SSP models that can be used directly in SSP-oriented
-  interoperability and regression testing.
-- `models/fmu/`: placeholder category for FMU-centric source models that may be
-  packaged into SSPs or used as building blocks by future workflows.
+If you work on another platform, expect to adjust dependencies manually.

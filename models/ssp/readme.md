@@ -12,6 +12,7 @@ Typical generated artifacts in a model directory:
 - `ssp/`
 - `fmus/` when the model is built from FMU sources
 - `references/` when upstream result files are available
+- `simulation_results/` when engine runs or comparisons have been generated
 
 These models are the main repository outputs and are intended to be simulated,
 inspected, unpacked, or used as regression/interoperability fixtures.

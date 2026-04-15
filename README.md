@@ -50,6 +50,8 @@ Common generated or copied artifacts:
   FMU archive rather than an SSP.
 - `references/`: copied upstream reference trajectories. When `.mat` files are
   present, the workflow also emits adjacent `.csv` files.
+- `simulation_results/`: engine-specific result files and cross-engine
+  comparison reports produced by the comparison tooling.
 
 Artifacts such as `fmus/` and `references/` are optional and depend on the
 model's declared sources. They are not required for every model.
@@ -105,6 +107,17 @@ Set up all discovered models:
 ```bash
 python3 scripts/run_model_workflows.py run-all
 ```
+
+Compare two engines on a model:
+
+```bash
+python3 scripts/cli/compare_engines.py embrace \
+  --ssp4sim-app ../ssp4sim/build/public/ssp4sim_app/sim_app
+```
+
+This writes raw results under
+`models/ssp/<model_name>/simulation_results/<engine>/` and comparison reports
+under `models/ssp/<model_name>/simulation_results/comparisons/`.
 
 ## Platform Notes
 

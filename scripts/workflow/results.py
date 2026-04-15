@@ -7,6 +7,41 @@ import numpy as np
 from scipy.io import loadmat
 
 
+def normalize_column_name(column_name: str, engine: str | None = None) -> str:
+    normalized = column_name.strip()
+    if engine == "omsimulator" and normalized.startswith("root."):
+        normalized = normalized[len("root.") :]
+    return normalized
+
+
+def parse_float(value: str) -> float:
+    stripped = value.strip()
+    if stripped == "":
+        return float("nan")
+    return float(stripped)
+
+
+def load_numeric_csv(path: Path, *, engine: str | None = None) -> dict:
+    with path.open(newline="") as handle:
+        reader = csv.reader(handle)
+        raw_headers = next(reader)
+        headers = [
+            normalize_column_name(header, engine)
+            for header in raw_headers
+        ]
+        rows = [[parse_float(value) for value in row] for row in reader]
+
+    if not rows:
+        return {"headers": headers, "columns": {header: np.array([], dtype=float) for header in headers}}
+
+    data = np.asarray(rows, dtype=float)
+    columns = {
+        header: data[:, index]
+        for index, header in enumerate(headers)
+    }
+    return {"headers": headers, "columns": columns}
+
+
 def default_csv_output_path(mat_path: Path) -> Path:
     return mat_path.with_suffix(".csv")
 

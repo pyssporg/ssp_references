@@ -28,6 +28,17 @@ class ModelPaths:
     def references_dir(self) -> Path:
         return self.model_dir / "references"
 
+    @property
+    def simulation_results_dir(self) -> Path:
+        return self.model_dir / "simulation_results"
+
+    @property
+    def comparisons_dir(self) -> Path:
+        return self.simulation_results_dir / "comparisons"
+
+    def engine_results_dir(self, engine_name: str) -> Path:
+        return self.simulation_results_dir / engine_name
+
     def fmu_path(self, fmu_name: str | None = None) -> Path:
         actual_name = fmu_name or self.name
         return self.fmus_dir / f"{actual_name}.fmu"

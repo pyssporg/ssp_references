@@ -1,0 +1,12 @@
+{
+  "model_name": "Feedthrough",
+  "description": "This model packages a reference FMU with direct input-to-output feedthrough behavior as an SSP.",
+  "intended_use": "Testing FMI/SSP tooling that must handle feedthrough signals, parameter setup, and driven inputs.",
+  "source": {
+    "ssp": [],
+    "fmu": [
+      "3rd_party/OMSimulator/testsuite/resources/Feedthrough"
+    ],
+    "results": []
+  }
+}

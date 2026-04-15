@@ -1,0 +1,15 @@
+{
+  "model_name": "Dahlquist",
+  "description": "This model packages the Dahlquist test equation reference FMU as an SSP.",
+  "intended_use": "Simple solver and integration benchmarking for exponential decay dynamics.",
+  "source": {
+    "ssp": [],
+    "fmu": [
+      "3rd_party/OMSimulator/testsuite/resources/Dahlquist"
+    ],
+    "results": [
+      "3rd_party/OMSimulator/testsuite/references/Dahlquist-cs.mat",
+      "3rd_party/OMSimulator/testsuite/references/Dahlquist-me.mat"
+    ]
+  }
+}

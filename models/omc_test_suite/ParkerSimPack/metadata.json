@@ -1,0 +1,12 @@
+{
+  "model_name": "ParkerSimPack",
+  "description": "This model is an OMSimulator test-suite SSP for Parker hydraulic valve demonstrator variants, including automotive and aerospace configurations.",
+  "intended_use": "Validating larger multi-variant SSPs, FMU interoperability, and hydraulic control/co-simulation workflows.",
+  "source": {
+    "ssp": [
+      "3rd_party/OMSimulator/testsuite/resources/ParkerSimPack"
+    ],
+    "fmu": [],
+    "results": []
+  }
+}

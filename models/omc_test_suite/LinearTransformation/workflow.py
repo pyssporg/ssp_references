@@ -10,22 +10,8 @@ MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = MODEL_DIR.parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from workflow_lib import populate_from_ssp_directory
-
-
-MODEL_NAME = "LinearTransformation"
-SOURCE_DIR = REPO_ROOT / "3rd_party" / "OMSimulator" / "testsuite" / "resources" / "LinearTransformation"
-
-
-def main() -> int:
-    populate_from_ssp_directory(
-        model_name=MODEL_NAME,
-        model_dir=MODEL_DIR,
-        source_dir=SOURCE_DIR,
-    )
-    print(f"Populated {MODEL_NAME}")
-    return 0
+from workflow_common import setup_directory
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    setup_directory(MODEL_DIR)

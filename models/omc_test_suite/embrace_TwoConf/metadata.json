@@ -1,0 +1,12 @@
+{
+  "model_name": "embrace_TwoConf",
+  "description": "This model is a two-configuration variant of the OMSimulator embrace aircraft vehicle demonstrator SSP.",
+  "intended_use": "Testing scenario-driven simulation together with configuration switching through SSV/SSM references and runtime connection setup.",
+  "source": {
+    "ssp": [
+      "3rd_party/OMSimulator/testsuite/resources/embrace_TwoConf"
+    ],
+    "fmu": [],
+    "results": []
+  }
+}

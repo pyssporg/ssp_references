@@ -1,0 +1,15 @@
+{
+  "model_name": "Stair",
+  "description": "This model packages the Stair reference FMU as an SSP.",
+  "intended_use": "Testing time events and stepped/discrete counter behavior in FMI-capable simulators.",
+  "source": {
+    "ssp": [],
+    "fmu": [
+      "3rd_party/OMSimulator/testsuite/resources/Stair"
+    ],
+    "results": [
+      "3rd_party/OMSimulator/testsuite/references/Stair-cs.mat",
+      "3rd_party/OMSimulator/testsuite/references/Stair-me.mat"
+    ]
+  }
+}

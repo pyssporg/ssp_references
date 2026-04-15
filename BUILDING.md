@@ -121,6 +121,8 @@ Available helper scripts:
 - [`scripts/package_fmu_as_ssp.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/package_fmu_as_ssp.sh)
 - [`scripts/run_model_workflows.py`](/home/eriro/pwa/2_work/ssp_references/scripts/run_model_workflows.py)
 - [`scripts/sync_omsimulator_models.py`](/home/eriro/pwa/2_work/ssp_references/scripts/sync_omsimulator_models.py)
+- [`scripts/unpack_mat_to_csv.py`](/home/eriro/pwa/2_work/ssp_references/scripts/unpack_mat_to_csv.py)
+- [`scripts/unpack_mat_to_csv.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/unpack_mat_to_csv.sh)
 - [`scripts/unpack_model_archive.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/unpack_model_archive.sh)
 - [`scripts/workflow_lib.py`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow_lib.py)
 
@@ -128,5 +130,6 @@ Examples:
 
 ```bash
 ./scripts/package_fmu_as_ssp.sh models/BouncingBall/fmus/BouncingBall.fmu
+./scripts/unpack_mat_to_csv.sh 3rd_party/OMSimulator/testsuite/references/BouncingBall-cs.mat
 ./scripts/unpack_model_archive.sh models/BouncingBall/BouncingBall.ssp
 ```

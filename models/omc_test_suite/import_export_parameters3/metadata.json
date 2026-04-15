@@ -1,0 +1,12 @@
+{
+  "model_name": "import_export_parameters3",
+  "description": "This model is an OMSimulator test-suite SSP for imported and exported parameter handling using inline parameter values embedded directly in the SSD.",
+  "intended_use": "Validating SSP parameter exchange without external SSV files by relying on inline parameter bindings instead.",
+  "source": {
+    "ssp": [
+      "3rd_party/OMSimulator/testsuite/resources/import_export_parameters3"
+    ],
+    "fmu": [],
+    "results": []
+  }
+}

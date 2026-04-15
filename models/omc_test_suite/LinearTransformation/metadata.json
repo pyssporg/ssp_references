@@ -1,0 +1,12 @@
+{
+  "model_name": "LinearTransformation",
+  "description": "This model is an OMSimulator test-suite SSP that applies an ssc:LinearTransformation on a connection between FMUs.",
+  "intended_use": "Verifying SSP connection-level linear transformation support, including factor and offset handling.",
+  "source": {
+    "ssp": [
+      "3rd_party/OMSimulator/testsuite/resources/LinearTransformation"
+    ],
+    "fmu": [],
+    "results": []
+  }
+}

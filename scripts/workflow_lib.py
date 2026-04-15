@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 import zipfile
 from dataclasses import dataclass
@@ -39,9 +40,40 @@ class ModelPaths:
         actual_name = fmu_name or self.name
         return self.fmus_dir / f"{actual_name}.fmu"
 
+class ModelMetaData:
+
+    def __init__(self, model_dir : Path):
+        self.dir = model_dir
+
+        self.metadata = load_model_metadata(self.dir)
+
+        
+        self.name = self.metadata["model_name"]
+        self.paths = model_paths(self.dir, self.name )
+        self.source_ssp = resolve_metadata_paths(self.metadata["source"]["ssp"])
+        self.source_fmu = resolve_metadata_paths(self.metadata["source"]["fmu"])
+        self.source_results = resolve_metadata_paths(self.metadata["source"].get("results", []))
+
 
 def model_paths(model_dir: Path, model_name: str) -> ModelPaths:
     return ModelPaths(name=model_name, model_dir=model_dir)
+
+
+def load_model_metadata(model_dir: Path) -> dict:
+    metadata_path = model_dir / "metadata.json"
+    if not metadata_path.is_file():
+        raise FileNotFoundError(f"Model metadata not found: {metadata_path}")
+    return json.loads(metadata_path.read_text())
+
+
+def resolve_metadata_paths(entries: list[str]) -> list[Path]:
+    return [REPO_ROOT / entry for entry in entries]
+
+
+def require_single_source(entries: list[Path], source_type: str) -> Path:
+    if len(entries) != 1:
+        raise ValueError(f"Expected exactly one {source_type} source entry, found {len(entries)}")
+    return entries[0]
 
 
 def remove_path(path: Path) -> None:
@@ -75,12 +107,12 @@ def copy_file(source: Path, target: Path) -> None:
     shutil.copy2(source, target)
 
 
-def copy_reference_results(model_dir: Path, filenames: list[str]) -> None:
+def copy_source_results(model_dir: Path, result_paths: list[Path]) -> None:
     target_dir = model_dir / "references"
     remove_path(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
-    for filename in filenames:
-        copy_file(TESTSUITE_REFERENCES_DIR / filename, target_dir / filename)
+    for result_path in result_paths:
+        copy_file(result_path, target_dir / result_path.name)
 
 
 def zip_directory(source_dir: Path, archive_path: Path) -> None:
@@ -126,35 +158,3 @@ def unpack_archive_to_runtime_layout(archive_path: Path, output_dir: Path) -> No
         recursive_fmus=True,
     )
 
-
-def populate_from_fmu_directory(
-    *,
-    model_name: str,
-    model_dir: Path,
-    source_dir: Path,
-    fmu_name: str | None = None,
-) -> None:
-    paths = model_paths(model_dir, model_name)
-    actual_fmu_name = fmu_name or model_name
-    if not source_dir.is_dir():
-        raise FileNotFoundError(f"Source directory not found: {source_dir}")
-    build_fmu_from_directory(source_dir, paths.fmu_path(actual_fmu_name))
-    package_single_fmu_as_ssp(
-        fmu_path=paths.fmu_path(actual_fmu_name),
-        ssp_path=paths.ssp_path,
-        system_name=model_name,
-        component_name=model_name,
-    )
-    unpack_archive_to_runtime_layout(paths.ssp_path, paths.unpacked_ssp_dir)
-
-
-def populate_from_ssp_directory(
-    *,
-    model_name: str,
-    model_dir: Path,
-    source_dir: Path,
-) -> None:
-    paths = model_paths(model_dir, model_name)
-    copy_tree(source_dir, paths.unpacked_ssp_dir)
-    package_ssp_from_directory(paths.unpacked_ssp_dir, paths.ssp_path)
-    unpack_archive_to_runtime_layout(paths.ssp_path, paths.unpacked_ssp_dir)

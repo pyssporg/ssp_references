@@ -1,0 +1,12 @@
+{
+  "model_name": "replaceSubmodel5",
+  "description": "This model is an OMSimulator test-suite SSP for submodel replacement with parameter bindings and mappings attached directly to a component.",
+  "intended_use": "Validating replace-submodel workflows and checking component-scoped SSV/SSM mappings after structural substitution.",
+  "source": {
+    "ssp": [
+      "3rd_party/OMSimulator/testsuite/resources/replaceSubmodel5"
+    ],
+    "fmu": [],
+    "results": []
+  }
+}

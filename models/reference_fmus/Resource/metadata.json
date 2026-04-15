@@ -1,0 +1,12 @@
+{
+  "model_name": "Resource",
+  "description": "This model packages a reference FMU that reads a bundled resource file during initialization.",
+  "intended_use": "Testing FMU resource handling inside packaged SSP workflows.",
+  "source": {
+    "ssp": [],
+    "fmu": [
+      "3rd_party/OMSimulator/testsuite/resources/Resource"
+    ],
+    "results": []
+  }
+}

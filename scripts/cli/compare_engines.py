@@ -17,7 +17,7 @@ from workflow.model import ModelMetaData
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run OMSimulator and ssp4sim for one or more models and compare their results."
+        description="Run OMSimulator and ssp4sim for one or more models, then compare all available result sets."
     )
     parser.add_argument("models", nargs="+", help="Model names under models/*/<model_name>.")
     parser.add_argument("--start-time", type=float, help="Override inferred start time.")
@@ -26,6 +26,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--ssp4sim-app",
         help="Path to the ssp4sim sim_app binary. Defaults to SSP4SIM_SIM_APP or ../ssp4sim/build/public/ssp4sim_app/sim_app.",
+    )
+    parser.add_argument(
+        "--no-references",
+        action="store_true",
+        help="Exclude CSV files in references/ from the comparison set.",
     )
     return parser.parse_args()
 
@@ -49,12 +54,13 @@ def main() -> int:
             stop_time=args.stop_time,
             interval=args.interval,
             ssp4sim_app=args.ssp4sim_app,
+            include_references=not args.no_references,
         )
-        summary = payload["summary"]
+        comparisons = payload["comparisons"]
+        max_abs_error = max((entry["summary"]["max_abs_error"] for entry in comparisons), default=0.0)
         print(
-            f"{model.name}: compared {summary['common_signal_count']} common signals, "
-            f"max_abs_error={summary['max_abs_error']:.6g}, "
-            f"mean_abs_error={summary['mean_abs_error']:.6g}"
+            f"{model.name}: compared {len(payload['result_sets'])} result sets across "
+            f"{len(comparisons)} pairings, max_abs_error={max_abs_error:.6g}"
         )
     return 0
 

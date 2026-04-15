@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import csv
+import itertools
 import json
 import math
-from dataclasses import asdict
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 import numpy as np
@@ -19,6 +20,15 @@ from .simulator import (
     run_omsimulator,
     run_ssp4sim,
 )
+
+REFERENCES_ENGINE = "references"
+
+
+@dataclass(frozen=True)
+class ResultSet:
+    label: str
+    path: Path
+    engine: str
 
 
 def build_time_grid(window: SimulationWindow) -> np.ndarray:
@@ -52,32 +62,73 @@ def resample_series(times: np.ndarray, values: np.ndarray, target_times: np.ndar
     )
 
 
-def compare_csv_results(
-    omsimulator_csv: Path,
-    ssp4sim_csv: Path,
+def discover_simulation_result_sets(model: ModelMetaData) -> list[ResultSet]:
+    result_sets: list[ResultSet] = []
+    root = model.paths.simulation_results_dir
+    if not root.is_dir():
+        return result_sets
+
+    for engine_dir in sorted(path for path in root.iterdir() if path.is_dir() and path.name != "comparisons"):
+        csv_files = sorted(engine_dir.glob("*.csv"))
+        for csv_path in csv_files:
+            label = engine_dir.name if csv_path.name == "result.csv" else f"{engine_dir.name}:{csv_path.stem}"
+            result_sets.append(
+                ResultSet(
+                    label=label,
+                    path=csv_path,
+                    engine=engine_dir.name,
+                )
+            )
+    return result_sets
+
+
+def discover_reference_result_sets(model: ModelMetaData) -> list[ResultSet]:
+    if not model.paths.references_dir.is_dir():
+        return []
+
+    return [
+        ResultSet(
+            label=f"references:{csv_path.stem}",
+            path=csv_path,
+            engine=REFERENCES_ENGINE,
+        )
+        for csv_path in sorted(model.paths.references_dir.glob("*.csv"))
+    ]
+
+
+def discover_result_sets(model: ModelMetaData, *, include_references: bool = True) -> list[ResultSet]:
+    result_sets = discover_simulation_result_sets(model)
+    if include_references:
+        result_sets.extend(discover_reference_result_sets(model))
+    return result_sets
+
+
+def compare_result_sets(
+    left: ResultSet,
+    right: ResultSet,
     *,
     window: SimulationWindow,
 ) -> tuple[dict, list[dict[str, float | str]]]:
-    oms_data = load_numeric_csv(omsimulator_csv, engine=OMSIMULATOR_ENGINE)["columns"]
-    ssp4sim_data = load_numeric_csv(ssp4sim_csv, engine=SSP4SIM_ENGINE)["columns"]
+    left_data = load_numeric_csv(left.path, engine=left.engine)["columns"]
+    right_data = load_numeric_csv(right.path, engine=right.engine)["columns"]
 
-    oms_time = oms_data.get("time")
-    ssp4sim_time = ssp4sim_data.get("time")
-    if oms_time is None or ssp4sim_time is None:
-        raise KeyError("Both engine results must contain a time column")
+    left_time = left_data.get("time")
+    right_time = right_data.get("time")
+    if left_time is None or right_time is None:
+        raise KeyError("Both result sets must contain a time column")
 
     target_times = build_time_grid(window)
     common_signals = sorted(
         signal
-        for signal in oms_data
-        if signal != "time" and signal in ssp4sim_data
+        for signal in left_data
+        if signal != "time" and signal in right_data
     )
 
     metrics: list[dict[str, float | str]] = []
     for signal in common_signals:
-        oms_series = resample_series(oms_time, oms_data[signal], target_times)
-        ssp4sim_series = resample_series(ssp4sim_time, ssp4sim_data[signal], target_times)
-        errors = np.abs(oms_series - ssp4sim_series)
+        left_series = resample_series(left_time, left_data[signal], target_times)
+        right_series = resample_series(right_time, right_data[signal], target_times)
+        errors = np.abs(left_series - right_series)
 
         metrics.append(
             {
@@ -85,14 +136,18 @@ def compare_csv_results(
                 "max_abs_error": float(np.nanmax(errors)),
                 "mean_abs_error": float(np.nanmean(errors)),
                 "rmse": float(math.sqrt(np.nanmean(np.square(errors)))),
-                "omsimulator_min": float(np.nanmin(oms_series)),
-                "omsimulator_max": float(np.nanmax(oms_series)),
-                "ssp4sim_min": float(np.nanmin(ssp4sim_series)),
-                "ssp4sim_max": float(np.nanmax(ssp4sim_series)),
+                "left_label": left.label,
+                "left_min": float(np.nanmin(left_series)),
+                "left_max": float(np.nanmax(left_series)),
+                "right_label": right.label,
+                "right_min": float(np.nanmin(right_series)),
+                "right_max": float(np.nanmax(right_series)),
             }
         )
 
     summary = {
+        "left_label": left.label,
+        "right_label": right.label,
         "time_points": int(len(target_times)),
         "common_signal_count": len(common_signals),
         "max_abs_error": max((row["max_abs_error"] for row in metrics), default=0.0),
@@ -102,6 +157,17 @@ def compare_csv_results(
     return summary, metrics
 
 
+def sanitize_label(label: str) -> str:
+    sanitized = []
+    for character in label:
+        sanitized.append(character if character.isalnum() or character in {"-", "_"} else "_")
+    return "".join(sanitized).strip("_")
+
+
+def comparison_stem(left: ResultSet, right: ResultSet) -> str:
+    return f"{sanitize_label(left.label)}_vs_{sanitize_label(right.label)}"
+
+
 def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
     ensure_parent(path)
     fieldnames = [
@@ -109,15 +175,62 @@ def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
         "max_abs_error",
         "mean_abs_error",
         "rmse",
-        "omsimulator_min",
-        "omsimulator_max",
-        "ssp4sim_min",
-        "ssp4sim_max",
+        "left_label",
+        "left_min",
+        "left_max",
+        "right_label",
+        "right_min",
+        "right_max",
     ]
     with path.open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
+
+
+def compare_available_results(
+    model: ModelMetaData,
+    *,
+    window: SimulationWindow,
+    include_references: bool = True,
+) -> dict:
+    result_sets = discover_result_sets(model, include_references=include_references)
+    if len(result_sets) < 2:
+        raise ValueError(
+            f"Need at least two result sets to compare for {model.name}, found {len(result_sets)}."
+        )
+
+    comparison_dir = model.paths.comparisons_dir
+    comparison_dir.mkdir(parents=True, exist_ok=True)
+
+    comparisons: list[dict] = []
+    for left, right in itertools.combinations(result_sets, 2):
+        stem = comparison_stem(left, right)
+        metrics_csv = comparison_dir / f"{stem}.csv"
+        summary_json = comparison_dir / f"{stem}.json"
+        summary, metrics = compare_result_sets(left, right, window=window)
+        write_metrics_csv(metrics_csv, metrics)
+
+        payload = {
+            "model": model.name,
+            "window": asdict(window),
+            "left": {"label": left.label, "path": str(left.path), "engine": left.engine},
+            "right": {"label": right.label, "path": str(right.path), "engine": right.engine},
+            "summary": summary,
+            "metrics_csv": str(metrics_csv),
+        }
+        summary_json.write_text(json.dumps(payload, indent=2) + "\n")
+        comparisons.append(payload)
+
+    return {
+        "model": model.name,
+        "window": asdict(window),
+        "result_sets": [
+            {"label": result_set.label, "path": str(result_set.path), "engine": result_set.engine}
+            for result_set in result_sets
+        ],
+        "comparisons": comparisons,
+    }
 
 
 def compare_model_results(
@@ -127,6 +240,7 @@ def compare_model_results(
     stop_time: float | None = None,
     interval: float | None = None,
     ssp4sim_app: str | None = None,
+    include_references: bool = True,
 ) -> dict:
     window = infer_window(
         model,
@@ -134,30 +248,10 @@ def compare_model_results(
         stop_time=stop_time,
         interval=interval,
     )
-    omsimulator = run_omsimulator(model, window)
-    ssp4sim = run_ssp4sim(model, window, ssp4sim_app=ssp4sim_app)
-
-    comparison_dir = model.paths.comparisons_dir
-    comparison_dir.mkdir(parents=True, exist_ok=True)
-    metrics_csv = comparison_dir / f"{OMSIMULATOR_ENGINE}_vs_{SSP4SIM_ENGINE}.csv"
-    summary_json = comparison_dir / f"{OMSIMULATOR_ENGINE}_vs_{SSP4SIM_ENGINE}.json"
-
-    summary, metrics = compare_csv_results(
-        omsimulator.result_csv,
-        ssp4sim.result_csv,
+    run_omsimulator(model, window)
+    run_ssp4sim(model, window, ssp4sim_app=ssp4sim_app)
+    return compare_available_results(
+        model,
         window=window,
+        include_references=include_references,
     )
-    write_metrics_csv(metrics_csv, metrics)
-
-    payload = {
-        "model": model.name,
-        "window": asdict(window),
-        "engines": {
-            OMSIMULATOR_ENGINE: str(omsimulator.result_csv),
-            SSP4SIM_ENGINE: str(ssp4sim.result_csv),
-        },
-        "summary": summary,
-        "metrics_csv": str(metrics_csv),
-    }
-    summary_json.write_text(json.dumps(payload, indent=2) + "\n")
-    return payload

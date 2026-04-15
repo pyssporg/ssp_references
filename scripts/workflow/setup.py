@@ -10,6 +10,7 @@ from .archive import (
 )
 from .filesystem import copy_file, copy_source_results, copy_tree
 from .model import ModelMetaData, require_single_source
+from .results import unpack_mat_results_in_directory
 
 
 def acquire(model: ModelMetaData) -> None:
@@ -60,6 +61,7 @@ def copy_results(model: ModelMetaData) -> None:
     if not model.source_results:
         return
     copy_source_results(model.dir, model.source_results)
+    unpack_mat_results_in_directory(model.paths.references_dir)
 
 
 def setup_directory(model_dir: Path) -> None:

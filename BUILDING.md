@@ -45,7 +45,7 @@ OMSimulator resources are not uniform enough for one hardcoded build path. The r
 
 - one shared population chain: `acquire -> build -> package -> unpack`
 - one per-model workflow script: [`models/<model_name>/workflow.py`](/home/eriro/pwa/2_work/ssp_references/models)
-- one shared helper library: [`scripts/workflow_lib.py`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow_lib.py)
+- one shared workflow package: [`scripts/workflow/`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow)
 
 This is intentional traceability back to the repository methodology:
 
@@ -124,7 +124,7 @@ Available helper scripts:
 - [`scripts/unpack_mat_to_csv.py`](/home/eriro/pwa/2_work/ssp_references/scripts/unpack_mat_to_csv.py)
 - [`scripts/unpack_mat_to_csv.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/unpack_mat_to_csv.sh)
 - [`scripts/unpack_model_archive.sh`](/home/eriro/pwa/2_work/ssp_references/scripts/unpack_model_archive.sh)
-- [`scripts/workflow_lib.py`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow_lib.py)
+- [`scripts/workflow/`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow)
 
 Examples:
 

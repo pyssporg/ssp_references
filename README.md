@@ -44,7 +44,7 @@ To keep the actual behavior visible, each model now owns its own workflow script
 
 - one common population chain: `acquire -> build -> package -> unpack`
 - one explicit workflow script per model under [`models`](/home/eriro/pwa/2_work/ssp_references/models)
-- one small shared helper library under [`scripts/workflow_lib.py`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow_lib.py)
+- one modular workflow helper package under [`scripts/workflow/`](/home/eriro/pwa/2_work/ssp_references/scripts/workflow)
 - one optional thin wrapper for batch execution in [`scripts/run_model_workflows.py`](/home/eriro/pwa/2_work/ssp_references/scripts/run_model_workflows.py)
 
 This is the traceable implementation of the repository methodology:

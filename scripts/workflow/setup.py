@@ -1,38 +1,24 @@
-#!/usr/bin/env python3
-
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
-
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-
-from workflow_lib import (
+from .archive import (
     build_fmu_from_directory,
-    copy_file,
-    copy_source_results,
-    copy_tree,
     package_single_fmu_as_ssp,
     package_ssp_from_directory,
-    require_single_source,
     unpack_archive_to_runtime_layout,
-    ModelMetaData
 )
+from .filesystem import copy_file, copy_source_results, copy_tree
+from .model import ModelMetaData, require_single_source
 
 
-
-
-
-def acquire(model : ModelMetaData) -> None:
+def acquire(model: ModelMetaData) -> None:
     for source_path in model.source_ssp + model.source_fmu + model.source_results:
         if not source_path.exists():
             raise FileNotFoundError(f"Source path not found: {source_path}")
 
 
-def build(model : ModelMetaData) -> None:
+def build(model: ModelMetaData) -> None:
     if not model.source_fmu:
         return
     source_path = require_single_source(model.source_fmu, "fmu")
@@ -45,7 +31,7 @@ def build(model : ModelMetaData) -> None:
     raise ValueError(f"Unsupported FMU source: {source_path}")
 
 
-def package(model : ModelMetaData) -> None:
+def package(model: ModelMetaData) -> None:
     if model.source_fmu:
         package_single_fmu_as_ssp(
             fmu_path=model.paths.fmu_path(),
@@ -66,18 +52,17 @@ def package(model : ModelMetaData) -> None:
     raise ValueError(f"Unsupported SSP source: {source_path}")
 
 
-def unpack(model : ModelMetaData) -> None:
+def unpack(model: ModelMetaData) -> None:
     unpack_archive_to_runtime_layout(model.paths.ssp_path, model.paths.unpacked_ssp_dir)
 
 
-def copy_results(model : ModelMetaData) -> None:
+def copy_results(model: ModelMetaData) -> None:
     if not model.source_results:
         return
     copy_source_results(model.dir, model.source_results)
 
 
 def setup_directory(model_dir: Path) -> None:
-
     print(f"Setup of {model_dir} starting")
 
     model = ModelMetaData(model_dir)
@@ -88,4 +73,3 @@ def setup_directory(model_dir: Path) -> None:
     unpack(model)
     copy_results(model)
     print(f"Setup of {model.name} complete")
-

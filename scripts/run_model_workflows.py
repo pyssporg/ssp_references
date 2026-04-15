@@ -7,10 +7,10 @@ import os
 import subprocess
 from pathlib import Path
 
+from workflow.config import REPO_ROOT_ENV_VAR, get_repo_root
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = get_repo_root()
 MODELS_DIR = REPO_ROOT / "models"
-REPO_ROOT_ENV_VAR = "SSP_REFERENCES_REPO_ROOT"
 
 
 def discover_workflows() -> dict[str, Path]:

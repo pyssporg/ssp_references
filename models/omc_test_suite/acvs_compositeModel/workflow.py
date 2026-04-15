@@ -11,7 +11,7 @@ MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(os.environ["SSP_REFERENCES_REPO_ROOT"])
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from workflow_common import setup_directory
+from workflow.setup import setup_directory
 
 
 if __name__ == "__main__":

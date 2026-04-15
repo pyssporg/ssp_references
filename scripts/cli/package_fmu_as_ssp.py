@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
-from workflow.config import MODELS_DIR
+SCRIPT_DIR = Path(__file__).resolve().parent
+SCRIPTS_ROOT = SCRIPT_DIR.parent
+sys.path.insert(0, str(SCRIPTS_ROOT))
+
 from workflow.packaging import infer_fmu_model_name, package_fmu_as_ssp
 
 
@@ -18,7 +22,7 @@ def parse_args() -> argparse.Namespace:
         "-o",
         "--output",
         type=Path,
-        help="Output .ssp path. Defaults to models/reference_fmus/<fmu-stem>/<fmu-stem>.ssp.",
+        help="Output .ssp path. Defaults to <fmu-stem>.ssp next to the input FMU.",
     )
     parser.add_argument(
         "--system-name",
@@ -32,7 +36,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def default_output_path(fmu_path: Path) -> Path:
-    return MODELS_DIR / "reference_fmus" / fmu_path.stem / f"{fmu_path.stem}.ssp"
+    return fmu_path.with_suffix(".ssp")
 
 
 def main() -> int:

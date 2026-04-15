@@ -3,7 +3,12 @@
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+SCRIPTS_ROOT = SCRIPT_DIR.parent
+sys.path.insert(0, str(SCRIPTS_ROOT))
 
 from workflow.results import unpack_mat_to_csv
 

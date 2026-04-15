@@ -1,8 +1,5 @@
-#!/usr/bin/env python3
-
 from __future__ import annotations
 
-import argparse
 import zipfile
 from pathlib import Path
 from xml.etree import ElementTree as ET
@@ -16,32 +13,6 @@ from pyssp_standard.common_content_ssc import (
     TypeString,
 )
 from pyssp_standard.ssd import Component, Connection, Connector, SSD, System
-
-
-REPO_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_MODELS_DIR = REPO_ROOT / "models"
-
-
-def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Package a single FMU into an SSP using pyssp_standard."
-    )
-    parser.add_argument("fmu", type=Path, help="Path to the FMU file to package.")
-    parser.add_argument(
-        "-o",
-        "--output",
-        type=Path,
-        help="Output .ssp path. Defaults to models/reference_fmus/<fmu-stem>/<fmu-stem>.ssp.",
-    )
-    parser.add_argument(
-        "--system-name",
-        help="Override the SSP system name. Defaults to the FMU model name.",
-    )
-    parser.add_argument(
-        "--component-name",
-        help="Override the component name inside the SSP. Defaults to the FMU model name.",
-    )
-    return parser.parse_args()
 
 
 def clone_type(type_):
@@ -181,7 +152,12 @@ def build_ssd(ssd: SSD, component_name: str, resource_name: str, fmu_path: Path)
     ssd.system = system
 
 
-def package_fmu(fmu_path: Path, output_path: Path, system_name: str, component_name: str) -> None:
+def package_fmu_as_ssp(
+    fmu_path: Path,
+    output_path: Path,
+    system_name: str,
+    component_name: str,
+) -> None:
     output_path.parent.mkdir(parents=True, exist_ok=True)
     if output_path.exists():
         output_path.unlink()
@@ -199,29 +175,6 @@ def package_fmu(fmu_path: Path, output_path: Path, system_name: str, component_n
             )
 
 
-def main() -> int:
-    args = parse_args()
-    fmu_path = args.fmu.resolve()
-    if not fmu_path.is_file():
-        raise FileNotFoundError(f"FMU not found: {fmu_path}")
-    if fmu_path.suffix.lower() != ".fmu":
-        raise ValueError(f"Expected an .fmu file, got: {fmu_path.name}")
-
+def infer_fmu_model_name(fmu_path: Path) -> str:
     with FMU(fmu_path, mode="r") as fmu:
-        model_name = fmu.model_description.model_name or fmu_path.stem
-
-    output_path = (
-        args.output.resolve()
-        if args.output
-        else DEFAULT_MODELS_DIR / fmu_path.stem / f"{fmu_path.stem}.ssp"
-    )
-    system_name = args.system_name or model_name
-    component_name = args.component_name or model_name
-
-    package_fmu(fmu_path, output_path, system_name, component_name)
-    print(f"Created SSP: {output_path}")
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+        return fmu.model_description.model_name or fmu_path.stem

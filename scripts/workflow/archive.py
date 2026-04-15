@@ -2,10 +2,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from package_fmu_as_ssp import package_fmu
-from unpack_model_archive import unpack_archive
-
 from .filesystem import remove_path, zip_directory
+from .packaging import package_fmu_as_ssp
+from .unpack import unpack_archive
 
 
 def build_fmu_from_directory(source_dir: Path, fmu_path: Path) -> None:
@@ -22,7 +21,7 @@ def package_single_fmu_as_ssp(
     system_name: str,
     component_name: str,
 ) -> None:
-    package_fmu(
+    package_fmu_as_ssp(
         fmu_path=fmu_path,
         output_path=ssp_path,
         system_name=system_name,

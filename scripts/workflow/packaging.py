@@ -14,6 +14,8 @@ from pyssp_standard.common_content_ssc import (
 )
 from pyssp_standard.ssd import Component, Connection, Connector, SSD, System
 
+FIXED_GENERATION_DATE_AND_TIME = "1970-01-01T00:00:00Z"
+
 
 def clone_type(type_):
     if isinstance(type_, TypeReal):
@@ -167,6 +169,8 @@ def package_fmu_as_ssp(
         with ssp.system_structure as ssd:
             ssd.name = system_name
             ssd.version = "1.0"
+            # Keep generated SSP metadata stable across repeated workflow runs.
+            ssd.top_level_metadata.generationDateAndTime = FIXED_GENERATION_DATE_AND_TIME
             build_ssd(
                 ssd=ssd,
                 component_name=component_name,

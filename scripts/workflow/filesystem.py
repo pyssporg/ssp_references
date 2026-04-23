@@ -36,14 +36,6 @@ def copy_file(source: Path, target: Path) -> None:
     shutil.copy2(source, target)
 
 
-def copy_source_results(model_dir: Path, result_paths: list[Path]) -> None:
-    target_dir = model_dir / "references"
-    remove_path(target_dir)
-    target_dir.mkdir(parents=True, exist_ok=True)
-    for result_path in result_paths:
-        copy_file(result_path, target_dir / result_path.name)
-
-
 def zip_directory(source_dir: Path, archive_path: Path) -> None:
     if not source_dir.is_dir():
         raise FileNotFoundError(f"Directory not found: {source_dir}")

@@ -10,7 +10,7 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 SCRIPTS_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(SCRIPTS_ROOT))
 
-from workflow.simulator import simulate_with_omsimulator
+from workflow.simulation import simulate_with_omsimulator
 
 
 def parse_args() -> argparse.Namespace:

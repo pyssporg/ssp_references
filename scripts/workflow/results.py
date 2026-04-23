@@ -158,16 +158,19 @@ def unpack_mat_to_csv(
     return resolved_output_path
 
 
-def unpack_mat_results_in_directory(
-    directory: Path,
-    include_description_row: bool = False,
-) -> list[Path]:
-    output_paths: list[Path] = []
-    for mat_path in sorted(directory.glob("*.mat")):
-        output_paths.append(
-            unpack_mat_to_csv(
-                mat_path,
-                include_description_row=include_description_row,
-            )
-        )
-    return output_paths
+def materialize_reference_csvs(result_paths: list[Path], output_dir: Path) -> list[Path]:
+    csv_paths: list[Path] = []
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    for result_path in sorted(result_paths):
+        if not result_path.is_file():
+            raise FileNotFoundError(f"Reference result not found: {result_path}")
+        if result_path.suffix == ".csv":
+            csv_paths.append(result_path)
+            continue
+        if result_path.suffix == ".mat":
+            csv_paths.append(unpack_mat_to_csv(result_path, output_dir / f"{result_path.stem}.csv"))
+            continue
+        raise ValueError(f"Unsupported reference result format: {result_path}")
+
+    return csv_paths

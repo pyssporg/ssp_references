@@ -1,5 +1,9 @@
 
 build/
+models/ssp/*/*.ssp
+models/ssp/*/simulation_results/
+models/ssp/*/fmus/
+models/ssp/*/results/
 
 venv/
 

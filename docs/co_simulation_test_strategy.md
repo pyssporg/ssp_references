@@ -26,7 +26,8 @@ Every test level should therefore be organized around three steps:
 
 Result comparison should use a small set of trusted oracles:
 
-- Reference trajectories checked into the repository under `references/`.
+- Reference trajectories declared in model metadata and materialized into the
+  temporary build area when needed.
 - A trusted external engine such as OMSimulator.
 - Previously accepted engine results for regression detection.
 
@@ -210,9 +211,12 @@ This repository already supports the core workflow needed for the strategy:
 
 - SSP fixtures live under `models/ssp/`.
 - Reusable FMU building blocks live under `models/fmu/`.
-- Reference trajectories live under each model's `references/`.
-- Simulation and comparison flow is driven by `scripts/cli/compare_engines.py`.
-- Pairwise metric generation is implemented in `scripts/workflow/compare.py`.
+- Generated SSPs, converted reference CSVs, and simulation outputs live under
+  `build/models/ssp/<model_name>/`.
+- Simulation and comparison flow is driven by per-model `simulate.py` scripts
+  plus `scripts/run_model_simulations.py`.
+- Pairwise metric generation is implemented in
+  `scripts/workflow/comparison.py`.
 
 That means the immediate next step is not new infrastructure. It is selecting a
 small required model set, including deterministic signal-propagation fixtures,

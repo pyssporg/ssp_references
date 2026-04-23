@@ -9,7 +9,7 @@ from pathlib import Path
 
 
 MODEL_DIR = Path(__file__).resolve().parent
-REPO_ROOT = Path(os.environ["SSP_REFERENCES_REPO_ROOT"])
+REPO_ROOT = Path(os.environ.get("SSP_REFERENCES_REPO_ROOT", Path(__file__).resolve().parents[3]))
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from pyssp_standard.common_content_ssc import TypeReal
@@ -19,11 +19,13 @@ from workflow.packaging import (
     materialize_fmu_archive,
     package_ssp,
     set_component_parameter_values,
+    unpack_archive_to_runtime_layout,
 )
-from workflow.setup import setup_directory
+from workflow.model import ModelMetaData
 
 
-def build_signal_step_add(model) -> None:
+def main() -> int:
+    model = ModelMetaData(MODEL_DIR)
     with ExitStack() as stack:
         step_a_path = stack.enter_context(
             materialize_fmu_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), "StepA.fmu")
@@ -75,7 +77,10 @@ def build_signal_step_add(model) -> None:
                 "Add.fmu": add_path,
             },
         )
+    unpack_archive_to_runtime_layout(model.paths.ssp_path, model.paths.unpacked_ssp_dir)
+    print(f"Built {model.name}")
+    return 0
 
 
 if __name__ == "__main__":
-    setup_directory(MODEL_DIR, ssp_builder=build_signal_step_add)
+    raise SystemExit(main())

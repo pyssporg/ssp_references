@@ -1,0 +1,10 @@
+{
+  "model_name": "signal_sine_gain_add",
+  "description": "Deterministic signal-propagation fixture combining a Sine source, a Gain block, and a Step offset through an Add block.",
+  "intended_use": "Validating mixed-source propagation, chained algebraic transforms, and additive signal combination.",
+  "source": {
+    "ssp": [],
+    "fmu": [],
+    "results": []
+  }
+}

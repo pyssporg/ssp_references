@@ -19,6 +19,7 @@ from lxml import etree as LET
 from lxml.etree import QName
 
 FIXED_GENERATION_DATE_AND_TIME = "1970-01-01T00:00:00Z"
+RUNTIME_PRUNE_DIRS = {"documentation", "sources"}
 
 
 def clone_type(type_):
@@ -131,6 +132,8 @@ def build_ssd(ssd: SSD, component_name: str, resource_name: str, fmu_path: Path)
     component = Component()
     component.name = component_name
     component.source = f"resources/{resource_name}"
+    component.component_type = "application/x-fmu-sharedlibrary"
+    component.implementation = "ModelExchange"
 
     add_system_mapping(
         system,
@@ -310,6 +313,53 @@ def package_ssp(
                 experiment.start_time = start_time
                 experiment.stop_time = stop_time
                 ssd.default_experiment = experiment
+
+
+def package_directory_as_archive(source_dir: Path, archive_path: Path) -> None:
+    archive_path.parent.mkdir(parents=True, exist_ok=True)
+    if archive_path.exists():
+        archive_path.unlink()
+    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for path in sorted(source_dir.rglob("*")):
+            if path.is_dir():
+                continue
+            archive.write(path, path.relative_to(source_dir).as_posix())
+
+
+def prune_runtime_irrelevant_dirs(root: Path) -> None:
+    for path in sorted(root.rglob("*")):
+        if path.is_dir() and path.name in RUNTIME_PRUNE_DIRS:
+            for child in sorted(path.rglob("*"), reverse=True):
+                if child.is_file():
+                    child.unlink()
+                elif child.is_dir():
+                    child.rmdir()
+            path.rmdir()
+
+
+def unpack_archive_to_runtime_layout(archive_path: Path, output_dir: Path) -> None:
+    if output_dir.exists():
+        for child in sorted(output_dir.rglob("*"), reverse=True):
+            if child.is_file():
+                child.unlink()
+            elif child.is_dir():
+                child.rmdir()
+        output_dir.rmdir()
+
+    output_dir.mkdir(parents=True, exist_ok=False)
+    with zipfile.ZipFile(archive_path, "r") as archive:
+        archive.extractall(output_dir)
+
+    for fmu_archive in sorted(output_dir.rglob("*.fmu")):
+        if not fmu_archive.is_file():
+            continue
+        temp_dir = fmu_archive.parent / f"{fmu_archive.name}.tmp"
+        temp_dir.mkdir(parents=True, exist_ok=False)
+        with zipfile.ZipFile(fmu_archive, "r") as archive:
+            archive.extractall(temp_dir)
+        prune_runtime_irrelevant_dirs(temp_dir)
+        fmu_archive.unlink()
+        temp_dir.rename(fmu_archive.with_suffix(""))
 
 
 def package_fmu_as_ssp(

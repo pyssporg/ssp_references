@@ -1,0 +1,10 @@
+{
+  "model_name": "signal_delay_detector",
+  "description": "Deterministic signal-propagation fixture comparing a direct Step path with an algebraic chain.",
+  "intended_use": "Detecting one-step lag, ordering issues, and unexpected delay in signal propagation.",
+  "source": {
+    "ssp": [],
+    "fmu": [],
+    "results": []
+  }
+}

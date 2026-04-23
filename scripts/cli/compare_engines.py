@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -10,57 +12,49 @@ SCRIPT_DIR = Path(__file__).resolve().parent
 SCRIPTS_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(SCRIPTS_ROOT))
 
-from workflow.compare import compare_model_results
-from workflow.config import MODELS_DIR
-from workflow.model import ModelMetaData
+from workflow.config import MODELS_DIR, REPO_ROOT_ENV_VAR, get_repo_root
+
+REPO_ROOT = get_repo_root()
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run OMSimulator and ssp4sim for one or more models, then compare all available result sets."
+        description="Run one or more per-model simulate.py scripts."
     )
     parser.add_argument("models", nargs="+", help="Model names under models/*/<model_name>.")
-    parser.add_argument("--start-time", type=float, help="Override inferred start time.")
-    parser.add_argument("--stop-time", type=float, help="Override inferred stop time.")
-    parser.add_argument("--interval", type=float, help="Override inferred recording interval.")
-    parser.add_argument(
-        "--ssp4sim-app",
-        help="Path to the ssp4sim sim_app binary. Defaults to SSP4SIM_SIM_APP or ../ssp4sim/build/public/ssp4sim_app/sim_app.",
-    )
-    parser.add_argument(
-        "--no-references",
-        action="store_true",
-        help="Exclude CSV files in references/ from the comparison set.",
-    )
     return parser.parse_args()
 
 
-def find_model_dir(model_name: str) -> Path:
+def find_model_script(model_name: str) -> Path:
     matches = sorted(MODELS_DIR.glob(f"*/{model_name}"))
     if not matches:
         raise FileNotFoundError(f"Model directory not found for {model_name}")
     if len(matches) > 1:
         raise RuntimeError(f"Ambiguous model name {model_name}: {matches}")
-    return matches[0]
+    script_path = matches[0] / "simulate.py"
+    if not script_path.is_file():
+        raise FileNotFoundError(f"simulate.py not found for {model_name}")
+    return script_path
+
+
+def resolve_python_executable() -> str:
+    venv_python = REPO_ROOT / "venv" / "bin" / "python"
+    if venv_python.is_file():
+        return str(venv_python)
+    return sys.executable or "python3"
 
 
 def main() -> int:
     args = parse_args()
+    env = os.environ.copy()
+    env[REPO_ROOT_ENV_VAR] = str(REPO_ROOT)
+    python_executable = resolve_python_executable()
     for model_name in args.models:
-        model = ModelMetaData(find_model_dir(model_name))
-        payload = compare_model_results(
-            model,
-            start_time=args.start_time,
-            stop_time=args.stop_time,
-            interval=args.interval,
-            ssp4sim_app=args.ssp4sim_app,
-            include_references=not args.no_references,
-        )
-        comparisons = payload["comparisons"]
-        max_abs_error = max((entry["summary"]["max_abs_error"] for entry in comparisons), default=0.0)
-        print(
-            f"{model.name}: compared {len(payload['result_sets'])} result sets across "
-            f"{len(comparisons)} pairings, max_abs_error={max_abs_error:.6g}"
+        subprocess.run(
+            [python_executable, str(find_model_script(model_name))],
+            check=True,
+            cwd=REPO_ROOT,
+            env=env,
         )
     return 0
 

@@ -13,20 +13,28 @@ class ModelPaths:
     model_dir: Path
 
     @property
-    def ssp_path(self) -> Path:
-        return self.model_dir / f"{self.name}.ssp"
-
-    @property
-    def unpacked_ssp_dir(self) -> Path:
+    def source_ssp_dir(self) -> Path:
         return self.model_dir / "ssp"
 
     @property
+    def build_dir(self) -> Path:
+        return REPO_ROOT / "build" / "models" / "ssp" / self.name
+
+    @property
+    def ssp_path(self) -> Path:
+        return self.build_dir / f"{self.name}.ssp"
+
+    @property
+    def unpacked_ssp_dir(self) -> Path:
+        return self.build_dir / "ssp"
+
+    @property
     def fmus_dir(self) -> Path:
-        return self.model_dir / "fmus"
+        return self.build_dir / "fmus"
 
     @property
     def references_dir(self) -> Path:
-        return self.model_dir / "references"
+        return self.build_dir / "references"
 
     @property
     def shared_fmu_models_dir(self) -> Path:
@@ -34,7 +42,7 @@ class ModelPaths:
 
     @property
     def simulation_results_dir(self) -> Path:
-        return self.model_dir / "simulation_results"
+        return self.build_dir / "simulation_results"
 
     @property
     def comparisons_dir(self) -> Path:

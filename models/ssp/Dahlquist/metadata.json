@@ -4,9 +4,7 @@
   "intended_use": "Simple solver and integration benchmarking for exponential decay dynamics.",
   "source": {
     "ssp": [],
-    "fmu": [
-      "3rd_party/OMSimulator/testsuite/resources/Dahlquist"
-    ],
+    "fmu": [],
     "results": [
       "3rd_party/OMSimulator/testsuite/references/Dahlquist-cs.mat",
       "3rd_party/OMSimulator/testsuite/references/Dahlquist-me.mat"

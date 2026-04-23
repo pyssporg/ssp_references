@@ -14,13 +14,16 @@ part of the repo.
 ```text
 .
 ├── models/
+│   ├── fmu/
+│   │   └── <fmu_name>/
+│   │       ├── fmu/
+│   │       └── references/
 │   └── ssp/
 │       └── <model_name>/
-│           ├── workflow.py
+│           ├── build.py
 │           ├── metadata.json
 │           ├── <model_name>.ssp
 │           ├── ssp/
-│           ├── fmus/              # only when the model starts from FMU sources
 │           ├── references/        # copied reference trajectories when available
 │           └── simulation_results/
 ├── scripts/
@@ -36,12 +39,16 @@ part of the repo.
 
 ## What Lives Where
 
-- `models/ssp/` is the main output of the repo. Each model directory is both a
+- `models/fmu/` holds reusable FMU fixtures that can be shared by multiple SSP
+  models.
+- `models/ssp/` is the main SSP fixture area. Each model directory is both a
   reusable fixture and the place where model-specific artifacts are kept.
-- `workflow.py` is the per-model executable entrypoint discovered by
-  `scripts/run_model_workflows.py`.
+- `build.py` is the per-model executable entrypoint discovered by
+  `scripts/run_model_workflows.py`. It can either use the shared metadata-based
+  setup flow or build the SSP programmatically with `pyssp_standard`.
 - `metadata.json` declares the upstream SSP, FMU, and reference-result sources
-  used by the shared workflow code.
+  still needed by the shared workflow code. When `build.py` assembles the SSP
+  itself, metadata is typically only needed for descriptive fields and results.
 - `scripts/workflow/` contains the common implementation for setup, packaging,
   unpacking, simulation, and comparison.
 - `scripts/cli/` contains small task-focused helpers for comparing engines,
@@ -55,13 +62,14 @@ part of the repo.
 Each model directory under `models/ssp/<model_name>/` follows the same basic
 contract:
 
-- `workflow.py` calls the shared setup flow for that model.
-- `metadata.json` points at the upstream source artifacts.
+- `build.py` is the source of truth for how that SSP gets assembled.
+- `metadata.json` provides model metadata plus any upstream files that still
+  need to be validated or copied by the shared setup code.
 - Running the workflow prepares the local fixture by validating sources,
-  building or copying FMUs when needed, packaging the `.ssp`, unpacking it into
-  `ssp/`, and copying reference trajectories into `references/`.
+  packaging the `.ssp`, unpacking it into `ssp/`, and copying reference
+  trajectories into `references/`.
 
-The workflow runner discovers models from `models/*/*/workflow.py`:
+The workflow runner discovers models from `models/*/*/build.py`:
 
 ```bash
 python3 scripts/run_model_workflows.py list
@@ -108,7 +116,9 @@ python3 scripts/cli/compare_engines.py embrace \
 ```
 
 Source entries are repository-relative. The current setup flow expects exactly
-one primary `ssp` or `fmu` source and zero or more `results` files.
+one primary `ssp` or `fmu` source and zero or more `results` files when using
+the metadata-driven path. Models can also leave `ssp` and `fmu` empty and let
+`build.py` assemble the SSP from shared fixtures in `models/fmu/`.
 
 ## Environment Notes
 

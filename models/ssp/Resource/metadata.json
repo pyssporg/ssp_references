@@ -4,9 +4,7 @@
   "intended_use": "Testing FMU resource handling inside packaged SSP workflows.",
   "source": {
     "ssp": [],
-    "fmu": [
-      "3rd_party/OMSimulator/testsuite/resources/Resource"
-    ],
+    "fmu": [],
     "results": []
   }
 }

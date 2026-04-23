@@ -3,9 +3,7 @@
   "description": "This model is an OMSimulator aircraft vehicle demonstrator SSP with boundary-condition inputs supplied through CONOPS.csv.",
   "intended_use": "Testing a larger scenario-driven system model with multiple FMUs, explicit connections added at runtime, and realistic operating-condition inputs.",
   "source": {
-    "ssp": [
-      "3rd_party/OMSimulator/testsuite/resources/embrace"
-    ],
+    "ssp": [],
     "fmu": [],
     "results": []
   }

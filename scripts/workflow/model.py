@@ -29,6 +29,10 @@ class ModelPaths:
         return self.model_dir / "references"
 
     @property
+    def shared_fmu_models_dir(self) -> Path:
+        return REPO_ROOT / "models" / "fmu"
+
+    @property
     def simulation_results_dir(self) -> Path:
         return self.model_dir / "simulation_results"
 
@@ -42,6 +46,10 @@ class ModelPaths:
     def fmu_path(self, fmu_name: str | None = None) -> Path:
         actual_name = fmu_name or self.name
         return self.fmus_dir / f"{actual_name}.fmu"
+
+    def shared_fmu_dir(self, fmu_name: str | None = None) -> Path:
+        actual_name = fmu_name or self.name
+        return self.shared_fmu_models_dir / actual_name / "fmu"
 
 
 class ModelMetaData:

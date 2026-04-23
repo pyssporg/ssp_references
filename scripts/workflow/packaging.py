@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import tempfile
 import zipfile
+from contextlib import contextmanager
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -67,7 +69,6 @@ def clone_variable_type(variable, enumeration_type_names: dict[str, str]):
         if enum_name:
             return TypeEnumeration(enum_name)
     return clone_type(type_)
-
 
 def add_system_mapping(
     system: System,
@@ -152,6 +153,117 @@ def build_ssd(ssd: SSD, component_name: str, resource_name: str, fmu_path: Path)
 
     system.elements.append(component)
     ssd.system = system
+
+
+def build_component(
+    component_name: str,
+    resource_name: str,
+    fmu_path: Path,
+    *,
+    component_type: str | None = None,
+    implementation: str | None = None,
+) -> Component:
+    with FMU(fmu_path, mode="r") as fmu:
+        model_description = fmu.model_description
+    enumeration_type_names = read_enumeration_type_names(fmu_path)
+
+    component = Component()
+    component.name = component_name
+    component.source = f"resources/{resource_name}"
+    component.component_type = component_type
+    component.implementation = implementation
+
+    for connector_kind, variables in (
+        ("parameter", model_description.parameters),
+        ("input", model_description.inputs),
+        ("output", model_description.outputs),
+    ):
+        for variable in variables:
+            component.connectors.append(
+                Connector(
+                    name=variable.name,
+                    kind=connector_kind,
+                    type_=clone_variable_type(variable, enumeration_type_names),
+                )
+            )
+
+    return component
+
+
+def add_component_to_system(
+    system: System,
+    component_name: str,
+    resource_name: str,
+    fmu_path: Path,
+    *,
+    component_type: str | None = None,
+    implementation: str | None = None,
+) -> Component:
+    component = build_component(
+        component_name,
+        resource_name,
+        fmu_path,
+        component_type=component_type,
+        implementation=implementation,
+    )
+    system.elements.append(component)
+    return component
+
+
+@contextmanager
+def materialize_fmu_archive(source_path: Path, archive_name: str):
+    if source_path.is_file():
+        yield source_path
+        return
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        archive_path = Path(temp_dir) / archive_name
+        with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            for path in sorted(source_path.rglob("*")):
+                if path.is_dir():
+                    continue
+                archive.write(path, arcname=path.relative_to(source_path))
+        yield archive_path
+
+
+def package_ssp(
+    output_path: Path,
+    system_name: str,
+    build_system,
+    *,
+    resource_files: dict[str, Path] | None = None,
+    resource_directories: dict[str, Path] | None = None,
+) -> None:
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    if output_path.exists():
+        output_path.unlink()
+
+    resource_files = resource_files or {}
+    resource_directories = resource_directories or {}
+
+    with SSP(output_path, mode="w") as ssp:
+        for resource_name, resource_path in resource_files.items():
+            resource_target = Path("resources") / resource_name
+            ssp.add_file(resource_path, str(resource_target.parent))
+            if resource_path.name != resource_name:
+                ssp.get_file_temp_path(resource_target.parent / resource_path.name).replace(
+                    ssp.get_file_temp_path(resource_target)
+                )
+
+        for resource_dir, source_dir in resource_directories.items():
+            for path in sorted(source_dir.rglob("*")):
+                if path.is_dir():
+                    continue
+                archive_parent = Path("resources") / resource_dir / path.relative_to(source_dir).parent
+                ssp.add_file(path, str(archive_parent))
+
+        with ssp.system_structure as ssd:
+            ssd.name = system_name
+            ssd.version = "1.0"
+            ssd.top_level_metadata.generationDateAndTime = FIXED_GENERATION_DATE_AND_TIME
+            system = System(name=system_name)
+            build_system(system)
+            ssd.system = system
 
 
 def package_fmu_as_ssp(

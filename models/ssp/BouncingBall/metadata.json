@@ -4,9 +4,7 @@
   "intended_use": "Simple FMI/SSP validation of hybrid dynamics with events and impacts.",
   "source": {
     "ssp": [],
-    "fmu": [
-      "3rd_party/OMSimulator/testsuite/resources/BouncingBall"
-    ],
+    "fmu": [],
     "results": [
       "3rd_party/OMSimulator/testsuite/references/BouncingBall-cs.mat",
       "3rd_party/OMSimulator/testsuite/references/BouncingBall-me.mat"

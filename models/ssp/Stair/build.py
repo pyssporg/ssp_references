@@ -11,8 +11,8 @@ MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(os.environ["SSP_REFERENCES_REPO_ROOT"])
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from workflow.setup import setup_directory
+from workflow.setup import build_ssp_from_shared_fmu, setup_directory
 
 
 if __name__ == "__main__":
-    setup_directory(MODEL_DIR)
+    setup_directory(MODEL_DIR, ssp_builder=build_ssp_from_shared_fmu)

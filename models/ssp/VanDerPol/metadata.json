@@ -4,9 +4,7 @@
   "intended_use": "Validating nonlinear continuous-time simulation behavior with a standard oscillator benchmark.",
   "source": {
     "ssp": [],
-    "fmu": [
-      "3rd_party/OMSimulator/testsuite/resources/VanDerPol"
-    ],
+    "fmu": [],
     "results": [
       "3rd_party/OMSimulator/testsuite/references/VanDerPol-cs.mat",
       "3rd_party/OMSimulator/testsuite/references/VanDerPol-me.mat"

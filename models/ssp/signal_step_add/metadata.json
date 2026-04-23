@@ -1,0 +1,10 @@
+{
+  "model_name": "signal_step_add",
+  "description": "Deterministic signal-propagation fixture with two Step sources feeding an Add block.",
+  "intended_use": "Validating fan-in behavior, connector mapping, and exact algebraic summation.",
+  "source": {
+    "ssp": [],
+    "fmu": [],
+    "results": []
+  }
+}

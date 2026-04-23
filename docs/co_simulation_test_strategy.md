@@ -1,0 +1,220 @@
+# Co-Simulation Engine Test Strategy
+
+## Purpose
+
+This repository should validate a co-simulation engine by running prepared SSP
+models, collecting simulation results, and comparing those results against
+trusted baselines.
+
+The strategy is intentionally high level. It focuses on confidence in simulation
+behavior, not on implementation details inside the engine.
+
+## Core Principle
+
+The main test question is:
+
+"When the engine simulates a known SSP model, does it produce the expected
+result trajectory?"
+
+Every test level should therefore be organized around three steps:
+
+1. Prepare a stable SSP model fixture.
+2. Simulate the model with one or more engines.
+3. Compare the produced result signals against a trusted reference.
+
+## Primary Oracles
+
+Result comparison should use a small set of trusted oracles:
+
+- Reference trajectories checked into the repository under `references/`.
+- A trusted external engine such as OMSimulator.
+- Previously accepted engine results for regression detection.
+
+These oracles serve different purposes:
+
+- Reference trajectories validate model behavior against known expected output.
+- Cross-engine comparison validates compatibility with established tooling.
+- Regression baselines detect unintended changes between engine versions.
+
+## Test Levels
+
+### 1. Smoke Tests
+
+Smoke tests answer: "Can the engine simulate the model at all?"
+
+They should:
+
+- Run a small representative subset of SSP models.
+- Confirm the simulation completes without crashes or invalid outputs.
+- Check that a result file is produced with the expected time column and signal
+  set.
+
+This level is meant for fast feedback in normal development.
+
+### 2. Behavioral Comparison Tests
+
+Behavioral comparison tests answer: "Does the engine produce the right system
+response?"
+
+They should:
+
+- Simulate each selected model with the engine under test.
+- Simulate the same model with a trusted comparison engine where possible.
+- Resample onto a common time grid.
+- Compare shared signals using metrics such as max absolute error, mean absolute
+  error, and RMSE.
+
+This should be the main quality gate for the engine.
+
+### 3. Regression Tests
+
+Regression tests answer: "Did engine behavior change unexpectedly?"
+
+They should:
+
+- Preserve accepted comparison outputs for important models.
+- Re-run the same simulations after engine changes.
+- Flag unexpected metric deltas or newly missing signals.
+
+This level protects against silent degradation after solver, scheduler, or FMI
+integration changes.
+
+## Model Portfolio
+
+The test portfolio should cover different kinds of co-simulation risk.
+
+### Simple Reference Models
+
+Examples: `BouncingBall`, `VanDerPol`, `Dahlquist`, `Stair`, `Resource`.
+
+These models are useful for:
+
+- Fast execution.
+- Isolated validation of time integration and event handling.
+- Detecting obvious numerical or FMI interface regressions.
+
+### Deterministic Signal-Propagation Building Blocks
+
+Examples: `Modelica.Blocks.Math.Add`, `Modelica.Blocks.Math.Gain`,
+`Modelica.Blocks.Math.Product`, `Modelica.Blocks.Sources.Step`,
+`Modelica.Blocks.Sources.Sine`.
+
+These FMUs should be used as small composable building blocks for targeted
+signal-propagation tests.
+
+They are especially valuable because many of them are algebraic or otherwise
+highly deterministic from one communication step to the next. That makes them
+well suited for checking whether the engine propagates values correctly across
+connections and across step boundaries.
+
+These building blocks are useful for:
+
+- Verifying that connected outputs appear at downstream inputs when expected.
+- Detecting ordering and feedthrough errors in coupled execution.
+- Checking that algebraic transformations preserve the expected numerical
+  relationship between signals.
+- Validating that communication-step handling does not introduce unexpected lag,
+  drift, or oscillation.
+- Building minimal SSPs that isolate one propagation behavior at a time.
+
+### Composite SSP Models
+
+Examples: `dcmotor`, `embrace`.
+
+These models are useful for:
+
+- Validating multi-component coupling behavior.
+- Checking signal routing across components.
+- Exercising realistic SSP packaging and resource handling.
+- Exposing scheduling and data-exchange issues not visible in single-FMU cases.
+
+## Signal-Propagation Focus
+
+The strategy should explicitly include a class of tests whose main purpose is
+not complex physical behavior, but signal propagation through a coupled system.
+
+These tests should be assembled from deterministic FMU building blocks so that
+the expected result is simple to reason about and easy to compare.
+
+Typical propagation scenarios include:
+
+- Pure pass-through or identity-like behavior.
+- Algebraic combinations such as addition, multiplication, and gain scaling.
+- Source-to-transform-to-output chains across multiple components.
+- Step changes and sinusoidal inputs propagated through deterministic blocks.
+- Small networks where a one-step delay, wrong evaluation order, or incorrect
+  connector mapping becomes immediately visible in the result traces.
+
+This class of tests is important because it isolates engine orchestration
+behavior. When such a test fails, the likely problem is in scheduling, data
+exchange, or connector handling rather than in the physical model itself.
+
+## Comparison Policy
+
+Signal comparison should be pragmatic rather than binary.
+
+The strategy should compare:
+
+- Signal presence.
+- Time coverage.
+- Magnitude agreement.
+- Trend agreement across the simulation window.
+
+Acceptance should be based on per-signal tolerances, not bitwise equality.
+Different model classes will need different tolerance levels.
+
+Recommended rule set:
+
+- Use tighter tolerances for simple reference models.
+- Use very tight tolerances for deterministic signal-propagation models built
+  from algebraic Modelica FMUs.
+- Use broader tolerances for larger composite models.
+- Treat missing signals, NaNs, unstable spikes, or early termination as test
+  failures even when aggregate metrics look acceptable.
+
+For deterministic propagation tests, comparison should emphasize exact signal
+relationships in addition to aggregate error metrics. For example, the engine
+should preserve expected scaling, summation, and timing behavior across each
+communication step, not merely produce a roughly similar overall trajectory.
+
+## Execution Cadence
+
+The suite should run at different depths depending on purpose.
+
+- Per change: smoke tests plus a small comparison subset.
+- Before merge: broader comparison across representative simple and composite
+  models.
+- Periodically or before release: full regression sweep across all maintained
+  models and supported configurations.
+
+## Expected Outputs
+
+Each test run should leave behind artifacts that are easy to inspect:
+
+- Raw simulation result files per engine.
+- Pairwise comparison CSV files.
+- Summary JSON files with error metrics and test window metadata.
+
+This makes failures diagnosable and keeps the strategy useful for both automated
+gates and manual investigation.
+
+## Out Of Scope
+
+This strategy does not try to prove absolute physical correctness of every
+model. It is meant to validate engine behavior relative to stable fixtures and
+trusted baselines.
+
+## Repository Fit
+
+This repository already supports the core workflow needed for the strategy:
+
+- SSP fixtures live under `models/ssp/`.
+- Reusable FMU building blocks live under `models/fmu/`.
+- Reference trajectories live under each model's `references/`.
+- Simulation and comparison flow is driven by `scripts/cli/compare_engines.py`.
+- Pairwise metric generation is implemented in `scripts/workflow/compare.py`.
+
+That means the immediate next step is not new infrastructure. It is selecting a
+small required model set, including deterministic signal-propagation fixtures,
+defining tolerances per model or signal group, and turning comparison outcomes
+into clear pass/fail criteria.

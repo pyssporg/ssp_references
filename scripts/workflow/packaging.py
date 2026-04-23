@@ -14,7 +14,9 @@ from pyssp_standard.common_content_ssc import (
     TypeReal,
     TypeString,
 )
-from pyssp_standard.ssd import Component, Connection, Connector, SSD, System
+from pyssp_standard.ssd import Component, Connection, Connector, DefaultExperiment, SSD, System
+from lxml import etree as LET
+from lxml.etree import QName
 
 FIXED_GENERATION_DATE_AND_TIME = "1970-01-01T00:00:00Z"
 
@@ -69,6 +71,7 @@ def clone_variable_type(variable, enumeration_type_names: dict[str, str]):
         if enum_name:
             return TypeEnumeration(enum_name)
     return clone_type(type_)
+
 
 def add_system_mapping(
     system: System,
@@ -160,8 +163,8 @@ def build_component(
     resource_name: str,
     fmu_path: Path,
     *,
-    component_type: str | None = None,
-    implementation: str | None = None,
+    component_type: str | None = "application/x-fmu-sharedlibrary",
+    implementation: str | None = "ModelExchange",
 ) -> Component:
     with FMU(fmu_path, mode="r") as fmu:
         model_description = fmu.model_description
@@ -196,8 +199,8 @@ def add_component_to_system(
     resource_name: str,
     fmu_path: Path,
     *,
-    component_type: str | None = None,
-    implementation: str | None = None,
+    component_type: str | None = "application/x-fmu-sharedlibrary",
+    implementation: str | None = "ModelExchange",
 ) -> Component:
     component = build_component(
         component_name,
@@ -208,6 +211,42 @@ def add_component_to_system(
     )
     system.elements.append(component)
     return component
+
+
+def set_component_parameter_values(component: Component, values: dict[str, float | int | bool | str]) -> None:
+    parameter_bindings = LET.Element(QName(Component.namespaces["ssd"], "ParameterBindings"))
+    parameter_binding = LET.SubElement(parameter_bindings, QName(Component.namespaces["ssd"], "ParameterBinding"))
+    parameter_values = LET.SubElement(parameter_binding, QName(Component.namespaces["ssd"], "ParameterValues"))
+    parameter_set = LET.SubElement(
+        parameter_values,
+        QName(Component.namespaces["ssv"], "ParameterSet"),
+        attrib={"version": "1.0", "name": f"{component.name}_parameters"},
+        nsmap={key: Component.namespaces[key] for key in ("ssv", "ssc")},
+    )
+    parameters = LET.SubElement(parameter_set, QName(Component.namespaces["ssv"], "Parameters"))
+
+    for parameter_name, value in values.items():
+        parameter = LET.SubElement(parameters, QName(Component.namespaces["ssv"], "Parameter"), attrib={"name": parameter_name})
+        if isinstance(value, bool):
+            parameter_type = "Boolean"
+            serialized_value = "true" if value else "false"
+        elif isinstance(value, int) and not isinstance(value, bool):
+            parameter_type = "Integer"
+            serialized_value = str(value)
+        elif isinstance(value, float):
+            parameter_type = "Real"
+            serialized_value = str(value)
+        else:
+            parameter_type = "String"
+            serialized_value = str(value)
+
+        LET.SubElement(
+            parameter,
+            QName(Component.namespaces["ssv"], parameter_type),
+            attrib={"value": serialized_value},
+        )
+
+    component.parameter_bindings = parameter_bindings
 
 
 @contextmanager
@@ -231,6 +270,8 @@ def package_ssp(
     system_name: str,
     build_system,
     *,
+    start_time: float | None = None,
+    stop_time: float | None = None,
     resource_files: dict[str, Path] | None = None,
     resource_directories: dict[str, Path] | None = None,
 ) -> None:
@@ -264,6 +305,11 @@ def package_ssp(
             system = System(name=system_name)
             build_system(system)
             ssd.system = system
+            if start_time is not None and stop_time is not None:
+                experiment = DefaultExperiment()
+                experiment.start_time = start_time
+                experiment.stop_time = stop_time
+                ssd.default_experiment = experiment
 
 
 def package_fmu_as_ssp(

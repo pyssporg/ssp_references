@@ -1,0 +1,10 @@
+{
+  "model_name": "signal_step_gain",
+  "description": "Deterministic signal-propagation fixture with a Step source feeding a Gain block.",
+  "intended_use": "Validating direct feedthrough, step timing, and algebraic scaling across one connection.",
+  "source": {
+    "ssp": [],
+    "fmu": [],
+    "results": []
+  }
+}

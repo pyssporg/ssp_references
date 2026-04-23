@@ -1,0 +1,22 @@
+# Resource
+
+## Overview
+
+`Resource` is a simple reference SSP fixture used to validate FMU resource
+handling inside an SSP.
+
+## Strategy Role
+
+- Simple reference model.
+- Packaging and runtime integration check.
+
+## Main Risks Covered
+
+- FMU resource loading.
+- Packaged SSP resource resolution.
+- Runtime failures caused by missing bundled files.
+
+## Typical Use
+
+- Verifying that engines can execute resource-dependent FMUs after SSP
+  packaging.

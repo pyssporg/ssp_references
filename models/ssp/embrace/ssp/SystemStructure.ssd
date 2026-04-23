@@ -1,20 +1,27 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" xmlns:ssb="http://ssp-standard.org/SSP1/SystemStructureSignalDictionary" xmlns:oms="https://raw.githubusercontent.com/OpenModelica/OMSimulator/master/schema/oms.xsd" name="embrace" version="1.0">
+<?xml version='1.0' encoding='utf-8'?>
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon"
+	xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription"
+	xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues"
+	xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping"
+	xmlns:ssb="http://ssp-standard.org/SSP1/SystemStructureSignalDictionary"
+	xmlns:oms="https://raw.githubusercontent.com/OpenModelica/OMSimulator/master/schema/oms.xsd"
+	name="embrace" version="1.0">
 	<ssd:System name="root">
-			<ssd:ParameterBindings>
-            		<ssd:ParameterBinding source="resources/RAPID_Systems_2021-03-29_Test_1.ssv">
-                		<ssd:ParameterMapping source="resources/ECS_HW.ssm"/>
-            		</ssd:ParameterBinding>
-        	</ssd:ParameterBindings>
+		<ssd:ParameterBindings>
+			<ssd:ParameterBinding source="resources/RAPID_Systems_2021-03-29_Test_1.ssv">
+				<ssd:ParameterMapping source="resources/ECS_HW.ssm" />
+			</ssd:ParameterBinding>
+		</ssd:ParameterBindings>
 		<ssd:Elements>
-			<ssd:Component name="ECS_SW" type="application/x-fmu-sharedlibrary" source="resources/0002_ECS_SW.fmu">
+			<ssd:Component name="ECS_SW" type="application/x-fmu-sharedlibrary"
+				source="resources/0002_ECS_SW.fmu">
 				<ssd:Connectors>
 					<ssd:Connector name="Input.TLiquid" kind="input">
 						<ssc:Real />
 						<ssd:ConnectorGeometry x="0.000000" y="0.333333" />
 					</ssd:Connector>
 					<ssd:Connector name="Input.Aircraft_State" kind="input">
-						<ssc:Enumeration name ="Aircraft_State_Type"/>
+						<ssc:Enumeration name="Aircraft_State_Type" />
 						<ssd:ConnectorGeometry x="0.000000" y="0.666667" />
 					</ssd:Connector>
 					<ssd:Connector name="TCoolingPack" kind="output">
@@ -23,7 +30,8 @@
 					</ssd:Connector>
 				</ssd:Connectors>
 			</ssd:Component>
-			<ssd:Component name="ECS_HW" type="application/x-fmu-sharedlibrary" source="resources/0001_ECS_HW.fmu">
+			<ssd:Component name="ECS_HW" type="application/x-fmu-sharedlibrary"
+				source="resources/0001_ECS_HW.fmu">
 				<ssd:Connectors>
 					<ssd:Connector name="Alt" kind="input">
 						<ssc:Real />
@@ -509,7 +517,8 @@
 					</ssd:Connector>
 				</ssd:Connectors>
 			</ssd:Component>
-			<ssd:Component name="Consumer" type="application/x-fmu-sharedlibrary" source="resources/0003_Consumer.fmu">
+			<ssd:Component name="Consumer" type="application/x-fmu-sharedlibrary"
+				source="resources/0003_Consumer.fmu">
 				<ssd:Connectors>
 					<ssd:Connector name="consumerRet.m" kind="input">
 						<ssc:Real />
@@ -762,7 +771,8 @@
 					</ssd:Connector>
 				</ssd:Connectors>
 			</ssd:Component>
-			<ssd:Component name="Atmos" type="application/x-fmu-sharedlibrary" source="resources/0004_Atmos.fmu">
+			<ssd:Component name="Atmos" type="application/x-fmu-sharedlibrary"
+				source="resources/0004_Atmos.fmu">
 				<ssd:Connectors>
 					<ssd:Connector name="Alt" kind="input">
 						<ssc:Real />
@@ -785,7 +795,8 @@
 					</ssd:Connector>
 				</ssd:Connectors>
 			</ssd:Component>
-			<ssd:Component name="AdaptionUnit" type="application/x-fmu-sharedlibrary" source="resources/0005_AdaptionUnit.fmu">
+			<ssd:Component name="AdaptionUnit" type="application/x-fmu-sharedlibrary"
+				source="resources/0005_AdaptionUnit.fmu">
 				<ssd:Connectors>
 					<ssd:Connector name="Aircraft_State" kind="input">
 						<ssc:Real />
@@ -805,46 +816,107 @@
 					</ssd:Connector>
 				</ssd:Connectors>
 			</ssd:Component>
+			<ssd:Component name="BC" type="application/x-fmu-sharedlibrary"
+				source="resources/BC.fmu">
+				<ssd:Connectors>
+					<ssd:Connector name="Alt" kind="output">
+						<ssc:Real />
+					</ssd:Connector>
+					<ssd:Connector name="Mach" kind="output">
+						<ssc:Real />
+					</ssd:Connector>
+					<ssd:Connector name="heatLoad" kind="output">
+						<ssc:Real />
+					</ssd:Connector>
+					<ssd:Connector name="WGT_ON_WHL" kind="output">
+						<ssc:Real />
+					</ssd:Connector>
+					<ssd:Connector name="Aircraft_state" kind="output">
+						<ssc:Real />
+					</ssd:Connector>
+				</ssd:Connectors>
+			</ssd:Component>
 		</ssd:Elements>
 		<ssd:Connections>
-			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.p" endElement="ECS_HW" endConnector="consumerFeed.p" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.h" endElement="ECS_HW" endConnector="consumerFeed.h" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[1]" endElement="ECS_HW" endConnector="consumerFeed.X[1]" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[2]" endElement="ECS_HW" endConnector="consumerFeed.X[2]" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[3]" endElement="ECS_HW" endConnector="consumerFeed.X[3]" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerRet.p" endElement="ECS_HW" endConnector="consumerRet.p" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerRet.h" endElement="ECS_HW" endConnector="consumerRet.h" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerRet.X[1]" endElement="ECS_HW" endConnector="consumerRet.X[1]" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerRet.X[2]" endElement="ECS_HW" endConnector="consumerRet.X[2]" />
-			<ssd:Connection startElement="Consumer" startConnector="consumerRet.X[3]" endElement="ECS_HW" endConnector="consumerRet.X[3]" />
-			<ssd:Connection startElement="ECS_HW" startConnector="consumerFeed.m" endElement="Consumer" endConnector="consumerFeed.m" />
-			<ssd:Connection startElement="ECS_HW" startConnector="consumerFeed.hn" endElement="Consumer" endConnector="consumerFeed.hn" />
-			<ssd:Connection startElement="ECS_HW" startConnector="consumerRet.m" endElement="Consumer" endConnector="consumerRet.m" />
-			<ssd:Connection startElement="ECS_HW" startConnector="consumerRet.hn" endElement="Consumer" endConnector="consumerRet.hn" />
-			<ssd:Connection startElement="ECS_HW" startConnector="LHexTout" endElement="AdaptionUnit" endConnector="LHexTout" />
-			<ssd:Connection startElement="AdaptionUnit" startConnector="sWsignals.Aircraft_State" endElement="ECS_SW" endConnector="Input.Aircraft_State" />
-			<ssd:Connection startElement="AdaptionUnit" startConnector="sWsignals.TLiquid" endElement="ECS_SW" endConnector="Input.TLiquid" />
-			<ssd:Connection startElement="ECS_SW" startConnector="TCoolingPack" endElement="ECS_HW" endConnector="reqCoolingTemperature" />
-			<ssd:Connection startElement="Atmos" startConnector="Tamb" endElement="Consumer" endConnector="Tamb" />
-			<ssd:Connection startElement="Atmos" startConnector="Pamb" endElement="Consumer" endConnector="Pamb" />
-			<ssd:Connection startElement="Atmos" startConnector="Tamb" endElement="ECS_HW" endConnector="Tamb" />
-			<ssd:Connection startElement="Atmos" startConnector="Pamb" endElement="ECS_HW" endConnector="Pamb" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.p"
+				endElement="ECS_HW" endConnector="consumerFeed.p" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.h"
+				endElement="ECS_HW" endConnector="consumerFeed.h" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[1]"
+				endElement="ECS_HW" endConnector="consumerFeed.X[1]" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[2]"
+				endElement="ECS_HW" endConnector="consumerFeed.X[2]" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[3]"
+				endElement="ECS_HW" endConnector="consumerFeed.X[3]" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerRet.p"
+				endElement="ECS_HW" endConnector="consumerRet.p" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerRet.h"
+				endElement="ECS_HW" endConnector="consumerRet.h" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerRet.X[1]"
+				endElement="ECS_HW" endConnector="consumerRet.X[1]" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerRet.X[2]"
+				endElement="ECS_HW" endConnector="consumerRet.X[2]" />
+			<ssd:Connection startElement="Consumer" startConnector="consumerRet.X[3]"
+				endElement="ECS_HW" endConnector="consumerRet.X[3]" />
+			<ssd:Connection startElement="ECS_HW" startConnector="consumerFeed.m"
+				endElement="Consumer" endConnector="consumerFeed.m" />
+			<ssd:Connection startElement="ECS_HW" startConnector="consumerFeed.hn"
+				endElement="Consumer" endConnector="consumerFeed.hn" />
+			<ssd:Connection startElement="ECS_HW" startConnector="consumerRet.m"
+				endElement="Consumer" endConnector="consumerRet.m" />
+			<ssd:Connection startElement="ECS_HW" startConnector="consumerRet.hn"
+				endElement="Consumer" endConnector="consumerRet.hn" />
+			<ssd:Connection startElement="ECS_HW" startConnector="LHexTout"
+				endElement="AdaptionUnit" endConnector="LHexTout" />
+			<ssd:Connection startElement="AdaptionUnit" startConnector="sWsignals.Aircraft_State"
+				endElement="ECS_SW" endConnector="Input.Aircraft_State" />
+			<ssd:Connection startElement="AdaptionUnit" startConnector="sWsignals.TLiquid"
+				endElement="ECS_SW" endConnector="Input.TLiquid" />
+			<ssd:Connection startElement="ECS_SW" startConnector="TCoolingPack" endElement="ECS_HW"
+				endConnector="reqCoolingTemperature" />
+			<ssd:Connection startElement="Atmos" startConnector="Tamb" endElement="Consumer"
+				endConnector="Tamb" />
+			<ssd:Connection startElement="Atmos" startConnector="Pamb" endElement="Consumer"
+				endConnector="Pamb" />
+			<ssd:Connection startElement="Atmos" startConnector="Tamb" endElement="ECS_HW"
+				endConnector="Tamb" />
+			<ssd:Connection startElement="Atmos" startConnector="Pamb" endElement="ECS_HW"
+				endConnector="Pamb" />
+			<ssd:Connection startElement="BC" startConnector="Alt" endElement="Consumer"
+				endConnector="Alt" />
+			<ssd:Connection startElement="BC" startConnector="Alt" endElement="ECS_HW"
+				endConnector="Alt" />
+			<ssd:Connection startElement="BC" startConnector="Alt" endElement="Atmos"
+				endConnector="Alt" />
+			<ssd:Connection startElement="BC" startConnector="Mach" endElement="Consumer"
+				endConnector="Mach" />
+			<ssd:Connection startElement="BC" startConnector="Mach" endElement="ECS_HW"
+				endConnector="Mach" />
+			<ssd:Connection startElement="BC" startConnector="Mach" endElement="Atmos"
+				endConnector="Ma" />
+			<ssd:Connection startElement="BC" startConnector="heatLoad" endElement="Consumer"
+				endConnector="heatLoad" />
+			<ssd:Connection startElement="BC" startConnector="Aircraft_state"
+				endElement="AdaptionUnit" endConnector="Aircraft_State" />
 		</ssd:Connections>
 		<ssd:Annotations>
 			<ssc:Annotation type="org.openmodelica">
 				<oms:Annotations>
 					<oms:SimulationInformation>
-						<oms:FixedStepMaster description="oms-ma" stepSize="0.001000" relativeTolerance="0.000100" />
+						<oms:FixedStepMaster description="oms-ma" stepSize="0.001000"
+							relativeTolerance="0.000100" />
 					</oms:SimulationInformation>
 				</oms:Annotations>
 			</ssc:Annotation>
 		</ssd:Annotations>
 	</ssd:System>
-	<ssd:DefaultExperiment startTime="0.000000" stopTime="1.000000">
+	<ssd:DefaultExperiment startTime="0.000000" stopTime="300.000000">
 		<ssd:Annotations>
 			<ssc:Annotation type="org.openmodelica">
 				<oms:Annotations>
-					<oms:SimulationInformation resultFile="embrace_res.mat" loggingInterval="0.000000" bufferSize="10" signalFilter="resources/signalFilter.xml" />
+					<oms:SimulationInformation resultFile="embrace_res.mat"
+						loggingInterval="0.000000" bufferSize="10"
+						signalFilter="resources/signalFilter.xml" />
 				</oms:Annotations>
 			</ssc:Annotation>
 		</ssd:Annotations>

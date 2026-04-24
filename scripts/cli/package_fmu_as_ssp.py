@@ -9,8 +9,9 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).resolve().parent
 SCRIPTS_ROOT = SCRIPT_DIR.parent
 sys.path.insert(0, str(SCRIPTS_ROOT))
+sys.path.insert(0, str(SCRIPTS_ROOT.parent / "3rd_party" / "pyssp_standard"))
 
-from workflow.packaging import infer_fmu_model_name, package_fmu_as_ssp
+from pyssp_standard.fmu import FMU
 
 
 def parse_args() -> argparse.Namespace:
@@ -47,12 +48,20 @@ def main() -> int:
     if fmu_path.suffix.lower() != ".fmu":
         raise ValueError(f"Expected an .fmu file, got: {fmu_path.name}")
 
-    model_name = infer_fmu_model_name(fmu_path)
+    with FMU(fmu_path, mode="r") as fmu:
+        with fmu.model_description as md:
+            model_name = md.xml.model_name or fmu_path.stem
     output_path = args.output.resolve() if args.output else default_output_path(fmu_path)
     system_name = args.system_name or model_name
     component_name = args.component_name or model_name
 
-    package_fmu_as_ssp(fmu_path, output_path, system_name, component_name)
+    with FMU(fmu_path, mode="r") as fmu:
+        fmu.package_as_ssp(
+            output_path,
+            system_name=system_name,
+            component_name=component_name,
+            implementation="ModelExchange",
+        )
     print(f"Created SSP: {output_path}")
     return 0
 

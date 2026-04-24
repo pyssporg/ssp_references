@@ -11,8 +11,8 @@ from pathlib import Path
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(os.environ.get("SSP_REFERENCES_REPO_ROOT", Path(__file__).resolve().parents[3]))
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
+sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard.common_content_ssc import TypeReal
 from pyssp_standard.ssd import Connection, Connector
 from workflow.packaging import (
     add_component_to_system,
@@ -53,7 +53,7 @@ def main() -> int:
             set_component_parameter_values(add, {"k1": 1.0, "k2": 1.0})
 
             for signal_name in ["step_a_y", "step_b_y", "sum_y"]:
-                system.connectors.append(Connector(name=signal_name, kind="output", type_=TypeReal(None)))
+                system.connectors.append(Connector(name=signal_name, kind="output", type_name="Real"))
 
             system.connections.extend(
                 [

@@ -13,19 +13,20 @@ REPO_ROOT = Path(os.environ.get("SSP_REFERENCES_REPO_ROOT", Path(__file__).resol
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard.ssd import Connection, Connector
-from workflow.packaging import (
-    add_component_to_system,
-    materialize_fmu_archive,
-    package_ssp,
-    set_component_parameter_values,
-    unpack_archive_to_runtime_layout,
-)
+from pyssp_standard import SSP
+from pyssp_standard.common.archive import unpack_archive
+from pyssp_standard.ssd import Connection, Connector, DefaultExperiment, System
 from workflow.model import ModelMetaData
+from workflow.packaging import FIXED_GENERATION_DATE_AND_TIME, materialize_fmu_archive
 
 
 def main() -> int:
     model = ModelMetaData(MODEL_DIR)
+    output_path = model.paths.ssp_path
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    if output_path.exists():
+        output_path.unlink()
+
     with ExitStack() as stack:
         step_a_path = stack.enter_context(
             materialize_fmu_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), "StepA.fmu")
@@ -37,47 +38,45 @@ def main() -> int:
             materialize_fmu_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"), "Add.fmu")
         )
 
-        def build_system(system) -> None:
-            step_a = add_component_to_system(
-                system, "step_a", "StepA.fmu", step_a_path, implementation="CoSimulation"
-            )
-            step_b = add_component_to_system(
-                system, "step_b", "StepB.fmu", step_b_path, implementation="CoSimulation"
-            )
-            add = add_component_to_system(
-                system, "add", "Add.fmu", add_path, implementation="CoSimulation"
-            )
+        with SSP(output_path, mode="w") as ssp:
+            with ssp.system_structure() as ssd:
+                ssd.xml.name = model.name
+                ssd.xml.version = "1.0"
+                ssd.xml.metadata.generation_date_and_time = FIXED_GENERATION_DATE_AND_TIME
+                ssd.xml.system = System(name=model.name)
+                ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
 
-            set_component_parameter_values(step_a, {"height": 1.5, "offset": 0.5, "startTime": 0.25})
-            set_component_parameter_values(step_b, {"height": -0.5, "offset": 1.0, "startTime": 0.5})
-            set_component_parameter_values(add, {"k1": 1.0, "k2": 1.0})
+            ssp.add_fmu("step_a", step_a_path, resource_name="StepA.fmu", implementation="CoSimulation")
+            ssp.add_fmu("step_b", step_b_path, resource_name="StepB.fmu", implementation="CoSimulation")
+            ssp.add_fmu("add", add_path, resource_name="Add.fmu", implementation="CoSimulation")
 
-            for signal_name in ["step_a_y", "step_b_y", "sum_y"]:
-                system.connectors.append(Connector(name=signal_name, kind="output", type_name="Real"))
+            with ssp.system_structure() as ssd:
+                ssd.extend_parameterset(
+                    {
+                        "step_a": {"height": 1.5, "offset": 0.5, "startTime": 0.25},
+                        "step_b": {"height": -0.5, "offset": 1.0, "startTime": 0.5},
+                        "add": {"k1": 1.0, "k2": 1.0},
+                    }
+                )
 
-            system.connections.extend(
-                [
-                    Connection(start_element="step_a", start_connector="y", end_element="add", end_connector="u1"),
-                    Connection(start_element="step_b", start_connector="y", end_element="add", end_connector="u2"),
-                    Connection(start_element="step_a", start_connector="y", end_connector="step_a_y"),
-                    Connection(start_element="step_b", start_connector="y", end_connector="step_b_y"),
-                    Connection(start_element="add", start_connector="y", end_connector="sum_y"),
-                ]
-            )
+                system = ssd.xml.system
+                if system is None:
+                    raise RuntimeError(f"System structure was not initialized for {model.name}")
 
-        package_ssp(
-            output_path=model.paths.ssp_path,
-            system_name=model.name,
-            build_system=build_system,
-            start_time=0.0,
-            stop_time=1.0,
-            resource_files={
-                "StepA.fmu": step_a_path,
-                "StepB.fmu": step_b_path,
-                "Add.fmu": add_path,
-            },
-        )
-    unpack_archive_to_runtime_layout(model.paths.ssp_path, model.paths.unpacked_ssp_dir)
+                for signal_name in ["step_a_y", "step_b_y", "sum_y"]:
+                    system.connectors.append(Connector(name=signal_name, kind="output", type_name="Real"))
+
+                system.connections.extend(
+                    [
+                        Connection(start_element="step_a", start_connector="y", end_element="add", end_connector="u1"),
+                        Connection(start_element="step_b", start_connector="y", end_element="add", end_connector="u2"),
+                        Connection(start_element="step_a", start_connector="y", end_connector="step_a_y"),
+                        Connection(start_element="step_b", start_connector="y", end_connector="step_b_y"),
+                        Connection(start_element="add", start_connector="y", end_connector="sum_y"),
+                    ]
+                )
+
+    unpack_archive(model.paths.ssp_path, model.paths.unpacked_ssp_dir, recursive_fmus=True, overwrite=True)
     print(f"Built {model.name}")
     return 0
 

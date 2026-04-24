@@ -33,12 +33,9 @@ def main() -> int:
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_a_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_b_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"), add_path)
+
     with SSP(output_path, mode="w") as ssp:
         with ssp.system_structure() as ssd:
-            ssd.xml.name = model.name
-            ssd.xml.version = "1.0"
-            ssd.xml.metadata.generation_date_and_time = FIXED_GENERATION_DATE_AND_TIME
-            ssd.xml.system = System(name=model.name)
             ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
 
         ssp.add_fmu("step_a", step_a_path, resource_name="StepA.fmu", implementation="CoSimulation")
@@ -55,12 +52,6 @@ def main() -> int:
             )
 
             system = ssd.xml.system
-            if system is None:
-                raise RuntimeError(f"System structure was not initialized for {model.name}")
-
-            for signal_name in ["step_a_y", "step_b_y", "sum_y"]:
-                system.connectors.append(Connector(name=signal_name, kind="output", type_name="Real"))
-
             system.connections.extend(
                 [
                     Connection(start_element="step_a", start_connector="y", end_element="add", end_connector="u1"),

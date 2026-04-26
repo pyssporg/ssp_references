@@ -29,25 +29,19 @@ class SimulationWindow:
 
 
 @dataclass(frozen=True)
-class SimulationVariant:
-    name: str
-    engine: str
-    version: str = "current"
+class SimulationConfig:
+    ssp_path: Path | None = None
     start_time: float | None = None
     stop_time: float | None = None
     interval: float | None = None
-    ssp4sim_app: str | None = None
-    executor_method: str = "jacobi"
-    thread_pool_workers: int = 1
-    forward_derivatives: bool = True
-    jacobi_parallel: bool = True
-    jacobi_method: int = 1
-    seidel_parallel: bool = False
+    tolerance: float = 1e-4
 
 
 @dataclass(frozen=True)
 class SimulationArtifacts:
-    variant: SimulationVariant
+    name: str
+    engine: str
+    config: SimulationConfig
     window: SimulationWindow
     result_csv: Path
     extra_files: list[Path]
@@ -78,6 +72,10 @@ def resolve_ssp4sim_app(explicit_path: str | None = None) -> Path:
     raise FileNotFoundError(
         "Unable to locate ssp4sim CLI. Set SSP4SIM_SIM_APP or pass an explicit path."
     )
+
+
+def resolve_ssp_path(model: ModelMetaData, config: SimulationConfig) -> Path:
+    return config.ssp_path or model.paths.ssp_path
 
 
 def read_default_experiment(ssp_path: Path) -> tuple[float | None, float | None]:
@@ -112,11 +110,13 @@ def infer_interval_from_reference_csv(reference_csv: Path) -> float | None:
 def infer_window(
     model: ModelMetaData,
     *,
+    ssp_path: Path | None = None,
     start_time: float | None = None,
     stop_time: float | None = None,
     interval: float | None = None,
 ) -> SimulationWindow:
-    default_start, default_stop = read_default_experiment(model.paths.ssp_path)
+    resolved_ssp_path = ssp_path or model.paths.ssp_path
+    default_start, default_stop = read_default_experiment(resolved_ssp_path)
     resolved_start = start_time if start_time is not None else default_start
     resolved_stop = stop_time if stop_time is not None else default_stop
     resolved_interval = interval
@@ -136,7 +136,7 @@ def infer_window(
     if resolved_start is None or resolved_stop is None:
         raise ValueError(
             f"Unable to infer simulation window for {model.name}. "
-            "Provide explicit start and stop times in the simulation variant."
+            "Provide explicit start and stop times in the simulation config."
         )
     if resolved_interval is None:
         resolved_interval = DEFAULT_INTERVAL
@@ -152,12 +152,13 @@ def infer_window(
     )
 
 
-def infer_variant_window(model: ModelMetaData, variant: SimulationVariant) -> SimulationWindow:
+def resolve_window(model: ModelMetaData, config: SimulationConfig) -> SimulationWindow:
     return infer_window(
         model,
-        start_time=variant.start_time,
-        stop_time=variant.stop_time,
-        interval=variant.interval,
+        ssp_path=resolve_ssp_path(model, config),
+        start_time=config.start_time,
+        stop_time=config.stop_time,
+        interval=config.interval,
     )
 
 
@@ -189,28 +190,28 @@ def simulate_with_omsimulator(
 
 
 def write_ssp4sim_config(
-    model: ModelMetaData,
+    ssp_path: Path,
     window: SimulationWindow,
-    variant: SimulationVariant,
+    config: SimulationConfig,
     *,
     config_path: Path,
     result_csv: Path,
     log_path: Path,
 ) -> None:
-    config = {
+    payload = {
         "simulation": {
-            "ssp": str(model.paths.ssp_path.resolve()),
+            "ssp": str(ssp_path.resolve()),
             "ssd": "SystemStructure.ssd",
             "start_time": window.start_time,
             "stop_time": window.stop_time,
             "timestep": window.interval,
-            "tolerance": 1e-4,
+            "tolerance": config.tolerance,
             "executor": {
-                "method": variant.executor_method,
-                "thread_pool_workers": variant.thread_pool_workers,
-                "forward_derivatives": variant.forward_derivatives,
-                "jacobi": {"parallel": variant.jacobi_parallel, "method": variant.jacobi_method},
-                "seidel": {"parallel": variant.seidel_parallel},
+                "method": "jacobi",
+                "thread_pool_workers": 1,
+                "forward_derivatives": True,
+                "jacobi": {"parallel": True, "method": 1},
+                "seidel": {"parallel": False},
             },
             "recording": {
                 "enable": True,
@@ -225,21 +226,31 @@ def write_ssp4sim_config(
         }
     }
     ensure_parent(config_path)
-    config_path.write_text(json.dumps(config, indent=2) + "\n")
+    config_path.write_text(json.dumps(payload, indent=2) + "\n")
 
 
-def write_variant_metadata(
+def write_run_metadata(
     output_dir: Path,
-    variant: SimulationVariant,
+    *,
+    name: str,
+    engine: str,
+    config: SimulationConfig,
     window: SimulationWindow,
+    ssp_path: Path,
 ) -> Path:
     metadata_path = output_dir / "variant.json"
     metadata_path.write_text(
         json.dumps(
             {
-                "name": variant.name,
-                "engine": variant.engine,
-                "version": variant.version,
+                "name": name,
+                "engine": engine,
+                "ssp": str(ssp_path),
+                "config": {
+                    "start_time": config.start_time,
+                    "stop_time": config.stop_time,
+                    "interval": config.interval,
+                    "tolerance": config.tolerance,
+                },
                 "window": asdict(window),
             },
             indent=2,
@@ -249,40 +260,73 @@ def write_variant_metadata(
     return metadata_path
 
 
-def run_omsimulator_variant(model: ModelMetaData, variant: SimulationVariant, window: SimulationWindow) -> SimulationArtifacts:
-    engine_dir = model.paths.engine_results_dir(variant.name)
+def simulate_oms(
+    model: ModelMetaData,
+    *,
+    name: str = OMSIMULATOR_ENGINE,
+    config: SimulationConfig | None = None,
+) -> SimulationArtifacts:
+    resolved_config = config or SimulationConfig()
+    ssp_path = resolve_ssp_path(model, resolved_config)
+    window = resolve_window(model, resolved_config)
+    engine_dir = model.paths.engine_results_dir(name)
     reset_dir(engine_dir)
 
     result_mat = engine_dir / "result.mat"
     result_csv = engine_dir / "result.csv"
     simulate_with_omsimulator(
-        model.paths.ssp_path,
+        ssp_path,
         result_mat=result_mat,
         result_csv=result_csv,
         start_time=window.start_time,
         stop_time=window.stop_time,
         interval=window.interval,
     )
-    metadata_path = write_variant_metadata(engine_dir, variant, window)
+    metadata_path = write_run_metadata(
+        engine_dir,
+        name=name,
+        engine=OMSIMULATOR_ENGINE,
+        config=resolved_config,
+        window=window,
+        ssp_path=ssp_path,
+    )
     return SimulationArtifacts(
-        variant=variant,
+        name=name,
+        engine=OMSIMULATOR_ENGINE,
+        config=resolved_config,
         window=window,
         result_csv=result_csv,
         extra_files=[result_mat, metadata_path],
     )
 
 
-def run_ssp4sim_variant(model: ModelMetaData, variant: SimulationVariant, window: SimulationWindow) -> SimulationArtifacts:
-    engine_dir = model.paths.engine_results_dir(variant.name)
+def simulate_ssp4sim(
+    model: ModelMetaData,
+    *,
+    name: str = SSP4SIM_ENGINE,
+    config: SimulationConfig | None = None,
+    app: str | None = None,
+) -> SimulationArtifacts:
+    resolved_config = config or SimulationConfig()
+    ssp_path = resolve_ssp_path(model, resolved_config)
+    window = resolve_window(model, resolved_config)
+    engine_dir = model.paths.engine_results_dir(name)
     reset_dir(engine_dir)
 
     result_csv = engine_dir / "result.csv"
     log_path = engine_dir / "simulation.log"
     config_path = engine_dir / "config.json"
     stdout_path = engine_dir / "stdout.log"
-    write_ssp4sim_config(model, window, variant, config_path=config_path, result_csv=result_csv, log_path=log_path)
+    write_ssp4sim_config(
+        ssp_path,
+        window,
+        resolved_config,
+        config_path=config_path,
+        result_csv=result_csv,
+        log_path=log_path,
+    )
 
-    command = [str(resolve_ssp4sim_app(variant.ssp4sim_app)), str(config_path)]
+    command = [str(resolve_ssp4sim_app(app)), str(config_path)]
     completed = subprocess.run(
         command,
         cwd=REPO_ROOT,
@@ -294,27 +338,23 @@ def run_ssp4sim_variant(model: ModelMetaData, variant: SimulationVariant, window
     stdout_path.write_text(completed.stdout)
     if completed.returncode != 0:
         raise RuntimeError(
-            f"ssp4sim failed for {model.name} variant {variant.name} with exit code {completed.returncode}. "
+            f"ssp4sim failed for {model.name} run {name} with exit code {completed.returncode}. "
             f"See {stdout_path}."
         )
 
-    metadata_path = write_variant_metadata(engine_dir, variant, window)
+    metadata_path = write_run_metadata(
+        engine_dir,
+        name=name,
+        engine=SSP4SIM_ENGINE,
+        config=resolved_config,
+        window=window,
+        ssp_path=ssp_path,
+    )
     return SimulationArtifacts(
-        variant=variant,
+        name=name,
+        engine=SSP4SIM_ENGINE,
+        config=resolved_config,
         window=window,
         result_csv=result_csv,
         extra_files=[config_path, log_path, stdout_path, metadata_path],
     )
-
-
-def run_simulation_variant(model: ModelMetaData, variant: SimulationVariant) -> SimulationArtifacts:
-    window = infer_variant_window(model, variant)
-    if variant.engine == OMSIMULATOR_ENGINE:
-        return run_omsimulator_variant(model, variant, window)
-    if variant.engine == SSP4SIM_ENGINE:
-        return run_ssp4sim_variant(model, variant, window)
-    raise ValueError(f"Unsupported simulation engine: {variant.engine}")
-
-
-def run_simulation_variants(model: ModelMetaData, variants: list[SimulationVariant]) -> list[SimulationArtifacts]:
-    return [run_simulation_variant(model, variant) for variant in variants]

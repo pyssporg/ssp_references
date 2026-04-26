@@ -55,14 +55,14 @@ definitions, fixture notes, and explicit build/simulation entrypoints.
   about how its SSP is assembled.
 - `simulate.py` is the per-model executable entrypoint discovered by
   `scripts/run_model_simulations.py`. Each model script declares the simulation
-  variants that should be run for that system.
+  configuration and explicit engine calls for that system.
 - `metadata.json` declares the upstream SSP, FMU, and reference-result sources
   still needed by the shared workflow code. When `build.py` assembles the SSP
   itself, metadata is typically only needed for descriptive fields and results.
 - `scripts/workflow/packaging.py` contains shared SSP/FMU packaging helpers
   built on `pyssp_standard`.
-- `scripts/workflow/simulation.py` contains shared simulation-engine and
-  simulation-variant helpers.
+- `scripts/workflow/simulation.py` contains shared simulation-engine helpers
+  and the common simulation configuration type.
 - `scripts/workflow/comparison.py` contains result discovery and comparison
   helpers.
 - `scripts/cli/` contains small task-focused helpers for comparing engines,
@@ -77,8 +77,8 @@ Each model directory under `models/ssp/<model_name>/` follows the same basic
 contract:
 
 - `build.py` is the source of truth for how that SSP gets assembled.
-- `simulate.py` is the source of truth for which simulation variants are run
-  for that model.
+- `simulate.py` is the source of truth for how that model is simulated and
+  compared across engines.
 - `metadata.json` provides model metadata plus any upstream files that still
   need to be validated or referenced by the shared workflow code.
 - Running `build.py` prepares the generated fixture under `build/` by
@@ -104,7 +104,8 @@ python3 scripts/run_model_simulations.py run-all
 
 Simulation execution is automated separately from model setup.
 
-- Each model's `simulate.py` declares its engine variants explicitly.
+- Each model's `simulate.py` declares a `SimulationConfig` and calls the
+  relevant engine helpers explicitly.
 - `scripts/run_model_simulations.py` executes those per-model simulation
   scripts.
 - `scripts/workflow/comparison.py` collects result CSVs, resamples onto a

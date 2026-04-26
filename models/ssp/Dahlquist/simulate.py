@@ -12,18 +12,18 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from workflow.comparison import compare_available_results
 from workflow.model import ModelMetaData
-from workflow.simulation import SimulationVariant, run_simulation_variants
+from workflow.simulation import SimulationConfig, simulate_oms, simulate_ssp4sim
 
 
 def main() -> int:
     model = ModelMetaData(MODEL_DIR)
-    variants = [
-        SimulationVariant(name="omsimulator_current", engine="omsimulator", version="current"),
-        SimulationVariant(name="ssp4sim_current", engine="ssp4sim", version="current"),
+    config = SimulationConfig()
+    artifacts = [
+        simulate_oms(model, name="omsimulator_current", config=config),
+        simulate_ssp4sim(model, name="ssp4sim_current", config=config),
     ]
-    artifacts = run_simulation_variants(model, variants)
     payload = compare_available_results(model, window=artifacts[0].window)
-    print(f"{model.name}: ran {len(variants)} variants and wrote {len(payload['comparisons'])} comparisons")
+    print(f"{model.name}: ran {len(artifacts)} simulations and wrote {len(payload['comparisons'])} comparisons")
     return 0
 
 

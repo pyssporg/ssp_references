@@ -1,0 +1,10 @@
+{
+  "model_name": "pyfmu_csv_source_sink",
+  "description": "Simple SSP fixture with a CSV-backed source connected to a CSV-shaped sink.",
+  "intended_use": "Structural validation of pyfmu_csv-generated FMUs in an SSP source-to-sink connection.",
+  "source": {
+    "ssp": [],
+    "fmu": [],
+    "results": []
+  }
+}

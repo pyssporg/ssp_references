@@ -77,6 +77,10 @@ Each model directory under `models/ssp/<model_name>/` follows the same basic
 contract:
 
 - `build.py` is the source of truth for how that SSP gets assembled.
+- Authored SSP composition in `build.py` should use `pyssp_standard` facades
+  (`SSP`, `system_structure()`, `add_fmu()`, `Connection`, and parameter-set
+  helpers) rather than hand-writing `SystemStructure.ssd` or assembling SSP zip
+  files directly.
 - `simulate.py` is the source of truth for how that model is simulated and
   compared across engines.
 - `metadata.json` provides model metadata plus any upstream files that still

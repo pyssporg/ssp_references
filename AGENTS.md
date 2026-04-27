@@ -75,6 +75,11 @@ Keep changes direct and explicit.
   details unnecessarily
 - Preserve the current design where each model's `build.py` and `simulate.py`
   are the source of truth for that model
+- For authored SSP composition in `models/ssp/<model_name>/build.py`, use
+  `pyssp_standard` facades such as `SSP`, `system_structure()`, `add_fmu()`,
+  `Connection`, and parameter-set helpers. Do not hand-write
+  `SystemStructure.ssd` XML or manually assemble SSP zip files unless the task
+  is explicitly about testing malformed or low-level archive behavior.
 - Prefer editing repository-owned workflow code over patching vendored upstream
   code in `3rd_party/` unless the task is explicitly about vendored content
 - Treat this as experimental software:

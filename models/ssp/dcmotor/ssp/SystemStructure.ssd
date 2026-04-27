@@ -71,7 +71,7 @@
                     </ssd:ParameterBinding>
                 </ssd:ParameterBindings>
                 <ssd:Elements>
-                    <ssd:Component type="application/x-fmu-sharedlibrary" source="resources/edrive_mass.fmu" implementation="ModelExchange" name="edrive_mass" description="Mechanical part of the DC motor model">
+                    <ssd:Component type="application/x-fmu-sharedlibrary" source="resources/edrive_mass.fmu" implementation="CoSimulation" name="edrive_mass" description="Mechanical part of the DC motor model">
                         <ssd:Connectors>
                             <ssd:Connector name="M_A" kind="input">
                                 <ssc:Real unit="N.m"/>
@@ -124,7 +124,7 @@
                             </ssd:ParameterBinding>
                         </ssd:ParameterBindings>
                     </ssd:Component>
-                    <ssd:Component type="application/x-fmu-sharedlibrary" source="resources/emachine_model.fmu" implementation="ModelExchange" name="emachine_model" description="electrical part of the DC-Motor model">
+                    <ssd:Component type="application/x-fmu-sharedlibrary" source="resources/emachine_model.fmu" implementation="CoSimulation" name="emachine_model" description="electrical part of the DC-Motor model">
                         <ssd:Connectors>
                             <ssd:Connector name="M" kind="output">
                                 <ssc:Real unit="N.m"/>
@@ -224,7 +224,7 @@
                 </ssd:Connections>
                 <ssd:SystemGeometry x1="-281.369197" y1="-981.383542" x2="718.194184" y2="-378.573683"/>
             </ssd:System>
-            <ssd:Component type="application/x-fmu-sharedlibrary" source="resources/stimuli_model.fmu" implementation="ModelExchange" name="stimuli_model" description="">
+            <ssd:Component type="application/x-fmu-sharedlibrary" source="resources/stimuli_model.fmu" implementation="CoSimulation" name="stimuli_model" description="">
                 <ssd:Connectors>
                     <ssd:Connector name="U" kind="output">
                         <ssc:Real unit="V"/>

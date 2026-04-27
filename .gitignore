@@ -1,9 +1,11 @@
 
-build/
-models/ssp/*/*.ssp
-models/ssp/*/simulation_results/
-models/ssp/*/fmus/
-models/ssp/*/results/
+build/*
+!build/models/
+build/models/*
+!build/models/*/
+build/models/*/*
+!build/models/*/ssp/
+!build/models/*/ssp/**
 
 venv/
 

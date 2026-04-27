@@ -18,7 +18,7 @@ class ModelPaths:
 
     @property
     def build_dir(self) -> Path:
-        return REPO_ROOT / "build" / "models" / "ssp" / self.name
+        return REPO_ROOT / "build" / "models" / self.name
 
     @property
     def ssp_path(self) -> Path:

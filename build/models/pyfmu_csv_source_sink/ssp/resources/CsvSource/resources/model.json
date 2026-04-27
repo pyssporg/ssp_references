@@ -1,0 +1,12 @@
+{
+  "modelName": "CsvSource",
+  "csvPathParameter": "csv_path",
+  "sourceCsvName": "signals.csv",
+  "outputs": [
+    {
+      "name": "y",
+      "valueReference": 1,
+      "type": "Real"
+    }
+  ]
+}

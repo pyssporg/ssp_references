@@ -1,0 +1,100 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" name="SystemStructure" version="1.0">
+  <ssd:System name="system">
+    <ssd:ParameterBindings>
+      <ssd:ParameterBinding>
+        <ssd:ParameterValues>
+          <ssv:ParameterSet version="1.0" name="system_parameters">
+            <ssv:Parameters>
+              <ssv:Parameter name="step.height">
+                <ssv:Real value="1.0" />
+              </ssv:Parameter>
+              <ssv:Parameter name="step.offset">
+                <ssv:Real value="0.0" />
+              </ssv:Parameter>
+              <ssv:Parameter name="step.startTime">
+                <ssv:Real value="0.25" />
+              </ssv:Parameter>
+              <ssv:Parameter name="sine.amplitude">
+                <ssv:Real value="1.0" />
+              </ssv:Parameter>
+              <ssv:Parameter name="sine.f">
+                <ssv:Real value="1.0" />
+              </ssv:Parameter>
+              <ssv:Parameter name="sine.offset">
+                <ssv:Real value="0.0" />
+              </ssv:Parameter>
+              <ssv:Parameter name="sine.phase">
+                <ssv:Real value="0.0" />
+              </ssv:Parameter>
+              <ssv:Parameter name="sine.startTime">
+                <ssv:Real value="0.0" />
+              </ssv:Parameter>
+            </ssv:Parameters>
+          </ssv:ParameterSet>
+        </ssd:ParameterValues>
+      </ssd:ParameterBinding>
+    </ssd:ParameterBindings>
+    <ssd:Elements>
+      <ssd:Component name="step" source="resources/Step.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+        <ssd:Connectors>
+          <ssd:Connector name="height" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="offset" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="startTime" kind="parameter">
+            <ssc:Real unit="s" />
+          </ssd:Connector>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+      <ssd:Component name="sine" source="resources/Sine.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+        <ssd:Connectors>
+          <ssd:Connector name="amplitude" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="f" kind="parameter">
+            <ssc:Real unit="Hz" />
+          </ssd:Connector>
+          <ssd:Connector name="offset" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="phase" kind="parameter">
+            <ssc:Real unit="rad" />
+          </ssd:Connector>
+          <ssd:Connector name="startTime" kind="parameter">
+            <ssc:Real unit="s" />
+          </ssd:Connector>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+      <ssd:Component name="product" source="resources/Product.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+        <ssd:Connectors>
+          <ssd:Connector name="u1" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="u2" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+    </ssd:Elements>
+    <ssd:Connections>
+      <ssd:Connection startElement="step" startConnector="y" endElement="product" endConnector="u1" />
+      <ssd:Connection startElement="sine" startConnector="y" endElement="product" endConnector="u2" />
+      <ssd:Connection startElement="step" startConnector="y" endConnector="step_y" />
+      <ssd:Connection startElement="sine" startConnector="y" endConnector="sine_y" />
+      <ssd:Connection startElement="product" startConnector="y" endConnector="product_y" />
+    </ssd:Connections>
+  </ssd:System>
+  <ssd:DefaultExperiment startTime="0.0" stopTime="1.0" />
+</ssd:SystemStructureDescription>

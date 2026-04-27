@@ -1,0 +1,5 @@
+{
+  "binary": "binaries/linux64/CsvSource.so",
+  "platform": "linux64",
+  "modelIdentifier": "CsvSource"
+}

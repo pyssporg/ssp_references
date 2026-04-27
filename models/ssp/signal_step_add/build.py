@@ -43,11 +43,16 @@ def main() -> int:
         ssp.add_fmu("add", add_path, resource_name="Add.fmu", implementation="CoSimulation")
 
         with ssp.system_structure() as ssd:
-            ssd.extend_parameterset(
+            ssd.extend_system_parameterset(
                 {
-                    "step_a": {"height": 1.5, "offset": 0.5, "startTime": 0.25},
-                    "step_b": {"height": -0.5, "offset": 1.0, "startTime": 0.5},
-                    "add": {"k1": 1.0, "k2": 1.0},
+                    "step_a.height": 1.5,
+                    "step_a.offset": 0.5,
+                    "step_a.startTime": 0.25,
+                    "step_b.height": -0.5,
+                    "step_b.offset": 1.0,
+                    "step_b.startTime": 0.5,
+                    "add.k1": 1.0,
+                    "add.k2": 1.0,
                 }
             )
 

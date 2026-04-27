@@ -53,6 +53,8 @@ Avoid reading these paths unless the task explicitly requires them:
 Do not start by reading all of `3rd_party/`. Treat it as source material to
 reference only when a model's metadata or workflow points there.
 
+Ask questions if anything is unclear
+
 ## Search Strategy
 
 - Prefer targeted `rg` queries scoped to `models/`, `scripts/`, `docs/`, or one

@@ -46,12 +46,19 @@ def main() -> int:
         ssp.add_fmu("add", add_path, resource_name="Add.fmu", implementation="CoSimulation")
 
         with ssp.system_structure() as ssd:
-            ssd.extend_parameterset(
+            ssd.extend_system_parameterset(
                 {
-                    "sine": {"amplitude": 1.0, "f": 1.0, "offset": 0.0, "phase": 0.0, "startTime": 0.0},
-                    "step": {"height": 2.0, "offset": 0.0, "startTime": 0.5},
-                    "gain": {"k": 3.0},
-                    "add": {"k1": 1.0, "k2": 1.0},
+                    "sine.amplitude": 1.0,
+                    "sine.f": 1.0,
+                    "sine.offset": 0.0,
+                    "sine.phase": 0.0,
+                    "sine.startTime": 0.0,
+                    "step.height": 2.0,
+                    "step.offset": 0.0,
+                    "step.startTime": 0.5,
+                    "gain.k": 3.0,
+                    "add.k1": 1.0,
+                    "add.k2": 1.0,
                 }
             )
 

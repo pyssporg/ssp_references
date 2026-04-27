@@ -42,11 +42,13 @@ def main() -> int:
         ssp.add_fmu("gain_b", gain_b_path, resource_name="GainB.fmu", implementation="CoSimulation")
 
         with ssp.system_structure() as ssd:
-            ssd.extend_parameterset(
+            ssd.extend_system_parameterset(
                 {
-                    "step": {"height": 2.0, "offset": -1.0, "startTime": 0.25},
-                    "gain_a": {"k": 2.0},
-                    "gain_b": {"k": -1.0},
+                    "step.height": 2.0,
+                    "step.offset": -1.0,
+                    "step.startTime": 0.25,
+                    "gain_a.k": 2.0,
+                    "gain_b.k": -1.0,
                 }
             )
 

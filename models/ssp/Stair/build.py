@@ -27,7 +27,7 @@ def main() -> int:
     fmu_path = model.paths.fmus_dir / "Stair.fmu"
     package_archive(model.paths.shared_fmu_dir("Stair"), fmu_path)
     with FMU(fmu_path, mode="r") as fmu:
-        fmu.package_as_ssp(model.paths.ssp_path, system_name=model.name, component_name="fmu")
+        fmu.package_as_ssp(model.paths.ssp_path, system_name=model.name, component_name="fmu", implementation="CoSimulation")
 
     unpack_archive(model.paths.ssp_path, model.paths.unpacked_ssp_dir, recursive_fmus=True, overwrite=True)
     print(f"Built {model.name}")

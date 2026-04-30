@@ -11,7 +11,7 @@ import numpy as np
 
 from .filesystem import ensure_parent
 from .model import ModelMetaData
-from .results import load_numeric_csv, materialize_reference_csvs
+from .results import load_numeric_csv
 from .simulation import SimulationWindow, infer_window
 
 REFERENCES_ENGINE = "references"
@@ -76,13 +76,17 @@ def discover_simulation_result_sets(model: ModelMetaData) -> list[ResultSet]:
 
 
 def discover_reference_result_sets(model: ModelMetaData) -> list[ResultSet]:
+    reference_dir = model.paths.reference_results_dir
+    if not reference_dir.is_dir():
+        return []
+
     return [
         ResultSet(
             label=f"references:{csv_path.stem}",
             path=csv_path,
             engine=REFERENCES_ENGINE,
         )
-        for csv_path in materialize_reference_csvs(model.source_results, model.paths.references_dir)
+        for csv_path in sorted(reference_dir.glob("*.csv"))
     ]
 
 

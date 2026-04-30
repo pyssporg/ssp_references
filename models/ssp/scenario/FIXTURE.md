@@ -1,5 +1,10 @@
 # scenario
 
+## Origin
+
+Authored SSP fixture in `models/ssp/scenario/ssp` built around local scenario
+FMU resources.
+
 ## Overview
 
 `scenario` is a small single fmu that can generate source data from a parameter definition

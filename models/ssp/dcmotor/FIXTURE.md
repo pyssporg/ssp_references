@@ -1,5 +1,10 @@
 # dcmotor
 
+## Origin
+
+Authored SSP fixture in `models/ssp/dcmotor/ssp` built around local component
+FMUs and nested resources.
+
 ## Overview
 
 `dcmotor` is a composite SSP fixture with multiple interacting FMUs.

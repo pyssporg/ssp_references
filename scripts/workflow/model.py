@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -41,6 +40,10 @@ class ModelPaths:
         return REPO_ROOT / "models" / "fmu"
 
     @property
+    def reference_results_dir(self) -> Path:
+        return self.shared_fmu_models_dir / self.name / "references"
+
+    @property
     def simulation_results_dir(self) -> Path:
         return self.build_dir / "simulation_results"
 
@@ -63,27 +66,12 @@ class ModelPaths:
 class ModelMetaData:
     def __init__(self, model_dir: Path):
         self.dir = model_dir
-        self.metadata = load_model_metadata(self.dir)
-        self.name = self.metadata["model_name"]
+        self.name = self.dir.name
         self.paths = model_paths(self.dir, self.name)
-        self.source_ssp = resolve_metadata_paths(self.metadata["source"]["ssp"])
-        self.source_fmu = resolve_metadata_paths(self.metadata["source"]["fmu"])
-        self.source_results = resolve_metadata_paths(self.metadata["source"].get("results", []))
 
 
 def model_paths(model_dir: Path, model_name: str) -> ModelPaths:
     return ModelPaths(name=model_name, model_dir=model_dir)
-
-
-def load_model_metadata(model_dir: Path) -> dict:
-    metadata_path = model_dir / "metadata.json"
-    if not metadata_path.is_file():
-        raise FileNotFoundError(f"Model metadata not found: {metadata_path}")
-    return json.loads(metadata_path.read_text())
-
-
-def resolve_metadata_paths(entries: list[str]) -> list[Path]:
-    return [REPO_ROOT / entry for entry in entries]
 
 
 def require_single_source(entries: list[Path], source_type: str) -> Path:

@@ -26,8 +26,8 @@ Every test level should therefore be organized around three steps:
 
 Result comparison should use a small set of trusted oracles:
 
-- Reference trajectories declared in model metadata and materialized into the
-  temporary build area when needed.
+- Reference trajectories stored alongside the shared FMU fixtures under
+  `models/fmu/<model>/references/`.
 - A trusted external engine such as OMSimulator.
 - Previously accepted engine results for regression detection.
 

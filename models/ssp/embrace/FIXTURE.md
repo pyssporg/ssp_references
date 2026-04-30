@@ -1,5 +1,10 @@
 # embrace
 
+## Origin
+
+Authored SSP fixture in `models/ssp/embrace/ssp` built around local component
+FMUs, SSP parameters, and `CONOPS.csv`.
+
 ## Overview
 
 `embrace` is a larger composite SSP fixture representing a more realistic,

@@ -1,5 +1,10 @@
 # Stair
 
+## Origin
+
+Packaged from the shared `models/fmu/Stair` reference FMU fixture and its CSV
+baselines.
+
 ## Overview
 
 `Stair` is a simple reference SSP fixture focused on stepped or event-driven

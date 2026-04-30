@@ -1,5 +1,10 @@
 # signal_step_add
 
+## Origin
+
+Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` and
+`models/fmu/Modelica.Blocks.Math.Add` fixtures.
+
 ## Overview
 
 `signal_step_add` is a deterministic signal-propagation SSP fixture built from

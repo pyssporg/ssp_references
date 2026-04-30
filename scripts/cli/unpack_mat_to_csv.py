@@ -16,8 +16,8 @@ from workflow.results import unpack_mat_to_csv
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
-            "Extract an OMSimulator/OpenModelica trajectory MAT file into a wide CSV. "
-            "The script understands the standard Dymola-style result layout "
+            "Extract a trajectory MAT file into a wide CSV. The script understands "
+            "the standard Dymola-style result layout "
             "(Aclass/name/description/dataInfo/data_1/data_2)."
         )
     )

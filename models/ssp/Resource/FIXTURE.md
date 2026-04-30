@@ -1,5 +1,9 @@
 # Resource
 
+## Origin
+
+Packaged from the shared `models/fmu/Resource` reference FMU fixture.
+
 ## Overview
 
 `Resource` is a simple reference SSP fixture used to validate FMU resource

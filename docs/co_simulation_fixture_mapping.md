@@ -1,7 +1,7 @@
 # Co-Simulation Fixture Mapping
 
 This document complements
-[co_simulation_test_strategy.md](/home/eriro/pwa/2_work/ssp_references/docs/co_simulation_test_strategy.md)
+[co_simulation_test_strategy.md](co_simulation_test_strategy.md)
 by mapping concrete fixtures to the strategy and defining the custom composite
 fixtures needed for signal-propagation coverage.
 
@@ -29,11 +29,11 @@ These are the main fast-running behavioral checks.
 
 | Fixture | Strategy Role | Detail |
 | --- | --- | --- |
-| `BouncingBall` | Simple reference model | [BouncingBall](/home/eriro/pwa/2_work/ssp_references/models/ssp/BouncingBall/FIXTURE.md) |
-| `VanDerPol` | Simple reference model | [VanDerPol](/home/eriro/pwa/2_work/ssp_references/models/ssp/VanDerPol/FIXTURE.md) |
-| `Dahlquist` | Simple reference model | [Dahlquist](/home/eriro/pwa/2_work/ssp_references/models/ssp/Dahlquist/FIXTURE.md) |
-| `Stair` | Simple reference model | [Stair](/home/eriro/pwa/2_work/ssp_references/models/ssp/Stair/FIXTURE.md) |
-| `Resource` | Simple reference model | [Resource](/home/eriro/pwa/2_work/ssp_references/models/ssp/Resource/FIXTURE.md) |
+| `BouncingBall` | Simple reference model | [BouncingBall](../models/ssp/BouncingBall/FIXTURE.md) |
+| `VanDerPol` | Simple reference model | [VanDerPol](../models/ssp/VanDerPol/FIXTURE.md) |
+| `Dahlquist` | Simple reference model | [Dahlquist](../models/ssp/Dahlquist/FIXTURE.md) |
+| `Stair` | Simple reference model | [Stair](../models/ssp/Stair/FIXTURE.md) |
+| `Resource` | Simple reference model | [Resource](../models/ssp/Resource/FIXTURE.md) |
 
 ### Composite SSP Fixtures
 
@@ -41,8 +41,8 @@ These cover more realistic coupling behavior.
 
 | Fixture | Strategy Role | Detail |
 | --- | --- | --- |
-| `dcmotor` | Composite SSP model | [dcmotor](/home/eriro/pwa/2_work/ssp_references/models/ssp/dcmotor/FIXTURE.md) |
-| `embrace` | Composite SSP model | [embrace](/home/eriro/pwa/2_work/ssp_references/models/ssp/embrace/FIXTURE.md) |
+| `dcmotor` | Composite SSP model | [dcmotor](../models/ssp/dcmotor/FIXTURE.md) |
+| `embrace` | Composite SSP model | [embrace](../models/ssp/embrace/FIXTURE.md) |
 
 ### Reusable FMU Building Blocks
 
@@ -68,9 +68,9 @@ These fixtures now exist as SSP models under `models/ssp/`.
 
 | Fixture | Status | Detail |
 | --- | --- | --- |
-| `signal_step_gain` | Implemented | [signal_step_gain](/home/eriro/pwa/2_work/ssp_references/models/ssp/signal_step_gain/FIXTURE.md) |
-| `signal_step_add` | Implemented | [signal_step_add](/home/eriro/pwa/2_work/ssp_references/models/ssp/signal_step_add/FIXTURE.md) |
-| `signal_fanout_gain` | Implemented | [signal_fanout_gain](/home/eriro/pwa/2_work/ssp_references/models/ssp/signal_fanout_gain/FIXTURE.md) |
+| `signal_step_gain` | Implemented | [signal_step_gain](../models/ssp/signal_step_gain/FIXTURE.md) |
+| `signal_step_add` | Implemented | [signal_step_add](../models/ssp/signal_step_add/FIXTURE.md) |
+| `signal_fanout_gain` | Implemented | [signal_fanout_gain](../models/ssp/signal_fanout_gain/FIXTURE.md) |
 
 ## Coverage Assessment
 
@@ -97,9 +97,9 @@ These fixtures are still planned and currently only have design notes.
 
 | Fixture | Status | Detail |
 | --- | --- | --- |
-| `signal_sine_gain_add` | Planned | [signal_sine_gain_add](/home/eriro/pwa/2_work/ssp_references/models/ssp/signal_sine_gain_add/FIXTURE.md) |
-| `signal_step_product` | Planned | [signal_step_product](/home/eriro/pwa/2_work/ssp_references/models/ssp/signal_step_product/FIXTURE.md) |
-| `signal_delay_detector` | Planned | [signal_delay_detector](/home/eriro/pwa/2_work/ssp_references/models/ssp/signal_delay_detector/FIXTURE.md) |
+| `signal_sine_gain_add` | Planned | [signal_sine_gain_add](../models/ssp/signal_sine_gain_add/FIXTURE.md) |
+| `signal_step_product` | Planned | [signal_step_product](../models/ssp/signal_step_product/FIXTURE.md) |
+| `signal_delay_detector` | Planned | [signal_delay_detector](../models/ssp/signal_delay_detector/FIXTURE.md) |
 
 ## Recommended Priority
 

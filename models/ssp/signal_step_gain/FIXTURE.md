@@ -1,5 +1,10 @@
 # signal_step_gain
 
+## Origin
+
+Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` and
+`models/fmu/Modelica.Blocks.Math.Gain` fixtures.
+
 ## Overview
 
 `signal_step_gain` is a deterministic signal-propagation SSP fixture built from

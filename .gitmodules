@@ -1,9 +1,3 @@
-[submodule "3rd_party/reference_fmus"]
-	path = 3rd_party/reference_fmus
-	url = git@github.com:modelica/Reference-FMUs.git
-[submodule "3rd_party/OMSimulator"]
-	path = 3rd_party/OMSimulator
-	url = git@github.com:OpenModelica/OMSimulator.git
 [submodule "3rd_party/pyfmu_csv"]
 	path = 3rd_party/pyfmu_csv
 	url = git@github.com:pyssporg/pyfmu_csv.git

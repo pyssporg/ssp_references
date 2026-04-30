@@ -36,7 +36,6 @@ Read in this order:
   model-specific:
   `build.py`,
   `simulate.py`,
-  `metadata.json`,
   and `FIXTURE.md` as needed
 - `docs/` only when the task is documentation-related
 
@@ -51,7 +50,7 @@ Avoid reading these paths unless the task explicitly requires them:
 - large generated or packaged artifacts such as `*.fmu`, `*.ssp`, `*.zip`, `*.mat`
 
 Do not start by reading all of `3rd_party/`. Treat it as source material to
-reference only when a model's metadata or workflow points there.
+reference only when a model's fixture notes or workflow points there.
 
 Ask questions if anything is unclear
 
@@ -62,7 +61,8 @@ Ask questions if anything is unclear
 - Prefer opening the model or workflow file you will edit before reading related
   files
 - If a task is about one fixture, inspect that model's `FIXTURE.md` and
-  `metadata.json` before chasing shared helpers
+  any nearby `models/fmu/<model_name>/references/` baselines before chasing
+  shared helpers
 - If a task is about workflow behavior, inspect `scripts/workflow/` before
   looking into vendored code
 

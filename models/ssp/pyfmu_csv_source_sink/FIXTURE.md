@@ -1,5 +1,10 @@
 # pyfmu_csv_source_sink
 
+## Origin
+
+Assembled locally from `input/signals.csv`, a generated `CsvSource` FMU, and
+the shared `models/fmu/Modelica.Blocks.Math.Gain` fixture.
+
 ## Overview
 
 `pyfmu_csv_source_sink` is a minimal SSP assembled from a `pyfmu_csv` source

@@ -14,7 +14,7 @@ import numpy as np
 from .config import REPO_ROOT
 from .filesystem import ensure_parent, reset_dir
 from .model import ModelMetaData
-from .results import load_numeric_csv, materialize_reference_csvs, unpack_mat_to_csv
+from .results import load_numeric_csv, unpack_mat_to_csv
 
 OMSIMULATOR_ENGINE = "omsimulator"
 SSP4SIM_ENGINE = "ssp4sim"
@@ -121,7 +121,7 @@ def infer_window(
     resolved_stop = stop_time if stop_time is not None else default_stop
     resolved_interval = interval
 
-    reference_csvs = materialize_reference_csvs(model.source_results, model.paths.references_dir)
+    reference_csvs = sorted(model.paths.reference_results_dir.glob("*.csv"))
     if reference_csvs:
         reference_data = load_numeric_csv(reference_csvs[0])["columns"]
         reference_time = reference_data.get("time")

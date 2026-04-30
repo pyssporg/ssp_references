@@ -1,5 +1,10 @@
 # BouncingBall
 
+## Origin
+
+Packaged from the shared `models/fmu/BouncingBall` reference FMU fixture and
+its CSV baselines.
+
 ## Overview
 
 `BouncingBall` is a simple reference SSP fixture used for fast behavioral

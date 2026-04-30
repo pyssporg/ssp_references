@@ -1,5 +1,11 @@
 # signal_delay_detector
 
+## Origin
+
+Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step`,
+`models/fmu/Modelica.Blocks.Math.Gain`, and `models/fmu/Modelica.Blocks.Math.Add`
+fixtures.
+
 ## Overview
 
 `signal_delay_detector` is a planned deterministic signal-propagation SSP

@@ -21,24 +21,20 @@ definitions, fixture notes, and explicit build/simulation entrypoints.
 │       └── <model_name>/
 │           ├── build.py
 │           ├── simulate.py
-│           ├── metadata.json
 │           ├── FIXTURE.md
 │           └── ssp/               # only for authored SSP sources such as dcmotor/embrace
 ├── build/
 │   └── models/ssp/<model_name>/
 │       ├── <model_name>.ssp
 │       ├── ssp/
-│       ├── references/            # generated CSV references from metadata sources
+│       ├── references/            # generated CSV baselines for supported fixtures
 │       └── simulation_results/
 ├── scripts/
 │   ├── run_model_workflows.py
 │   ├── run_model_simulations.py
 │   ├── cli/
 │   └── workflow/
-├── 3rd_party/
-│   ├── OMSimulator
-│   ├── reference_fmus
-│   └── pyfmu_csv
+├── 3rd_party/                # vendored helpers and upstream source material
 └── requirements.txt
 ```
 
@@ -56,9 +52,7 @@ definitions, fixture notes, and explicit build/simulation entrypoints.
 - `simulate.py` is the per-model executable entrypoint discovered by
   `scripts/run_model_simulations.py`. Each model script declares the simulation
   configuration and explicit engine calls for that system.
-- `metadata.json` declares the upstream SSP, FMU, and reference-result sources
-  still needed by the shared workflow code. When `build.py` assembles the SSP
-  itself, metadata is typically only needed for descriptive fields and results.
+- `FIXTURE.md` records the fixture origin, intended role, and usage notes.
 - `scripts/workflow/packaging.py` contains shared SSP/FMU packaging helpers
   built on `pyssp_standard`.
 - `scripts/workflow/simulation.py` contains shared simulation-engine helpers
@@ -83,8 +77,7 @@ contract:
   files directly.
 - `simulate.py` is the source of truth for how that model is simulated and
   compared across engines.
-- `metadata.json` provides model metadata plus any upstream files that still
-  need to be validated or referenced by the shared workflow code.
+- `FIXTURE.md` provides the fixture notes for each model.
 - Running `build.py` prepares the generated fixture under `build/` by
   validating sources, packaging the `.ssp`, and unpacking a runtime layout.
 
@@ -125,29 +118,11 @@ Example:
 python3 scripts/run_model_simulations.py run embrace
 ```
 
-## Metadata Shape
+## Fixture Origins
 
-```json
-{
-  "model_name": "BouncingBall",
-  "description": "Packages the bouncing-ball reference model as an SSP.",
-  "intended_use": "Simple FMI/SSP validation of hybrid dynamics.",
-  "source": {
-    "ssp": [],
-    "fmu": [
-      "3rd_party/OMSimulator/testsuite/resources/BouncingBall"
-    ],
-    "results": [
-      "3rd_party/OMSimulator/testsuite/references/BouncingBall-cs.mat"
-    ]
-  }
-}
-```
-
-Source entries are repository-relative. The current setup flow expects exactly
-one primary `ssp` or `fmu` source and zero or more `results` files when using
-the metadata-driven path. Models can also leave `ssp` and `fmu` empty and let
-`build.py` assemble the SSP from shared fixtures in `models/fmu/`.
+Classic baseline fixtures keep their provenance in `FIXTURE.md`. For the
+reference-model cases, the matching CSV baselines live in
+`models/fmu/<model>/references/`.
 
 ## Environment Notes
 

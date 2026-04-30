@@ -1,5 +1,10 @@
 # VanDerPol
 
+## Origin
+
+Packaged from the shared `models/fmu/VanDerPol` reference FMU fixture and its
+CSV baselines.
+
 ## Overview
 
 `VanDerPol` is a simple reference SSP fixture used to validate continuous

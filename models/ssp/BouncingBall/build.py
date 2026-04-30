@@ -20,9 +20,6 @@ from workflow.model import ModelMetaData
 def main() -> int:
     model = ModelMetaData(MODEL_DIR)
     model.paths.fmus_dir.mkdir(parents=True, exist_ok=True)
-    for source_path in model.source_results:
-        if not source_path.exists():
-            raise FileNotFoundError(f"Source path not found: {source_path}")
 
     fmu_path = model.paths.fmus_dir / "BouncingBall.fmu"
     package_archive(model.paths.shared_fmu_dir("BouncingBall"), fmu_path)

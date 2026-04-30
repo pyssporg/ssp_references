@@ -1,5 +1,10 @@
 # Dahlquist
 
+## Origin
+
+Packaged from the shared `models/fmu/Dahlquist` reference FMU fixture and its
+CSV baselines.
+
 ## Overview
 
 `Dahlquist` is a simple reference SSP fixture for basic integration behavior.

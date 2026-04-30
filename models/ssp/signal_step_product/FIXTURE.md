@@ -1,5 +1,11 @@
 # signal_step_product
 
+## Origin
+
+Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step`,
+`models/fmu/Modelica.Blocks.Sources.Sine`, and
+`models/fmu/Modelica.Blocks.Math.Product` fixtures.
+
 ## Overview
 
 `signal_step_product` is a planned deterministic signal-propagation SSP

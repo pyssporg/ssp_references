@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import shutil
-import zipfile
 from pathlib import Path
 
 
@@ -34,15 +33,3 @@ def copy_file(source: Path, target: Path) -> None:
         raise FileNotFoundError(f"Source file not found: {source}")
     ensure_parent(target)
     shutil.copy2(source, target)
-
-
-def zip_directory(source_dir: Path, archive_path: Path) -> None:
-    if not source_dir.is_dir():
-        raise FileNotFoundError(f"Directory not found: {source_dir}")
-    remove_path(archive_path)
-    ensure_parent(archive_path)
-    with zipfile.ZipFile(archive_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(source_dir.rglob("*")):
-            if path.is_dir():
-                continue
-            archive.write(path, path.relative_to(source_dir).as_posix())

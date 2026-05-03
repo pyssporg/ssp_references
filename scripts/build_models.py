@@ -3,22 +3,12 @@
 from __future__ import annotations
 
 import argparse
-import os
 import subprocess
-import sys
 from pathlib import Path
 
-from workflow.config import REPO_ROOT_ENV_VAR, get_repo_root
+from .utils.config import REPO_ROOT
 
-REPO_ROOT = get_repo_root()
 MODELS_DIR = REPO_ROOT / "models"
-
-
-def resolve_python_executable() -> str:
-    venv_python = REPO_ROOT / "venv" / "bin" / "python"
-    if venv_python.is_file():
-        return str(venv_python)
-    return sys.executable or "python3"
 
 
 def discover_workflows() -> dict[str, Path]:
@@ -54,31 +44,22 @@ def cmd_run(models: list[str]) -> int:
     if missing:
         raise KeyError(f"Unknown workflow(s): {', '.join(sorted(missing))}")
 
-    env = os.environ.copy()
-    env[REPO_ROOT_ENV_VAR] = str(REPO_ROOT)
-    python_executable = resolve_python_executable()
-
     for model in models:
         subprocess.run(
-            [python_executable, str(workflows[model])],
+            ["python3", str(workflows[model])],
             check=True,
-            cwd=REPO_ROOT,
-            env=env,
+            cwd=REPO_ROOT
         )
     return 0
 
 
 def cmd_run_all() -> int:
     workflows = discover_workflows()
-    env = os.environ.copy()
-    env[REPO_ROOT_ENV_VAR] = str(REPO_ROOT)
-    python_executable = resolve_python_executable()
     for model in workflows:
         subprocess.run(
-            [python_executable, str(workflows[model])],
+            ["python3", str(workflows[model])],
             check=True,
             cwd=REPO_ROOT,
-            env=env,
         )
     return 0
 

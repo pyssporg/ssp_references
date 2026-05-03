@@ -1,21 +1,21 @@
 from __future__ import annotations
 
 import csv
-import itertools
-import json
 import math
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass
 from pathlib import Path
 
 import numpy as np
 
 from .filesystem import ensure_parent
-from .model import ModelMetaData
-from .results import load_numeric_csv
-from .simulation import SimulationWindow, infer_window
+from .csv import load_numeric_csv
 
-REFERENCES_ENGINE = "references"
 
+@dataclass(frozen=True)
+class SimulationWindow:
+    start_time: float
+    stop_time: float
+    interval: float
 
 @dataclass(frozen=True)
 class ResultSet:
@@ -53,49 +53,6 @@ def resample_series(times: np.ndarray, values: np.ndarray, target_times: np.ndar
         left=unique_values[0],
         right=unique_values[-1],
     )
-
-
-def discover_simulation_result_sets(model: ModelMetaData) -> list[ResultSet]:
-    result_sets: list[ResultSet] = []
-    root = model.paths.simulation_results_dir
-    if not root.is_dir():
-        return result_sets
-
-    for variant_dir in sorted(path for path in root.iterdir() if path.is_dir() and path.name != "comparisons"):
-        csv_files = sorted(variant_dir.glob("*.csv"))
-        metadata_path = variant_dir / "variant.json"
-        engine = variant_dir.name
-        if metadata_path.is_file():
-            metadata = json.loads(metadata_path.read_text())
-            engine = metadata.get("engine", engine)
-
-        for csv_path in csv_files:
-            label = variant_dir.name if csv_path.name == "result.csv" else f"{variant_dir.name}:{csv_path.stem}"
-            result_sets.append(ResultSet(label=label, path=csv_path, engine=engine))
-    return result_sets
-
-
-def discover_reference_result_sets(model: ModelMetaData) -> list[ResultSet]:
-    reference_dir = model.paths.reference_results_dir
-    if not reference_dir.is_dir():
-        return []
-
-    return [
-        ResultSet(
-            label=f"references:{csv_path.stem}",
-            path=csv_path,
-            engine=REFERENCES_ENGINE,
-        )
-        for csv_path in sorted(reference_dir.glob("*.csv"))
-    ]
-
-
-def discover_result_sets(model: ModelMetaData, *, include_references: bool = True) -> list[ResultSet]:
-    result_sets = discover_simulation_result_sets(model)
-    if include_references:
-        result_sets.extend(discover_reference_result_sets(model))
-    return result_sets
-
 
 def compare_result_sets(
     left: ResultSet,
@@ -177,48 +134,3 @@ def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
         writer.writeheader()
         writer.writerows(rows)
 
-
-def compare_available_results(
-    model: ModelMetaData,
-    *,
-    window: SimulationWindow | None = None,
-    include_references: bool = True,
-) -> dict:
-    resolved_window = window or infer_window(model)
-    result_sets = discover_result_sets(model, include_references=include_references)
-    if len(result_sets) < 2:
-        raise ValueError(
-            f"Need at least two result sets to compare for {model.name}, found {len(result_sets)}."
-        )
-
-    comparison_dir = model.paths.comparisons_dir
-    comparison_dir.mkdir(parents=True, exist_ok=True)
-
-    comparisons: list[dict] = []
-    for left, right in itertools.combinations(result_sets, 2):
-        stem = comparison_stem(left, right)
-        metrics_csv = comparison_dir / f"{stem}.csv"
-        summary_json = comparison_dir / f"{stem}.json"
-        summary, metrics = compare_result_sets(left, right, window=resolved_window)
-        write_metrics_csv(metrics_csv, metrics)
-
-        payload = {
-            "model": model.name,
-            "window": asdict(resolved_window),
-            "left": {"label": left.label, "path": str(left.path), "engine": left.engine},
-            "right": {"label": right.label, "path": str(right.path), "engine": right.engine},
-            "summary": summary,
-            "metrics_csv": str(metrics_csv),
-        }
-        summary_json.write_text(json.dumps(payload, indent=2) + "\n")
-        comparisons.append(payload)
-
-    return {
-        "model": model.name,
-        "window": asdict(resolved_window),
-        "result_sets": [
-            {"label": result_set.label, "path": str(result_set.path), "engine": result_set.engine}
-            for result_set in result_sets
-        ],
-        "comparisons": comparisons,
-    }

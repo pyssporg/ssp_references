@@ -5,6 +5,8 @@ from pathlib import Path
 
 from .config import REPO_ROOT
 
+FIXED_GENERATION_DATE_AND_TIME = "1970-01-01T00:00:00Z"
+
 
 @dataclass(frozen=True)
 class ModelPaths:
@@ -73,8 +75,3 @@ class ModelMetaData:
 def model_paths(model_dir: Path, model_name: str) -> ModelPaths:
     return ModelPaths(name=model_name, model_dir=model_dir)
 
-
-def require_single_source(entries: list[Path], source_type: str) -> Path:
-    if len(entries) != 1:
-        raise ValueError(f"Expected exactly one {source_type} source entry, found {len(entries)}")
-    return entries[0]

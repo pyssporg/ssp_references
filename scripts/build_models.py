@@ -4,16 +4,17 @@ from __future__ import annotations
 
 import argparse
 import subprocess
+import sys
 from pathlib import Path
 
 from .utils.config import REPO_ROOT
 
-MODELS_DIR = REPO_ROOT / "models"
+MODELS_DIR = REPO_ROOT / "models" / "ssp"
 
 
 def discover_workflows() -> dict[str, Path]:
     workflows: dict[str, Path] = {}
-    for workflow_path in sorted(MODELS_DIR.glob("*/*/build.py")):
+    for workflow_path in sorted(MODELS_DIR.glob("*/build.py")):
         workflows[workflow_path.parent.name] = workflow_path
     return workflows
 
@@ -46,9 +47,9 @@ def cmd_run(models: list[str]) -> int:
 
     for model in models:
         subprocess.run(
-            ["python3", str(workflows[model])],
+            [sys.executable, str(workflows[model])],
             check=True,
-            cwd=REPO_ROOT
+            cwd=REPO_ROOT,
         )
     return 0
 
@@ -57,7 +58,7 @@ def cmd_run_all() -> int:
     workflows = discover_workflows()
     for model in workflows:
         subprocess.run(
-            ["python3", str(workflows[model])],
+            [sys.executable, str(workflows[model])],
             check=True,
             cwd=REPO_ROOT,
         )

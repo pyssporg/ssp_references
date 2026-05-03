@@ -16,7 +16,7 @@ from pyssp_standard import SSP
 from pyssp_standard.common.archive import package_archive, unpack_archive
 from pyssp_standard.ssd import Connection, DefaultExperiment
 
-from workflow.model import ModelMetaData
+from utils.model import ModelMetaData
 
 
 def main() -> int:

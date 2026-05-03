@@ -15,8 +15,7 @@ sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 from pyssp_standard import SSP
 from pyssp_standard.common.archive import package_archive, unpack_archive
 from pyssp_standard.ssd import Connection, Connector, DefaultExperiment, System
-from workflow.model import ModelMetaData
-from workflow.packaging import FIXED_GENERATION_DATE_AND_TIME
+from utils.model import FIXED_GENERATION_DATE_AND_TIME, ModelMetaData
 
 
 def main() -> int:

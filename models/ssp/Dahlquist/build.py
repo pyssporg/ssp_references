@@ -14,7 +14,7 @@ sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
 from pyssp_standard.common.archive import package_archive, unpack_archive
 from pyssp_standard.fmu import FMU
-from workflow.model import ModelMetaData
+from utils.model import ModelMetaData
 
 
 def main() -> int:

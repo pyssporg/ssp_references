@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssv:ParameterSet xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" version="1.0" name="StepProductParameters">
+  <ssv:Parameters>
+    <ssv:Parameter name="step_height">
+      <ssv:Real value="1.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="step_offset">
+      <ssv:Real value="0.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="step_startTime">
+      <ssv:Real value="0.25" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine_amplitude">
+      <ssv:Real value="1.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine_f">
+      <ssv:Real value="1.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine_offset">
+      <ssv:Real value="0.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine_phase">
+      <ssv:Real value="0.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine_startTime">
+      <ssv:Real value="0.0" />
+    </ssv:Parameter>
+  </ssv:Parameters>
+</ssv:ParameterSet>

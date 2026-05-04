@@ -5,10 +5,14 @@
 Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` and
 `models/fmu/Modelica.Blocks.Math.Gain` fixtures.
 
+The parameter values are stored in
+`models/ssp/signal_step_gain/ssp/resources/signal_step_gain_parameters.ssv`
+and linked during the SSP build.
+
 ## Overview
 
 `signal_step_gain` is a deterministic signal-propagation SSP fixture built from
-shared Modelica FMUs.
+shared Modelica FMUs with an external system-level parameter set.
 
 ## Structure
 

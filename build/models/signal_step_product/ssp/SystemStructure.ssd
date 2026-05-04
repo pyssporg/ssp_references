@@ -1,38 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" name="SystemStructure" version="1.0">
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="SystemStructure" version="1.0">
   <ssd:System name="system">
     <ssd:ParameterBindings>
-      <ssd:ParameterBinding>
-        <ssd:ParameterValues>
-          <ssv:ParameterSet version="1.0" name="system_parameters">
-            <ssv:Parameters>
-              <ssv:Parameter name="step.height">
-                <ssv:Real value="1.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step.offset">
-                <ssv:Real value="0.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step.startTime">
-                <ssv:Real value="0.25" />
-              </ssv:Parameter>
-              <ssv:Parameter name="sine.amplitude">
-                <ssv:Real value="1.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="sine.f">
-                <ssv:Real value="1.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="sine.offset">
-                <ssv:Real value="0.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="sine.phase">
-                <ssv:Real value="0.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="sine.startTime">
-                <ssv:Real value="0.0" />
-              </ssv:Parameter>
-            </ssv:Parameters>
-          </ssv:ParameterSet>
-        </ssd:ParameterValues>
+      <ssd:ParameterBinding source="resources/signal_step_product_parameters.ssv">
+        <ssd:ParameterMapping source="resources/signal_step_product_mapping.ssm" />
       </ssd:ParameterBinding>
     </ssd:ParameterBindings>
     <ssd:Elements>

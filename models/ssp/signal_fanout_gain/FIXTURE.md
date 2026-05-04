@@ -5,10 +5,14 @@
 Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` and
 `models/fmu/Modelica.Blocks.Math.Gain` fixtures.
 
+The parameter values are stored in
+`models/ssp/signal_fanout_gain/ssp/resources/signal_fanout_gain_parameters.ssv`
+and linked during the SSP build.
+
 ## Overview
 
 `signal_fanout_gain` is a deterministic signal-propagation SSP fixture built
-from shared Modelica FMUs.
+from shared Modelica FMUs with an external system-level parameter set.
 
 ## Structure
 

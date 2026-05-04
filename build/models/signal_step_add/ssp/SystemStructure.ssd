@@ -1,38 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" name="SystemStructure" version="1.0">
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="SystemStructure" version="1.0">
   <ssd:System name="system">
     <ssd:ParameterBindings>
-      <ssd:ParameterBinding>
-        <ssd:ParameterValues>
-          <ssv:ParameterSet version="1.0" name="system_parameters">
-            <ssv:Parameters>
-              <ssv:Parameter name="step_a.height">
-                <ssv:Real value="1.5" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step_a.offset">
-                <ssv:Real value="0.5" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step_a.startTime">
-                <ssv:Real value="0.25" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step_b.height">
-                <ssv:Real value="-0.5" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step_b.offset">
-                <ssv:Real value="1.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step_b.startTime">
-                <ssv:Real value="0.5" />
-              </ssv:Parameter>
-              <ssv:Parameter name="add.k1">
-                <ssv:Real value="1.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="add.k2">
-                <ssv:Real value="1.0" />
-              </ssv:Parameter>
-            </ssv:Parameters>
-          </ssv:ParameterSet>
-        </ssd:ParameterValues>
+      <ssd:ParameterBinding source="resources/signal_step_add_parameters.ssv">
+        <ssd:ParameterMapping source="resources/signal_step_add_mapping.ssm" />
       </ssd:ParameterBinding>
     </ssd:ParameterBindings>
     <ssd:Elements>

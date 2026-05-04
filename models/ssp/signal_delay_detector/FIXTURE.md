@@ -6,10 +6,14 @@ Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step`,
 `models/fmu/Modelica.Blocks.Math.Gain`, and `models/fmu/Modelica.Blocks.Math.Add`
 fixtures.
 
+The parameter values are stored in
+`models/ssp/signal_delay_detector/ssp/resources/signal_delay_detector_parameters.ssv`
+and linked during the SSP build.
+
 ## Overview
 
-`signal_delay_detector` is a planned deterministic signal-propagation SSP
-fixture designed to expose subtle ordering and delay issues.
+`signal_delay_detector` is a deterministic signal-propagation SSP fixture
+designed to expose subtle ordering and delay issues.
 
 ## Structure
 
@@ -20,6 +24,7 @@ fixture designed to expose subtle ordering and delay issues.
 
 - Deterministic signal-propagation fixture.
 - Priority 3 propagation test.
+- Implemented regression fixture.
 
 ## Intent
 

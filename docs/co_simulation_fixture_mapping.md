@@ -71,6 +71,9 @@ These fixtures now exist as SSP models under `models/ssp/`.
 | `signal_step_gain` | Implemented | [signal_step_gain](../models/ssp/signal_step_gain/FIXTURE.md) |
 | `signal_step_add` | Implemented | [signal_step_add](../models/ssp/signal_step_add/FIXTURE.md) |
 | `signal_fanout_gain` | Implemented | [signal_fanout_gain](../models/ssp/signal_fanout_gain/FIXTURE.md) |
+| `signal_sine_gain_add` | Implemented | [signal_sine_gain_add](../models/ssp/signal_sine_gain_add/FIXTURE.md) |
+| `signal_step_product` | Implemented | [signal_step_product](../models/ssp/signal_step_product/FIXTURE.md) |
+| `signal_delay_detector` | Implemented | [signal_delay_detector](../models/ssp/signal_delay_detector/FIXTURE.md) |
 
 ## Coverage Assessment
 
@@ -81,8 +84,8 @@ The repository already has good coverage for:
 - Larger composite SSP execution.
 - Cross-engine result comparison.
 
-The main remaining gap is deliberate coverage of signal-propagation behavior in
-small deterministic composite systems.
+The main remaining gap is engine-side validation and regression coverage, not
+fixture construction.
 
 That gap matters because many orchestration bugs are easiest to detect in
 fixtures where:
@@ -91,37 +94,17 @@ fixtures where:
 - There is little or no internal state to mask errors.
 - A wrong execution order or step boundary shows up immediately.
 
-## Planned Signal-Propagation Fixtures
+## Packaging Coverage
 
-These fixtures are still planned and currently only have design notes.
+The deterministic signal fixtures now cover the main packaging alternatives:
 
-| Fixture | Status | Detail |
-| --- | --- | --- |
-| `signal_sine_gain_add` | Planned | [signal_sine_gain_add](../models/ssp/signal_sine_gain_add/FIXTURE.md) |
-| `signal_step_product` | Planned | [signal_step_product](../models/ssp/signal_step_product/FIXTURE.md) |
-| `signal_delay_detector` | Planned | [signal_delay_detector](../models/ssp/signal_delay_detector/FIXTURE.md) |
-
-## Recommended Priority
-
-The custom fixture rollout should be staged.
-
-### Priority 1
-
-Implemented fixtures provide immediate coverage of direct propagation, fan-in,
-and fan-out.
-
-### Priority 2
-
-Planned:
-
-- `signal_sine_gain_add`
-- `signal_step_product`
-
-### Priority 3
-
-Planned:
-
-- `signal_delay_detector`
+- `signal_step_gain`, `signal_fanout_gain`, and `signal_delay_detector` use
+  checked-in external `.ssv` files linked during the SSP build.
+- `signal_step_add` uses a checked-in external `.ssv` plus an external
+  `.ssm` mapping linked during the SSP build.
+- `signal_step_product` generates the external `.ssv` and `.ssm` during its
+  build script before linking them into the SSP.
+- `signal_sine_gain_add` remains the inline system-level regression anchor.
 
 ## Comparison Expectations Per Fixture Class
 
@@ -159,12 +142,6 @@ Recommended pass/fail rules for these fixtures:
 
 ## Immediate Next Step
 
-The most useful implementation path is:
-
-1. Resolve engine-side runtime issues exposed by the new deterministic
-   propagation fixtures.
-2. Run `signal_step_gain`, `signal_step_add`, and `signal_fanout_gain` through
-   the comparison workflow once both engines accept them.
-3. Use those fixtures to define the first strict signal-propagation regression
-   checks.
-4. Add the Priority 2 fixtures after the initial propagation path is stable.
+The most useful follow-up is to run the full deterministic signal set through
+the comparison workflow and keep the five external-parameter variants plus the
+inline regression anchor in the maintained regression suite.

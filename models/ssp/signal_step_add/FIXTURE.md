@@ -5,10 +5,15 @@
 Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` and
 `models/fmu/Modelica.Blocks.Math.Add` fixtures.
 
+The parameter values are stored in
+`models/ssp/signal_step_add/ssp/resources/signal_step_add_parameters.ssv` with
+the external mapping in
+`models/ssp/signal_step_add/ssp/resources/signal_step_add_mapping.ssm`.
+
 ## Overview
 
 `signal_step_add` is a deterministic signal-propagation SSP fixture built from
-shared Modelica FMUs.
+shared Modelica FMUs with an external system-level parameter set and mapping.
 
 ## Structure
 

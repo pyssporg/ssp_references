@@ -1,6 +1,6 @@
 # AGENTS
 
-## AGENT/DEVELOPMEMNT RULES
+## AGENT/DEVELOPMENT RULES
 
 1. Don’t assume. Don’t hide confusion. Surface tradeoffs.
 
@@ -25,6 +25,7 @@ Keep changes direct and explicit.
 - Treat this as experimental software:
   interfaces do not need to be stable, and clarity is more important than
   compatibility shims
+- Avoid if possible shims and thin wrappers unless a substantial upside
 
 ## Environment Guidelines
 

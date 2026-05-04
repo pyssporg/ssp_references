@@ -1,30 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" name="SystemStructure" version="1.0">
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="SystemStructure" version="1.0">
   <ssd:System name="system">
     <ssd:ParameterBindings>
-      <ssd:ParameterBinding>
-        <ssd:ParameterValues>
-          <ssv:ParameterSet version="1.0" name="system_parameters">
-            <ssv:Parameters>
-              <ssv:Parameter name="step.height">
-                <ssv:Real value="2.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step.offset">
-                <ssv:Real value="-1.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="step.startTime">
-                <ssv:Real value="0.25" />
-              </ssv:Parameter>
-              <ssv:Parameter name="gain_a.k">
-                <ssv:Real value="2.0" />
-              </ssv:Parameter>
-              <ssv:Parameter name="gain_b.k">
-                <ssv:Real value="-1.0" />
-              </ssv:Parameter>
-            </ssv:Parameters>
-          </ssv:ParameterSet>
-        </ssd:ParameterValues>
-      </ssd:ParameterBinding>
+      <ssd:ParameterBinding source="resources/signal_fanout_gain_parameters.ssv" />
     </ssd:ParameterBindings>
     <ssd:Elements>
       <ssd:Component name="step" source="resources/Step.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">

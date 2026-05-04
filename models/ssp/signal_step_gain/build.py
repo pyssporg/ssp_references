@@ -14,8 +14,8 @@ sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
 from pyssp_standard import SSP
 from pyssp_standard.common.archive import package_archive, unpack_archive
-from pyssp_standard.ssd import Connection, Connector, DefaultExperiment, System
-from utils.model import FIXED_GENERATION_DATE_AND_TIME, ModelMetaData
+from pyssp_standard.ssd import Connection, DefaultExperiment
+from utils.model import ModelMetaData
 
 
 def main() -> int:
@@ -28,6 +28,7 @@ def main() -> int:
 
     step_path = model.paths.fmus_dir / "Step.fmu"
     gain_path = model.paths.fmus_dir / "Gain.fmu"
+    parameters_path = MODEL_DIR / "ssp" / "resources" / "signal_step_gain_parameters.ssv"
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), gain_path)
     with SSP(output_path, mode="w") as ssp:
@@ -36,17 +37,9 @@ def main() -> int:
 
         ssp.add_fmu("step", step_path, resource_name="Step.fmu", implementation="CoSimulation")
         ssp.add_fmu("gain", gain_path, resource_name="Gain.fmu", implementation="CoSimulation")
+        ssp.add_external_parameterset(parameters_path)
 
         with ssp.system_structure() as ssd:
-            ssd.extend_system_parameterset(
-                {
-                    "step.height": 2.0,
-                    "step.offset": 1.0,
-                    "step.startTime": 0.25,
-                    "gain.k": 3.0,
-                }
-            )
-
             system = ssd.xml.system
             system.connections.extend(
                 [

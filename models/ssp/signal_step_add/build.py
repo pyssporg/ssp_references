@@ -30,6 +30,8 @@ def main() -> int:
     step_a_path = model.paths.fmus_dir / "StepA.fmu"
     step_b_path = model.paths.fmus_dir / "StepB.fmu"
     add_path = model.paths.fmus_dir / "Add.fmu"
+    parameters_path = MODEL_DIR / "ssp" / "resources" / "signal_step_add_parameters.ssv"
+    mapping_path = MODEL_DIR / "ssp" / "resources" / "signal_step_add_mapping.ssm"
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_a_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_b_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"), add_path)
@@ -41,21 +43,9 @@ def main() -> int:
         ssp.add_fmu("step_a", step_a_path, resource_name="StepA.fmu", implementation="CoSimulation")
         ssp.add_fmu("step_b", step_b_path, resource_name="StepB.fmu", implementation="CoSimulation")
         ssp.add_fmu("add", add_path, resource_name="Add.fmu", implementation="CoSimulation")
+        ssp.add_external_parameterset(parameters_path, mapping_path)
 
         with ssp.system_structure() as ssd:
-            ssd.extend_system_parameterset(
-                {
-                    "step_a.height": 1.5,
-                    "step_a.offset": 0.5,
-                    "step_a.startTime": 0.25,
-                    "step_b.height": -0.5,
-                    "step_b.offset": 1.0,
-                    "step_b.startTime": 0.5,
-                    "add.k1": 1.0,
-                    "add.k2": 1.0,
-                }
-            )
-
             system = ssd.xml.system
             system.connections.extend(
                 [

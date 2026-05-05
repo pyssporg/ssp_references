@@ -5,6 +5,8 @@ from pathlib import Path
 
 from .config import REPO_ROOT
 
+from utils.filesystem import reset_dir
+
 FIXED_GENERATION_DATE_AND_TIME = "1970-01-01T00:00:00Z"
 
 
@@ -70,6 +72,9 @@ class ModelMetaData:
         self.dir = model_dir
         self.name = self.dir.name
         self.paths = model_paths(self.dir, self.name)
+
+    def reset_build_dir(self):
+        reset_dir(self.paths.build_dir)
 
 
 def model_paths(model_dir: Path, model_name: str) -> ModelPaths:

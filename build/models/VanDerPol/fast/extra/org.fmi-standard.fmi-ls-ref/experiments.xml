@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Experiments name="experiments">
+  <Experiment name="fast" description="Variant configuration with mu set to 2.0." target="SystemStructure.ssd" startTime="0.0" stopTime="1.0" tolerance="0.0001" stepSize="0.001">
+    <Parameters source="resources/vanderpol_parameters_fast.ssv" mapping="resources/vanderpol_parameters.ssm" />
+    <References source="resources/vanderpol_reference_fast.csv" mapping="resources/vanderpol_references.ssm">
+      <Signal name="x0" />
+      <Signal name="x1" />
+    </References>
+  </Experiment>
+</Experiments>

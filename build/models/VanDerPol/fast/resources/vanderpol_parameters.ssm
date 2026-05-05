@@ -1,0 +1,3 @@
+<ssm:ParameterMapping xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" version="1.0">
+  <ssm:MappingEntry source="mu" target="fmu.mu" />
+</ssm:ParameterMapping>

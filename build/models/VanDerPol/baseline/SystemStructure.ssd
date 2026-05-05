@@ -1,8 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="VanDerPol" version="1.0">
   <ssd:System name="VanDerPol">
+    <ssd:ParameterBindings>
+      <ssd:ParameterBinding source="resources/vanderpol_parameters_baseline.ssv">
+        <ssd:ParameterMapping source="resources/vanderpol_parameters.ssm" />
+      </ssd:ParameterBinding>
+    </ssd:ParameterBindings>
     <ssd:Elements>
-      <ssd:Component name="fmu" source="resources/VanDerPol.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+      <ssd:Component name="fmu" source="resources/model.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
         <ssd:Connectors>
           <ssd:Connector name="mu" kind="parameter">
             <ssc:Real />

@@ -1,11 +1,7 @@
 
 build/*
 !build/models/
-build/models/*
-!build/models/*/
-build/models/*/*
-!build/models/*/ssp/
-!build/models/*/ssp/**
+
 
 venv/
 

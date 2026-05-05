@@ -1,32 +1,73 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 
 from __future__ import annotations
 
-import os
-import sys
+import tempfile
 from pathlib import Path
+import sys
 
+from pyssp_standard import LSRefExperiments, SSP, get_repo_root
+from pyssp_standard.common.archive import package_archive, unpack_archive
+from pyssp_standard.fmu import FMU
+from pyssp_standard.standard.ls_ref.model import (
+    LSRefExperiment,
+    LSRefExperimentResource,
+)
 
 MODEL_DIR = Path(__file__).resolve().parent
-REPO_ROOT = Path(os.environ.get("SSP_REFERENCES_REPO_ROOT", Path(__file__).resolve().parents[3]))
+REPO_ROOT = get_repo_root(file="__SSP_REF_ROOT__")
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard.common.archive import package_archive, unpack_archive
-from pyssp_standard.fmu import FMU
 from utils.model import ModelMetaData
+
+
+def create_ssp(model: ModelMetaData, temp_dir, exp: LSRefExperiment):
+    fmu_path = temp_dir / "model.fmu"
+    ssp_path = temp_dir / "model.ssp"
+    package_archive(model.paths.shared_fmu_dir("VanDerPol"), fmu_path)
+
+    build_dir = model.paths.build_dir / exp.name
+
+    with FMU(fmu_path, mode="r") as fmu:
+        fmu.package_as_ssp(
+            ssp_path,
+            system_name=model.name,
+            component_name="fmu",
+            implementation="CoSimulation",
+        )
+
+    with SSP(ssp_path, mode="a") as ssp:
+        for parameters in exp.parameters:
+            ssp.add_external_parameterset(
+                MODEL_DIR / parameters.source, MODEL_DIR / parameters.mapping
+            )
+
+        for resource in [*exp.stimuli, *exp.references]: 
+            ssp.add_resource(MODEL_DIR / resource.source)
+            if resource.mapping is not None:
+                ssp.add_resource(MODEL_DIR / resource.mapping)
+
+        with ssp.ls_ref_experiments() as experiments:
+            experiments.add_experiment(exp)
+
+    unpack_archive(ssp_path, build_dir, recursive_fmus=True, overwrite=True)
+
+
+EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
 
 
 def main() -> int:
     model = ModelMetaData(MODEL_DIR)
-    model.paths.fmus_dir.mkdir(parents=True, exist_ok=True)
+    model.reset_build_dir()
 
-    fmu_path = model.paths.fmus_dir / "VanDerPol.fmu"
-    package_archive(model.paths.shared_fmu_dir("VanDerPol"), fmu_path)
-    with FMU(fmu_path, mode="r") as fmu:
-        fmu.package_as_ssp(model.paths.ssp_path, system_name=model.name, component_name="fmu", implementation="CoSimulation")
+    LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
 
-    unpack_archive(model.paths.ssp_path, model.paths.unpacked_ssp_dir, recursive_fmus=True, overwrite=True)
+    with tempfile.TemporaryDirectory(prefix="vanderpol_") as temp_dir:
+        with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
+            for exp in experiments.xml.experiments:
+                create_ssp(model, Path(temp_dir), exp)
+
     print(f"Built {model.name}")
     return 0
 

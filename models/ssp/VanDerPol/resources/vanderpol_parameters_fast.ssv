@@ -1,0 +1,7 @@
+<ssv:ParameterSet xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" version="1.0" name="vanderpol_parameters_fast">
+  <ssv:Parameters>
+    <ssv:Parameter name="mu">
+      <ssv:Real value="2.0" />
+    </ssv:Parameter>
+  </ssv:Parameters>
+</ssv:ParameterSet>

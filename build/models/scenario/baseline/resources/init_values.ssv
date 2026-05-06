@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssv:ParameterSet xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" version="1.0" name="Default">
+  <ssv:Parameters />
+</ssv:ParameterSet>

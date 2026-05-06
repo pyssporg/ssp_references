@@ -7,8 +7,5 @@
       stopTime="1.0"
       stepSize="0.001"
       tolerance="0.0001">
-    <Parameters
-        source="resources/signal_step_product_parameters.ssv"
-        mapping="resources/signal_step_product_mapping.ssm" />
   </Experiment>
 </Experiments>

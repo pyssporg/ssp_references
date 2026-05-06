@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Experiments name="experiments">
+  <Experiment name="baseline" target="SystemStructure.ssd" startTime="0.0" stopTime="1.0" tolerance="0.0001" stepSize="0.001">
+    <Parameters source="resources/signal_step_add_parameters.ssv" mapping="resources/signal_step_add_mapping.ssm" />
+  </Experiment>
+</Experiments>

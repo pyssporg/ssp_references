@@ -2,41 +2,35 @@
 
 from __future__ import annotations
 
-import os
 import sys
+import tempfile
 from pathlib import Path
 
 
 MODEL_DIR = Path(__file__).resolve().parent
-REPO_ROOT = Path(os.environ.get("SSP_REFERENCES_REPO_ROOT", Path(__file__).resolve().parents[3]))
+REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import SSP
+from pyssp_standard import LSRefExperiments, SSP
 from pyssp_standard.common.archive import package_archive, unpack_archive
+from pyssp_standard.standard.ls_ref.model import LSRefExperiment
 from pyssp_standard.ssd import Connection, DefaultExperiment
 from utils.model import ModelMetaData
 
 
-def main() -> int:
-    model = ModelMetaData(MODEL_DIR)
-    output_path = model.paths.ssp_path
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    model.paths.fmus_dir.mkdir(parents=True, exist_ok=True)
-    if output_path.exists():
-        output_path.unlink()
-
-    step_path = model.paths.fmus_dir / "Step.fmu"
-    gain_a_path = model.paths.fmus_dir / "GainA.fmu"
-    gain_b_path = model.paths.fmus_dir / "GainB.fmu"
-    add_path = model.paths.fmus_dir / "Add.fmu"
-    parameters_path = MODEL_DIR / "ssp" / "resources" / "signal_delay_detector_parameters.ssv"
+def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
+    step_path = temp_dir / "Step.fmu"
+    gain_a_path = temp_dir / "GainA.fmu"
+    gain_b_path = temp_dir / "GainB.fmu"
+    add_path = temp_dir / "Add.fmu"
+    ssp_path = temp_dir / "model.ssp"
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), gain_a_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), gain_b_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"), add_path)
 
-    with SSP(output_path, mode="w") as ssp:
+    with SSP(ssp_path, mode="w") as ssp:
         with ssp.system_structure() as ssd:
             ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
 
@@ -44,7 +38,8 @@ def main() -> int:
         ssp.add_fmu("gain_a", gain_a_path, resource_name="GainA.fmu", implementation="CoSimulation")
         ssp.add_fmu("gain_b", gain_b_path, resource_name="GainB.fmu", implementation="CoSimulation")
         ssp.add_fmu("add", add_path, resource_name="Add.fmu", implementation="CoSimulation")
-        ssp.add_external_parameterset(parameters_path)
+        for parameters in exp.parameters:
+            ssp.add_external_parameterset(MODEL_DIR / "ssp" / parameters.source)
 
         with ssp.system_structure() as ssd:
             system = ssd.xml.system
@@ -60,7 +55,31 @@ def main() -> int:
                 ]
             )
 
-    unpack_archive(model.paths.ssp_path, model.paths.unpacked_ssp_dir, recursive_fmus=True, overwrite=True)
+        for resource in [*exp.stimuli, *exp.references]:
+            ssp.add_resource(MODEL_DIR / resource.source)
+            if resource.mapping is not None:
+                ssp.add_resource(MODEL_DIR / resource.mapping)
+
+        with ssp.ls_ref_experiments() as experiments:
+            experiments.add_experiment(exp)
+
+    unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
+
+
+EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
+
+
+def main() -> int:
+    model = ModelMetaData(MODEL_DIR)
+    model.reset_build_dir()
+
+    LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
+
+    with tempfile.TemporaryDirectory(prefix="signal_delay_detector_") as temp_dir:
+        with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
+            for exp in experiments.xml.experiments:
+                create_ssp(model, Path(temp_dir), exp)
+
     print(f"Built {model.name}")
     return 0
 

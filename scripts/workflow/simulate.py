@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import multiprocessing as mp
 import os
 import shutil
 import time
@@ -9,6 +10,8 @@ from contextlib import contextmanager
 from pathlib import Path
 import tempfile
 import zipfile
+import sys
+import traceback
 
 from utils.filesystem import reset_dir
 from utils.config import REPO_ROOT
@@ -228,6 +231,23 @@ def _temporary_cwd(path: Path):
         os.chdir(previous)
 
 
+def _ssp4sim_child_main(config_path: str) -> None:
+    from pyssp4sim import Simulator
+
+    try:
+        simulator = Simulator(config_path)
+        simulator.init()
+        simulator.simulate()
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(0)
+    except BaseException:
+        traceback.print_exc()
+        sys.stdout.flush()
+        sys.stderr.flush()
+        os._exit(1)
+
+
 @contextmanager
 def _runtime_ssp_archive(ssp_root: Path):
     with tempfile.TemporaryDirectory(prefix=f"{ssp_root.name}_") as temp_dir:
@@ -262,8 +282,6 @@ def _runtime_ssp_archive(ssp_root: Path):
 
 
 def simulate_ssp4sim(request: SimulationRequest) -> SimulationRun:
-    from pyssp4sim import Simulator
-
     reset_dir(request.run_dir)
     with _runtime_ssp_copy(request.setup.ssp_root) as runtime_ssp_root:
         write_json(
@@ -277,11 +295,18 @@ def simulate_ssp4sim(request: SimulationRequest) -> SimulationRun:
         )
 
         start = time.perf_counter()
-        simulator = Simulator(str(request.config_path))
-        simulator.init()
-        simulator.simulate()
-        del simulator
+        process = mp.get_context("spawn").Process(
+            target=_ssp4sim_child_main,
+            args=(str(request.config_path),),
+        )
+        process.start()
+        process.join()
         runtime_s = time.perf_counter() - start
+        if process.exitcode != 0:
+            raise RuntimeError(
+                f"ssp4sim failed for {request.setup.model_name}/{request.setup.case_name} "
+                f"with exit code {process.exitcode}"
+            )
 
     if not request.result_path.is_file():
         raise FileNotFoundError(f"ssp4sim did not write result CSV: {request.result_path}")

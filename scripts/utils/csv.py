@@ -7,12 +7,24 @@ import numpy as np
 from scipy.io import loadmat
 
 
-def normalize_column_name(column_name: str, engine: str | None = None) -> str:
+def normalize_column_name(
+    column_name: str,
+    *,
+    engine: str | None = None,
+    root_system_name: str | None = None,
+) -> str:
     normalized = column_name.strip()
     if engine == "omsimulator" and normalized.startswith("root."):
         normalized = normalized[len("root.") :]
-    if "." in normalized and normalized != "time":
-        normalized = normalized.rsplit(".", 1)[-1]
+
+    if root_system_name:
+        root_prefix = f"{root_system_name}."
+        if normalized.startswith(root_prefix):
+            normalized = normalized[len(root_prefix) :]
+
+    if normalized.startswith("fmu."):
+        normalized = normalized[len("fmu.") :]
+
     return normalized
 
 
@@ -23,24 +35,27 @@ def parse_float(value: str) -> float:
     return float(stripped)
 
 
-def load_numeric_csv(path: Path, *, engine: str | None = None) -> dict:
+def load_numeric_csv(
+    path: Path,
+    *,
+    engine: str | None = None,
+    root_system_name: str | None = None,
+) -> dict:
     with path.open(newline="") as handle:
         reader = csv.reader(handle)
         raw_headers = next(reader)
-        headers = [
-            normalize_column_name(header, engine)
-            for header in raw_headers
-        ]
+        headers = [header.strip() for header in raw_headers]
         rows = [[parse_float(value) for value in row] for row in reader]
 
     if not rows:
         return {"headers": headers, "columns": {header: np.array([], dtype=float) for header in headers}}
 
     data = np.asarray(rows, dtype=float)
-    columns = {
-        header: data[:, index]
-        for index, header in enumerate(headers)
-    }
+    columns: dict[str, np.ndarray] = {}
+    for index, header in enumerate(headers):
+        if header in columns:
+            raise ValueError(f"Duplicate column name '{header}' in {path}")
+        columns[header] = data[:, index]
     return {"headers": headers, "columns": columns}
 
 

@@ -22,6 +22,21 @@ def _parse_float(attributes: dict[str, str], key: str, path: Path) -> float:
     return float(attributes[key])
 
 
+def _read_root_system_name(system_structure_path: Path) -> str:
+    if not system_structure_path.is_file():
+        raise FileNotFoundError(f"System structure not found: {system_structure_path}")
+
+    root = ET.parse(system_structure_path).getroot()
+    system = root.find(".//{*}System")
+    if system is None:
+        raise ValueError(f"No system element found in {system_structure_path}")
+
+    system_name = system.attrib.get("name")
+    if not system_name:
+        raise ValueError(f"System element in {system_structure_path} is missing a name")
+    return str(system_name)
+
+
 def read_experiment_window(ssp_root: Path, case_name: str) -> tuple[SimulationWindow, float, str | None]:
     experiments_path = ssp_root / LS_REF_EXPERIMENTS_RELATIVE
     if not experiments_path.is_file():
@@ -56,6 +71,8 @@ class SimulationSetup:
     window: SimulationWindow
     tolerance: float
     backends: tuple[str, ...] = field(default_factory=tuple)
+    compare_signals: tuple[str, ...] = field(default_factory=tuple)
+    root_system_name: str = ""
     description: str | None = None
 
     def __post_init__(self) -> None:
@@ -63,6 +80,16 @@ class SimulationSetup:
         if not normalized_backends:
             raise ValueError("Simulation setup must declare at least one backend")
         object.__setattr__(self, "backends", normalized_backends)
+
+        normalized_signals = tuple(str(signal).strip() for signal in self.compare_signals if str(signal).strip())
+        if not normalized_signals:
+            raise ValueError("Simulation setup must declare at least one compare signal")
+        object.__setattr__(self, "compare_signals", normalized_signals)
+
+        root_system_name = str(self.root_system_name).strip()
+        if not root_system_name:
+            raise ValueError("Simulation setup must declare a root system name")
+        object.__setattr__(self, "root_system_name", root_system_name)
 
     @classmethod
     def from_spec(cls, spec: SimulationCaseSpec) -> "SimulationSetup":
@@ -74,11 +101,14 @@ class SimulationSetup:
             )
 
         window, tolerance, description = read_experiment_window(spec.ssp_root, spec.case_name)
+        root_system_name = _read_root_system_name(layout.system_structure_path)
         return cls(
             layout=layout,
             window=window,
             tolerance=tolerance,
             backends=spec.backends,
+            compare_signals=spec.compare_signals,
+            root_system_name=root_system_name,
             description=description,
         )
 
@@ -95,11 +125,17 @@ class SimulationSetup:
         backends = data["backends"]
         if not isinstance(backends, list):
             raise TypeError("Simulation setup backends must be a list of backend names")
+        compare_signals = data["compare_signals"]
+        if not isinstance(compare_signals, list):
+            raise TypeError("Simulation setup compare_signals must be a list of signal names")
+        root_system_name = str(data.get("root_system_name") or _read_root_system_name(layout.system_structure_path))
         return cls(
             layout=layout,
             window=window,
             tolerance=float(data["tolerance"]),
             backends=tuple(str(backend).lower() for backend in backends),
+            compare_signals=tuple(str(signal).strip() for signal in compare_signals if str(signal).strip()),
+            root_system_name=root_system_name,
             description=data.get("description"),
         )
 
@@ -132,6 +168,8 @@ class SimulationSetup:
             },
             "tolerance": self.tolerance,
             "backends": list(self.backends),
+            "compare_signals": list(self.compare_signals),
+            "root_system_name": self.root_system_name,
             "system_structure": relative_path(manifest_root, self.layout.system_structure_path),
             "ls_ref_experiments": relative_path(manifest_root, self.layout.ls_ref_experiments_path),
             "resources_dir": relative_path(manifest_root, self.layout.resources_dir),

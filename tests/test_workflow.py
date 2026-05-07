@@ -23,7 +23,13 @@ def make_ssp_root(tmp_path: Path) -> Path:
     ssp_root = tmp_path / "artifacts" / "models" / "ToyModel" / "baseline"
     (ssp_root / "extra" / "org.fmi-standard.fmi-ls-ref").mkdir(parents=True)
     (ssp_root / "resources").mkdir()
-    (ssp_root / "SystemStructure.ssd").write_text("<ssd />\n")
+    (ssp_root / "SystemStructure.ssd").write_text(
+        """<?xml version="1.0" encoding="UTF-8"?>
+<ssd:SystemStructure xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructure">
+  <ssd:System name="system" />
+</ssd:SystemStructure>
+"""
+    )
     (ssp_root / "extra" / "org.fmi-standard.fmi-ls-ref" / "experiments.xml").write_text(
         """<?xml version="1.0" encoding="UTF-8"?>
 <Experiments name="ToyModel experiments">
@@ -61,6 +67,7 @@ def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:
         models=(
             RegistryModel(
                 name="ToyModel",
+                compare_signals=("signal",),
                 cases=(
                     RegistryCase(name="baseline", backends=("ssp4sim", "omsimulator")),
                     RegistryCase(name="fast", backends=("ssp4sim",)),
@@ -68,6 +75,7 @@ def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:
             ),
             RegistryModel(
                 name="OtherModel",
+                compare_signals=("output",),
                 cases=(RegistryCase(name="baseline", backends=("omsimulator",)),),
             ),
         ),
@@ -84,6 +92,7 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
+        compare_signals=("signal",),
     )
 
     setup = prepare_setup(spec)
@@ -103,6 +112,8 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
     assert loaded.model_name == "ToyModel"
     assert loaded.case_name == "baseline"
     assert loaded.backends == ("ssp4sim", "omsimulator")
+    assert loaded.compare_signals == ("signal",)
+    assert loaded.root_system_name == "system"
     assert loaded.window == setup.window
     assert loaded.tolerance == pytest.approx(setup.tolerance)
 
@@ -114,6 +125,7 @@ def test_simulation_run_manifest_roundtrip(tmp_path: Path) -> None:
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
+        compare_signals=("signal",),
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -144,6 +156,7 @@ def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
+        compare_signals=("signal",),
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -163,7 +176,7 @@ def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
 
     assert comparison.manifest_path.exists()
     assert comparison.metrics_path.exists()
-    assert comparison.summary["common_signal_count"] == 1
+    assert comparison.summary["compared_signal_count"] == 1
     assert comparison.summary["max_abs_error"] == pytest.approx(0.1)
 
     loaded = ComparisonRun.from_manifest(comparison.manifest_path)
@@ -182,6 +195,7 @@ def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
+        compare_signals=("step.y",),
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -189,8 +203,8 @@ def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
     left_request = SimulationRequest(setup=setup, backend="ssp4sim")
     right_request = SimulationRequest(setup=setup, backend="omsimulator")
 
-    write_prefixed_csv(left_request.result_path, "fmu.x", [0.0, 1.0])
-    write_prefixed_csv(right_request.result_path, "ToyModel.fmu.x", [0.0, 1.0])
+    write_prefixed_csv(left_request.result_path, "system.step.y", [0.0, 1.0])
+    write_prefixed_csv(right_request.result_path, "root.system.step.y", [0.0, 1.0])
 
     left_run = SimulationRun(request=left_request, result_path=left_request.result_path)
     right_run = SimulationRun(request=right_request, result_path=right_request.result_path)
@@ -199,7 +213,7 @@ def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
 
     comparison = compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
 
-    assert comparison.summary["common_signal_count"] == 1
+    assert comparison.summary["compared_signal_count"] == 1
     assert comparison.summary["max_abs_error"] == pytest.approx(0.0)
 
 
@@ -210,6 +224,7 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "ecos"),
+        compare_signals=("signal",),
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -232,6 +247,7 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
     assert batch.manifest_path.exists()
     assert batch.summary["backend_count"] == 3
     assert batch.summary["comparison_count"] == 3
+    assert batch.summary["min_compared_signal_count"] == 1
     assert batch.summary["max_abs_error"] == pytest.approx(0.2)
     assert len(batch.comparisons) == 3
 

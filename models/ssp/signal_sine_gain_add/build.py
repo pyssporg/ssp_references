@@ -40,6 +40,7 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
         ssp.add_fmu("add", add_path, resource_name="Add.fmu", implementation="CoSimulation")
 
         with ssp.system_structure() as ssd:
+            system = ssd.xml.system
             ssd.extend_system_parameterset(
                 {
                     "sine.amplitude": 1.0,
@@ -56,16 +57,11 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
                 }
             )
 
-            system = ssd.xml.system
             system.connections.extend(
                 [
                     Connection(start_element="sine", start_connector="y", end_element="gain", end_connector="u"),
                     Connection(start_element="gain", start_connector="y", end_element="add", end_connector="u1"),
                     Connection(start_element="step", start_connector="y", end_element="add", end_connector="u2"),
-                    Connection(start_element="sine", start_connector="y", end_connector="sine_y"),
-                    Connection(start_element="step", start_connector="y", end_connector="step_y"),
-                    Connection(start_element="gain", start_connector="y", end_connector="gain_y"),
-                    Connection(start_element="add", start_connector="y", end_connector="sum_y"),
                 ]
             )
 

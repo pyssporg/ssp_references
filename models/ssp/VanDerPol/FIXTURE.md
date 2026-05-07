@@ -27,16 +27,16 @@ nonlinear dynamics.
 - Fast cross-engine comparison for continuous models.
 - Detecting changes in smooth nonlinear trajectories.
 
-## LS-REF Experiments
+## Packaging Note
 
-This fixture now carries a multi-experiment LS-REF bundle at the model root.
+This fixture carries a small `experiments.xml` bundle so the builder can
+materialize the baseline SSP variants.
 
-- `experiments.xml` defines the experiment set.
 - `resources/` holds the parameter SSV and SSM files.
 - `references/` holds the reference CSV baselines.
 - `baseline` runs with `mu = 1.0`.
 - `fast` runs with `mu = 2.0`.
 
 The build step packages the parameter resources into the SSP `resources/`
-directory and packages the LS-REF experiment XML plus the reference CSVs under
+directory and stores the experiment XML plus reference CSVs under
 `extra/org.fmi-standard.fmi-ls-ref/`.

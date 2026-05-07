@@ -62,9 +62,6 @@
     <ssd:Connections>
       <ssd:Connection startElement="step_a" startConnector="y" endElement="add" endConnector="u1" />
       <ssd:Connection startElement="step_b" startConnector="y" endElement="add" endConnector="u2" />
-      <ssd:Connection startElement="step_a" startConnector="y" endConnector="step_a_y" />
-      <ssd:Connection startElement="step_b" startConnector="y" endConnector="step_b_y" />
-      <ssd:Connection startElement="add" startConnector="y" endConnector="sum_y" />
     </ssd:Connections>
   </ssd:System>
   <ssd:DefaultExperiment startTime="0.0" stopTime="1.0" />

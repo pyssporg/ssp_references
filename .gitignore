@@ -9,3 +9,7 @@ __pycache__/
 *.pyc
 
 .codex
+
+*.csv
+*.mat
+*.log

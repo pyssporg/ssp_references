@@ -42,21 +42,31 @@ class RegistryCase:
 @dataclass(frozen=True)
 class RegistryModel:
     name: str
+    compare_signals: tuple[str, ...]
     cases: tuple[RegistryCase, ...]
 
     @classmethod
     def from_dict(cls, data: dict) -> "RegistryModel":
+        compare_signals = data.get("compare_signals")
+        if not isinstance(compare_signals, list):
+            raise TypeError("Registry model compare_signals must be a list")
+        normalized_compare_signals = tuple(str(signal).strip() for signal in compare_signals if str(signal).strip())
+        if not normalized_compare_signals:
+            raise ValueError("Registry model compare_signals must not be empty")
+
         cases = data.get("cases")
         if not isinstance(cases, list):
             raise TypeError("Registry model cases must be a list")
         return cls(
             name=str(data["name"]),
+            compare_signals=normalized_compare_signals,
             cases=tuple(RegistryCase.from_dict(case) for case in cases),
         )
 
     def to_dict(self) -> dict[str, object]:
         return {
             "name": self.name,
+            "compare_signals": list(self.compare_signals),
             "cases": [case.to_dict() for case in self.cases],
         }
 
@@ -67,6 +77,7 @@ class SimulationCaseSpec:
     case_name: str
     ssp_root: Path
     backends: tuple[str, ...]
+    compare_signals: tuple[str, ...]
 
     @property
     def layout(self) -> ArtifactLayout:
@@ -133,6 +144,7 @@ class SimulationRegistry:
                         case_name=case.name,
                         ssp_root=ssp_root,
                         backends=selected_backends,
+                        compare_signals=model.compare_signals,
                     )
                 )
         return specs

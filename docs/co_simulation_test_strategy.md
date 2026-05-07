@@ -62,8 +62,8 @@ They should:
 - Simulate each selected model with the engine under test.
 - Simulate the same model with a trusted comparison engine where possible.
 - Resample onto a common time grid.
-- Compare shared signals using metrics such as max absolute error, mean absolute
-  error, and RMSE.
+- Compare the explicitly selected signal set for that model using metrics such
+  as max absolute error, mean absolute error, and RMSE.
 
 This should be the main quality gate for the engine.
 
@@ -212,13 +212,16 @@ This repository already supports the core workflow needed for the strategy:
 - SSP fixtures live under `models/ssp/`.
 - Reusable FMU building blocks live under `models/fmu/`.
 - Generated SSPs live under `artifacts/models/<model_name>/<experiment>/`.
+- Some fixtures also use `experiments.xml` to package SSP variants, but the
+  runtime comparison flow does not depend on LS-REF.
 - Runtime setup, simulation, and comparison outputs live under
   `artifacts/simulation/<model_name>/<experiment>/` and
   `artifacts/comparisons/<model_name>/<experiment>/`.
-- `artifacts/simulation_registry.json` maps models to one or more named cases
-  and records the backends for each case explicitly.
+- `artifacts/simulation_registry.json` maps models to one or more named cases,
+  records the backends for each case explicitly, and stores the selected compare
+  signals for each model.
 - Each generated `artifacts/simulation/<model>/<case>/setup.json` also stores
-  the explicit backend list for that setup.
+  the explicit backend list and selected compare signals for that setup.
 - Simulation is driven by `scripts/run_simulations.py`.
 - Comparison is driven by `scripts/run_comparisons.py` and implemented in
   `scripts/workflow/comparison.py`. The compare entry point uses the backend

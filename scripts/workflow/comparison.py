@@ -31,6 +31,8 @@ class ComparisonRequest:
             raise ValueError("Comparison requires both runs to use the same case")
         if run_a_setup.window != run_b_setup.window:
             raise ValueError("Comparison requires both runs to use the same execution window")
+        if run_a_setup.compare_signals != run_b_setup.compare_signals:
+            raise ValueError("Comparison requires both runs to use the same selected signals")
         if self.run_a.request.backend == self.run_b.request.backend:
             raise ValueError("Comparison requires distinct backends")
 
@@ -149,6 +151,8 @@ class ComparisonBatchRequest:
                 raise ValueError("Comparison requires all runs to use the same case")
             if setup.window != first_setup.window:
                 raise ValueError("Comparison requires all runs to use the same execution window")
+            if setup.compare_signals != first_setup.compare_signals:
+                raise ValueError("Comparison requires all runs to use the same selected signals")
             if run.request.backend in seen_backends:
                 raise ValueError("Comparison requires unique backends")
             seen_backends.add(run.request.backend)
@@ -270,8 +274,8 @@ def _summarize_batch(
         (float(comparison.summary.get("max_rel_error", 0.0)) for comparison in comparisons),
         default=0.0,
     )
-    min_common_signal_count = min(
-        (int(comparison.summary.get("common_signal_count", 0)) for comparison in comparisons),
+    min_compared_signal_count = min(
+        (int(comparison.summary.get("compared_signal_count", 0)) for comparison in comparisons),
         default=0,
     )
     return {
@@ -279,7 +283,7 @@ def _summarize_batch(
         "comparison_count": len(comparisons),
         "max_abs_error": max_abs_error,
         "max_rel_error": max_rel_error,
-        "min_common_signal_count": min_common_signal_count,
+        "min_compared_signal_count": min_compared_signal_count,
     }
 
 
@@ -290,6 +294,8 @@ def compare_runs(request: ComparisonRequest) -> ComparisonRun:
         request.run_a.to_result_set(),
         request.run_b.to_result_set(),
         window=request.run_a.request.setup.window,
+        selected_signals=request.run_a.request.setup.compare_signals,
+        root_system_name=request.run_a.request.setup.root_system_name,
     )
     write_metrics_csv(request.metrics_path, metrics)
     run = ComparisonRun(

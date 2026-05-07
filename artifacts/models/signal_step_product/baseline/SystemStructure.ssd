@@ -62,9 +62,6 @@
     <ssd:Connections>
       <ssd:Connection startElement="step" startConnector="y" endElement="product" endConnector="u1" />
       <ssd:Connection startElement="sine" startConnector="y" endElement="product" endConnector="u2" />
-      <ssd:Connection startElement="step" startConnector="y" endConnector="step_y" />
-      <ssd:Connection startElement="sine" startConnector="y" endConnector="sine_y" />
-      <ssd:Connection startElement="product" startConnector="y" endConnector="product_y" />
     </ssd:Connections>
   </ssd:System>
   <ssd:DefaultExperiment startTime="0.0" stopTime="1.0" />

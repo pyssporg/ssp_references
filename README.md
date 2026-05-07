@@ -50,14 +50,16 @@ contract:
 - `FIXTURE.md` provides the fixture notes for each model.
 - Running `build.py` prepares the generated fixture under `artifacts/models/`
   by validating sources, packaging the `.ssp`, and unpacking a runtime layout.
+- Some fixtures also carry `experiments.xml`, but that file is only packaging
+  metadata for variant SSP assembly. It is not the main runtime contract.
 - Simulation and comparison run through the shared entry points in `scripts/`
   and consume the built SSP root plus `artifacts/simulation_registry.json`.
   Each generated `artifacts/simulation/<model>/<case>/setup.json` records the
-  explicit backend list for that case. `scripts/run_comparisons.py` compares
-  every unique backend combination from that setup by default, or a filtered backend
-  subset when `--backend` is repeated. Runtime artifacts live under
-  `artifacts/simulation/` and `artifacts/comparisons/`; they do not live in
-  `build.py`.
+  explicit backend list and the explicit compare-signal list for that case.
+  `scripts/run_comparisons.py` compares every unique backend combination from
+  that setup by default, or a filtered backend subset when `--backend` is
+  repeated. Runtime artifacts live under `artifacts/simulation/` and
+  `artifacts/comparisons/`; they do not live in `build.py`.
 
 The build workflow discovers models from `models/*/*/build.py`:
 
@@ -74,9 +76,10 @@ python3 scripts/run_simulations.py --help
 python3 scripts/run_comparisons.py --help
 ```
 
-The registry maps each model to one or more cases, and each case carries the
-explicit backend list for that setup. That keeps the runtime matrix explicit
-without pushing execution settings back into the SSP build step.
+The registry maps each model to one or more cases, and each model also carries
+the explicit compare-signal list used for engine-to-engine comparisons. That
+keeps the runtime matrix explicit without pushing execution settings back into
+the SSP build step.
 
 ## Fixture Origins
 

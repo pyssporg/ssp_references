@@ -48,9 +48,6 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
                 [
                     Connection(start_element="step_a", start_connector="y", end_element="add", end_connector="u1"),
                     Connection(start_element="step_b", start_connector="y", end_element="add", end_connector="u2"),
-                    Connection(start_element="step_a", start_connector="y", end_connector="step_a_y"),
-                    Connection(start_element="step_b", start_connector="y", end_connector="step_b_y"),
-                    Connection(start_element="add", start_connector="y", end_connector="sum_y"),
                 ]
             )
 

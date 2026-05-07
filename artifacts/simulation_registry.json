@@ -2,6 +2,10 @@
   "models": [
     {
       "name": "BouncingBall",
+      "compare_signals": [
+        "h",
+        "v"
+      ],
       "cases": [
         {
           "name": "baseline",
@@ -14,6 +18,167 @@
     },
     {
       "name": "Dahlquist",
+      "compare_signals": [
+        "x"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "dcmotor",
+      "compare_signals": [
+        "edrive_mass.phiB",
+        "edrive_mass.wB",
+        "emachine_model.I",
+        "emachine_model.M",
+        "stimuli_model.M_load",
+        "stimuli_model.U"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "embrace",
+      "compare_signals": [
+        "AdaptionUnit.sWsignals.Aircraft_State",
+        "AdaptionUnit.sWsignals.TLiquid",
+        "Atmos.Pamb",
+        "Consumer.outletTemp",
+        "ECS_HW.LHexTout",
+        "ECS_SW.TCoolingPack"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Resource",
+      "compare_signals": [
+        "y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_delay_detector",
+      "compare_signals": [
+        "step.y",
+        "gain_a.y",
+        "gain_b.y",
+        "add.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_fanout_gain",
+      "compare_signals": [
+        "step.y",
+        "gain_a.y",
+        "gain_b.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_sine_gain_add",
+      "compare_signals": [
+        "step.y",
+        "sine.y",
+        "gain.y",
+        "add.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_step_add",
+      "compare_signals": [
+        "step_a.y",
+        "step_b.y",
+        "add.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_step_gain",
+      "compare_signals": [
+        "step.y",
+        "gain.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_step_product",
+      "compare_signals": [
+        "step.y",
+        "sine.y",
+        "product.y"
+      ],
       "cases": [
         {
           "name": "baseline",
@@ -26,6 +191,9 @@
     },
     {
       "name": "Stair",
+      "compare_signals": [
+        "counter"
+      ],
       "cases": [
         {
           "name": "baseline",
@@ -38,6 +206,10 @@
     },
     {
       "name": "VanDerPol",
+      "compare_signals": [
+        "x0",
+        "x1"
+      ],
       "cases": [
         {
           "name": "baseline",

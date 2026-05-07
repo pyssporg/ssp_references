@@ -120,10 +120,6 @@
       <ssd:Connection startElement="sine" startConnector="y" endElement="gain" endConnector="u" />
       <ssd:Connection startElement="gain" startConnector="y" endElement="add" endConnector="u1" />
       <ssd:Connection startElement="step" startConnector="y" endElement="add" endConnector="u2" />
-      <ssd:Connection startElement="sine" startConnector="y" endConnector="sine_y" />
-      <ssd:Connection startElement="step" startConnector="y" endConnector="step_y" />
-      <ssd:Connection startElement="gain" startConnector="y" endConnector="gain_y" />
-      <ssd:Connection startElement="add" startConnector="y" endConnector="sum_y" />
     </ssd:Connections>
   </ssd:System>
   <ssd:DefaultExperiment startTime="0.0" stopTime="1.0" />

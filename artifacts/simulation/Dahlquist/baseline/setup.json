@@ -1,13 +1,18 @@
 {
   "backends": [
-    "ssp4sim"
+    "ssp4sim",
+    "omsimulator"
   ],
   "case": "baseline",
-  "ls_ref_experiments": "../../../../build/models/Dahlquist/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "compare_signals": [
+    "x"
+  ],
+  "ls_ref_experiments": "../../../models/Dahlquist/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "Dahlquist",
-  "resources_dir": "../../../../build/models/Dahlquist/baseline/resources",
-  "ssp_root": "../../../../build/models/Dahlquist/baseline",
-  "system_structure": "../../../../build/models/Dahlquist/baseline/SystemStructure.ssd",
+  "resources_dir": "../../../models/Dahlquist/baseline/resources",
+  "root_system_name": "Dahlquist",
+  "ssp_root": "../../../models/Dahlquist/baseline",
+  "system_structure": "../../../models/Dahlquist/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,
   "window": {
     "interval": 0.001,

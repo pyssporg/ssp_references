@@ -4,10 +4,15 @@
     "omsimulator"
   ],
   "case": "baseline",
+  "compare_signals": [
+    "x0",
+    "x1"
+  ],
   "description": "Baseline configuration with mu set to 1.0.",
   "ls_ref_experiments": "../../../models/VanDerPol/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "VanDerPol",
   "resources_dir": "../../../models/VanDerPol/baseline/resources",
+  "root_system_name": "VanDerPol",
   "ssp_root": "../../../models/VanDerPol/baseline",
   "system_structure": "../../../models/VanDerPol/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,

@@ -1,0 +1,15 @@
+{
+  "artifacts": [
+    "result.mat"
+  ],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "baseline",
+    "model": "signal_fanout_gain",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.012097577098757029,
+  "status": "completed"
+}

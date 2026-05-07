@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    "config.json",
+    "simulation.log"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "baseline",
+    "model": "Resource",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.10734414588660002,
+  "status": "completed"
+}

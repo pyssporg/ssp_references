@@ -1,0 +1,22 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "compare_signals": [
+    "y"
+  ],
+  "ls_ref_experiments": "../../../models/Resource/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "Resource",
+  "resources_dir": "../../../models/Resource/baseline/resources",
+  "root_system_name": "Resource",
+  "ssp_root": "../../../models/Resource/baseline",
+  "system_structure": "../../../models/Resource/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

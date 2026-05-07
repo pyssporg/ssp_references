@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    "config.json",
+    "simulation.log"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "baseline",
+    "model": "signal_delay_detector",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.12914359313435853,
+  "status": "completed"
+}

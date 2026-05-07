@@ -1,0 +1,27 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "fast",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/VanDerPol/fast/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/VanDerPol/fast/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 2,
+    "max_abs_error": 4.0,
+    "mean_abs_error": 2.177469762218328,
+    "rmse": 2.1948415202612814,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "omsimulator",
+    "time_points": 1001
+  }
+}

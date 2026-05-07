@@ -1,0 +1,17 @@
+{
+  "backends": [
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "ls_ref_experiments": "../../../models/pyfmu_csv_source_sink/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "pyfmu_csv_source_sink",
+  "resources_dir": "../../../models/pyfmu_csv_source_sink/baseline/resources",
+  "ssp_root": "../../../models/pyfmu_csv_source_sink/baseline",
+  "system_structure": "../../../models/pyfmu_csv_source_sink/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

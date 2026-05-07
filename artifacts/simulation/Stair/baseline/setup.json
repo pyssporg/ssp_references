@@ -1,0 +1,22 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "compare_signals": [
+    "counter"
+  ],
+  "ls_ref_experiments": "../../../models/Stair/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "Stair",
+  "resources_dir": "../../../models/Stair/baseline/resources",
+  "root_system_name": "Stair",
+  "ssp_root": "../../../models/Stair/baseline",
+  "system_structure": "../../../models/Stair/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.2,
+    "start_time": 0.0,
+    "stop_time": 9.0
+  }
+}

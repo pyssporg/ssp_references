@@ -1,0 +1,24 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "compare_signals": [
+    "step.y",
+    "sine.y",
+    "product.y"
+  ],
+  "ls_ref_experiments": "../../../models/signal_step_product/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "signal_step_product",
+  "resources_dir": "../../../models/signal_step_product/baseline/resources",
+  "root_system_name": "system",
+  "ssp_root": "../../../models/signal_step_product/baseline",
+  "system_structure": "../../../models/signal_step_product/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

@@ -16,7 +16,7 @@
   },
   "status": "completed",
   "summary": {
-    "common_signal_count": 1,
+    "compared_signal_count": 1,
     "max_abs_error": 0.10000000000000009,
     "mean_abs_error": 0.050000000000000044,
     "rmse": 0.07071067811865482,

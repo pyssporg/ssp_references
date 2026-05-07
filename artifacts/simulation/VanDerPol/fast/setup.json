@@ -1,0 +1,24 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "fast",
+  "compare_signals": [
+    "x0",
+    "x1"
+  ],
+  "description": "Variant configuration with mu set to 2.0.",
+  "ls_ref_experiments": "../../../models/VanDerPol/fast/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "VanDerPol",
+  "resources_dir": "../../../models/VanDerPol/fast/resources",
+  "root_system_name": "VanDerPol",
+  "ssp_root": "../../../models/VanDerPol/fast",
+  "system_structure": "../../../models/VanDerPol/fast/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

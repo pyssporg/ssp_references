@@ -1,0 +1,27 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "compare_signals": [
+    "AdaptionUnit.sWsignals.Aircraft_State",
+    "AdaptionUnit.sWsignals.TLiquid",
+    "Atmos.Pamb",
+    "Consumer.outletTemp",
+    "ECS_HW.LHexTout",
+    "ECS_SW.TCoolingPack"
+  ],
+  "ls_ref_experiments": "../../../models/embrace/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "embrace",
+  "resources_dir": "../../../models/embrace/baseline/resources",
+  "root_system_name": "root",
+  "ssp_root": "../../../models/embrace/baseline",
+  "system_structure": "../../../models/embrace/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.01,
+    "start_time": 0.0,
+    "stop_time": 10.0
+  }
+}

@@ -1,13 +1,19 @@
 {
   "backends": [
+    "ssp4sim",
     "omsimulator"
   ],
   "case": "baseline",
-  "ls_ref_experiments": "../../../../build/models/BouncingBall/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "compare_signals": [
+    "h",
+    "v"
+  ],
+  "ls_ref_experiments": "../../../models/BouncingBall/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "BouncingBall",
-  "resources_dir": "../../../../build/models/BouncingBall/baseline/resources",
-  "ssp_root": "../../../../build/models/BouncingBall/baseline",
-  "system_structure": "../../../../build/models/BouncingBall/baseline/SystemStructure.ssd",
+  "resources_dir": "../../../models/BouncingBall/baseline/resources",
+  "root_system_name": "BouncingBall",
+  "ssp_root": "../../../models/BouncingBall/baseline",
+  "system_structure": "../../../models/BouncingBall/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,
   "window": {
     "interval": 0.001,

@@ -1,0 +1,27 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "compare_signals": [
+    "edrive_mass.phiB",
+    "edrive_mass.wB",
+    "emachine_model.I",
+    "emachine_model.M",
+    "stimuli_model.M_load",
+    "stimuli_model.U"
+  ],
+  "ls_ref_experiments": "../../../models/dcmotor/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "dcmotor",
+  "resources_dir": "../../../models/dcmotor/baseline/resources",
+  "root_system_name": "DC-Motor",
+  "ssp_root": "../../../models/dcmotor/baseline",
+  "system_structure": "../../../models/dcmotor/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

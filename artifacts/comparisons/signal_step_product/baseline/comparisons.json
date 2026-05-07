@@ -1,0 +1,50 @@
+{
+  "comparisons": [
+    {
+      "manifest": "ssp4sim_vs_omsimulator/comparison.json",
+      "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/signal_step_product/baseline/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/signal_step_product/baseline/omsimulator/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 3,
+        "max_abs_error": 2.0,
+        "mean_abs_error": 1.3025580362658422,
+        "rmse": 1.3733928003554239,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "omsimulator",
+        "time_points": 1001
+      }
+    }
+  ],
+  "error": null,
+  "request": {
+    "case": "baseline",
+    "model": "signal_step_product",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../simulation/signal_step_product/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../simulation/signal_step_product/baseline/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "backend_count": 2,
+    "comparison_count": 1,
+    "max_abs_error": 2.0,
+    "max_rel_error": 0.0,
+    "min_compared_signal_count": 3
+  }
+}

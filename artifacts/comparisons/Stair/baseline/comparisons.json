@@ -1,0 +1,50 @@
+{
+  "comparisons": [
+    {
+      "manifest": "ssp4sim_vs_omsimulator/comparison.json",
+      "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/Stair/baseline/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/Stair/baseline/omsimulator/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 1,
+        "max_abs_error": 20.0,
+        "mean_abs_error": 10.207624918883694,
+        "rmse": 11.504672111869622,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "omsimulator",
+        "time_points": 46
+      }
+    }
+  ],
+  "error": null,
+  "request": {
+    "case": "baseline",
+    "model": "Stair",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../simulation/Stair/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../simulation/Stair/baseline/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "backend_count": 2,
+    "comparison_count": 1,
+    "max_abs_error": 20.0,
+    "max_rel_error": 0.0,
+    "min_compared_signal_count": 1
+  }
+}

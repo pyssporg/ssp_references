@@ -1,0 +1,15 @@
+{
+  "artifacts": [
+    "result.mat"
+  ],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "baseline",
+    "model": "signal_step_add",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.011938284151256084,
+  "status": "completed"
+}

@@ -1,0 +1,13 @@
+{
+  "artifacts": [],
+  "error": null,
+  "request": {
+    "backend": "fmpy",
+    "case": "baseline",
+    "model": "signal_delay_detector",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.0848125300835818,
+  "status": "completed"
+}

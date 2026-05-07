@@ -219,7 +219,8 @@ This repository already supports the core workflow needed for the strategy:
   `artifacts/comparisons/<model_name>/<experiment>/`.
 - `artifacts/simulation_registry.json` maps models to one or more named cases,
   records the backends for each case explicitly, and stores the selected compare
-  signals for each model.
+  signals for each model. The current backend set is `ssp4sim`,
+  `OMSimulator`, and `FMPy`.
 - Each generated `artifacts/simulation/<model>/<case>/setup.json` also stores
   the explicit backend list and selected compare signals for that setup.
 - Simulation is driven by `scripts/run_simulations.py`.

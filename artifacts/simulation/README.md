@@ -4,8 +4,7 @@ This directory holds runtime outputs for the registered simulation suite.
 The default suite is controlled by `artifacts/simulation_registry.json`.
 
 Some authored fixtures are intentionally omitted from the default sweep
-because they do not currently satisfy the same two-engine contract as the
-rest of the suite:
+because they do not currently satisfy the registered backend set:
 
 - `scenario`: kept as an authored fixture, but omitted because the current
   setup does not initialize cleanly on `OMSimulator` and has failed during

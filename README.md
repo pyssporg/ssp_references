@@ -56,6 +56,7 @@ contract:
   and consume the built SSP root plus `artifacts/simulation_registry.json`.
   Each generated `artifacts/simulation/<model>/<case>/setup.json` records the
   explicit backend list and the explicit compare-signal list for that case.
+  The current backend set is `ssp4sim`, `OMSimulator`, and `FMPy`.
   `scripts/run_comparisons.py` compares every unique backend combination from
   that setup by default, or a filtered backend subset when `--backend` is
   repeated. Runtime artifacts live under `artifacts/simulation/` and

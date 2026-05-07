@@ -41,3 +41,14 @@ designed to expose subtle ordering and delay issues.
 - Hidden one-step delay.
 - Wrong topological ordering.
 - Incorrect handling of algebraic feedthrough across a chain.
+
+## Current Runtime Note
+
+The current co-simulation runtime still aborts on this fixture at the first
+`Step` discontinuity (`t = 0.25`). The FMU logs
+`fmi2GetContinuousStates: Invalid argument states[] = NULL` from its internal
+continuous-state helper during `doStep`.
+
+That failure comes from the FMU/runtime interaction, not from the SSP package
+layout. The fixture remains useful as a regression detector because it makes
+the ordering and event-boundary problem visible immediately.

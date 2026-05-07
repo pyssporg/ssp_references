@@ -1,0 +1,13 @@
+{
+  "artifacts": [],
+  "error": null,
+  "request": {
+    "backend": "fmpy",
+    "case": "baseline",
+    "model": "VanDerPol",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.19603410200215876,
+  "status": "completed"
+}

@@ -2,8 +2,8 @@
 #-e ./3rd_party/pyfmu_csv
 numpy
 scipy
+fmpy
 OMSimulator
 https://github.com/jkCXf9X4/ssp4sim/releases/latest/download/pyssp4sim-0.0.0+lat-cp39-abi3-linux_x86_64.whl
 https://github.com/pyssporg/pyfmu_csv/releases/download/v0.1.10/pyfmu_csv-0-py3-none-linux_x86_64.whl
 pytest
-

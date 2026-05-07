@@ -69,7 +69,7 @@ def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:
                 name="ToyModel",
                 compare_signals=("signal",),
                 cases=(
-                    RegistryCase(name="baseline", backends=("ssp4sim", "omsimulator")),
+                    RegistryCase(name="baseline", backends=("ssp4sim", "omsimulator", "fmpy")),
                     RegistryCase(name="fast", backends=("ssp4sim",)),
                 ),
             ),
@@ -91,7 +91,7 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
         model_name="ToyModel",
         case_name="baseline",
         ssp_root=ssp_root,
-        backends=("ssp4sim", "omsimulator"),
+        backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
     )
 
@@ -111,7 +111,7 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
     assert loaded.ssp_root == ssp_root.resolve()
     assert loaded.model_name == "ToyModel"
     assert loaded.case_name == "baseline"
-    assert loaded.backends == ("ssp4sim", "omsimulator")
+    assert loaded.backends == ("ssp4sim", "omsimulator", "fmpy")
     assert loaded.compare_signals == ("signal",)
     assert loaded.root_system_name == "system"
     assert loaded.window == setup.window
@@ -124,7 +124,7 @@ def test_simulation_run_manifest_roundtrip(tmp_path: Path) -> None:
         model_name="ToyModel",
         case_name="baseline",
         ssp_root=ssp_root,
-        backends=("ssp4sim", "omsimulator"),
+        backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
     )
     setup = prepare_setup(spec)
@@ -155,7 +155,7 @@ def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
         model_name="ToyModel",
         case_name="baseline",
         ssp_root=ssp_root,
-        backends=("ssp4sim", "omsimulator"),
+        backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
     )
     setup = prepare_setup(spec)
@@ -223,7 +223,7 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
         model_name="ToyModel",
         case_name="baseline",
         ssp_root=ssp_root,
-        backends=("ssp4sim", "omsimulator", "ecos"),
+        backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
     )
     setup = prepare_setup(spec)
@@ -232,7 +232,7 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
     requests = [
         SimulationRequest(setup=setup, backend="ssp4sim"),
         SimulationRequest(setup=setup, backend="omsimulator"),
-        SimulationRequest(setup=setup, backend="ecos"),
+        SimulationRequest(setup=setup, backend="fmpy"),
     ]
     write_series(requests[0].result_path, [0.0, 1.0])
     write_series(requests[1].result_path, [0.0, 1.1])

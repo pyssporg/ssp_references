@@ -231,6 +231,109 @@ def _temporary_cwd(path: Path):
         os.chdir(previous)
 
 
+def _fmpy_get_connections(system, connectors=None):
+    """Resolve FMPy SSP connections for the generated runtime archive.
+
+    FMPy's built-in resolver trips over some system-boundary connections in
+    these fixtures, especially models like dcmotor that wire inputs/outputs
+    through the root system. We mirror its traversal here and fix that branch
+    so the runtime archive can be instantiated without changing the models.
+    """
+    from fmpy.ssp.ssd import System, build_path, find_connectors
+
+    if connectors is None:
+        connectors = {}
+        for connector in find_connectors(system):
+            connectors[build_path(connector)] = connector
+
+    cons = []
+
+    for connector in system.connectors:
+        if connector.kind == "output":
+            start_p = None
+            end_p = None
+            for connection in system.connections:
+                if connection.endElement is None and connection.endConnector == connector.name:
+                    start_p = build_path(system) + "." + connection.startElement + "." + connection.startConnector
+                    end_p = build_path(connector)
+                    break
+                if connection.startElement is None and connection.startConnector == connector.name:
+                    start_p = build_path(connector)
+                    end_p = build_path(system) + "." + connection.endElement + "." + connection.endConnector
+                    break
+            if start_p is None or end_p is None:
+                raise KeyError(f"Missing connection for connector {build_path(connector)}")
+            cons.append((connectors[start_p], connectors[end_p]))
+
+    for element in system.elements:
+        for connector in element.connectors:
+            if connector.kind == "input":
+                end_p = build_path(element) + "." + connector.name
+                start_p = None
+                for connection in system.connections:
+                    if connection.endElement == element.name and connection.endConnector == connector.name:
+                        start_p = build_path(system)
+                        if connection.startElement is not None:
+                            start_p += "." + connection.startElement
+                        start_p += "." + connection.startConnector
+                        break
+                    if connection.startElement == element.name and connection.startConnector == connector.name:
+                        start_p = build_path(system)
+                        if connection.endElement is not None:
+                            start_p += "." + connection.endElement
+                        start_p += "." + connection.endConnector
+                        break
+                if start_p is None:
+                    raise KeyError(f"Missing connection for connector {build_path(element) + '.' + connector.name}")
+                cons.append((connectors[start_p], connectors[end_p]))
+
+    for element in system.elements:
+        if isinstance(element, System):
+            cons += _fmpy_get_connections(element, connectors=connectors)
+
+    return cons
+
+
+@contextmanager
+def _patched_fmpy_ssp_runtime():
+    """Temporarily relax FMPy's SSP loader for this repository's fixtures.
+
+    The generated SSP archives are current enough for our other backends, but
+    FMPy's loader still rejects some SSP 2.0 schema details. We therefore skip
+    validation and swap in the local connection resolver above so boundary
+    wiring continues to work for models that depend on it.
+    """
+    from fmpy.ssp import simulation as fmpy_simulation
+    from fmpy.ssp import ssd as fmpy_ssd
+
+    original_validate_tree = fmpy_ssd.validate_tree
+    original_get_connections = fmpy_simulation.get_connections
+
+    def _no_validate(*args, **kwargs):
+        return None
+
+    # Keep the patch scoped to the FMPy runtime call path only.
+    fmpy_ssd.validate_tree = _no_validate
+    fmpy_simulation.get_connections = _fmpy_get_connections
+    try:
+        yield
+    finally:
+        fmpy_ssd.validate_tree = original_validate_tree
+        fmpy_simulation.get_connections = original_get_connections
+
+
+def _run_fmpy_ssp(runtime_ssp_path: Path, setup: SimulationSetup):
+    from fmpy.ssp.simulation import simulate_ssp
+
+    with _patched_fmpy_ssp_runtime():
+        return simulate_ssp(
+            str(runtime_ssp_path),
+            start_time=setup.window.start_time,
+            stop_time=setup.window.stop_time,
+            step_size=setup.window.interval,
+        )
+
+
 def _configure_omsimulator() -> None:
     from OMSimulator.capi import Capi, Status
 
@@ -383,10 +486,32 @@ def simulate_omsimulator(request: SimulationRequest) -> SimulationRun:
     return run
 
 
+def simulate_fmpy(request: SimulationRequest) -> SimulationRun:
+    reset_dir(request.run_dir)
+    with _runtime_ssp_archive(request.setup.ssp_root) as runtime_ssp_path:
+        start = time.perf_counter()
+        result = _run_fmpy_ssp(runtime_ssp_path, request.setup)
+        runtime_s = time.perf_counter() - start
+
+    write_structured_csv(request.result_path, result)
+    if not request.result_path.is_file():
+        raise FileNotFoundError(f"FMPy did not write result CSV: {request.result_path}")
+
+    run = SimulationRun(
+        request=request,
+        result_path=request.result_path,
+        runtime_s=runtime_s,
+    )
+    run.write_manifest()
+    return run
+
+
 def simulate_backend(request: SimulationRequest) -> SimulationRun:
     backend = request.backend.lower()
     if backend == "ssp4sim":
         return simulate_ssp4sim(request)
     if backend == "omsimulator":
         return simulate_omsimulator(request)
+    if backend == "fmpy":
+        return simulate_fmpy(request)
     raise NotImplementedError(f"Unsupported backend: {request.backend}")

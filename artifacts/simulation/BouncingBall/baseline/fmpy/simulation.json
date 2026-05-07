@@ -1,0 +1,13 @@
+{
+  "artifacts": [],
+  "error": null,
+  "request": {
+    "backend": "fmpy",
+    "case": "baseline",
+    "model": "BouncingBall",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.11119615798816085,
+  "status": "completed"
+}

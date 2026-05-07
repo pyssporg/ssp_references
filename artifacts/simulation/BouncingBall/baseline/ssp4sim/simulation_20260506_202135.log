@@ -1,0 +1,20 @@
+20:21:35.695888193 [2] ssp.cpp:134                  LOG_INFO      ssp4cpp.ssp.ssp SSP Imported, name: BouncingBall ssd: SystemStructure.ssd
+20:21:35.695964994 [2] ssp.cpp:83                   LOG_WARNING   ssp4cpp.ssp.ssp [get_parameter_bindings] If there are internal component connected parameter sets, move these up to system level to get support
+20:21:35.695971644 [2] simulation.cpp:50            LOG_INFO      ssp4sim.Simulation [Simulation] Creating simulation
+20:21:35.696292407 [2] simulator.cpp:94             LOG_INFO      ssp4sim.Simulator [init] Initializing Simulator
+20:21:35.696292567 [2] simulation.cpp:73            LOG_INFO      ssp4sim.Simulation [init] Initializing simulation
+20:21:35.696292627 [2] simulation.cpp:75            LOG_INFO      ssp4sim.Simulation [init] - Initializing fmus
+20:21:35.696292797 [2] simulation.cpp:78            LOG_INFO      ssp4sim.Simulation [init] - Creating analysis graph
+20:21:35.696336507 [2] simulation.cpp:82            LOG_INFO      ssp4sim.Simulation [init] - Creating simulation graph
+20:21:35.696394708 [2] simulation.cpp:91            LOG_INFO      ssp4sim.Simulation [init] - Init simulation graph
+20:21:35.696405488 [2] executor_builder.cpp:41      LOG_INFO      ssp4sim.execution.Delay [build] Executor: JacobiParallelTBB
+20:21:35.696408928 [2] jacobi_parallel_tbb.cpp:16   LOG_INFO      ssp4sim.execution.JacobiParallelTBB [JacobiParallelTBB] JacobiParallelTBB
+20:21:35.697850663 [2] simulation.cpp:96            LOG_INFO      ssp4sim.Simulation [init] - Initializing recorder
+20:21:35.697908103 [2] simulator.cpp:104            LOG_INFO      ssp4sim.Simulator [simulate] Starting Simulator
+20:21:35.697908393 [2] recorder.cpp:80              LOG_INFO      ssp4sim.signal.DataRecorder [start_recording] Starting recording
+20:21:35.697944243 [2] simulation.cpp:115           LOG_INFO      ssp4sim.Simulation [simulate] Starting simulation
+20:21:35.717776531 [2] simulation.cpp:148           LOG_INFO      ssp4sim.Simulation [simulate] Total walltime: 0.019830149 
+20:21:35.717776991 [2] recorder.cpp:88              LOG_INFO      ssp4sim.signal.DataRecorder [stop_recording] Stop recording
+20:21:35.718059154 [2] simulation.cpp:161           LOG_INFO      ssp4sim.Simulation [simulate] Simulation completed
+20:21:35.718059304 [2] simulation.cpp:168           LOG_INFO      ssp4sim.Simulation [simulate] Model fmu walltime: 0.000602552
+20:21:35.718059404 [2] simulation.cpp:171           LOG_INFO      ssp4sim.Simulation [simulate] Model walltime: 0.000602552

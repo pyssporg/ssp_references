@@ -21,7 +21,17 @@ class ModelPaths:
 
     @property
     def build_dir(self) -> Path:
-        return REPO_ROOT / "build" / "models" / self.name
+        return REPO_ROOT / "artifacts" / "models" / self.name
+
+    @property
+    def workflow_dir(self) -> Path:
+        return self.build_dir / "workflow"
+
+    def experiment_dir(self, experiment_name: str) -> Path:
+        return self.build_dir / experiment_name
+
+    def experiment_workflow_dir(self, experiment_name: str) -> Path:
+        return self.workflow_dir / experiment_name
 
     @property
     def ssp_path(self) -> Path:
@@ -49,11 +59,11 @@ class ModelPaths:
 
     @property
     def simulation_results_dir(self) -> Path:
-        return self.build_dir / "simulation_results"
+        return REPO_ROOT / "artifacts" / "simulation" / self.name
 
     @property
     def comparisons_dir(self) -> Path:
-        return self.simulation_results_dir / "comparisons"
+        return REPO_ROOT / "artifacts" / "comparisons" / self.name
 
     def engine_results_dir(self, engine_name: str) -> Path:
         return self.simulation_results_dir / engine_name
@@ -79,4 +89,3 @@ class ModelMetaData:
 
 def model_paths(model_dir: Path, model_name: str) -> ModelPaths:
     return ModelPaths(name=model_name, model_dir=model_dir)
-

@@ -1,15 +1,27 @@
 # LS-REF SSP Experiment Workflow
 
-LS-REF experiment files define the runnable contract for SSP fixtures:
+This workflow covers the first part of the broader comparison goal in this
+repository:
+
+1. Build stand-alone SSP artifacts that contain everything needed to run a
+   system.
+2. Execute those SSPs with different engines and simulation settings.
+3. Compare the results across engines.
+
+LS-REF is the contract used for step 1. In the current direction it is used to
+assemble the correct runnable SSP variant and preserve related metadata, not to
+drive execution settings. Each `experiments.xml` defines:
 
 - what SSP/SSD to run
 - which parameter, stimuli, and reference resources to package
 - how file signals map to SSP connectors
-- which outputs to compare
+- which outputs or related artifacts belong to that variant
 
-The current repository convention is intentionally small: every fixture has an
-`experiments.xml`; the build materializes one SSP layout per experiment; and
-referenced artifacts are packaged under `resources/`.
+The current repository convention is: every fixture has an `experiments.xml`;
+the build materializes one SSP layout per experiment; and referenced artifacts
+are packaged into the generated SSP. Runtime simulations and comparisons are
+separate and write their outputs under `artifacts/simulation/` and
+`artifacts/comparisons/`.
 
 ## Supported Fields
 
@@ -29,7 +41,7 @@ referenced artifacts are packaged under `resources/`.
 The build materializes one runner-ready SSP directory per experiment:
 
 ```text
-build/models/<fixture>/
+artifacts/models/<fixture>/
   baseline/
     SystemStructure.ssd
     extra/org.fmi-standard.fmi-ls-ref/
@@ -42,6 +54,13 @@ Each generated `experiments.xml` contains exactly one `<Experiment>` and must
 point at archive-root-relative paths packaged in that SSP. It may live in
 `extra/org.fmi-standard.fmi-ls-ref/`; do not rewrite paths just because the XML
 is stored under `extra/`.
+
+`artifacts/simulation_registry.json` maps each model to one or more case
+definitions, and each case lists its explicit backend set. That is the runtime
+selection layer used by `scripts/run_simulations.py`. The generated
+`setup.json` files repeat that explicit backend list so later stages do not
+need hidden defaults. `scripts/run_comparisons.py` reads that list and
+compares every unique backend combination by default.
 
 ## Example
 
@@ -83,7 +102,20 @@ Use `models/ssp/VanDerPol/build.py` as the pattern for every fixture:
 4. Copy referenced stimuli/reference artifacts and mappings into `resources/`.
 5. Add the single experiment with `ssp.ls_ref_experiments()`.
 6. Unpack or publish the materialized SSP under
-   `build/models/<fixture>/<experiment>/`.
+   `artifacts/models/<fixture>/<experiment>/`.
+
+`build.py` stops here. It is only responsible for SSP assembly and does not
+simulate or compare.
+
+Simulation and comparison entry points keep their files out of the SSP tree and
+write under:
+
+- `artifacts/simulation/<fixture>/<experiment>/`
+- `artifacts/comparisons/<fixture>/<experiment>/`
+
+If the authored LS-REF XML still names `references/...` resources, the runtime
+adapters mirror the packaged `resources/*.csv` and `resources/*.ssm` files into
+a temporary `references/` tree before invoking the engines.
 
 Keep `main()` close to VanDerPol:
 
@@ -103,33 +135,41 @@ experiments by extending `experiments.xml`; avoid changing `main()` for each new
 case. The build should fail if `target`, `source`, or `mapping` paths cannot be
 resolved.
 
-## Runner Workflow
+Simulation and comparison are separate entry points that consume the built SSP
+root and the registry-selected case list. Keep those runners out of `build.py`
+so the SSP assembly step stays easy to review and extend.
 
-For engine comparison, run materialized experiment SSPs:
+## Execution And Comparison
+
+Once the per-experiment SSPs exist, later tooling should treat them as the
+execution input:
 
 ```text
 (engine, experiment_ssp) -> simulation result -> LS-REF comparison
 ```
 
-A runner should:
+Execution should:
 
-1. Read the single-experiment LS-REF document from the SSP.
-2. Resolve `target`, defaulting to `SystemStructure.ssd`.
-3. Configure `startTime`, `stopTime`, and `stepSize`.
-4. Run the SSP with the selected engine.
-5. Load references, apply signal selection and mapping, then compare with the
-   experiment `tolerance`.
-6. Create a simulation entry containing the key values used to compare
-   simulation engines.
+1. Select the materialized SSP variant to run.
+2. Configure engine, interval, step size, algorithm, and other execution
+   settings from the execution matrix, not from `experiments.xml`.
+3. Run the SSP with the selected engine.
+4. Record result files and status/configuration data for comparison.
 
-Missing selected reference signals or missing mapped SSP outputs should fail the
-experiment.
+Comparison should:
+
+1. Compare engine outputs against each other for the same SSP variant and
+   execution case.
+2. Apply any needed signal mapping or alignment rules.
+3. Report mapping differences, phase shifts, numerical errors, execution time,
+   and other relevant attributes.
+4. Treat missing mapped outputs or incompatible result sets as failures.
 
 ## Current Gaps
 
-- There is no shared helper yet for materializing per-experiment SSPs.
-- There is no generic LS-REF-aware SSP runner yet.
-- Existing CSV comparison does not consume LS-REF mappings or `<Signal>`
-  selections.
-- Solver, master algorithm, and interpolation settings are not described by the
-  fields currently used here.
+- The shared workflow layer exists for setup, simulation, and comparison, and
+  the first comparison combination is `ssp4sim` versus `OMSimulator`.
+- Additional backends can be added behind the same manifest contract and the
+  same registry file.
+- Solver, master algorithm, and interpolation settings are still backend
+  configuration, not LS-REF fields, and that is intentional for now.

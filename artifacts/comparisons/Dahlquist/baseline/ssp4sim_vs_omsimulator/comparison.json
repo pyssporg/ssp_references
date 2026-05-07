@@ -1,0 +1,21 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "baseline",
+    "left_backend": "ssp4sim",
+    "left_manifest": "../../../../simulation/Dahlquist/baseline/ssp4sim/simulation.json",
+    "right_backend": "omsimulator",
+    "right_manifest": "../../../../simulation/Dahlquist/baseline/omsimulator/simulation.json"
+  },
+  "status": "completed",
+  "summary": {
+    "common_signal_count": 1,
+    "left_label": "ssp4sim",
+    "max_abs_error": 2.0,
+    "mean_abs_error": 1.0999873939606037,
+    "right_label": "omsimulator",
+    "rmse": 1.1191966338383454,
+    "time_points": 10001
+  }
+}

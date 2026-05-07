@@ -1,3 +1,3 @@
-from pyssp_standard import get_repo_root
+from pathlib import Path
 
-REPO_ROOT = get_repo_root(file="__SSP_REF_ROOT__")
+REPO_ROOT = Path(__file__).resolve().parents[2]

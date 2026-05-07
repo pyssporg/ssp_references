@@ -11,6 +11,8 @@ def normalize_column_name(column_name: str, engine: str | None = None) -> str:
     normalized = column_name.strip()
     if engine == "omsimulator" and normalized.startswith("root."):
         normalized = normalized[len("root.") :]
+    if "." in normalized and normalized != "time":
+        normalized = normalized.rsplit(".", 1)[-1]
     return normalized
 
 
@@ -156,4 +158,3 @@ def unpack_mat_to_csv(
         include_description_row=include_description_row,
     )
     return resolved_output_path
-

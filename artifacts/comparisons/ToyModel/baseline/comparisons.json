@@ -1,0 +1,100 @@
+{
+  "comparisons": [
+    {
+      "manifest": "ssp4sim_vs_omsimulator/comparison.json",
+      "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/ToyModel/baseline/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/ToyModel/baseline/omsimulator/simulation.json"
+        }
+      ],
+      "summary": {
+        "common_signal_count": 1,
+        "max_abs_error": 0.10000000000000009,
+        "mean_abs_error": 0.050000000000000044,
+        "rmse": 0.07071067811865482,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "omsimulator",
+        "time_points": 2
+      }
+    },
+    {
+      "manifest": "ssp4sim_vs_ecos/comparison.json",
+      "metrics": "ssp4sim_vs_ecos/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/ToyModel/baseline/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "ecos",
+          "manifest": "../../../simulation/ToyModel/baseline/ecos/simulation.json"
+        }
+      ],
+      "summary": {
+        "common_signal_count": 1,
+        "max_abs_error": 0.09999999999999998,
+        "mean_abs_error": 0.04999999999999999,
+        "rmse": 0.07071067811865474,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "ecos",
+        "time_points": 2
+      }
+    },
+    {
+      "manifest": "omsimulator_vs_ecos/comparison.json",
+      "metrics": "omsimulator_vs_ecos/metrics.csv",
+      "runs": [
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/ToyModel/baseline/omsimulator/simulation.json"
+        },
+        {
+          "backend": "ecos",
+          "manifest": "../../../simulation/ToyModel/baseline/ecos/simulation.json"
+        }
+      ],
+      "summary": {
+        "common_signal_count": 1,
+        "max_abs_error": 0.20000000000000007,
+        "mean_abs_error": 0.10000000000000003,
+        "rmse": 0.14142135623730956,
+        "run_a_label": "omsimulator",
+        "run_b_label": "ecos",
+        "time_points": 2
+      }
+    }
+  ],
+  "error": null,
+  "request": {
+    "case": "baseline",
+    "model": "ToyModel",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../simulation/ToyModel/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../simulation/ToyModel/baseline/omsimulator/simulation.json"
+      },
+      {
+        "backend": "ecos",
+        "manifest": "../../../simulation/ToyModel/baseline/ecos/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "backend_count": 3,
+    "comparison_count": 3,
+    "max_abs_error": 0.20000000000000007,
+    "max_rel_error": 0.0,
+    "min_common_signal_count": 1
+  }
+}

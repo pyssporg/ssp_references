@@ -6,7 +6,7 @@ and compare results across engines.
 The repository is primarily a working collection of reference models under
 `models/ssp/`. Most source material comes from vendored upstream projects in
 `3rd_party/`, while the checked-in model directories hold the authored model
-definitions, fixture notes, and explicit build/simulation entrypoints.
+definitions, fixture notes, and build metadata.
 
 ## Layout
 
@@ -20,18 +20,21 @@ definitions, fixture notes, and explicit build/simulation entrypoints.
 │   └── ssp/
 │       └── <model_name>/
 │           ├── build.py
-│           ├── simulate.py
+│           ├── experiments.xml
 │           ├── FIXTURE.md
 │           └── ssp/               # only for authored SSP sources such as dcmotor/embrace
-├── build/
-│   └── models/ssp/<model_name>/
-│       ├── <model_name>.ssp
-│       ├── ssp/
-│       ├── references/            # generated CSV baselines for supported fixtures
-│       └── simulation_results/
+├── artifacts/
+│   ├── models/
+│   │   └── <model_name>/
+│   │       └── <experiment>/
+│   ├── comparisons/
+│   ├── simulation_registry.json
+│   └── simulation/
 ├── scripts/
 │   ├── build_models.py
 │   ├── run_simulations.py
+│   ├── run_comparisons.py
+│   ├── workflow/
 │   └── utils/
 ├── 3rd_party/                # vendored helpers and upstream source material
 └── requirements.txt
@@ -45,10 +48,18 @@ contract:
 
 - `build.py` is the source of truth for how that SSP gets assembled.
 - `FIXTURE.md` provides the fixture notes for each model.
-- Running `build.py` prepares the generated fixture under `build/` by
-  validating sources, packaging the `.ssp`, and unpacking a runtime layout.
+- Running `build.py` prepares the generated fixture under `artifacts/models/`
+  by validating sources, packaging the `.ssp`, and unpacking a runtime layout.
+- Simulation and comparison run through the shared entry points in `scripts/`
+  and consume the built SSP root plus `artifacts/simulation_registry.json`.
+  Each generated `artifacts/simulation/<model>/<case>/setup.json` records the
+  explicit backend list for that case. `scripts/run_comparisons.py` compares
+  every unique backend combination from that setup by default, or a filtered backend
+  subset when `--backend` is repeated. Runtime artifacts live under
+  `artifacts/simulation/` and `artifacts/comparisons/`; they do not live in
+  `build.py`.
 
-The workflow runner discovers models from `models/*/*/build.py`:
+The build workflow discovers models from `models/*/*/build.py`:
 
 ```bash
 python3 scripts/build_models.py list
@@ -56,13 +67,16 @@ python3 scripts/build_models.py run BouncingBall
 python3 scripts/build_models.py run-all
 ```
 
-Simulation runners are discovered from `models/*/*/simulate.py`:
+Simulation and comparison use the shared entry points:
 
 ```bash
-python3 scripts/run_simulations.py list
-python3 scripts/run_simulations.py run BouncingBall
-python3 scripts/run_simulations.py run-all
+python3 scripts/run_simulations.py --help
+python3 scripts/run_comparisons.py --help
 ```
+
+The registry maps each model to one or more cases, and each case carries the
+explicit backend list for that setup. That keeps the runtime matrix explicit
+without pushing execution settings back into the SSP build step.
 
 ## Fixture Origins
 

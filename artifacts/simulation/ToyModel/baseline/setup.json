@@ -1,0 +1,20 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator",
+    "ecos"
+  ],
+  "case": "baseline",
+  "description": "Baseline case",
+  "ls_ref_experiments": "../../../../../../../../../tmp/pytest-of-eriro/pytest-151/test_compare_run_batch_writes_0/artifacts/models/ToyModel/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "ToyModel",
+  "resources_dir": "../../../../../../../../../tmp/pytest-of-eriro/pytest-151/test_compare_run_batch_writes_0/artifacts/models/ToyModel/baseline/resources",
+  "ssp_root": "../../../../../../../../../tmp/pytest-of-eriro/pytest-151/test_compare_run_batch_writes_0/artifacts/models/ToyModel/baseline",
+  "system_structure": "../../../../../../../../../tmp/pytest-of-eriro/pytest-151/test_compare_run_batch_writes_0/artifacts/models/ToyModel/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 1.0,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "comparisons": [
+    {
+      "manifest": "ssp4sim_vs_omsimulator/comparison.json",
+      "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/VanDerPol/baseline/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/VanDerPol/baseline/omsimulator/simulation.json"
+        }
+      ],
+      "summary": {
+        "common_signal_count": 2,
+        "max_abs_error": 4.027788,
+        "mean_abs_error": 1.6009731870156492,
+        "rmse": 1.9475037582433807,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "omsimulator",
+        "time_points": 20001
+      }
+    }
+  ],
+  "error": null,
+  "request": {
+    "case": "baseline",
+    "model": "VanDerPol",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../simulation/VanDerPol/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../simulation/VanDerPol/baseline/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "backend_count": 2,
+    "comparison_count": 1,
+    "max_abs_error": 4.027788,
+    "max_rel_error": 0.0,
+    "min_common_signal_count": 2
+  }
+}

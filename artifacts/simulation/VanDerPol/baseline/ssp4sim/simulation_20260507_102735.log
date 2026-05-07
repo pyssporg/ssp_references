@@ -1,0 +1,22 @@
+10:27:35.228962935 [2] ssp.cpp:134                  LOG_INFO      ssp4cpp.ssp.ssp SSP Imported, name: VanDerPol ssd: SystemStructure.ssd
+10:27:35.229040896 [2] ssp.cpp:83                   LOG_WARNING   ssp4cpp.ssp.ssp [get_parameter_bindings] If there are internal component connected parameter sets, move these up to system level to get support
+10:27:35.229048376 [2] simulation.cpp:50            LOG_INFO      ssp4sim.Simulation [Simulation] Creating simulation
+10:27:35.229277579 [2] simulator.cpp:94             LOG_INFO      ssp4sim.Simulator [init] Initializing Simulator
+10:27:35.229277759 [2] simulation.cpp:73            LOG_INFO      ssp4sim.Simulation [init] Initializing simulation
+10:27:35.229277819 [2] simulation.cpp:75            LOG_INFO      ssp4sim.Simulation [init] - Initializing fmus
+10:27:35.229277999 [2] simulation.cpp:78            LOG_INFO      ssp4sim.Simulation [init] - Creating analysis graph
+10:27:35.229313499 [2] simulation.cpp:82            LOG_INFO      ssp4sim.Simulation [init] - Creating simulation graph
+10:27:35.229368210 [2] simulation.cpp:91            LOG_INFO      ssp4sim.Simulation [init] - Init simulation graph
+10:27:35.229388340 [2] executor_builder.cpp:41      LOG_INFO      ssp4sim.execution.Delay [build] Executor: JacobiParallelTBB
+10:27:35.229392040 [2] jacobi_parallel_tbb.cpp:16   LOG_INFO      ssp4sim.execution.JacobiParallelTBB [JacobiParallelTBB] JacobiParallelTBB
+10:27:35.230992327 [2] simulation.cpp:96            LOG_INFO      ssp4sim.Simulation [init] - Initializing recorder
+10:27:35.231080888 [2] simulator.cpp:104            LOG_INFO      ssp4sim.Simulator [simulate] Starting Simulator
+10:27:35.231081348 [2] recorder.cpp:80              LOG_INFO      ssp4sim.signal.DataRecorder [start_recording] Starting recording
+10:27:35.231119768 [2] simulation.cpp:115           LOG_INFO      ssp4sim.Simulation [simulate] Starting simulation
+10:27:35.273536462 [2] simulation.cpp:148           LOG_INFO      ssp4sim.Simulation [simulate] Total walltime: 0.042414165 
+10:27:35.273539092 [2] recorder.cpp:88              LOG_INFO      ssp4sim.signal.DataRecorder [stop_recording] Stop recording
+10:27:35.273935157 [2] simulation.cpp:161           LOG_INFO      ssp4sim.Simulation [simulate] Simulation completed
+10:27:35.273935437 [2] simulation.cpp:168           LOG_INFO      ssp4sim.Simulation [simulate] Model fmu walltime: 0.002561513
+10:27:35.273935557 [2] simulation.cpp:171           LOG_INFO      ssp4sim.Simulation [simulate] Model walltime: 0.002561513
+10:27:35.296541024 [2] SignalHandler:~              LOG_INFO      fmu.fmu      Received signal: Segmentation fault (signum: 11)
+10:27:35.296542464 [2] SignalHandler:~              LOG_CRITICAL  fmu.fmu      Program terminated unexpectedly due to signal: Segmentation fault (signum: 11)

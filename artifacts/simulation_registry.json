@@ -1,0 +1,59 @@
+{
+  "models": [
+    {
+      "name": "BouncingBall",
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Dahlquist",
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Stair",
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "VanDerPol",
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        },
+        {
+          "name": "fast",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    }
+  ]
+}

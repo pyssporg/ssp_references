@@ -1,0 +1,21 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "baseline",
+    "left_backend": "ssp4sim",
+    "left_manifest": "../../../../simulation/BouncingBall/baseline/ssp4sim/simulation.json",
+    "right_backend": "omsimulator",
+    "right_manifest": "../../../../simulation/BouncingBall/baseline/omsimulator/simulation.json"
+  },
+  "status": "completed",
+  "summary": {
+    "common_signal_count": 2,
+    "left_label": "ssp4sim",
+    "max_abs_error": 4.43412,
+    "mean_abs_error": 1.1019019025324892,
+    "right_label": "omsimulator",
+    "rmse": 1.334463881707781,
+    "time_points": 3001
+  }
+}

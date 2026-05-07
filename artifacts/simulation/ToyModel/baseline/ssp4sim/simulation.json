@@ -1,0 +1,13 @@
+{
+  "artifacts": [],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "baseline",
+    "model": "ToyModel",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": null,
+  "status": "completed"
+}

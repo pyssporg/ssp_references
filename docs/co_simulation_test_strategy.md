@@ -192,8 +192,8 @@ The suite should run at different depths depending on purpose.
 
 Each test run should leave behind artifacts that are easy to inspect:
 
-- Raw simulation result files per engine.
-- Pairwise comparison CSV files.
+- Raw simulation result files per engine under `artifacts/simulation/`.
+- Pairwise comparison CSV files under `artifacts/comparisons/`.
 - Summary JSON files with error metrics and test window metadata.
 
 This makes failures diagnosable and keeps the strategy useful for both automated
@@ -211,12 +211,19 @@ This repository already supports the core workflow needed for the strategy:
 
 - SSP fixtures live under `models/ssp/`.
 - Reusable FMU building blocks live under `models/fmu/`.
-- Generated SSPs, converted reference CSVs, and simulation outputs live under
-  `build/models/ssp/<model_name>/`.
-- Simulation and comparison flow is driven by per-model `simulate.py` scripts
-  plus `scripts/run_model_simulations.py`.
-- Pairwise metric generation is implemented in
-  `scripts/workflow/comparison.py`.
+- Generated SSPs live under `artifacts/models/<model_name>/<experiment>/`.
+- Runtime setup, simulation, and comparison outputs live under
+  `artifacts/simulation/<model_name>/<experiment>/` and
+  `artifacts/comparisons/<model_name>/<experiment>/`.
+- `artifacts/simulation_registry.json` maps models to one or more named cases
+  and records the backends for each case explicitly.
+- Each generated `artifacts/simulation/<model>/<case>/setup.json` also stores
+  the explicit backend list for that setup.
+- Simulation is driven by `scripts/run_simulations.py`.
+- Comparison is driven by `scripts/run_comparisons.py` and implemented in
+  `scripts/workflow/comparison.py`. The compare entry point uses the backend
+  list from `setup.json` and emits comparisons for every unique backend
+  combination by default.
 
 That means the immediate next step is not new infrastructure. It is selecting a
 small required model set, including deterministic signal-propagation fixtures,

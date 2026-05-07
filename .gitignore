@@ -1,6 +1,5 @@
 
-build/*
-!build/models/
+build/
 
 
 venv/

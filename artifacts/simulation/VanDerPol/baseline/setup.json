@@ -1,0 +1,19 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "description": "Baseline configuration with mu set to 1.0.",
+  "ls_ref_experiments": "../../../models/VanDerPol/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "VanDerPol",
+  "resources_dir": "../../../models/VanDerPol/baseline/resources",
+  "ssp_root": "../../../models/VanDerPol/baseline",
+  "system_structure": "../../../models/VanDerPol/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 20.0
+  }
+}

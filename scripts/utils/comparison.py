@@ -55,27 +55,27 @@ def resample_series(times: np.ndarray, values: np.ndarray, target_times: np.ndar
     )
 
 def compare_result_sets(
-    left: ResultSet,
-    right: ResultSet,
+    run_a: ResultSet,
+    run_b: ResultSet,
     *,
     window: SimulationWindow,
 ) -> tuple[dict, list[dict[str, float | str]]]:
-    left_data = load_numeric_csv(left.path, engine=left.engine)["columns"]
-    right_data = load_numeric_csv(right.path, engine=right.engine)["columns"]
+    run_a_data = load_numeric_csv(run_a.path, engine=run_a.engine)["columns"]
+    run_b_data = load_numeric_csv(run_b.path, engine=run_b.engine)["columns"]
 
-    left_time = left_data.get("time")
-    right_time = right_data.get("time")
-    if left_time is None or right_time is None:
+    run_a_time = run_a_data.get("time")
+    run_b_time = run_b_data.get("time")
+    if run_a_time is None or run_b_time is None:
         raise KeyError("Both result sets must contain a time column")
 
     target_times = build_time_grid(window)
-    common_signals = sorted(signal for signal in left_data if signal != "time" and signal in right_data)
+    common_signals = sorted(signal for signal in run_a_data if signal != "time" and signal in run_b_data)
 
     metrics: list[dict[str, float | str]] = []
     for signal in common_signals:
-        left_series = resample_series(left_time, left_data[signal], target_times)
-        right_series = resample_series(right_time, right_data[signal], target_times)
-        errors = np.abs(left_series - right_series)
+        run_a_series = resample_series(run_a_time, run_a_data[signal], target_times)
+        run_b_series = resample_series(run_b_time, run_b_data[signal], target_times)
+        errors = np.abs(run_a_series - run_b_series)
 
         metrics.append(
             {
@@ -83,18 +83,18 @@ def compare_result_sets(
                 "max_abs_error": float(np.nanmax(errors)),
                 "mean_abs_error": float(np.nanmean(errors)),
                 "rmse": float(math.sqrt(np.nanmean(np.square(errors)))),
-                "left_label": left.label,
-                "left_min": float(np.nanmin(left_series)),
-                "left_max": float(np.nanmax(left_series)),
-                "right_label": right.label,
-                "right_min": float(np.nanmin(right_series)),
-                "right_max": float(np.nanmax(right_series)),
+                "run_a_label": run_a.label,
+                "run_a_min": float(np.nanmin(run_a_series)),
+                "run_a_max": float(np.nanmax(run_a_series)),
+                "run_b_label": run_b.label,
+                "run_b_min": float(np.nanmin(run_b_series)),
+                "run_b_max": float(np.nanmax(run_b_series)),
             }
         )
 
     summary = {
-        "left_label": left.label,
-        "right_label": right.label,
+        "run_a_label": run_a.label,
+        "run_b_label": run_b.label,
         "time_points": int(len(target_times)),
         "common_signal_count": len(common_signals),
         "max_abs_error": max((row["max_abs_error"] for row in metrics), default=0.0),
@@ -111,8 +111,12 @@ def sanitize_label(label: str) -> str:
     return "".join(sanitized).strip("_")
 
 
-def comparison_stem(left: ResultSet, right: ResultSet) -> str:
-    return f"{sanitize_label(left.label)}_vs_{sanitize_label(right.label)}"
+def comparison_run_name(run_a_label: str, run_b_label: str) -> str:
+    return f"{sanitize_label(run_a_label)}_vs_{sanitize_label(run_b_label)}"
+
+
+def comparison_stem(run_a: ResultSet, run_b: ResultSet) -> str:
+    return comparison_run_name(run_a.label, run_b.label)
 
 
 def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
@@ -122,15 +126,14 @@ def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
         "max_abs_error",
         "mean_abs_error",
         "rmse",
-        "left_label",
-        "left_min",
-        "left_max",
-        "right_label",
-        "right_min",
-        "right_max",
+        "run_a_label",
+        "run_a_min",
+        "run_a_max",
+        "run_b_label",
+        "run_b_min",
+        "run_b_max",
     ]
     with path.open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
-

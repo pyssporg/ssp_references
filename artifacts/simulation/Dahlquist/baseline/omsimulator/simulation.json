@@ -1,0 +1,15 @@
+{
+  "artifacts": [
+    "result.mat"
+  ],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "baseline",
+    "model": "Dahlquist",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.06576879508793354,
+  "status": "completed"
+}

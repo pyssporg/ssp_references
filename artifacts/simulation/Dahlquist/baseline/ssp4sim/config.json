@@ -1,0 +1,47 @@
+{
+  "simulation": {
+    "executor": {
+      "forward_derivatives": true,
+      "jacobi": {
+        "method": 1,
+        "parallel": true
+      },
+      "method": "jacobi",
+      "seidel": {
+        "parallel": false
+      },
+      "sub_step": 0.001,
+      "thread_pool_workers": 5
+    },
+    "log": {
+      "file": "/home/eriro/pwa/2_work/ssp_references/artifacts/simulation/Dahlquist/baseline/ssp4sim/simulation.log",
+      "fmu": false,
+      "level_cutelog": "disable",
+      "level_file": "info",
+      "level_json": "disable",
+      "level_terminal": "error"
+    },
+    "realtime": false,
+    "recording": {
+      "csv": {
+        "enable": true,
+        "file": "/home/eriro/pwa/2_work/ssp_references/artifacts/simulation/Dahlquist/baseline/ssp4sim/result.csv",
+        "interval": 0.001
+      },
+      "enable": true,
+      "influx": {
+        "enable": false
+      },
+      "interval": 0.001,
+      "result_file": "/home/eriro/pwa/2_work/ssp_references/artifacts/simulation/Dahlquist/baseline/ssp4sim/result.csv",
+      "wait_for": true
+    },
+    "ssd": "SystemStructure.ssd",
+    "ssp": "/tmp/baseline_zy7gpfd4/ssp",
+    "start_time": 0.0,
+    "stop_time": 10.0,
+    "timestep": 0.001,
+    "tolerance": 0.0001,
+    "working_dir": "/home/eriro/pwa/2_work/ssp_references/artifacts/simulation/Dahlquist/baseline/ssp4sim"
+  }
+}

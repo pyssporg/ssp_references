@@ -231,6 +231,22 @@ def _temporary_cwd(path: Path):
         os.chdir(previous)
 
 
+def _configure_omsimulator() -> None:
+    from OMSimulator.capi import Capi, Status
+
+    # The OMSimulator package already applies suppressPath while loading FMUs,
+    # so only set the remaining historical options here.
+    for option in (
+        "--ignoreInitialUnknowns=true",
+        "--wallTime=true",
+        "--emitEvents=false",
+        "--inputExtrapolation=true",
+    ):
+        status = Capi.setCommandLineOption(option)
+        if status != Status.ok:
+            raise RuntimeError(f"Failed to set OMSimulator command line option {option!r}: {status}")
+
+
 def _ssp4sim_child_main(config_path: str) -> None:
     from pyssp4sim import Simulator
 
@@ -328,6 +344,7 @@ def simulate_omsimulator(request: SimulationRequest) -> SimulationRun:
     repo_result_dir = REPO_ROOT / "result"
     if repo_result_dir.exists():
         shutil.rmtree(repo_result_dir)
+    _configure_omsimulator()
     Settings.suppressPath = True
     with _temporary_cwd(request.run_dir):
         with _runtime_ssp_archive(request.setup.ssp_root) as runtime_ssp_path:

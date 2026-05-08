@@ -1,25 +1,25 @@
 {
   "comparisons": [
     {
-      "manifest": "ssp4sim_vs_omsimulator/comparison.json",
-      "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "manifest": "omsimulator_vs_fmpy/comparison.json",
+      "metrics": "omsimulator_vs_fmpy/metrics.csv",
       "runs": [
-        {
-          "backend": "ssp4sim",
-          "manifest": "../../../simulation/Dahlquist/baseline/ssp4sim/simulation.json"
-        },
         {
           "backend": "omsimulator",
           "manifest": "../../../simulation/Dahlquist/baseline/omsimulator/simulation.json"
+        },
+        {
+          "backend": "fmpy",
+          "manifest": "../../../simulation/Dahlquist/baseline/fmpy/simulation.json"
         }
       ],
       "summary": {
         "compared_signal_count": 1,
         "max_abs_error": 2.0,
-        "mean_abs_error": 0.19997474174207383,
-        "rmse": 0.45880852989567017,
-        "run_a_label": "ssp4sim",
-        "run_b_label": "omsimulator",
+        "mean_abs_error": 0.19987470821781408,
+        "rmse": 0.4585848040234512,
+        "run_a_label": "omsimulator",
+        "run_b_label": "fmpy",
         "time_points": 10001
       }
     }
@@ -30,12 +30,12 @@
     "model": "Dahlquist",
     "runs": [
       {
-        "backend": "ssp4sim",
-        "manifest": "../../../simulation/Dahlquist/baseline/ssp4sim/simulation.json"
-      },
-      {
         "backend": "omsimulator",
         "manifest": "../../../simulation/Dahlquist/baseline/omsimulator/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../simulation/Dahlquist/baseline/fmpy/simulation.json"
       }
     ]
   },

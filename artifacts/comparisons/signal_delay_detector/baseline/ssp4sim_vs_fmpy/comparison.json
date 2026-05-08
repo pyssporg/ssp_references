@@ -1,0 +1,27 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "baseline",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/signal_delay_detector/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../../simulation/signal_delay_detector/baseline/fmpy/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 4,
+    "max_abs_error": 3.0,
+    "mean_abs_error": 0.6875624375624376,
+    "rmse": 0.8755615176591627,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "fmpy",
+    "time_points": 1001
+  }
+}

@@ -22,6 +22,52 @@
         "run_b_label": "omsimulator",
         "time_points": 20001
       }
+    },
+    {
+      "manifest": "ssp4sim_vs_fmpy/comparison.json",
+      "metrics": "ssp4sim_vs_fmpy/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/VanDerPol/baseline/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "fmpy",
+          "manifest": "../../../simulation/VanDerPol/baseline/fmpy/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 2,
+        "max_abs_error": 0.04877703603768424,
+        "mean_abs_error": 0.001408974219234796,
+        "rmse": 0.005513153868647072,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "fmpy",
+        "time_points": 20001
+      }
+    },
+    {
+      "manifest": "omsimulator_vs_fmpy/comparison.json",
+      "metrics": "omsimulator_vs_fmpy/metrics.csv",
+      "runs": [
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/VanDerPol/baseline/omsimulator/simulation.json"
+        },
+        {
+          "backend": "fmpy",
+          "manifest": "../../../simulation/VanDerPol/baseline/fmpy/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 2,
+        "max_abs_error": 5.385261941860761,
+        "mean_abs_error": 2.521907673398803,
+        "rmse": 2.8821187645629696,
+        "run_a_label": "omsimulator",
+        "run_b_label": "fmpy",
+        "time_points": 20001
+      }
     }
   ],
   "error": null,
@@ -36,13 +82,17 @@
       {
         "backend": "omsimulator",
         "manifest": "../../../simulation/VanDerPol/baseline/omsimulator/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../simulation/VanDerPol/baseline/fmpy/simulation.json"
       }
     ]
   },
   "status": "completed",
   "summary": {
-    "backend_count": 2,
-    "comparison_count": 1,
+    "backend_count": 3,
+    "comparison_count": 3,
     "max_abs_error": 5.38526197093038,
     "max_rel_error": 0.0,
     "min_compared_signal_count": 2

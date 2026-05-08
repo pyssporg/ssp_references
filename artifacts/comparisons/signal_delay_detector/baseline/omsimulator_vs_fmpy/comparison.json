@@ -1,0 +1,27 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "baseline",
+    "runs": [
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/signal_delay_detector/baseline/omsimulator/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../../simulation/signal_delay_detector/baseline/fmpy/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 4,
+    "max_abs_error": 2.0,
+    "mean_abs_error": 1.8096903096903094,
+    "rmse": 1.8503654721163563,
+    "run_a_label": "omsimulator",
+    "run_b_label": "fmpy",
+    "time_points": 1001
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "baseline",
+    "runs": [
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/Dahlquist/baseline/omsimulator/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../../simulation/Dahlquist/baseline/fmpy/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 1,
+    "max_abs_error": 2.0,
+    "mean_abs_error": 0.19987470821781408,
+    "rmse": 0.4585848040234512,
+    "run_a_label": "omsimulator",
+    "run_b_label": "fmpy",
+    "time_points": 10001
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "baseline",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/VanDerPol/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../../simulation/VanDerPol/baseline/fmpy/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 2,
+    "max_abs_error": 0.04877703603768424,
+    "mean_abs_error": 0.001408974219234796,
+    "rmse": 0.005513153868647072,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "fmpy",
+    "time_points": 20001
+  }
+}

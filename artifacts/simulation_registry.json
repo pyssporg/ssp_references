@@ -25,28 +25,6 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator",
-            "fmpy"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "dcmotor",
-      "compare_signals": [
-        "edrive_mass.phiB",
-        "edrive_mass.wB",
-        "emachine_model.I",
-        "emachine_model.M",
-        "stimuli_model.M_load",
-        "stimuli_model.U"
-      ],
-      "cases": [
-        {
-          "name": "baseline",
-          "backends": [
-            "ssp4sim",
             "omsimulator",
             "fmpy"
           ]

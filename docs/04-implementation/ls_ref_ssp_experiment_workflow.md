@@ -22,4 +22,4 @@ When a fixture does use `experiments.xml`:
 
 Most fixtures in this repository do not rely on LS-REF at runtime. For the
 current workflow details, read `README.md` and
-`docs/co_simulation_test_strategy.md`.
+`docs/04-implementation/co_simulation_test_strategy.md`.

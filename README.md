@@ -37,6 +37,11 @@ definitions, fixture notes, and build metadata.
 │   ├── workflow/
 │   └── utils/
 ├── 3rd_party/                # vendored helpers and upstream source material
+├── docs/
+│   ├── 01-intent/            # repository purpose and commitments
+│   ├── 02-architecture/      # stable guarantees and boundaries
+│   ├── 03-decisions/         # Architecture Decision Records
+│   └── 04-implementation/    # strategy, fixture mapping, workflow notes
 └── requirements.txt
 ```
 

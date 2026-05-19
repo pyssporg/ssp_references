@@ -10,25 +10,25 @@ Each candidate is proposed. None is approved for implementation. Each needs a sc
 
 Each candidate is in its own file under this directory:
 
-| File | ID | Theme | Priority | Blast Radius |
-|------|----|-------|----------|-------------|
-| [IMP-001.md](./IMP-001.md) | IMP-001 | Purpose/Intent Document | High | Low |
-| [IMP-002.md](./IMP-002.md) | IMP-002 | System Architecture Document | High | Low |
-| [IMP-003.md](./IMP-003.md) | IMP-003 | Architecture Decision Record Mechanism | Medium | Medium |
-| [IMP-004.md](./IMP-004.md) | IMP-004 | FIXTURE.md Template Standardization | Medium | Low-Medium |
-| [IMP-005.md](./IMP-005.md) | IMP-005 | Design Decisions Log | Medium | Low |
+| File | ID | Theme | Priority | Blast Radius | Status |
+|------|----|-------|----------|-------------|--------|
+| [IMP-001.md](./IMP-001.md) | IMP-001 | Purpose/Intent Document | High | Low | **Completed** (`docs/01-intent/intent.md` exists) |
+| [IMP-002.md](./IMP-002.md) | IMP-002 | System Architecture Document | High | Low | **Completed** (`docs/02-architecture/architecture.md` created) |
+| [IMP-003.md](./IMP-003.md) | IMP-003 | Architecture Decision Record Mechanism | Medium | Medium | **Completed** (ADR template, 3 initial ADRs, AGENTS.md updated) |
+| [IMP-004.md](./IMP-004.md) | IMP-004 | FIXTURE.md Template Standardization | Medium | Low-Medium | **Completed** (template created, outliers reformatted) |
+| [IMP-005.md](./IMP-005.md) | IMP-005 | Design Decisions Log | Medium | Low | **Completed** (todo.md expanded with rationale for 6 decisions) |
 
 ---
 
 ## Summary
 
-| ID | Theme | Priority | Prerequisite | Blast Radius |
-|----|-------|----------|-------------|-------------|
-| IMP-001 | Purpose/Intent Document | High | None | Low |
-| IMP-002 | System Architecture Document | High | IMP-001 (preferred) | Low |
-| IMP-003 | Architecture Decision Record Mechanism | Medium | IMP-001, IMP-002 | Medium |
-| IMP-004 | FIXTURE.md Template Standardization | Medium | None | Low-Medium |
-| IMP-005 | Design Decisions Log | Medium | IMP-003 (optional) | Low |
+| ID | Theme | Priority | Prerequisite | Blast Radius | Status |
+|----|-------|----------|-------------|-------------|--------|
+| IMP-001 | Purpose/Intent Document | High | None | Low | ✅ Completed |
+| IMP-002 | System Architecture Document | High | IMP-001 (preferred) | Low | ✅ Completed |
+| IMP-003 | Architecture Decision Record Mechanism | Medium | IMP-001, IMP-002 | Medium | ✅ Completed |
+| IMP-004 | FIXTURE.md Template Standardization | Medium | None | Low-Medium | ✅ Completed |
+| IMP-005 | Design Decisions Log | Medium | IMP-003 (optional) | Low | ✅ Completed |
 
 ## Cross-Cutting Note: KM-005 Preservation
 

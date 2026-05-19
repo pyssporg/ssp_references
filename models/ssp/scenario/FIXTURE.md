@@ -7,16 +7,19 @@ FMU resources.
 
 ## Overview
 
-`scenario` is a small single fmu that can generate source data from a parameter definition
+`scenario` is a small single-FMU SSP that can generate source data from a
+parameter definition.
 
 ## Strategy Role
 
-- Test SSV, SSM and parameter setting
+- Test SSV, SSM and parameter setting in an SSP context.
+- Provides a minimal scenario for validating external-parameter handling.
 
-## Main Risks Covered
+## Main Failures This Catches
 
-- Larger-system signal exchange.
+- Larger-system signal exchange issues.
+- SSV and SSM parsing problems.
 
 ## Typical Use
 
-- Validating engine behavior on ssv ssm parsing
+- Validating engine behavior on SSV and SSM parameter parsing.

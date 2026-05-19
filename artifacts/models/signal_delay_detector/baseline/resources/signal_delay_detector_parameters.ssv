@@ -5,7 +5,7 @@
       <ssv:Real value="1.0" />
     </ssv:Parameter>
     <ssv:Parameter name="step.offset">
-      <ssv:Real value="0.0" />
+      <ssv:Real value="0.5" />
     </ssv:Parameter>
     <ssv:Parameter name="step.startTime">
       <ssv:Real value="0.25" />

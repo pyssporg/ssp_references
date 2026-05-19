@@ -13,3 +13,6 @@ __pycache__/
 *.csv
 *.mat
 *.log
+
+.opencode/
+opencode.json

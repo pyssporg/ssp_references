@@ -48,7 +48,7 @@ Keep changes direct and explicit.
   template at `.opencode/templates/others/adr-template.md`. Create an ADR when
   a decision affects pipeline boundaries, fixture hierarchy, runtime contracts,
   entry point responsibilities, or repository layout. Smaller implementation
-  choices belong in the design decisions log in `todo.md`.
+  choices belong in the design decisions log in `docs/03-decisions/design-decisions-log.md`.
 - Keep cross-cutting workflow or strategy notes in `docs/`
 - When docs move or commands change, update references so the documented build
   and simulation flow stays accurate

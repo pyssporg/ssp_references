@@ -19,7 +19,7 @@ Create an ADR when a decision affects:
 
 Smaller implementation choices (variable naming, one-off fix approaches,
 internal function design) do not need an ADR. Use the design decisions log in
-[todo.md](../../todo.md) for those.
+[design-decisions-log.md](./design-decisions-log.md) for those.
 
 ## ADR Lifecycle
 

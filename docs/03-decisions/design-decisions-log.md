@@ -1,48 +1,12 @@
-# Simulation Comparison Plan
+# Design Decisions Log
 
-The goal is to compare simulations between different engines with a simple
-three-stage workflow:
+This log records implementation-level design decisions that are narrower in
+scope than the Architecture Decision Records (ADRs) in this directory. Each
+entry states the context, chosen approach, rationale, and consequences.
 
-1. Build stand-alone SSPs.
-2. Run registered simulation cases with one or more backends.
-3. Compare the produced trajectories.
+For architectural decisions, see the [ADRs](./) in this directory.
 
-## Current Direction
-
-- `build.py` stays SSP-only.
-- `artifacts/simulation_registry.json` maps each model to one or more case
-  definitions, and each case lists its explicit backends.
-- Each generated `setup.json` repeats that backend list so later stages do not
-  rely on hidden defaults.
-- `scripts/run_simulations.py` writes setup and run manifests under
-  `artifacts/simulation/<model>/<case>/`.
-- `scripts/run_comparisons.py` writes comparison artifacts under
-  `artifacts/comparisons/<model>/<case>/` and compares all unique backend
-  combinations from the selected setup by default.
-- The setup, simulation, and comparison manifests are the fixed interface
-  between stages.
-
-## Review Plan
-
-1. Review the registry coverage and confirm which model/case/backend
-   combinations should be kept in the registry.
-2. Review backend adapters for `ssp4sim` and `OMSimulator` against the current
-   config shape and result CSV contract.
-3. Review the setup manifest and run manifest fields for anything that is still
-   missing or redundant.
-4. Review comparison metrics and decide which are gate-worthy versus
-   diagnostic-only.
-5. Review whether additional backends or model cases should be added to the
-   registry once the first comparison path is stable.
-
-## Open Questions For Further Review
-
-- Which summary metrics should become acceptance criteria?
-- Which additional registry entries should be added?
-
-## Current Decisions
-
-Each entry records the decision, context, rationale, and consequences.
+---
 
 ### 1. Simulation Settings Belong to the Runtime Layer, Not `experiments.xml`
 
@@ -63,6 +27,11 @@ runtime contract. Avoids re-parsing XML on every simulation dispatch.
 tolerance changes. The `experiments.xml` file must still be present and valid
 in each built SSP root because it is the source of truth at setup time.
 
+**See also:** [ADR-003](./ADR-003.md) (Runtime Configuration Belongs to the
+Simulation Registry).
+
+---
+
 ### 2. Comparison Is Engine-to-Engine Only
 
 **Context:** The repository could compare results against analytical
@@ -82,6 +51,8 @@ engine-specific pass/fail criteria for each model.
 requires at least one other backend run for the comparison to produce results.
 Absolute correctness checks against analytical solutions are out of scope.
 
+---
+
 ### 3. Runtime Artifacts Stay Under `artifacts/`, Not Inside SSP Trees
 
 **Context:** Simulation results could be stored next to each model's build
@@ -99,6 +70,10 @@ Prevents accidental coupling between build logic and runtime configuration.
 **Consequences:** Three parallel directory trees under `artifacts/` (models,
 simulation, comparisons). Cleanup must target each tree independently.
 
+**See also:** [ADR-001](./ADR-001.md) (Three-Stage Pipeline Architecture).
+
+---
+
 ### 4. `build.py` Remains Build-Only
 
 **Context:** A model's `build.py` could optionally run a smoke simulation after
@@ -114,6 +89,10 @@ debugging or incremental work.
 
 **Consequences:** Validation of a built SSP requires a separate simulation step.
 There is no "build and smoke test" shortcut at the model level.
+
+**See also:** [ADR-001](./ADR-001.md) (Three-Stage Pipeline Architecture).
+
+---
 
 ### 5. Signal-Propagation Fixtures Use Deterministic Algebraic FMU Building Blocks
 
@@ -135,6 +114,10 @@ separately from the simple reference and composite models. Packaging
 alternatives (external SSV, generated SSV, inline parameters) must be
 exercised across these fixtures to cover the parameter-passing surface.
 
+**See also:** [ADR-002](./ADR-002.md) (Fixture Hierarchy).
+
+---
+
 ### 6. Simulation Registry Is the Single Source of Truth for Case/Backend Selection
 
 **Context:** The run matrix could be derived from directory scanning of built
@@ -151,3 +134,6 @@ scripts.
 **Consequences:** Adding a new model or case requires a registry update.
 Removing a case requires only a registry change (no rebuild needed as long
 as the SSP root already exists).
+
+**See also:** [ADR-003](./ADR-003.md) (Runtime Configuration Belongs to the
+Simulation Registry).

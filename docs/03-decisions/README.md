@@ -18,12 +18,12 @@ Create an ADR when a decision affects:
 - Repository layout, directory conventions, or documentation structure.
 
 Smaller implementation choices (variable naming, one-off fix approaches,
-internal function design) do not need an ADR. Use the design decisions log in
-[design-decisions-log.md](./design-decisions-log.md) for those.
+internal function design) do not need an ADR. Use the design decisions (DD)
+files in this directory for those.
 
 Product-level decisions (comparison methodology, backend commitment, registry
 as source of truth) belong in the
-[Product Decisions](../00-product-decisions/product-decisions.md) artifact, not
+[Product Decisions](../00-product-decisions/README.md) directory, not
 in this directory.
 
 ## ADR Lifecycle
@@ -40,11 +40,23 @@ The canonical template is at
 
 ## Index
 
+### Architecture Decision Records (ADRs)
+
 | ADR | Title | Status | Layer |
 |-----|-------|--------|-------|
 | [ADR-001](./ADR-001.md) | Three-Stage Pipeline Architecture | Accepted | architecture-decision |
 | [ADR-002](./ADR-002.md) | Fixture Hierarchy | Accepted | architecture-decision |
 | [ADR-003](./ADR-003.md) | Runtime Configuration Belongs to the Simulation Registry | Accepted | technical-decision |
+
+### Design Decisions (DDs)
+
+| DD | Title | Status | Layer |
+|----|-------|--------|-------|
+| [DD-001](./DD-001-simulation-settings-runtime-layer.md) | Simulation Settings Belong to the Runtime Layer | Accepted | technical-decision |
+| [DD-002](./DD-002-runtime-artifacts-under-artifacts.md) | Runtime Artifacts Stay Under `artifacts/` | Accepted | technical-decision |
+| [DD-003](./DD-003-build-py-remains-build-only.md) | `build.py` Remains Build-Only | Accepted | technical-decision |
+| [DD-004](./DD-004-signal-propagation-deterministic-blocks.md) | Signal-Propagation Fixtures Use Deterministic Algebraic FMU Blocks | Accepted | technical-decision |
+| [DD-005](./DD-005-simulation-registry-technical.md) | Simulation Registry Technical Mechanism | Accepted | technical-decision |
 
 ## Layer Map
 
@@ -59,8 +71,43 @@ layers:
   explain *how to implement* within the architecture's stable boundaries.
 
 Product-level decisions (what the repository promises to do) are recorded in
-[docs/00-product-decisions/product-decisions.md](../00-product-decisions/product-decisions.md),
+[docs/00-product-decisions/README.md](../00-product-decisions/README.md),
 not in this directory.
+
+## Decision Sequence
+
+Technical decisions follow the architecture they implement. The sequence below
+shows the dependency order — earlier decisions constrain later ones:
+
+```
+Architecture Decisions:
+  ADR-001: Three-Stage Pipeline
+    └─ establishes Build → Simulate → Compare with file-based contracts
+        │
+        ▼
+  ADR-002: Fixture Hierarchy
+    └─ establishes four-class fixture organization
+        │
+        ▼
+Technical Decisions (bridging architecture to build details):
+  ADR-003: Runtime Config → Registry
+    └─ configuration flows through simulation_registry.json → setup.json
+        │
+        ├──► DD-001: Settings → Runtime Layer
+        │     └─ runtime reads setup.json, not experiments.xml
+        │
+        ├──► DD-002: Artifacts Under artifacts/
+        │     └─ simulation/comparison outputs are separate from build
+        │
+        ├──► DD-003: build.py Is Build-Only
+        │     └─ stage boundary enforcement
+        │
+        ├──► DD-004: Deterministic FMU Blocks
+        │     └─ fixture design for signal-propagation tests
+        │
+        └──► DD-005: Registry Technical Mechanism
+              └─ JSON schema and maintenance convention
+```
 
 ## Maintenance Note
 

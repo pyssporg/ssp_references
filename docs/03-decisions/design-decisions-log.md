@@ -34,22 +34,14 @@ Simulation Registry).
 
 ### 2. Comparison Is Engine-to-Engine Only
 
-**Context:** The repository could compare results against analytical
-expectations, CSV baselines, or other engineered references.
+**Status:** Reclassified to Product Decisions layer.
 
-**Chosen approach:** Comparison is always pairwise engine-to-engine. At least
-two distinct backend runs are required. Baselines stored under
-`models/fmu/<model>/references/` are used as fixture reference data, not as
-comparison targets in the pipeline.
+This decision has been migrated to
+[PD-001: Comparison Methodology — Engine-to-Engine Only](../../00-product-decisions/product-decisions.md#pd-001-comparison-methodology--engine-to-engine-only)
+in the Product Decisions artifact. Its context, rationale, alternatives, and
+consequences are recorded there at the product-decision scope.
 
-**Rationale:** Engine-to-engine comparison detects behavioral differences in
-the orchestration layer without requiring analytical truth for every fixture.
-It keeps the comparison pipeline symmetric and avoids maintaining
-engine-specific pass/fail criteria for each model.
-
-**Consequences:** A single-backend run cannot be compared. Adding a new backend
-requires at least one other backend run for the comparison to produce results.
-Absolute correctness checks against analytical solutions are out of scope.
+**See also:** [Product Decisions — PD-001](../../00-product-decisions/product-decisions.md).
 
 ---
 
@@ -119,6 +111,13 @@ exercised across these fixtures to cover the parameter-passing surface.
 ---
 
 ### 6. Simulation Registry Is the Single Source of Truth for Case/Backend Selection
+
+**Status:** Also recorded as Product Decision.
+
+This decision is also recorded at the product-decision scope in
+[PD-002: Simulation Registry Is the Single Source of Truth](../../00-product-decisions/product-decisions.md#pd-002-simulation-registry-is-the-single-source-of-truth-for-casebackend-selection)
+in the Product Decisions artifact. The entry below retains the technical
+implementation details.
 
 **Context:** The run matrix could be derived from directory scanning of built
 SSPs, from `experiments.xml` content, or from a registry file.

@@ -37,3 +37,11 @@ general-purpose simulation framework or a specification conformance suite.
 - Serving as an authoritative SSP specification conformance suite. The fixtures cover
   a representative range of modeling patterns but do not exhaustively test every
   SSP 1.0 capability or edge case.
+
+## Forward Trace
+
+The product commitments in this document are translated into durable product
+promises in the [Product Decisions](../00-product-decisions/product-decisions.md) artifact
+(decisions about comparison methodology, backend support, and the simulation registry).
+The stable boundaries that preserve these commitments are defined in the
+[System Architecture](../02-architecture/architecture.md) document.

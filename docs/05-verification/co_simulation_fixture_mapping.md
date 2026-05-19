@@ -1,7 +1,7 @@
 # Co-Simulation Fixture Mapping
 
 This document complements
-[co_simulation_test_strategy.md](co_simulation_test_strategy.md)
+[co_simulation_test_strategy.md](./co_simulation_test_strategy.md)
 by mapping concrete fixtures to the strategy and defining the custom composite
 fixtures needed for signal-propagation coverage.
 

@@ -44,11 +44,11 @@ Keep changes direct and explicit.
 - Use the canonical template at `docs/04-implementation/FIXTURE-template.md`
   when creating new FIXTURE.md files; reformat existing files to match when
   editing them
-- Record significant architectural decisions as ADRs in `docs/03-decisions/` using the
+- Record significant architectural decisions as ADRs in `docs/03-technical-decisions/` using the
   template at `.opencode/templates/others/adr-template.md`. Create an ADR when
   a decision affects pipeline boundaries, fixture hierarchy, runtime contracts,
   entry point responsibilities, or repository layout. Smaller implementation
-  choices belong in the design decisions log in `docs/03-decisions/design-decisions-log.md`.
+  choices belong in the Design Decisions (DD) files in `docs/03-technical-decisions/`.
 - Keep cross-cutting workflow or strategy notes in `docs/`
 - When docs move or commands change, update references so the documented build
   and simulation flow stays accurate

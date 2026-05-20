@@ -20,7 +20,9 @@ correctly.
 ## Backward Trace
 
 These verification artifacts satisfy the System Architecture described in
-[docs/02-architecture/architecture.md](../02-architecture/architecture.md) and the
-product commitments in [docs/01-intent/intent.md](../01-intent/intent.md). They
-trace backward to the architecture and intent layers — they do not link down
-into implementation details.
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md),
+the [Product Decisions](../01-product-decisions/README.md) that translate intent
+into durable promises, and the product commitments in
+[docs/00-intent/intent.md](../00-intent/intent.md). They trace backward through
+the full documentation chain (Intent → Product Decisions → System Architecture →
+Technical Decisions) — they do not link down into implementation details.

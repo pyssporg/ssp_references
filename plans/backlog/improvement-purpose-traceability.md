@@ -12,11 +12,11 @@ Each candidate is in its own file under this directory:
 
 | File | ID | Theme | Priority | Blast Radius | Status |
 |------|----|-------|----------|-------------|--------|
-| [IMP-001.md](./IMP-001.md) | IMP-001 | Purpose/Intent Document | High | Low | **Completed** (`docs/01-intent/intent.md` exists) |
-| [IMP-002.md](./IMP-002.md) | IMP-002 | System Architecture Document | High | Low | **Completed** (`docs/02-architecture/architecture.md` created) |
+| [IMP-001.md](./IMP-001.md) | IMP-001 | Purpose/Intent Document | High | Low | **Completed** (`docs/00-intent/intent.md` exists) |
+| [IMP-002.md](./IMP-002.md) | IMP-002 | System Architecture Document | High | Low | **Completed** (`docs/02-system-architecture/architecture.md` created) |
 | [IMP-003.md](./IMP-003.md) | IMP-003 | Architecture Decision Record Mechanism | Medium | Medium | **Completed** (ADR template, 3 initial ADRs, AGENTS.md updated) |
 | [IMP-004.md](./IMP-004.md) | IMP-004 | FIXTURE.md Template Standardization | Medium | Low-Medium | **Completed** (template created, outliers reformatted) |
-| [IMP-005.md](./IMP-005.md) | IMP-005 | Design Decisions Log | Medium | Low | **Completed** (`docs/03-decisions/design-decisions-log.md` created) |
+| [IMP-005.md](./IMP-005.md) | IMP-005 | Design Decisions Log | Medium | Low | **Completed** (`docs/03-technical-decisions/design-decisions-log.md` created) |
 
 ---
 

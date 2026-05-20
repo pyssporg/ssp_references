@@ -43,7 +43,7 @@ mathematical analysis that is out of scope for a curated reference collection.
 ## Trace
 
 Satisfies the "Engine comparison results are the primary quality gate"
-commitment in [docs/01-intent/intent.md](../01-intent/intent.md).
+commitment in [docs/00-intent/intent.md](../00-intent/intent.md).
 
 *This decision was migrated from the former design decisions log entry #2.*
 

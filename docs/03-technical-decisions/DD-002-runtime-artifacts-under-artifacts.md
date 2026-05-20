@@ -32,7 +32,7 @@ coupling between build logic and runtime configuration.
 ## Trace
 
 Satisfies the pipeline stage isolation described in Section 1 of
-[docs/02-architecture/architecture.md](../02-architecture/architecture.md).
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md).
 
 ## See Also
 

@@ -32,7 +32,7 @@ Avoids re-parsing XML on every simulation dispatch.
 ## Trace
 
 Satisfies the runtime contract described in Section 5 of
-[docs/02-architecture/architecture.md](../02-architecture/architecture.md).
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md).
 
 ## See Also
 

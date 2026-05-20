@@ -38,13 +38,13 @@ hidden defaults and makes the active test matrix explicit in version control.
 ## Trace
 
 Satisfies the runtime contract described in Section 5 of
-[docs/02-architecture/architecture.md](../02-architecture/architecture.md) and
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md) and
 the product decision
-[PD-002: Simulation Registry Is the Single Source of Truth](../00-product-decisions/PD-002-simulation-registry-source-of-truth.md).
+[PD-002: Simulation Registry Is the Single Source of Truth](../01-product-decisions/PD-002-simulation-registry-source-of-truth.md).
 
 ## See Also
 
-- [PD-002: Simulation Registry Is the Single Source of Truth](../00-product-decisions/PD-002-simulation-registry-source-of-truth.md)
+- [PD-002: Simulation Registry Is the Single Source of Truth](../01-product-decisions/PD-002-simulation-registry-source-of-truth.md)
   — the product-level commitment that this technical mechanism implements.
 - [ADR-003: Runtime Configuration Belongs to the Simulation Registry](./ADR-003.md)
   — describes how the registry feeds into the `setup.json` contract.

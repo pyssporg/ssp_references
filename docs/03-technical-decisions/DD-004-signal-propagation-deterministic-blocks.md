@@ -34,7 +34,7 @@ tight tolerances.
 ## Trace
 
 Satisfies the fixture hierarchy described in Section 2 of
-[docs/02-architecture/architecture.md](../02-architecture/architecture.md) and
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md) and
 the fixture-class intent in
 [ADR-002: Fixture Hierarchy](./ADR-002.md).
 

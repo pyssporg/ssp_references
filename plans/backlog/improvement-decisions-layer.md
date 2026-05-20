@@ -1,6 +1,6 @@
 # Improvement Backlog — Decisions Layer Separation (KM-005)
 
-Generated from critical review of `docs/03-decisions/` against KM-005 documentation layer separation.
+Generated from critical review of `docs/03-technical-decisions/` against KM-005 documentation layer separation.
 
 Each candidate is proposed. None is approved for implementation. Each needs a scoped task contract before any code or documentation changes begin.
 
@@ -53,6 +53,6 @@ No candidate mixes layers, links downward into implementation details, or adds i
 
 ## Origin
 
-These candidates were generated from a critical review of `docs/03-decisions/` against KM-005. The review identified 6 findings; these 3 candidates address the actionable subset. Findings not addressed by these candidates (e.g., ADR-001/002 content duplication with architecture.md) are either absorbed into IMP-007's scope or deferred as lower-priority follow-ups.
+These candidates were generated from a critical review of `docs/03-technical-decisions/` against KM-005. The review identified 6 findings; these 3 candidates address the actionable subset. Findings not addressed by these candidates (e.g., ADR-001/002 content duplication with architecture.md) are either absorbed into IMP-007's scope or deferred as lower-priority follow-ups.
 
 See the review output for full finding details.

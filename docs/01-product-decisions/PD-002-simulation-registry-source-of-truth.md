@@ -40,13 +40,13 @@ cases without modifying model sources or build scripts.
 ## Trace
 
 Satisfies the "build, simulate, and compare workflow is driven by shared entry
-points" commitment in [docs/01-intent/intent.md](../01-intent/intent.md).
+points" commitment in [docs/00-intent/intent.md](../00-intent/intent.md).
 
 *This decision was migrated from the former design decisions log entry #6.*
 
 ## See Also
 
-- [DD-005: Simulation Registry Technical Mechanism](../03-decisions/DD-005-simulation-registry-technical.md)
+- [DD-005: Simulation Registry Technical Mechanism](../03-technical-decisions/DD-005-simulation-registry-technical.md)
   describes the JSON schema and implementation details.
-- [ADR-003: Runtime Configuration Belongs to the Simulation Registry](../03-decisions/ADR-003.md)
+- [ADR-003: Runtime Configuration Belongs to the Simulation Registry](../03-technical-decisions/ADR-003.md)
   describes how the registry feeds into `setup.json`.

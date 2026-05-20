@@ -5,9 +5,9 @@ one file per decision. Each file follows the ADR template structure (Context,
 Options Considered, Decision, Rationale, Consequences, Trace) at the
 product-decision scope.
 
-This layer sits between [docs/01-intent/intent.md](../01-intent/intent.md)
+This layer sits between [docs/00-intent/intent.md](../00-intent/intent.md)
 (Intent and Product Commitments) and
-[docs/02-architecture/architecture.md](../02-architecture/architecture.md)
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md)
 (System Architecture) in the documentation chain.
 
 ## Decision Sequence
@@ -39,7 +39,7 @@ PD-002: Registry as Source of Truth
 ## Forward Trace
 
 These product decisions translate the commitments in
-[docs/01-intent/intent.md](../01-intent/intent.md) into durable promises. The
+[docs/00-intent/intent.md](../00-intent/intent.md) into durable promises. The
 stable boundaries that preserve them are defined in the
-[System Architecture](../02-architecture/architecture.md) and refined by the
-[Technical Decisions](../03-decisions/README.md) (ADRs and DDs).
+[System Architecture](../02-system-architecture/architecture.md) and refined by the
+[Technical Decisions](../03-technical-decisions/README.md) (ADRs and DDs).

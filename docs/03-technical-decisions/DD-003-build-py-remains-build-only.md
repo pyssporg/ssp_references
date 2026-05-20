@@ -31,7 +31,7 @@ incremental work.
 ## Trace
 
 Satisfies the stage-boundary invariants described in Section 3 of
-[docs/02-architecture/architecture.md](../02-architecture/architecture.md)
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md)
 (entry point ownership and forbidden shortcuts).
 
 ## See Also

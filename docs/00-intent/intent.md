@@ -41,7 +41,7 @@ general-purpose simulation framework or a specification conformance suite.
 ## Forward Trace
 
 The product commitments in this document are translated into durable product
-promises in the [Product Decisions](../00-product-decisions/product-decisions.md) artifact
+promises in the [Product Decisions](../01-product-decisions/README.md) artifact
 (decisions about comparison methodology, backend support, and the simulation registry).
 The stable boundaries that preserve these commitments are defined in the
-[System Architecture](../02-architecture/architecture.md) document.
+[System Architecture](../02-system-architecture/architecture.md) document.

@@ -44,7 +44,7 @@ one Python-based engine (FMPy) covering different execution models.
 ## Trace
 
 Satisfies the "Engine comparison results are the primary quality gate"
-commitment in [docs/01-intent/intent.md](../01-intent/intent.md). The current
+commitment in [docs/00-intent/intent.md](../00-intent/intent.md). The current
 backend set is documented in
 [docs/05-verification/co_simulation_test_strategy.md](../05-verification/co_simulation_test_strategy.md).
 

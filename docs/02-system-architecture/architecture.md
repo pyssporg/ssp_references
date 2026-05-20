@@ -3,7 +3,7 @@
 This document describes the stable guarantees, component boundaries, and
 interface contracts of the `ssp_references` repository. It sits at the
 **System Architecture** layer in the documentation chain, between
-[docs/intent.md](../01-intent/intent.md) (Intent and Product Commitments) and any future
+[docs/00-intent/intent.md](../00-intent/intent.md) (Intent and Product Commitments) and any future
 Technical Decisions records.
 
 ---
@@ -297,7 +297,7 @@ The following architectural violations are not allowed:
 ## Document Purpose
 
 This architecture document satisfies the Build → Simulate → Compare pipeline
-commitment stated in [docs/intent.md](../01-intent/intent.md) by defining the stable
+commitment stated in [docs/00-intent/intent.md](../00-intent/intent.md) by defining the stable
 boundaries, interface contracts, and forbidden shortcuts that preserve that
 pipeline across changes. Future technical decisions (ADRs) and implementation
 work should reference this document as the source of architectural constraints.

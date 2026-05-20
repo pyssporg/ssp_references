@@ -23,7 +23,7 @@ files in this directory for those.
 
 Product-level decisions (comparison methodology, backend commitment, registry
 as source of truth) belong in the
-[Product Decisions](../00-product-decisions/README.md) directory, not
+[Product Decisions](../01-product-decisions/README.md) directory, not
 in this directory.
 
 ## ADR Lifecycle
@@ -65,13 +65,13 @@ layers:
 
 - **architecture-decision** — Records the rationale behind a system-structure
   choice that is already described as a stable boundary in
-  [docs/02-architecture/architecture.md](../02-architecture/architecture.md).
+  [docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md).
   These ADRs explain *why* the architecture is the way it is.
 - **technical-decision** — Bridges architecture to build details. These ADRs
   explain *how to implement* within the architecture's stable boundaries.
 
 Product-level decisions (what the repository promises to do) are recorded in
-[docs/00-product-decisions/README.md](../00-product-decisions/README.md),
+[docs/01-product-decisions/README.md](../01-product-decisions/README.md),
 not in this directory.
 
 ## Decision Sequence
@@ -113,7 +113,7 @@ Technical Decisions (bridging architecture to build details):
 
 ADR-001 (pipeline) and ADR-002 (fixture hierarchy) describe system-structure
 choices that are also documented in
-[docs/02-architecture/architecture.md](../02-architecture/architecture.md).
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md).
 When either ADR or the architecture doc is updated, verify both documents stay
 consistent. The architecture doc describes *what* the architecture is; the ADRs
 describe *why* those choices were made.
@@ -121,5 +121,5 @@ describe *why* those choices were made.
 ## Backward Trace
 
 These ADRs satisfy the System Architecture described in
-[docs/architecture.md](../02-architecture/architecture.md) and the product commitments in
-[docs/intent.md](../01-intent/intent.md).
+[docs/02-system-architecture/architecture.md](../02-system-architecture/architecture.md) and the product commitments in
+[docs/00-intent/intent.md](../00-intent/intent.md).

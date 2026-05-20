@@ -41,14 +41,14 @@ Keep changes direct and explicit.
 - Keep docs short, focused, and tied to the actual workflow in this repository
 - Treat `README.md` as the landing page for repository structure and usage
 - Keep model-specific notes in each model's `FIXTURE.md`
-- Use the canonical template at `docs/04-implementation/FIXTURE-template.md`
+- Use the canonical template at `product-breakdown/03-implementation/FIXTURE-template.md`
   when creating new FIXTURE.md files; reformat existing files to match when
   editing them
-- Record significant architectural decisions as ADRs in `docs/03-technical-decisions/` using the
+- Record significant architectural decisions as ADRs in `product-breakdown/02-architecture/decisions/` using the
   template at `.opencode/templates/others/adr-template.md`. Create an ADR when
   a decision affects pipeline boundaries, fixture hierarchy, runtime contracts,
   entry point responsibilities, or repository layout. Smaller implementation
-  choices belong in the Design Decisions (DD) files in `docs/03-technical-decisions/`.
-- Keep cross-cutting workflow or strategy notes in `docs/`
+  choices belong in the Design Decisions (DD) files in `product-breakdown/03-implementation/decisions/`.
+- Keep cross-cutting workflow or strategy notes in `product-breakdown/`
 - When docs move or commands change, update references so the documented build
   and simulation flow stays accurate

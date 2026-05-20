@@ -37,13 +37,14 @@ definitions, fixture notes, and build metadata.
 │   ├── workflow/
 │   └── utils/
 ├── 3rd_party/                # vendored helpers and upstream source material
-├── docs/
-│   ├── 00-intent/                 # repository purpose and commitments
-│   ├── 01-product-decisions/      # durable product promises
-│   ├── 02-system-architecture/    # stable guarantees and boundaries
-│   ├── 03-technical-decisions/    # ADRs and design decisions
-│   ├── 04-implementation/         # build/simulation workflow notes
-│   └── 05-verification/           # test strategy and verification
+├── product-breakdown/
+│   ├── 00-intent/              # north star intent and commitments
+│   ├── 01-product/              # product decisions
+│   ├── 02-architecture/         # system architecture and ADRs
+│   ├── 03-implementation/       # build/simulation workflow notes
+│   ├── 04-verification/         # test strategy and verification
+│   ├── 05-operation/            # operational guidance
+│   └── 06-evolution/            # backlog and roadmap
 └── requirements.txt
 ```
 

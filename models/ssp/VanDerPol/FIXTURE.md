@@ -16,7 +16,7 @@ nonlinear dynamics.
 - Behavioral comparison baseline.
 - Regression anchor for continuous-time behavior.
 
-## Main Risks Covered
+## Main Failures This Catches
 
 - Continuous dynamics handling.
 - Solver consistency across engines.
@@ -27,7 +27,7 @@ nonlinear dynamics.
 - Fast cross-engine comparison for continuous models.
 - Detecting changes in smooth nonlinear trajectories.
 
-## Packaging Note
+## Packaging Notes
 
 This fixture carries a small `experiments.xml` bundle so the builder can
 materialize the baseline SSP variants.

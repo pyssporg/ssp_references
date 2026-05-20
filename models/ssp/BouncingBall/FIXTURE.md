@@ -16,7 +16,7 @@ checks.
 - Smoke-test candidate.
 - Cross-engine behavioral comparison baseline.
 
-## Main Risks Covered
+## Main Failures This Catches
 
 - Event handling and discontinuities.
 - Result export correctness.

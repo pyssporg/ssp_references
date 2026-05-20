@@ -104,3 +104,90 @@ reference-model cases, the matching CSV baselines live in
 - `OMSimulator` is installed from PyPI.
 
 If you work on another platform, expect to adjust dependencies manually.
+
+## Quick Start
+
+This section walks you from clone to first comparison result in a few minutes.
+All commands run from the repository root.
+
+### Prerequisites
+
+- Python 3.10+ and `python3-venv` (Ubuntu: `sudo apt install python3-venv`)
+- Linux `x86_64` (required for the pinned `pyssp4sim` wheel)
+- OMSimulator system libraries (Ubuntu: `sudo apt install libomsimulator libomc`)
+
+### 1. Clone and set up
+
+```bash
+git clone <repo-url> ssp_references
+cd ssp_references
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Build a model
+
+Build the simplest reference model (`BouncingBall`) to verify the toolchain:
+
+```bash
+# See which models are available
+python3 scripts/build_models.py list
+
+# Build one model
+python3 scripts/build_models.py run BouncingBall
+```
+
+Built artifacts appear under `artifacts/models/BouncingBall/`.
+
+To build every model at once:
+```bash
+python3 scripts/build_models.py run-all
+```
+
+### 3. Simulate
+
+Run `BouncingBall` against two backends for an engine-to-engine comparison:
+
+```bash
+python3 scripts/run_simulations.py --model BouncingBall --backend ssp4sim --backend omsimulator
+```
+
+Simulation results appear under `artifacts/simulation/BouncingBall/baseline/`.
+
+### 4. Compare
+
+Compare results across the two backends:
+
+```bash
+python3 scripts/run_comparisons.py --model BouncingBall --backend ssp4sim --backend omsimulator
+```
+
+Comparison metrics and manifests appear under `artifacts/comparisons/BouncingBall/`.
+
+### 5. Run tests
+
+```bash
+python3 -m pytest tests/
+```
+
+### Full pipeline (one-shot)
+
+```bash
+source venv/bin/activate
+python3 scripts/build_models.py run BouncingBall
+python3 scripts/run_simulations.py --model BouncingBall --backend ssp4sim --backend omsimulator
+python3 scripts/run_comparisons.py --model BouncingBall --backend ssp4sim --backend omsimulator
+python3 -m pytest tests/
+```
+
+### Troubleshooting
+
+| Symptom | Likely Cause | Fix |
+|---------|------------|-----|
+| `pip install` fails on `pyssp4sim` | Not on Linux `x86_64` | Install manually or use an `x86_64` environment |
+| `OMSimulator` import error | System libraries not installed | `sudo apt install libomsimulator libomc` (Ubuntu) |
+| `build_models.py: error: argument command: invalid choice` | Subcommand missing | Use `list`, `run <model>`, or `run-all` |
+| `No simulation cases matched` | Model name or backend typo | Check `artifacts/simulation_registry.json` for valid names |
+| FMU or source files missing | Model needs a clean rebuild | Delete `artifacts/models/<model>` and re-run `build_models.py run <model>` |
+| `ModuleNotFoundError: No module named 'workflow'` | Not running from repo root | `cd ssp_references` and verify `scripts/` is in the current directory |

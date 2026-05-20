@@ -15,16 +15,16 @@ and linked during the SSP build.
 `signal_delay_detector` is a deterministic signal-propagation SSP fixture
 designed to expose subtle ordering and delay issues.
 
-## Structure
-
-- `Step -> Gain -> Gain -> Add`
-- Parallel direct path from `Step -> Add`
-
 ## Strategy Role
 
 - Deterministic signal-propagation fixture.
 - Priority 3 propagation test.
 - Implemented regression fixture.
+
+## Structure
+
+- `Step -> Gain -> Gain -> Add`
+- Parallel direct path from `Step -> Add`
 
 ## Intent
 

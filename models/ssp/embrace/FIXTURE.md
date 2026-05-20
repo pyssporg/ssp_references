@@ -16,7 +16,7 @@ resource-heavy orchestration case.
 - Pre-merge comparison candidate.
 - Regression anchor for larger-system orchestration behavior.
 
-## Main Risks Covered
+## Main Failures This Catches
 
 - Larger-system signal exchange.
 - Resource-heavy packaging and loading.
@@ -27,7 +27,7 @@ resource-heavy orchestration case.
 - Validating engine behavior on larger coupled systems where signal routing and
   setup complexity are both important.
 
-## OMSimulator Notes
+## Engine-Specific Notes
 
 The OMSimulator backend for this fixture is run with a reduced logging and
 eventing setup to keep the result file manageable and to tolerate the model's

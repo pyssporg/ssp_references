@@ -14,7 +14,7 @@ handling inside an SSP.
 - Simple reference model.
 - Packaging and runtime integration check.
 
-## Main Risks Covered
+## Main Failures This Catches
 
 - FMU resource loading.
 - Packaged SSP resource resolution.

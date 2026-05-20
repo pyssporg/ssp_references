@@ -16,7 +16,7 @@ behavior.
 - Smoke-test candidate.
 - Behavioral comparison baseline for time events.
 
-## Main Risks Covered
+## Main Failures This Catches
 
 - Time-event handling.
 - Step transition timing.

@@ -15,7 +15,7 @@ CSV baselines.
 - Behavioral comparison baseline.
 - Regression anchor for numerical stability checks.
 
-## Main Risks Covered
+## Main Failures This Catches
 
 - Basic integration behavior.
 - Numerical stability.

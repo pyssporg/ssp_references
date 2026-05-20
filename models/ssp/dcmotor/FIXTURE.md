@@ -15,7 +15,7 @@ FMUs and nested resources.
 - Pre-merge comparison candidate.
 - Regression anchor for coupled execution behavior.
 
-## Main Risks Covered
+## Main Failures This Catches
 
 - Multi-component signal exchange.
 - Routing and coupling behavior.

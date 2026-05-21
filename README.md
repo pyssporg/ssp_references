@@ -85,6 +85,32 @@ python3 scripts/run_simulations.py --help
 python3 scripts/run_comparisons.py --help
 ```
 
+Comparative plots use the same registry and simulation outputs:
+
+```bash
+python3 scripts/generate_comparative_plots.py --help
+python3 scripts/generate_comparative_plots.py
+```
+
+The plot generator writes one PNG per model, case, and variable under
+`artifacts/plots/<model>/<case>/<variable>.png`. It compares every available
+engine for that case and renders the full stored timeseries without resampling.
+Use `--model`, `--case`, and `--backend` to narrow the selection.
+
+To run the full registered suite and generate comparisons for every case that
+has at least two recorded backends:
+
+```bash
+python3 scripts/run_simulations.py
+python3 scripts/run_comparisons.py
+```
+
+`run_simulations.py` executes every case in `artifacts/simulation_registry.json`
+by default. `run_comparisons.py` then compares each case using all backends
+listed in the corresponding `setup.json`, or a filtered backend subset when
+`--backend` is repeated. Cases that only have one backend, such as
+`pyfmu_csv_source_sink` and `scenario`, are simulated but not comparable.
+
 The registry maps each model to one or more cases, and each model also carries
 the explicit compare-signal list used for engine-to-engine comparisons. That
 keeps the runtime matrix explicit without pushing execution settings back into

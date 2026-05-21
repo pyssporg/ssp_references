@@ -1,13 +1,15 @@
 {
-  "artifacts": [],
+  "artifacts": [
+    "result.mat"
+  ],
   "error": null,
   "request": {
-    "backend": "ssp4sim",
+    "backend": "omsimulator",
     "case": "baseline",
-    "model": "ToyModel",
+    "model": "dcmotor",
     "setup_manifest": "../setup.json"
   },
   "result": "result.csv",
-  "runtime_s": null,
+  "runtime_s": 0.20635064601083286,
   "status": "completed"
 }

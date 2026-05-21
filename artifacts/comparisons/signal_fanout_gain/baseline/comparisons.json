@@ -1,29 +1,6 @@
 {
   "comparisons": [
     {
-      "manifest": "ssp4sim_vs_omsimulator/comparison.json",
-      "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
-      "runs": [
-        {
-          "backend": "ssp4sim",
-          "manifest": "../../../simulation/signal_fanout_gain/baseline/ssp4sim/simulation.json"
-        },
-        {
-          "backend": "omsimulator",
-          "manifest": "../../../simulation/signal_fanout_gain/baseline/omsimulator/simulation.json"
-        }
-      ],
-      "summary": {
-        "compared_signal_count": 3,
-        "max_abs_error": 4.0,
-        "mean_abs_error": 2.6646686646686644,
-        "rmse": 2.6651676033704734,
-        "run_a_label": "ssp4sim",
-        "run_b_label": "omsimulator",
-        "time_points": 1001
-      }
-    },
-    {
       "manifest": "ssp4sim_vs_fmpy/comparison.json",
       "metrics": "ssp4sim_vs_fmpy/metrics.csv",
       "runs": [
@@ -45,29 +22,6 @@
         "run_b_label": "fmpy",
         "time_points": 1001
       }
-    },
-    {
-      "manifest": "omsimulator_vs_fmpy/comparison.json",
-      "metrics": "omsimulator_vs_fmpy/metrics.csv",
-      "runs": [
-        {
-          "backend": "omsimulator",
-          "manifest": "../../../simulation/signal_fanout_gain/baseline/omsimulator/simulation.json"
-        },
-        {
-          "backend": "fmpy",
-          "manifest": "../../../simulation/signal_fanout_gain/baseline/fmpy/simulation.json"
-        }
-      ],
-      "summary": {
-        "compared_signal_count": 3,
-        "max_abs_error": 3.0,
-        "mean_abs_error": 1.499500499500499,
-        "rmse": 1.7922850695405501,
-        "run_a_label": "omsimulator",
-        "run_b_label": "fmpy",
-        "time_points": 1001
-      }
     }
   ],
   "error": null,
@@ -80,10 +34,6 @@
         "manifest": "../../../simulation/signal_fanout_gain/baseline/ssp4sim/simulation.json"
       },
       {
-        "backend": "omsimulator",
-        "manifest": "../../../simulation/signal_fanout_gain/baseline/omsimulator/simulation.json"
-      },
-      {
         "backend": "fmpy",
         "manifest": "../../../simulation/signal_fanout_gain/baseline/fmpy/simulation.json"
       }
@@ -91,9 +41,9 @@
   },
   "status": "completed",
   "summary": {
-    "backend_count": 3,
-    "comparison_count": 3,
-    "max_abs_error": 4.0,
+    "backend_count": 2,
+    "comparison_count": 1,
+    "max_abs_error": 3.0,
     "max_rel_error": 0.0,
     "min_compared_signal_count": 3
   }

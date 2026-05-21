@@ -1,11 +1,12 @@
 {
   "backends": [
-    "ssp4sim"
+    "ssp4sim",
+    "omsimulator"
   ],
   "case": "baseline",
   "compare_signals": [
-    "emachine_model.Te",
-    "edrive_mass.w"
+    "SuT_emachine_model.M",
+    "SuT_edrive_mass.wB"
   ],
   "ls_ref_experiments": "../../../models/dcmotor/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "dcmotor",

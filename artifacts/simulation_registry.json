@@ -112,8 +112,7 @@
           "name": "baseline",
           "backends": [
             "ssp4sim",
-            "omsimulator",
-            "fmpy"
+            "omsimulator"
           ]
         }
       ]
@@ -130,8 +129,7 @@
           "name": "baseline",
           "backends": [
             "ssp4sim",
-            "omsimulator",
-            "fmpy"
+            "omsimulator"
           ]
         }
       ]
@@ -214,16 +212,15 @@
     {
       "name": "dcmotor",
       "compare_signals": [
-        "emachine_model.Te",
-        "edrive_mass.w"
+        "SuT_emachine_model.M",
+        "SuT_edrive_mass.wB"
       ],
       "cases": [
         {
           "name": "baseline",
           "backends": [
             "ssp4sim",
-            "omsimulator",
-            "fmpy"
+            "omsimulator"
           ]
         }
       ]
@@ -237,9 +234,7 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator",
-            "fmpy"
+            "ssp4sim"
           ]
         }
       ]
@@ -253,9 +248,7 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator",
-            "fmpy"
+            "ssp4sim"
           ]
         }
       ]

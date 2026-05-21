@@ -41,7 +41,7 @@ Multi-component SSPs exercising realistic coupling and scheduling.
 
 | Model | Purpose | Backends | Test Level | FIXTURE.md |
 |-------|---------|----------|------------|------------|
-| dcmotor | DC motor model with electrical and mechanical subsystems | ssp4sim, OMSimulator, FMPy | Regression | [link](./ssp/dcmotor/FIXTURE.md) |
+| dcmotor | DC motor model with electrical and mechanical subsystems | ssp4sim, OMSimulator | Regression | [link](./ssp/dcmotor/FIXTURE.md) |
 | embrace | EMBRACE co-simulation benchmark; multi-FMU coupling | ssp4sim, OMSimulator, FMPy | Regression | [link](./ssp/embrace/FIXTURE.md) |
 
 ### Special-Purpose SSPs

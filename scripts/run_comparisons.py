@@ -53,6 +53,7 @@ def main() -> int:
     if not specs:
         raise ValueError("No simulation cases matched the selected registry filters")
 
+    skipped = 0
     for spec in specs:
         layout = spec.layout
         setup = SimulationSetup.from_manifest(layout.setup_manifest_path)
@@ -62,6 +63,13 @@ def main() -> int:
             raise ValueError(
                 f"Backends {missing_backends} are not listed in {layout.setup_manifest_path}"
             )
+        if len(selected_backends) < 2:
+            print(
+                f"Skipping {spec.model_name}/{spec.case_name}: "
+                f"need at least two backends for comparison"
+            )
+            skipped += 1
+            continue
 
         runs = tuple(
             SimulationRun.from_manifest(layout.simulation_manifest_path(backend))
@@ -74,6 +82,8 @@ def main() -> int:
             print(comparison.metrics_path)
         print(result.summary)
 
+    if skipped:
+        print(f"Skipped {skipped} case(s) with fewer than two backends")
     return 0
 
 

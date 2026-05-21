@@ -35,7 +35,7 @@
       </ssd:ParameterBinding>
     </ssd:ParameterBindings>
     <ssd:Elements>
-      <ssd:Component name="SuT.edrive_mass" source="resources/edrive_mass.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+      <ssd:Component name="SuT_edrive_mass" source="resources/edrive_mass.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
         <ssd:Connectors>
           <ssd:Connector name="M_A" kind="input">
             <ssc:Real unit="N.m" />
@@ -81,7 +81,7 @@
           </ssd:ParameterBinding>
         </ssd:ParameterBindings>
       </ssd:Component>
-      <ssd:Component name="SuT.emachine_model" source="resources/emachine_model.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+      <ssd:Component name="SuT_emachine_model" source="resources/emachine_model.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
         <ssd:Connectors>
           <ssd:Connector name="M" kind="output">
             <ssc:Real unit="N.m" />
@@ -190,16 +190,16 @@
       </ssd:Component>
     </ssd:Elements>
     <ssd:Connections>
-      <ssd:Connection startElement="SuT.emachine_model" startConnector="M" endConnector="M_mot" />
-      <ssd:Connection startElement="SuT.edrive_mass" startConnector="wB" endConnector="wB" />
+      <ssd:Connection startElement="SuT_emachine_model" startConnector="M" endConnector="M_mot" />
+      <ssd:Connection startElement="SuT_edrive_mass" startConnector="wB" endConnector="wB" />
       <ssd:Connection startElement="stimuli_model" startConnector="U" endConnector="U" />
-      <ssd:Connection startElement="SuT.emachine_model" startConnector="I" endConnector="I" />
-      <ssd:Connection startElement="stimuli_model" startConnector="M_load" endElement="SuT.edrive_mass" endConnector="M_B" />
-      <ssd:Connection startElement="stimuli_model" startConnector="U" endElement="SuT.emachine_model" endConnector="U" />
+      <ssd:Connection startElement="SuT_emachine_model" startConnector="I" endConnector="I" />
+      <ssd:Connection startElement="stimuli_model" startConnector="M_load" endElement="SuT_edrive_mass" endConnector="M_B" />
+      <ssd:Connection startElement="stimuli_model" startConnector="U" endElement="SuT_emachine_model" endConnector="U" />
       <ssd:Connection startConnector="M_load" endElement="stimuli_model" endConnector="M_load" />
-      <ssd:Connection startElement="SuT.emachine_model" startConnector="M" endElement="SuT.edrive_mass" endConnector="M_A" />
-      <ssd:Connection startElement="SuT.edrive_mass" startConnector="wA" endElement="SuT.emachine_model" endConnector="w" />
-      <ssd:Connection startElement="SuT.edrive_mass" startConnector="phiA" endElement="SuT.emachine_model" endConnector="phi" />
+      <ssd:Connection startElement="SuT_emachine_model" startConnector="M" endElement="SuT_edrive_mass" endConnector="M_A" />
+      <ssd:Connection startElement="SuT_edrive_mass" startConnector="wA" endElement="SuT_emachine_model" endConnector="w" />
+      <ssd:Connection startElement="SuT_edrive_mass" startConnector="phiA" endElement="SuT_emachine_model" endConnector="phi" />
     </ssd:Connections>
   </ssd:System>
 </ssd:SystemStructureDescription>

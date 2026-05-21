@@ -37,7 +37,7 @@
       "wait_for": true
     },
     "ssd": "SystemStructure.ssd",
-    "ssp": "/tmp/baseline_upm8muzo/ssp",
+    "ssp": "/tmp/baseline_0_2rs3ea/ssp",
     "start_time": 0.0,
     "stop_time": 3.0,
     "timestep": 0.001,

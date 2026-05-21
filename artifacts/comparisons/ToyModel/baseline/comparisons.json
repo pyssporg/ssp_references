@@ -24,16 +24,16 @@
       }
     },
     {
-      "manifest": "ssp4sim_vs_ecos/comparison.json",
-      "metrics": "ssp4sim_vs_ecos/metrics.csv",
+      "manifest": "ssp4sim_vs_fmpy/comparison.json",
+      "metrics": "ssp4sim_vs_fmpy/metrics.csv",
       "runs": [
         {
           "backend": "ssp4sim",
           "manifest": "../../../simulation/ToyModel/baseline/ssp4sim/simulation.json"
         },
         {
-          "backend": "ecos",
-          "manifest": "../../../simulation/ToyModel/baseline/ecos/simulation.json"
+          "backend": "fmpy",
+          "manifest": "../../../simulation/ToyModel/baseline/fmpy/simulation.json"
         }
       ],
       "summary": {
@@ -42,21 +42,21 @@
         "mean_abs_error": 0.04999999999999999,
         "rmse": 0.07071067811865474,
         "run_a_label": "ssp4sim",
-        "run_b_label": "ecos",
+        "run_b_label": "fmpy",
         "time_points": 2
       }
     },
     {
-      "manifest": "omsimulator_vs_ecos/comparison.json",
-      "metrics": "omsimulator_vs_ecos/metrics.csv",
+      "manifest": "omsimulator_vs_fmpy/comparison.json",
+      "metrics": "omsimulator_vs_fmpy/metrics.csv",
       "runs": [
         {
           "backend": "omsimulator",
           "manifest": "../../../simulation/ToyModel/baseline/omsimulator/simulation.json"
         },
         {
-          "backend": "ecos",
-          "manifest": "../../../simulation/ToyModel/baseline/ecos/simulation.json"
+          "backend": "fmpy",
+          "manifest": "../../../simulation/ToyModel/baseline/fmpy/simulation.json"
         }
       ],
       "summary": {
@@ -65,7 +65,7 @@
         "mean_abs_error": 0.10000000000000003,
         "rmse": 0.14142135623730956,
         "run_a_label": "omsimulator",
-        "run_b_label": "ecos",
+        "run_b_label": "fmpy",
         "time_points": 2
       }
     }
@@ -84,8 +84,8 @@
         "manifest": "../../../simulation/ToyModel/baseline/omsimulator/simulation.json"
       },
       {
-        "backend": "ecos",
-        "manifest": "../../../simulation/ToyModel/baseline/ecos/simulation.json"
+        "backend": "fmpy",
+        "manifest": "../../../simulation/ToyModel/baseline/fmpy/simulation.json"
       }
     ]
   },

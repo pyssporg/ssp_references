@@ -35,6 +35,8 @@ def _copy_archive_file(archive: ZipFile, member_name: str, target_path: Path) ->
 
 
 def sync_fmu_dir(archive_path: Path, index_html_path: Path, fmu_dir: Path) -> None:
+    from pyssp_standard import FMU
+
     shutil.rmtree(fmu_dir / "binaries" / "linux64", ignore_errors=True)
     shutil.rmtree(fmu_dir / "documentation", ignore_errors=True)
     shutil.rmtree(fmu_dir / "sources", ignore_errors=True)
@@ -55,6 +57,10 @@ def sync_fmu_dir(archive_path: Path, index_html_path: Path, fmu_dir: Path) -> No
                 _copy_archive_file(archive, member, fmu_dir / member)
             elif member.startswith("resources/") and not member.endswith("/"):
                 _copy_archive_file(archive, member, fmu_dir / member)
+
+    with FMU(fmu_dir, mode="a") as fmu:
+        with fmu.model_description as model_description:
+            model_description.strip_model_exchange()
 
 
 def build_openmodelica_fmu(*, source_file: Path, class_name: str, file_name_prefix: str, fmu_dir: Path) -> None:

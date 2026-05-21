@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    "config.json",
+    "simulation.log"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "baseline",
+    "model": "dcmotor",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.12648135001654737,
+  "status": "completed"
+}

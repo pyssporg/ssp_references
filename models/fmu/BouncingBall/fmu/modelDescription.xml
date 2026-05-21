@@ -7,17 +7,6 @@
   generationDateAndTime="2024-10-14T12:04:16.269782+00:00"
   guid="{1AE5E10D-9521-4DE3-80B9-D0EAAA7D5AF1}"
   numberOfEventIndicators="1">
-
-  <ModelExchange
-    modelIdentifier="BouncingBall"
-    canNotUseMemoryManagementFunctions="true"
-    canGetAndSetFMUstate="true"
-    canSerializeFMUstate="true">
-    <SourceFiles>
-      <File name="all.c"/>
-    </SourceFiles>
-  </ModelExchange>
-
   <CoSimulation
     modelIdentifier="BouncingBall"
     canHandleVariableCommunicationStepSize="true"

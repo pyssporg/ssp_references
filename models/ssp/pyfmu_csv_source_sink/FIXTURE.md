@@ -15,8 +15,6 @@ FMU and a shared Modelica block sink FMU.
 This fixture is registered for simulation with the following backends:
 
 - ssp4sim
-- OMSimulator
-- FMPy
 
 ## Strategy Role
 

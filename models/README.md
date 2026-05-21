@@ -50,8 +50,8 @@ SSPs that test specific packaging or runtime features.
 
 | Model | Purpose | Backends | Test Level | FIXTURE.md |
 |-------|---------|----------|------------|------------|
-| pyfmu_csv_source_sink | CSV-backed source and sink FMUs inside an SSP | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/pyfmu_csv_source_sink/FIXTURE.md) |
-| scenario | SSV/SSM parameter injection and structured scenario handling | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/scenario/FIXTURE.md) |
+| pyfmu_csv_source_sink | CSV-backed source and sink FMUs inside an SSP | ssp4sim | Behavioral | [link](./ssp/pyfmu_csv_source_sink/FIXTURE.md) |
+| scenario | SSV/SSM parameter injection and structured scenario handling | ssp4sim | Behavioral | [link](./ssp/scenario/FIXTURE.md) |
 
 ## FMU Building Blocks
 

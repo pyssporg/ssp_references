@@ -20,16 +20,26 @@ from utils.model import ModelMetaData
 
 
 def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
+    step_path = temp_dir / "Step.fmu"
+    gain_a_path = temp_dir / "GainA.fmu"
+    gain_b_path = temp_dir / "GainB.fmu"
+    add_path = temp_dir / "Add.fmu"
+    ssp_path = temp_dir / "model.ssp"
 
-    with SSP(model.paths.build_dir / exp.name, mode="w") as ssp:
+    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_path)
+    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), gain_a_path)
+    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), gain_b_path)
+    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"), add_path)
+
+    with SSP(ssp_path, mode="w") as ssp:
         with ssp.system_structure() as ssd:
             ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
 
-        ssp.add_fmu("step", model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), resource_name="Step", implementation="CoSimulation")
-        ssp.add_fmu("gain_a", model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), resource_name="GainA", implementation="CoSimulation")
-        ssp.add_fmu("gain_b", model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), resource_name="GainB", implementation="CoSimulation")
-        ssp.add_fmu("add", model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"), resource_name="Add", implementation="CoSimulation")
-        
+        ssp.add_fmu("step", step_path, resource_name="Step.fmu", implementation="CoSimulation")
+        ssp.add_fmu("gain_a", gain_a_path, resource_name="GainA.fmu", implementation="CoSimulation")
+        ssp.add_fmu("gain_b", gain_b_path, resource_name="GainB.fmu", implementation="CoSimulation")
+        ssp.add_fmu("add", add_path, resource_name="Add.fmu", implementation="CoSimulation")
+
         for parameters in exp.parameters:
             ssp.add_external_parameterset(MODEL_DIR / "ssp" / parameters.source)
 
@@ -51,6 +61,8 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
 
         with ssp.ls_ref_experiments() as experiments:
             experiments.add_experiment(exp)
+
+    unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
 
 
 EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"

@@ -1,12 +1,15 @@
 {
   "backends": [
-    "ssp4sim",
-    "omsimulator"
+    "ssp4sim"
   ],
   "case": "baseline",
+  "compare_signals": [
+    "source.y"
+  ],
   "ls_ref_experiments": "../../../models/scenario/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "scenario",
   "resources_dir": "../../../models/scenario/baseline/resources",
+  "root_system_name": "root",
   "ssp_root": "../../../models/scenario/baseline",
   "system_structure": "../../../models/scenario/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,

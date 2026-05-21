@@ -45,9 +45,7 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator",
-            "fmpy"
+            "ssp4sim"
           ]
         }
       ]
@@ -61,9 +59,7 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator",
-            "fmpy"
+            "ssp4sim"
           ]
         }
       ]
@@ -81,7 +77,6 @@
           "name": "baseline",
           "backends": [
             "ssp4sim",
-            "omsimulator",
             "fmpy"
           ]
         }
@@ -99,7 +94,6 @@
           "name": "baseline",
           "backends": [
             "ssp4sim",
-            "omsimulator",
             "fmpy"
           ]
         }

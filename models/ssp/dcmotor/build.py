@@ -12,15 +12,36 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import LSRefExperiments, SSP
+from pyssp_standard import FMU, LSRefExperiments, SSP
 from pyssp_standard.common.archive import package_archive, unpack_archive
 from pyssp_standard.standard.ls_ref.model import LSRefExperiment
+from pyssp_standard.standard.ssp1.codec.ssd_codec import Ssp1SsdCodec
+from pyssp_standard.standard.ssp1.operations.ssd_flatten import flatten_ssd
 from utils.model import ModelMetaData
 
 
-def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
+def _strip_source_fmus() -> None:
+    resources_dir = MODEL_DIR / "ssp" / "resources"
+    for resource_name in ("edrive_mass", "emachine_model", "stimuli_model"):
+        resource_dir = resources_dir / resource_name
+        if not resource_dir.is_dir():
+            raise FileNotFoundError(f"Missing source FMU directory: {resource_dir}")
+        with FMU(resource_dir, mode="a") as fmu:
+            with fmu.model_description as model_description:
+                model_description.strip_model_exchange()
+
+
+def create_ssp(
+    model: ModelMetaData,
+    temp_dir: Path,
+    exp: LSRefExperiment,
+    *,
+    flattened: bool = False,
+) -> None:
     if not model.paths.source_ssp_dir.is_dir():
         raise FileNotFoundError(f"Local SSP directory not found: {model.paths.source_ssp_dir}")
+
+    _strip_source_fmus()
 
     ssp_path = temp_dir / "model.ssp"
     package_archive(model.paths.source_ssp_dir, ssp_path, nested_fmus=True)
@@ -33,6 +54,13 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
 
         with ssp.ls_ref_experiments() as experiments:
             experiments.add_experiment(exp)
+
+        if flattened:
+            with ssp.system_structure() as ssd:
+                codec = Ssp1SsdCodec()
+                flat = flatten_ssd(ssd.xml)
+                flat.version = "1.0"
+                ssd.from_xml(codec.serialize(flat))
 
     unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
 
@@ -49,7 +77,7 @@ def main() -> int:
     with tempfile.TemporaryDirectory(prefix="dcmotor_") as temp_dir:
         with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
             for exp in experiments.xml.experiments:
-                create_ssp(model, Path(temp_dir), exp)
+                create_ssp(model, Path(temp_dir), exp, flattened=True)
 
     print(f"Built {model.name}")
     return 0

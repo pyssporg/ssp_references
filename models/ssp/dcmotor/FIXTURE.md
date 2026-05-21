@@ -7,7 +7,9 @@ FMUs and nested resources.
 
 ## Overview
 
-`dcmotor` is a composite SSP fixture with multiple interacting FMUs.
+`dcmotor` is a composite SSP fixture with multiple interacting FMUs. The
+checked-in build output is flattened for `ssp4sim`, and the bundled FMUs are
+written without `ModelExchange` sections so engines must use co-simulation.
 
 ## Backends
 

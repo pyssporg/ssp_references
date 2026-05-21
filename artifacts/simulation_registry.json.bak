@@ -216,55 +216,6 @@
           ]
         }
       ]
-    },
-    {
-      "name": "dcmotor",
-      "compare_signals": [
-        "emachine_model.Te",
-        "edrive_mass.w"
-      ],
-      "cases": [
-        {
-          "name": "baseline",
-          "backends": [
-            "ssp4sim",
-            "omsimulator",
-            "fmpy"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "pyfmu_csv_source_sink",
-      "compare_signals": [
-        "source.y"
-      ],
-      "cases": [
-        {
-          "name": "baseline",
-          "backends": [
-            "ssp4sim",
-            "omsimulator",
-            "fmpy"
-          ]
-        }
-      ]
-    },
-    {
-      "name": "scenario",
-      "compare_signals": [
-        "source.y"
-      ],
-      "cases": [
-        {
-          "name": "baseline",
-          "backends": [
-            "ssp4sim",
-            "omsimulator",
-            "fmpy"
-          ]
-        }
-      ]
     }
   ]
 }

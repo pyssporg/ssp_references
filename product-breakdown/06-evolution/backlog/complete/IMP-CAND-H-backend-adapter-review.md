@@ -2,7 +2,7 @@
 
 ## Status
 
-Completed — moved to `backlog/complete/IMP-CAND-H-backend-adapter-review.md`.
+Completed
 
 ## Layer
 

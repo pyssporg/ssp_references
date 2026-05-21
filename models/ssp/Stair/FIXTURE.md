@@ -10,6 +10,13 @@ baselines.
 `Stair` is a simple reference SSP fixture focused on stepped or event-driven
 behavior.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+
 ## Strategy Role
 
 - Simple reference model.

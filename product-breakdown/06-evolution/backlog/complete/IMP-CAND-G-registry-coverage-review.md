@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Completed
 
 ## Layer
 
@@ -38,9 +38,17 @@ Low. Read-only review of the registry file. May result in a small number of regi
 
 Medium
 
-## Task Contract Seed
+## Completed
 
-Audit `artifacts/simulation_registry.json` and produce a review document listing each model/case/backend combination with: (1) reason for inclusion, (2) test level it serves, (3) whether it's actively maintained, (4) recommendation (keep/remove/add). If changes are needed, update the registry in the same pass.
+Implemented via IMP-CAND-G builder task. The review document is at
+`04-verification/simulation_registry_coverage_review.md`.
+
+Actions taken:
+- Added 3 missing models (dcmotor, pyfmu_csv_source_sink, scenario) to `simulation_registry.json`
+- Added FMPy backend documentation to `models/README.md` (Backend Key + model tables)
+- Added `## Backends` sections to all 15 FIXTURE.md files
+- Created `04-verification/simulation_registry_coverage_review.md` with per-model rationale
+- Updated `review-plan.md` item 1 status
 
 ## Out Of Scope
 

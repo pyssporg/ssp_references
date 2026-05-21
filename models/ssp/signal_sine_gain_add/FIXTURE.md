@@ -12,6 +12,14 @@ Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Sine`,
 `signal_sine_gain_add` is a deterministic signal-propagation SSP fixture built
 from shared Modelica FMUs with an inline system-level regression parameter set.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Structure
 
 - `Sine -> Gain`

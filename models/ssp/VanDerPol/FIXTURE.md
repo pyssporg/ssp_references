@@ -10,6 +10,14 @@ CSV baselines.
 `VanDerPol` is a simple reference SSP fixture used to validate continuous
 nonlinear dynamics.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Strategy Role
 
 - Simple reference model.

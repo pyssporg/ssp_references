@@ -9,6 +9,14 @@ Packaged from the shared `models/fmu/Resource` reference FMU fixture.
 `Resource` is a simple reference SSP fixture used to validate FMU resource
 handling inside an SSP.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Strategy Role
 
 - Simple reference model.

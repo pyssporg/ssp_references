@@ -10,6 +10,14 @@ FMUs, SSP parameters, and `CONOPS.csv`.
 `embrace` is a larger composite SSP fixture representing a more realistic,
 resource-heavy orchestration case.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Strategy Role
 
 - Composite SSP model.

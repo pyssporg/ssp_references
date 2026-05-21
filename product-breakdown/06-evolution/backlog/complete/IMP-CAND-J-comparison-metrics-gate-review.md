@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Completed
 
 ## Layer
 
@@ -15,8 +15,9 @@ Comparison metrics audit — decide which metrics are gate-worthy vs diagnostic
 ## Evidence
 
 - Test strategy describes comparison using max_abs_error, MAE, RMSE
-- No criteria exist for which metrics constitute acceptance vs diagnostics
+- No criteria existed for which metrics constitute acceptance vs diagnostics
 - Open question in review-plan: "Which summary metrics should become acceptance criteria?"
+- Review output: `04-verification/comparison_metrics_gate_review.md`
 
 ## Current Pain Or Risk
 
@@ -46,8 +47,20 @@ Review the comparison metrics in `scripts/workflow/comparison.py` and the test s
 
 Expanding the backend set or adding new models.
 
+## Outcome
+
+Gate specification produced at `04-verification/comparison_metrics_gate_review.md`. Key findings:
+- **Primary gate metric:** `max_abs_error` (per-signal, bounded, interpretable).
+- **Diagnostic metrics:** `mean_abs_error`, `rmse`, signal ranges (`run_a_min`/`max`, etc.).
+- **Stability metrics (batch):** `max_rel_error`, `min_compared_signal_count`.
+- **Thresholds:** Simple Reference < 1e-3, Deterministic Signal-Propagation < 1e-6, Composite < 1e-2, Special-Purpose < 1e-2.
+- **Pass/Fail/Error criteria defined** with explicit conditions for each.
+- **Recommendation:** Add gate check logic in `compare_runs()` with a `gate_result` field on manifests.
+- No changes required to metrics production — the gap is entirely in pass/fail decision logic.
+
 ## Traceability
 
 - Product: PD-001 (comparison methodology) — how comparison results are interpreted
 - Verification: `04-verification/co_simulation_test_strategy.md` — comparison policy
-- Implementation: `scripts/workflow/comparison.py` — metric calculation
+- Verification: `04-verification/comparison_metrics_gate_review.md` — gate specification (this review's output)
+- Implementation: `scripts/workflow/comparison.py` — metrics and recommended gate insertion point

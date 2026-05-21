@@ -14,6 +14,14 @@ then linked into the SSP archive.
 `signal_step_product` is a deterministic signal-propagation SSP fixture built
 from shared Modelica FMUs with build-generated external parameter packaging.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Structure
 
 - `Step * Sine -> Product`

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Completed
 
 ## Layer
 
@@ -41,6 +41,16 @@ Low
 ## Task Contract Seed
 
 Produce an assessment document evaluating: (1) missing fixture classes or model types in the registry, (2) whether FMPy should be added as a third comparison backend, (3) cost/benefit analysis for each proposed addition, (4) recommendations with dependencies.
+
+## Completed
+
+Implemented via IMP-CAND-K builder task. The assessment document is at
+`06-evolution/backlog/IMP-CAND-K-assessment.md`.
+
+Actions taken:
+- Created `06-evolution/backlog/IMP-CAND-K-assessment.md` with full assessment of backends, fixtures, cases, and FMPy
+- Moved this backlog entry from `06-evolution/backlog/` to `06-evolution/backlog/complete/`
+- Updated `review-plan.md` item 5 status
 
 ## Out Of Scope
 

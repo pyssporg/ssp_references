@@ -16,6 +16,7 @@ correctly.
 |----------|-------------|
 | [co_simulation_test_strategy.md](./co_simulation_test_strategy.md) | Overall test strategy: fixture classes, oracles, fixture-to-strategy mapping, and the three-step test flow (prepare, simulate, compare). |
 | [co_simulation_fixture_mapping.md](./co_simulation_fixture_mapping.md) | Concrete mapping of fixtures to the test strategy, including custom composite fixtures for signal-propagation coverage. |
+| [backend_adapter_review.md](./backend_adapter_review.md) | Contract review of ssp4sim and OMSimulator backend adapters against config shape and result CSV contract (IMP-CAND-H). |
 
 ## Backward Trace
 

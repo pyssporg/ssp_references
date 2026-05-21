@@ -14,6 +14,14 @@ and linked during the SSP build.
 `signal_fanout_gain` is a deterministic signal-propagation SSP fixture built
 from shared Modelica FMUs with an external system-level parameter set.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Structure
 
 - `Step -> Gain A`

@@ -15,6 +15,14 @@ and linked during the SSP build.
 `signal_delay_detector` is a deterministic signal-propagation SSP fixture
 designed to expose subtle ordering and delay issues.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Strategy Role
 
 - Deterministic signal-propagation fixture.

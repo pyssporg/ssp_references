@@ -10,6 +10,14 @@ FMU resources.
 `scenario` is a small single-FMU SSP that can generate source data from a
 parameter definition.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Strategy Role
 
 - Test SSV, SSM and parameter setting in an SSP context.

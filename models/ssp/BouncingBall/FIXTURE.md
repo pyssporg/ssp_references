@@ -10,6 +10,13 @@ its CSV baselines.
 `BouncingBall` is a simple reference SSP fixture used for fast behavioral
 checks.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+
 ## Strategy Role
 
 - Simple reference model.

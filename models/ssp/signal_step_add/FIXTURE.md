@@ -15,6 +15,14 @@ the external mapping in
 `signal_step_add` is a deterministic signal-propagation SSP fixture built from
 shared Modelica FMUs with an external system-level parameter set and mapping.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Structure
 
 - `Step + Step -> Add`

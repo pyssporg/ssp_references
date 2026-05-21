@@ -10,6 +10,14 @@ the shared `models/fmu/Modelica.Blocks.Math.Gain` fixture.
 `pyfmu_csv_source_sink` is a minimal SSP assembled from a `pyfmu_csv` source
 FMU and a shared Modelica block sink FMU.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
 ## Strategy Role
 
 - Exercise packaging a CSV-backed source FMU into an SSP.

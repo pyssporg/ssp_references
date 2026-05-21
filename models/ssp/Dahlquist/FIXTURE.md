@@ -9,6 +9,13 @@ CSV baselines.
 
 `Dahlquist` is a simple reference SSP fixture for basic integration behavior.
 
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- OMSimulator
+- FMPy
+
 ## Strategy Role
 
 - Simple reference model.

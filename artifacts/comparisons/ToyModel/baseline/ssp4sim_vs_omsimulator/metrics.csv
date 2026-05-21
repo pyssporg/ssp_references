@@ -1,2 +1,0 @@
-signal,max_abs_error,mean_abs_error,rmse,run_a_label,run_a_min,run_a_max,run_b_label,run_b_min,run_b_max
-signal,0.10000000000000009,0.050000000000000044,0.07071067811865482,ssp4sim,0.0,1.0,omsimulator,0.0,1.1

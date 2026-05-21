@@ -7,6 +7,17 @@
   generationDateAndTime="2024-10-14T12:04:15.860998+00:00"
   guid="{BD403596-3166-4232-ABC2-132BDF73E644}"
   numberOfEventIndicators="0">
+
+  <ModelExchange
+    modelIdentifier="Stair"
+    canNotUseMemoryManagementFunctions="true"
+    canGetAndSetFMUstate="true"
+    canSerializeFMUstate="true">
+    <SourceFiles>
+      <File name="all.c"/>
+    </SourceFiles>
+  </ModelExchange>
+
   <CoSimulation
     modelIdentifier="Stair"
     canHandleVariableCommunicationStepSize="true"

@@ -1,41 +1,246 @@
-<?xml version='1.0' encoding='utf-8'?>
-<fmiModelDescription fmiVersion="2.0" modelName="Modelica.Blocks.Sources.Sine" guid="{1c92b0cf-0b6b-4d2d-8b93-0e159f8c39d2}" description="Generate sine signal" version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-05-21T13:37:12Z" variableNamingConvention="structured" numberOfEventIndicators="1">
-  <CoSimulation modelIdentifier="Modelica_Blocks_Sources_Sine" needsExecutionTool="false" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" canBeInstantiatedOnlyOncePerProcess="false" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription
+  fmiVersion="2.0"
+  modelName="Modelica.Blocks.Sources.Sine"
+  guid="{69a5037e-cb6b-41ec-a67d-b8780d934782}"
+  description="Generate sine signal"
+  version=""
+  generationTool="OpenModelica Compiler OpenModelica 1.26.1"
+  generationDateAndTime="2026-05-08T08:29:30Z"
+  variableNamingConvention="structured"
+  numberOfEventIndicators="1">
+  <CoSimulation
+    modelIdentifier="Modelica_Blocks_Sources_Sine"
+    needsExecutionTool="false"
+    canHandleVariableCommunicationStepSize="true"
+    canInterpolateInputs="true"
+    maxOutputDerivativeOrder="1"
+    canRunAsynchronuously = "false"
+    canBeInstantiatedOnlyOncePerProcess="false"
+    canNotUseMemoryManagementFunctions="false"
+    canGetAndSetFMUstate="false"
+    canSerializeFMUstate="false"
+    providesDirectionalDerivative="false">
+    <SourceFiles>
+      <File name="Modelica_Blocks_Sources_Sine.c" />
+      <File name="Modelica_Blocks_Sources_Sine_functions.c" />
+      <File name="Modelica_Blocks_Sources_Sine_records.c" />
+      <File name="Modelica_Blocks_Sources_Sine_01exo.c" />
+      <File name="Modelica_Blocks_Sources_Sine_02nls.c" />
+      <File name="Modelica_Blocks_Sources_Sine_03lsy.c" />
+      <File name="Modelica_Blocks_Sources_Sine_04set.c" />
+      <File name="Modelica_Blocks_Sources_Sine_05evt.c" />
+      <File name="Modelica_Blocks_Sources_Sine_06inz.c" />
+      <File name="Modelica_Blocks_Sources_Sine_07dly.c" />
+      <File name="Modelica_Blocks_Sources_Sine_08bnd.c" />
+      <File name="Modelica_Blocks_Sources_Sine_09alg.c" />
+      <File name="Modelica_Blocks_Sources_Sine_10asr.c" />
+      <File name="Modelica_Blocks_Sources_Sine_11mix.c" />
+      <File name="Modelica_Blocks_Sources_Sine_12jac.c" />
+      <File name="Modelica_Blocks_Sources_Sine_13opt.c" />
+      <File name="Modelica_Blocks_Sources_Sine_14lnz.c" />
+      <File name="Modelica_Blocks_Sources_Sine_15syn.c" />
+      <File name="Modelica_Blocks_Sources_Sine_16dae.c" />
+      <File name="Modelica_Blocks_Sources_Sine_17inl.c" />
+      <File name="Modelica_Blocks_Sources_Sine_18spd.c" />
+      <File name="Modelica_Blocks_Sources_Sine_init_fmu.c" />
+      <File name="Modelica_Blocks_Sources_Sine_FMU.c" />
+      <File name="fmi-export/fmu2_model_interface.c" />
+      <File name="fmi-export/fmu_read_flags.c" />
+      <File name="./gc/memory_pool.c" />
+      <File name="./gc/omc_gc.c" />
+      <File name="./util/base_array.c" />
+      <File name="./util/boolean_array.c" />
+      <File name="./util/context.c" />
+      <File name="./util/division.c" />
+      <File name="./util/doubleEndedList.c" />
+      <File name="./util/generic_array.c" />
+      <File name="./util/index_spec.c" />
+      <File name="./util/integer_array.c" />
+      <File name="./util/list.c" />
+      <File name="./util/modelica_string_lit.c" />
+      <File name="./util/modelica_string.c" />
+      <File name="./util/ModelicaUtilities.c" />
+      <File name="./util/omc_error.c" />
+      <File name="./util/omc_file.c" />
+      <File name="./util/omc_init.c" />
+      <File name="./util/omc_mmap.c" />
+      <File name="./util/omc_msvc.c" />
+      <File name="./util/omc_numbers.c" />
+      <File name="./util/parallel_helper.c" />
+      <File name="./util/rational.c" />
+      <File name="./util/real_array.c" />
+      <File name="./util/ringbuffer.c" />
+      <File name="./util/simulation_options.c" />
+      <File name="./util/string_array.c" />
+      <File name="./util/utility.c" />
+      <File name="./util/varinfo.c" />
+      <File name="./math-support/pivot.c" />
+      <File name="./simulation/arrayIndex.c" />
+      <File name="./simulation/jacobian_util.c" />
+      <File name="./simulation/omc_simulation_util.c" />
+      <File name="./simulation/options.c" />
+      <File name="./simulation/simulation_info_json.c" />
+      <File name="./simulation/simulation_omc_assert.c" />
+      <File name="./simulation/solver/delay.c" />
+      <File name="./simulation/solver/fmi_events.c" />
+      <File name="./simulation/solver/model_help.c" />
+      <File name="./simulation/solver/omc_math.c" />
+      <File name="./simulation/solver/spatialDistribution.c" />
+      <File name="./simulation/solver/stateset.c" />
+      <File name="./simulation/solver/synchronous.c" />
+      <File name="./simulation/solver/initialization/initialization.c" />
+      <File name="./meta/meta_modelica_catch.c" />
+      <File name="./external_solvers/dgesv.c" />
+      <File name="./external_solvers/dgetrf.c" />
+      <File name="./external_solvers/dgetri.c" />
+      <File name="./external_solvers/dtrtri.c" />
+      <File name="./external_solvers/dtrti2.c" />
+      <File name="./external_solvers/dlamch.c" />
+      <File name="./external_solvers/ilaenv.c" />
+      <File name="./external_solvers/xerbla.c" />
+      <File name="./external_solvers/dgetf2.c" />
+      <File name="./external_solvers/dgetrs.c" />
+      <File name="./external_solvers/dlaswp.c" />
+      <File name="./external_solvers/ieeeck.c" />
+      <File name="./external_solvers/iparmq.c" />
+      <File name="./external_solvers/dgemm.c" />
+      <File name="./external_solvers/dger.c" />
+      <File name="./external_solvers/dgemv.c" />
+      <File name="./external_solvers/dscal.c" />
+      <File name="./external_solvers/dswap.c" />
+      <File name="./external_solvers/dtrsm.c" />
+      <File name="./external_solvers/dtrmm.c" />
+      <File name="./external_solvers/dtrmv.c" />
+      <File name="./external_solvers/idamax.c" />
+      <File name="./external_solvers/lsame.c" />
+      <File name="./external_solvers/i_nint.c" />
+      <File name="./external_solvers/pow_di.c" />
+      <File name="./external_solvers/s_cmp.c" />
+      <File name="./external_solvers/s_copy.c" />
+      <File name="./external_solvers/s_cat.c" />
+      <File name="./external_solvers/F77_aloc.c" />
+      <File name="./external_solvers/exit_.c" />
+      <File name="./external_solvers/enorm_.c" />
+      <File name="./external_solvers/hybrj_.c" />
+      <File name="./external_solvers/dpmpar_.c" />
+      <File name="./external_solvers/qrfac_.c" />
+      <File name="./external_solvers/qform_.c" />
+      <File name="./external_solvers/dogleg_.c" />
+      <File name="./external_solvers/r1updt_.c" />
+      <File name="./external_solvers/r1mpyq_.c" />
+      <File name="simulation/solver/cvode_solver.c" />
+      <File name="simulation/solver/sundials_error.c" />
+      <File name="ModelicaExternalC/ModelicaStandardTables.c" />
+      <File name="ModelicaExternalC/ModelicaMatIO.c" />
+      <File name="ModelicaExternalC/ModelicaIO.c" />
+      <File name="ModelicaExternalC/ModelicaStandardTablesDummyUsertab.c" />
+      <File name="ModelicaExternalC/snprintf.c" />
+    </SourceFiles>
+  </CoSimulation>
   <UnitDefinitions>
     <Unit name="s">
       <BaseUnit s="1" />
     </Unit>
-    <Unit name="rad" />
+    <Unit name="rad">
+      <BaseUnit />
+    </Unit>
     <Unit name="Hz">
       <BaseUnit s="-1" />
     </Unit>
   </UnitDefinitions>
-  <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="1e-06" />
+  <LogCategories>
+    <Category name="logEvents" />
+    <Category name="logSingularLinearSystems" />
+    <Category name="logNonlinearSystems" />
+    <Category name="logDynamicStateSelection" />
+    <Category name="logStatusWarning" />
+    <Category name="logStatusDiscard" />
+    <Category name="logStatusError" />
+    <Category name="logStatusFatal" />
+    <Category name="logStatusPending" />
+    <Category name="logAll" />
+    <Category name="logFmi2Call" />
+  </LogCategories>
+  <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="1e-6" stepSize="0.002"/>
   <ModelVariables>
-    <ScalarVariable name="der(_D_outputAlias_y)" valueReference="0" description="Connector of Real output signal">
-      <Real />
-    </ScalarVariable>
-    <ScalarVariable name="y" valueReference="3" description="Connector of Real output signal" causality="output">
-      <Real />
-    </ScalarVariable>
-    <ScalarVariable name="amplitude" valueReference="4" description="Amplitude of sine wave" causality="parameter" variability="fixed">
-      <Real start="1.0" />
-    </ScalarVariable>
-    <ScalarVariable name="f" valueReference="5" description="Frequency of sine wave" causality="parameter" variability="fixed">
-      <Real unit="Hz" start="1.0" />
-    </ScalarVariable>
-    <ScalarVariable name="offset" valueReference="6" description="Offset of output signal y" causality="parameter" variability="fixed">
-      <Real start="0.0" />
-    </ScalarVariable>
-    <ScalarVariable name="phase" valueReference="7" description="Phase of sine wave" causality="parameter" variability="fixed">
-      <Real unit="rad" start="0.0" />
-    </ScalarVariable>
-    <ScalarVariable name="startTime" valueReference="8" description="Output y = offset for time &lt; startTime" causality="parameter" variability="fixed">
-      <Real unit="s" start="0.0" />
-    </ScalarVariable>
-    <ScalarVariable name="continuous" valueReference="0" description="Make output continuous by starting at offset + amplitude*sin(phase)" causality="calculatedParameter" variability="fixed">
-      <Boolean />
-    </ScalarVariable>
+  <!-- Index of variable = "1" -->
+  <ScalarVariable
+    name="der(_D_outputAlias_y)"
+    valueReference="0"
+    description="Connector of Real output signal"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "2" -->
+  <ScalarVariable
+    name="y"
+    valueReference="3"
+    description="Connector of Real output signal"
+    causality="output"
+    >
+    <Real/>
+  </ScalarVariable>
+  <!-- Index of variable = "3" -->
+  <ScalarVariable
+    name="amplitude"
+    valueReference="4"
+    description="Amplitude of sine wave"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="1.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "4" -->
+  <ScalarVariable
+    name="f"
+    valueReference="5"
+    description="Frequency of sine wave"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="1.0" unit="Hz"/>
+  </ScalarVariable>
+  <!-- Index of variable = "5" -->
+  <ScalarVariable
+    name="offset"
+    valueReference="6"
+    description="Offset of output signal y"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.0"/>
+  </ScalarVariable>
+  <!-- Index of variable = "6" -->
+  <ScalarVariable
+    name="phase"
+    valueReference="7"
+    description="Phase of sine wave"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.0" unit="rad"/>
+  </ScalarVariable>
+  <!-- Index of variable = "7" -->
+  <ScalarVariable
+    name="startTime"
+    valueReference="8"
+    description="Output y = offset for time &lt; startTime"
+    variability="fixed"
+    causality="parameter"
+    >
+    <Real start="0.0" unit="s"/>
+  </ScalarVariable>
+  <!-- Index of variable = "8" -->
+  <ScalarVariable
+    name="continuous"
+    valueReference="0"
+    description="Make output continuous by starting at offset + amplitude*sin(phase)"
+    variability="fixed"
+    causality="calculatedParameter"
+    >
+    <Boolean/>
+  </ScalarVariable>
   </ModelVariables>
   <ModelStructure>
     <Outputs>

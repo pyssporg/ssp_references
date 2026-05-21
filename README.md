@@ -95,7 +95,8 @@ python3 scripts/generate_comparative_plots.py
 The plot generator writes one PNG per model, case, and variable under
 `artifacts/plots/<model>/<case>/<variable>.png`. It compares every available
 engine for that case and renders the full stored timeseries without resampling.
-Use `--model`, `--case`, and `--backend` to narrow the selection.
+It only plots the case's registered `compare_signals`. Use `--model`, `--case`,
+and `--backend` to narrow the selection.
 
 To run the full registered suite and generate comparisons for every case that
 has at least two recorded backends:

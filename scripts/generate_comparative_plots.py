@@ -174,13 +174,11 @@ def main() -> int:
         for run in runs:
             engine_series[run.request.backend] = _load_engine_series(run, setup)
 
-        variables = sorted(
-            {
-                variable
-                for series in engine_series.values()
-                for variable in series.values_by_variable
-            }
-        )
+        variables = [
+            variable
+            for variable in dict.fromkeys(setup.compare_signals)
+            if any(variable in series.values_by_variable for series in engine_series.values())
+        ]
         if not variables:
             skipped += 1
             continue

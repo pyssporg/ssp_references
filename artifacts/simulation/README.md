@@ -17,6 +17,9 @@ backends for a case, so single-backend fixtures are simulated but not compared.
 Those cases are skipped with a short message and do not stop the remaining
 comparisons.
 
+`scripts/generate_comparative_plots.py` uses the same registry and only emits
+plots for the case's registered `compare_signals`.
+
 Some authored fixtures are intentionally omitted from the default sweep
 because they do not currently satisfy the registered backend set:
 

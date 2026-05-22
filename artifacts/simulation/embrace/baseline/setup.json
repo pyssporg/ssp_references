@@ -1,6 +1,7 @@
 {
   "backends": [
-    "ssp4sim"
+    "ssp4sim",
+    "omsimulator"
   ],
   "case": "baseline",
   "compare_signals": [

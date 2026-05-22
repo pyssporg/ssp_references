@@ -16,56 +16,10 @@
       "summary": {
         "compared_signal_count": 6,
         "max_abs_error": 202650.0,
-        "mean_abs_error": 34176.45649883307,
-        "rmse": 34176.54089962621,
+        "mean_abs_error": 34176.45624779127,
+        "rmse": 34176.54064789758,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
-        "time_points": 1001
-      }
-    },
-    {
-      "manifest": "ssp4sim_vs_fmpy/comparison.json",
-      "metrics": "ssp4sim_vs_fmpy/metrics.csv",
-      "runs": [
-        {
-          "backend": "ssp4sim",
-          "manifest": "../../../simulation/embrace/baseline/ssp4sim/simulation.json"
-        },
-        {
-          "backend": "fmpy",
-          "manifest": "../../../simulation/embrace/baseline/fmpy/simulation.json"
-        }
-      ],
-      "summary": {
-        "compared_signal_count": 6,
-        "max_abs_error": 299.95853684661705,
-        "mean_abs_error": 0.08785267815656005,
-        "rmse": 1.7879298389595482,
-        "run_a_label": "ssp4sim",
-        "run_b_label": "fmpy",
-        "time_points": 1001
-      }
-    },
-    {
-      "manifest": "omsimulator_vs_fmpy/comparison.json",
-      "metrics": "omsimulator_vs_fmpy/metrics.csv",
-      "runs": [
-        {
-          "backend": "omsimulator",
-          "manifest": "../../../simulation/embrace/baseline/omsimulator/simulation.json"
-        },
-        {
-          "backend": "fmpy",
-          "manifest": "../../../simulation/embrace/baseline/fmpy/simulation.json"
-        }
-      ],
-      "summary": {
-        "compared_signal_count": 6,
-        "max_abs_error": 202650.0,
-        "mean_abs_error": 34176.51211019763,
-        "rmse": 34176.58285602694,
-        "run_a_label": "omsimulator",
-        "run_b_label": "fmpy",
         "time_points": 1001
       }
     }
@@ -82,17 +36,13 @@
       {
         "backend": "omsimulator",
         "manifest": "../../../simulation/embrace/baseline/omsimulator/simulation.json"
-      },
-      {
-        "backend": "fmpy",
-        "manifest": "../../../simulation/embrace/baseline/fmpy/simulation.json"
       }
     ]
   },
   "status": "completed",
   "summary": {
-    "backend_count": 3,
-    "comparison_count": 3,
+    "backend_count": 2,
+    "comparison_count": 1,
     "max_abs_error": 202650.0,
     "max_rel_error": 0.0,
     "min_compared_signal_count": 6

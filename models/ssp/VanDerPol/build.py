@@ -27,6 +27,10 @@ def create_ssp(model: ModelMetaData, temp_dir, exp: LSRefExperiment):
     ssp_path = temp_dir / "model.ssp"
     package_archive(model.paths.shared_fmu_dir("VanDerPol"), fmu_path)
 
+    with FMU(fmu_path, mode="a") as fmu:
+        with fmu.model_description as md:
+            md.strip_model_exchange()
+
     build_dir = model.paths.build_dir / exp.name
 
     with FMU(fmu_path, mode="r") as fmu:

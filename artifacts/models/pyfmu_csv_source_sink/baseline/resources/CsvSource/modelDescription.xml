@@ -1,2 +1,17 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<fmiModelDescription fmiVersion="2.0" modelName="CsvSource" guid="25e92897-da79-54d9-86d1-f1020d2ba4b3" generationTool="pyfmu-csv" variableNamingConvention="structured"><CoSimulation modelIdentifier="CsvSource" canHandleVariableCommunicationStepSize="true" /><ModelVariables><ScalarVariable name="csv_path" valueReference="0" variability="tunable" causality="parameter"><String start="data/signals.csv" /></ScalarVariable><ScalarVariable name="y" valueReference="1" variability="continuous" causality="output"><Real /></ScalarVariable></ModelVariables><ModelStructure><Outputs><Unknown index="2" /></Outputs></ModelStructure></fmiModelDescription>
+<?xml version='1.0' encoding='utf-8'?>
+<fmiModelDescription fmiVersion="2.0" modelName="CsvSource" guid="25e92897-da79-54d9-86d1-f1020d2ba4b3" generationTool="pyfmu-csv" variableNamingConvention="structured">
+  <CoSimulation modelIdentifier="CsvSource" canHandleVariableCommunicationStepSize="true" />
+  <ModelVariables>
+    <ScalarVariable name="csv_path" valueReference="0" causality="parameter" variability="tunable">
+      <String start="data/signals.csv" />
+    </ScalarVariable>
+    <ScalarVariable name="y" valueReference="1" causality="output" variability="continuous">
+      <Real />
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="2" />
+    </Outputs>
+  </ModelStructure>
+</fmiModelDescription>

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<fmiModelDescription fmiVersion="2.0" modelName="edrive_mass" guid="{4b6ac5c9-3e3d-4d36-a021-3551c34f8bb9}" description="Rotational mass with damper" version="1.2.0" generationTool="Dymola Version 2024x Refresh 1 Beta 1, 2024-03-01" generationDateAndTime="2024-03-06T12:54:09Z" variableNamingConvention="structured" numberOfEventIndicators="0">
+<fmiModelDescription fmiVersion="2.0" modelName="edrive_mass" guid="{4b6ac5c9-3e3d-4d36-a021-3551c34f8bb9}" description="Rotational mass with damper" version="1.2.0" generationTool="Dymola Version 2024x Refresh 1 Beta 1, 2024-03-01" generationDateAndTime="2024-03-06T12:54:09Z" variableNamingConvention="structured">
   <CoSimulation modelIdentifier="edrive_mass" canNotUseMemoryManagementFunctions="true" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
   <UnitDefinitions>
     <Unit name="1" />

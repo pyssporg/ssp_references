@@ -12,7 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import LSRefExperiments, SSP
+from pyssp_standard import FMU, LSRefExperiments, SSP
 from pyssp_standard.common.archive import package_archive, unpack_archive
 from pyssp_standard.standard.ls_ref.model import LSRefExperiment
 from pyssp_standard.ssd import Connection, DefaultExperiment
@@ -30,6 +30,16 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Sine"), sine_path)
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Product"), product_path)
+
+    with FMU(step_path, mode="a") as fmu:
+        with fmu.model_description as md:
+            md.strip_model_exchange()
+    with FMU(sine_path, mode="a") as fmu:
+        with fmu.model_description as md:
+            md.strip_model_exchange()
+    with FMU(product_path, mode="a") as fmu:
+        with fmu.model_description as md:
+            md.strip_model_exchange()
 
     parameters_path = Path(temp_dir) / "signal_step_product_parameters.ssv"
     mapping_path = Path(temp_dir) / "signal_step_product_mapping.ssm"

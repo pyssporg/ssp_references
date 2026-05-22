@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<fmiModelDescription fmiVersion="2.0" modelName="Modelica.Blocks.Sources.Step" guid="{b4f6f1e4-b649-495d-9be9-e00c8049a186}" description="Generate step signal of type Real" version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-05-21T13:37:12Z" variableNamingConvention="structured" numberOfEventIndicators="1">
+<fmiModelDescription fmiVersion="2.0" modelName="Modelica.Blocks.Sources.Step" guid="{7dc6fc0d-740e-4913-a2fa-fa7d4bfbcede}" description="Generate step signal of type Real" version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-05-22T12:14:21Z" variableNamingConvention="structured" numberOfEventIndicators="1">
   <CoSimulation modelIdentifier="Modelica_Blocks_Sources_Step" needsExecutionTool="false" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" canBeInstantiatedOnlyOncePerProcess="false" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
   <UnitDefinitions>
     <Unit name="s">

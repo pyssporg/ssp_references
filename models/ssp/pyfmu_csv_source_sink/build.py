@@ -14,7 +14,7 @@ sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyfmu_csv" / "python"))
 
 from pyfmu_csv.packaging import package_fmu_from_csv
-from pyssp_standard import LSRefExperiments, SSP
+from pyssp_standard import FMU, LSRefExperiments, SSP
 from pyssp_standard.common.archive import package_archive, unpack_archive
 from pyssp_standard.standard.ls_ref.model import LSRefExperiment
 from pyssp_standard.ssd import Connection, DefaultExperiment
@@ -28,7 +28,13 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
     ssp_path = temp_dir / "model.ssp"
 
     package_fmu_from_csv(source_csv, source_fmu, "CsvSource")
+    with FMU(source_fmu, mode="a") as fmu:
+        with fmu.model_description as md:
+            md.strip_model_exchange()
     package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), sink_fmu)
+    with FMU(sink_fmu, mode="a") as fmu:
+        with fmu.model_description as md:
+            md.strip_model_exchange()
 
     with SSP(ssp_path, mode="w") as ssp:
         with ssp.system_structure() as ssd:

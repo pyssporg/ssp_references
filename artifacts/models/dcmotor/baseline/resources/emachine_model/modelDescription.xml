@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<fmiModelDescription fmiVersion="2.0" modelName="emachine_model" guid="{27927f3c-f4b6-4f27-ae7a-a6001766cad2}" description="DC-Motor for a mild hybrid application" version="1.2.0" generationTool="Dymola Version 2024x Refresh 1 Beta 1, 2024-03-01" generationDateAndTime="2024-03-06T12:53:54Z" variableNamingConvention="structured" numberOfEventIndicators="0">
+<fmiModelDescription fmiVersion="2.0" modelName="emachine_model" guid="{27927f3c-f4b6-4f27-ae7a-a6001766cad2}" description="DC-Motor for a mild hybrid application" version="1.2.0" generationTool="Dymola Version 2024x Refresh 1 Beta 1, 2024-03-01" generationDateAndTime="2024-03-06T12:53:54Z" variableNamingConvention="structured">
   <CoSimulation modelIdentifier="emachine_model" canNotUseMemoryManagementFunctions="true" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
   <UnitDefinitions>
     <Unit name="1" />

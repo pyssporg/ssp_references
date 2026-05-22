@@ -1,0 +1,27 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "baseline",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/ToyModel/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/ToyModel/baseline/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 1,
+    "max_abs_error": 0.10000000000000009,
+    "mean_abs_error": 0.050000000000000044,
+    "rmse": 0.07071067811865482,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "omsimulator",
+    "time_points": 2
+  }
+}

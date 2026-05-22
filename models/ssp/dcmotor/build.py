@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 import sys
 import tempfile
 from pathlib import Path
@@ -20,12 +21,11 @@ from pyssp_standard.standard.ssp1.operations.ssd_flatten import flatten_ssd
 from utils.model import ModelMetaData
 
 
-def _strip_source_fmus() -> None:
-    resources_dir = MODEL_DIR / "ssp" / "resources"
+def _strip_source_fmus(resources_dir: Path) -> None:
     for resource_name in ("edrive_mass", "emachine_model", "stimuli_model"):
         resource_dir = resources_dir / resource_name
         if not resource_dir.is_dir():
-            raise FileNotFoundError(f"Missing source FMU directory: {resource_dir}")
+            raise FileNotFoundError(f"Missing FMU directory: {resource_dir}")
         with FMU(resource_dir, mode="a") as fmu:
             with fmu.model_description as model_description:
                 model_description.strip_model_exchange()
@@ -41,10 +41,12 @@ def create_ssp(
     if not model.paths.source_ssp_dir.is_dir():
         raise FileNotFoundError(f"Local SSP directory not found: {model.paths.source_ssp_dir}")
 
-    _strip_source_fmus()
+    ssp_copy = temp_dir / "ssp"
+    shutil.copytree(model.paths.source_ssp_dir, ssp_copy)
+    _strip_source_fmus(ssp_copy / "resources")
 
     ssp_path = temp_dir / "model.ssp"
-    package_archive(model.paths.source_ssp_dir, ssp_path, nested_fmus=True)
+    package_archive(ssp_copy, ssp_path, nested_fmus=True)
 
     with SSP(ssp_path, mode="a") as ssp:
         for resource in [*exp.stimuli, *exp.references]:

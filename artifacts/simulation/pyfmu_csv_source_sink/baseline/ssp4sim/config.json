@@ -37,7 +37,7 @@
       "wait_for": true
     },
     "ssd": "SystemStructure.ssd",
-    "ssp": "/tmp/baseline_i5_sm456/ssp",
+    "ssp": "/tmp/baseline_35jwpl88/ssp",
     "start_time": 0.0,
     "stop_time": 1.0,
     "timestep": 0.001,

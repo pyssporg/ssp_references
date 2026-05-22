@@ -14,7 +14,13 @@ from workflow.comparison import (
     compare_run_batch,
     compare_runs,
 )
-from workflow.registry import RegistryCase, RegistryModel, SimulationCaseSpec, SimulationRegistry
+from workflow.registry import (
+    RegistryCase,
+    RegistryModel,
+    RegistryReferenceCsv,
+    SimulationCaseSpec,
+    SimulationRegistry,
+)
 from workflow.setup import prepare_setup
 from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
 
@@ -83,6 +89,39 @@ def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:
 
     loaded = SimulationRegistry.from_dict(registry.to_dict())
     assert loaded == registry
+
+
+def test_registry_roundtrip_supports_reference_csvs() -> None:
+    registry = SimulationRegistry(
+        models=(
+            RegistryModel(
+                name="ToyModel",
+                compare_signals=("signal",),
+                cases=(
+                    RegistryCase(
+                        name="baseline",
+                        backends=("ssp4sim",),
+                        reference_csvs=(
+                            RegistryReferenceCsv(
+                                label="reference-cs",
+                                path=Path("models/ssp/ToyModel/references/ToyModel-cs.csv"),
+                            ),
+                            RegistryReferenceCsv(
+                                label="reference-me",
+                                path=Path("models/ssp/ToyModel/references/ToyModel-me.csv"),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+    )
+
+    loaded = SimulationRegistry.from_dict(registry.to_dict())
+    spec = loaded.expand()[0]
+
+    assert loaded == registry
+    assert [reference.label for reference in spec.reference_csvs] == ["reference-cs", "reference-me"]
 
 
 def test_setup_manifest_roundtrip(tmp_path: Path) -> None:

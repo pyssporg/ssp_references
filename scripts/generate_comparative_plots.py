@@ -15,9 +15,10 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 
-from workflow.registry import default_registry_path, load_registry
+from workflow.registry import RegistryReferenceCsv, default_registry_path, load_registry
 from workflow.setup import SimulationSetup
 from workflow.simulate import SimulationRun
+from utils.config import REPO_ROOT
 from utils.csv import load_numeric_csv, normalize_column_name, unpack_mat_to_csv
 
 
@@ -118,6 +119,41 @@ def _load_engine_series(run: SimulationRun, setup: SimulationSetup) -> EngineSer
     )
 
 
+def _load_reference_series(reference: RegistryReferenceCsv, setup: SimulationSetup) -> EngineSeries:
+    result_path = reference.path
+    if not result_path.is_absolute():
+        result_path = (REPO_ROOT / result_path).resolve()
+    if not result_path.is_file():
+        raise FileNotFoundError(
+            f"Missing reference CSV for {setup.model_name}/{setup.case_name}/{reference.label}: {result_path}"
+        )
+
+    payload = load_numeric_csv(
+        result_path,
+        root_system_name=f"default.{setup.model_name}",
+    )["columns"]
+
+    time_series = payload.get("time")
+    if time_series is None:
+        raise KeyError(f"Reference CSV does not contain a time column: {result_path}")
+
+    values_by_variable: dict[str, list[float]] = {}
+    for raw_name, series in payload.items():
+        if raw_name == "time":
+            continue
+        canonical_name = normalize_column_name(
+            raw_name,
+            root_system_name=f"default.{setup.model_name}",
+        )
+        values_by_variable[canonical_name] = series.tolist()
+
+    return EngineSeries(
+        engine=reference.label,
+        time=time_series.tolist(),
+        values_by_variable=values_by_variable,
+    )
+
+
 def _plot_variable(
     *,
     output_path: Path,
@@ -173,6 +209,8 @@ def main() -> int:
         engine_series: dict[str, EngineSeries] = {}
         for run in runs:
             engine_series[run.request.backend] = _load_engine_series(run, setup)
+        for reference in spec.reference_csvs:
+            engine_series[reference.label] = _load_reference_series(reference, setup)
 
         variables = [
             variable

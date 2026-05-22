@@ -15,9 +15,29 @@ def default_registry_path() -> Path:
 
 
 @dataclass(frozen=True)
+class RegistryReferenceCsv:
+    label: str
+    path: Path
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "RegistryReferenceCsv":
+        return cls(
+            label=str(data["label"]),
+            path=Path(str(data["path"])),
+        )
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "label": self.label,
+            "path": self.path.as_posix(),
+        }
+
+
+@dataclass(frozen=True)
 class RegistryCase:
     name: str
     backends: tuple[str, ...]
+    reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
 
     @classmethod
     def from_dict(cls, data: dict) -> "RegistryCase":
@@ -30,13 +50,20 @@ class RegistryCase:
         return cls(
             name=str(data["name"]),
             backends=normalized_backends,
+            reference_csvs=tuple(
+                RegistryReferenceCsv.from_dict(reference)
+                for reference in data.get("reference_csvs", [])
+            ),
         )
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        data: dict[str, object] = {
             "name": self.name,
             "backends": list(self.backends),
         }
+        if self.reference_csvs:
+            data["reference_csvs"] = [reference.to_dict() for reference in self.reference_csvs]
+        return data
 
 
 @dataclass(frozen=True)
@@ -78,6 +105,7 @@ class SimulationCaseSpec:
     ssp_root: Path
     backends: tuple[str, ...]
     compare_signals: tuple[str, ...]
+    reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
 
     @property
     def layout(self) -> ArtifactLayout:
@@ -145,6 +173,7 @@ class SimulationRegistry:
                         ssp_root=ssp_root,
                         backends=selected_backends,
                         compare_signals=model.compare_signals,
+                        reference_csvs=case.reference_csvs,
                     )
                 )
         return specs

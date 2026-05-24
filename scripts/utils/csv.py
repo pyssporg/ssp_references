@@ -106,8 +106,10 @@ def extract_series(
             continue
 
         source_matrix = int(data_info[0, idx])
-        source_row = int(data_info[1, idx])
-        sign = -1.0 if int(data_info[3, idx]) < 0 else 1.0
+        signed_source_row = int(data_info[1, idx])
+        # Dymola-style MAT aliases encode negation in the signed row index.
+        source_row = abs(signed_source_row)
+        sign = -1.0 if signed_source_row < 0 else 1.0
 
         if source_matrix == 1:
             if source_row < 1 or source_row > data_1.shape[0]:

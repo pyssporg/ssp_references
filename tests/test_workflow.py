@@ -23,6 +23,7 @@ from workflow.registry import (
 )
 from workflow.setup import prepare_setup
 from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
+from utils.csv import extract_series
 
 
 def make_ssp_root(tmp_path: Path) -> Path:
@@ -66,6 +67,32 @@ def write_prefixed_csv(path: Path, signal_name: str, signal_values: list[float])
     for index, value in enumerate(signal_values):
         rows.append(f"{float(index)},{value}")
     path.write_text("\n".join(rows) + "\n")
+
+
+def test_extract_series_uses_signed_data_row_for_alias_sign() -> None:
+    headers, _, columns = extract_series(
+        names=["time", "signal", "negated_alias"],
+        descriptions=["time", "signal", "negated alias"],
+        data_info=np.array(
+            [
+                [0, 2, 2],
+                [1, 2, -2],
+                [0, 0, 0],
+                [-1, -1, -1],
+            ]
+        ),
+        data_1=np.empty((0, 0)),
+        data_2=np.array(
+            [
+                [0.0, 1.0],
+                [2.0, 3.0],
+            ]
+        ),
+    )
+
+    assert headers == ["time", "signal", "negated_alias"]
+    np.testing.assert_array_equal(columns[1], np.array([2.0, 3.0]))
+    np.testing.assert_array_equal(columns[2], np.array([-2.0, -3.0]))
 
 
 def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:

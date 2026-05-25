@@ -26,8 +26,18 @@ from workflow.simulate import SimulationRequest, SimulationRun, write_structured
 from utils.csv import extract_series
 
 
+@pytest.fixture(autouse=True)
+def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    monkeypatch.setattr("workflow.layout.REPO_ROOT", repo_root)
+    monkeypatch.setattr("workflow.registry.REPO_ROOT", repo_root)
+    monkeypatch.setattr("workflow.simulate.REPO_ROOT", repo_root)
+    monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
+
+
 def make_ssp_root(tmp_path: Path) -> Path:
-    ssp_root = tmp_path / "artifacts" / "models" / "ToyModel" / "baseline"
+    ssp_root = tmp_path / "artifacts" / "models" / "ExampleModel" / "baseline"
     (ssp_root / "extra" / "org.fmi-standard.fmi-ls-ref").mkdir(parents=True)
     (ssp_root / "resources").mkdir()
     (ssp_root / "SystemStructure.ssd").write_text(
@@ -39,7 +49,7 @@ def make_ssp_root(tmp_path: Path) -> Path:
     )
     (ssp_root / "extra" / "org.fmi-standard.fmi-ls-ref" / "experiments.xml").write_text(
         """<?xml version="1.0" encoding="UTF-8"?>
-<Experiments name="ToyModel experiments">
+<Experiments name="ExampleModel experiments">
   <Experiment
       name="baseline"
       target="SystemStructure.ssd"
@@ -59,6 +69,7 @@ def write_series(path: Path, signal_values: list[float]) -> None:
         [(float(index), value) for index, value in enumerate(signal_values)],
         dtype=[("time", float), ("signal", float)],
     )
+    path.parent.mkdir(parents=True, exist_ok=True)
     write_structured_csv(path, result)
 
 
@@ -66,6 +77,7 @@ def write_prefixed_csv(path: Path, signal_name: str, signal_values: list[float])
     rows = ["time,{}".format(signal_name)]
     for index, value in enumerate(signal_values):
         rows.append(f"{float(index)},{value}")
+    path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(rows) + "\n")
 
 
@@ -99,7 +111,7 @@ def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:
     registry = SimulationRegistry(
         models=(
             RegistryModel(
-                name="ToyModel",
+                name="ExampleModel",
                 compare_signals=("signal",),
                 cases=(
                     RegistryCase(name="baseline", backends=("ssp4sim", "omsimulator", "fmpy")),
@@ -122,7 +134,7 @@ def test_registry_roundtrip_supports_reference_csvs() -> None:
     registry = SimulationRegistry(
         models=(
             RegistryModel(
-                name="ToyModel",
+                name="ExampleModel",
                 compare_signals=("signal",),
                 cases=(
                     RegistryCase(
@@ -131,11 +143,11 @@ def test_registry_roundtrip_supports_reference_csvs() -> None:
                         reference_csvs=(
                             RegistryReferenceCsv(
                                 label="reference-cs",
-                                path=Path("models/ssp/ToyModel/references/ToyModel-cs.csv"),
+                                path=Path("models/ssp/ExampleModel/references/ExampleModel-cs.csv"),
                             ),
                             RegistryReferenceCsv(
                                 label="reference-me",
-                                path=Path("models/ssp/ToyModel/references/ToyModel-me.csv"),
+                                path=Path("models/ssp/ExampleModel/references/ExampleModel-me.csv"),
                             ),
                         ),
                     ),
@@ -154,7 +166,7 @@ def test_registry_roundtrip_supports_reference_csvs() -> None:
 def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
     ssp_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
-        model_name="ToyModel",
+        model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
@@ -165,7 +177,7 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
     manifest_path = setup.write_manifest()
 
     assert manifest_path.exists()
-    assert setup.model_name == "ToyModel"
+    assert setup.model_name == "ExampleModel"
     assert setup.case_name == "baseline"
     assert setup.window.start_time == pytest.approx(0.0)
     assert setup.window.stop_time == pytest.approx(1.0)
@@ -175,7 +187,7 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
 
     loaded = type(setup).from_manifest(manifest_path)
     assert loaded.ssp_root == ssp_root.resolve()
-    assert loaded.model_name == "ToyModel"
+    assert loaded.model_name == "ExampleModel"
     assert loaded.case_name == "baseline"
     assert loaded.backends == ("ssp4sim", "omsimulator", "fmpy")
     assert loaded.compare_signals == ("signal",)
@@ -187,7 +199,7 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
 def test_simulation_run_manifest_roundtrip(tmp_path: Path) -> None:
     ssp_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
-        model_name="ToyModel",
+        model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
@@ -218,7 +230,7 @@ def test_simulation_run_manifest_roundtrip(tmp_path: Path) -> None:
 def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
     ssp_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
-        model_name="ToyModel",
+        model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
@@ -257,7 +269,7 @@ def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
 def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
     ssp_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
-        model_name="ToyModel",
+        model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
@@ -286,7 +298,7 @@ def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
 def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) -> None:
     ssp_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
-        model_name="ToyModel",
+        model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),

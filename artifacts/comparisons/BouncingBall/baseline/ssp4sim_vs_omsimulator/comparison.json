@@ -18,8 +18,8 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 43.130285000001194,
-    "mean_abs_error": 14.478217081287685,
-    "rmse": 18.079784135917116,
+    "mean_abs_error": 14.148158112917141,
+    "rmse": 17.981234448433387,
     "run_a_label": "ssp4sim",
     "run_b_label": "omsimulator",
     "time_points": 3001

@@ -17,9 +17,9 @@
   "status": "completed",
   "summary": {
     "compared_signal_count": 1,
-    "max_abs_error": 194.0,
-    "mean_abs_error": 194.0,
-    "rmse": 194.0,
+    "max_abs_error": 0.0,
+    "mean_abs_error": 0.0,
+    "rmse": 0.0,
     "run_a_label": "ssp4sim",
     "run_b_label": "omsimulator",
     "time_points": 1001

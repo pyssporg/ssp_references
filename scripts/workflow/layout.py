@@ -84,9 +84,6 @@ class ArtifactLayout:
     def simulation_result_path(self, backend: str) -> Path:
         return self.simulation_run_dir(backend) / "result.csv"
 
-    def simulation_mat_path(self, backend: str) -> Path:
-        return self.simulation_run_dir(backend) / "result.mat"
-
     def simulation_config_path(self, backend: str) -> Path:
         return self.simulation_run_dir(backend) / "config.json"
 

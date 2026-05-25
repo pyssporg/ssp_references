@@ -19,7 +19,7 @@ from workflow.registry import RegistryReferenceCsv, default_registry_path, load_
 from workflow.setup import SimulationSetup
 from workflow.simulate import SimulationRun
 from utils.config import REPO_ROOT
-from utils.csv import load_numeric_csv, normalize_column_name, unpack_mat_to_csv
+from utils.csv import load_numeric_csv, normalize_column_name
 
 
 @dataclass(frozen=True)
@@ -83,13 +83,9 @@ def _sanitize_filename(value: str) -> str:
 def _load_engine_series(run: SimulationRun, setup: SimulationSetup) -> EngineSeries:
     result_path = run.result_path
     if not result_path.is_file():
-        mat_path = setup.layout.simulation_mat_path(run.request.backend)
-        if mat_path.is_file():
-            result_path = unpack_mat_to_csv(mat_path, result_path)
-        else:
-            raise FileNotFoundError(
-                f"Missing result file for {setup.model_name}/{setup.case_name}/{run.request.backend}"
-            )
+        raise FileNotFoundError(
+            f"Missing result file for {setup.model_name}/{setup.case_name}/{run.request.backend}"
+        )
 
     payload = load_numeric_csv(
         result_path,

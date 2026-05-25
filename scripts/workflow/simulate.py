@@ -48,10 +48,6 @@ class SimulationRequest:
         return self.setup.layout.simulation_result_path(self.backend)
 
     @property
-    def result_mat_path(self) -> Path:
-        return self.setup.layout.simulation_mat_path(self.backend)
-
-    @property
     def config_path(self) -> Path:
         return self.setup.layout.simulation_config_path(self.backend)
 
@@ -344,6 +340,7 @@ def _configure_omsimulator() -> None:
         "--wallTime=true",
         "--emitEvents=false",
         "--inputExtrapolation=true",
+        "--addParametersToCSV=true",
     ):
         status = Capi.setCommandLineOption(option)
         if status != Status.ok:
@@ -459,7 +456,7 @@ def simulate_omsimulator(request: SimulationRequest) -> SimulationRun:
                 instantiated_model.setStartTime(request.setup.window.start_time)
                 instantiated_model.setStopTime(request.setup.window.stop_time)
                 instantiated_model.setLoggingInterval(request.setup.window.interval)
-                instantiated_model.setResultFile(str(request.result_mat_path))
+                instantiated_model.setResultFile(str(request.result_path))
                 instantiated_model.initialize()
                 instantiated_model.simulate()
                 instantiated_model.terminate()
@@ -467,9 +464,6 @@ def simulate_omsimulator(request: SimulationRequest) -> SimulationRun:
                 instantiated_model.delete()
             runtime_s = time.perf_counter() - start
 
-    from utils.csv import unpack_mat_to_csv
-
-    unpack_mat_to_csv(request.result_mat_path, request.result_path)
     stray_result_dir = request.run_dir / "result"
     if stray_result_dir.exists():
         shutil.rmtree(stray_result_dir)
@@ -480,7 +474,7 @@ def simulate_omsimulator(request: SimulationRequest) -> SimulationRun:
         request=request,
         result_path=request.result_path,
         runtime_s=runtime_s,
-        artifacts=(request.result_mat_path,),
+        artifacts=(),
     )
     run.write_manifest()
     return run

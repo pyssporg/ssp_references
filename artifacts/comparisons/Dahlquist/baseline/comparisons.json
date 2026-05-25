@@ -15,9 +15,9 @@
       ],
       "summary": {
         "compared_signal_count": 1,
-        "max_abs_error": 2.0,
-        "mean_abs_error": 0.19997474174207383,
-        "rmse": 0.45880852989567017,
+        "max_abs_error": 4.956763389349995e-07,
+        "mean_abs_error": 2.3143954419434305e-07,
+        "rmse": 2.858669010366061e-07,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
         "time_points": 10001
@@ -61,9 +61,9 @@
       ],
       "summary": {
         "compared_signal_count": 1,
-        "max_abs_error": 2.0,
-        "mean_abs_error": 0.19987470821781408,
-        "rmse": 0.4585848040234512,
+        "max_abs_error": 0.09999999999999298,
+        "mean_abs_error": 9.998734512559498e-05,
+        "rmse": 0.002294042638615409,
         "run_a_label": "omsimulator",
         "run_b_label": "fmpy",
         "time_points": 10001
@@ -93,7 +93,7 @@
   "summary": {
     "backend_count": 3,
     "comparison_count": 3,
-    "max_abs_error": 2.0,
+    "max_abs_error": 0.09999999999999298,
     "max_rel_error": 0.0,
     "min_compared_signal_count": 1
   }

@@ -13,7 +13,7 @@
   "ls_ref_experiments": "../../../models/VanDerPol/fast/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "VanDerPol",
   "resources_dir": "../../../models/VanDerPol/fast/resources",
-  "root_system_name": "VanDerPol",
+  "root_system_name": "system",
   "ssp_root": "../../../models/VanDerPol/fast",
   "system_structure": "../../../models/VanDerPol/fast/SystemStructure.ssd",
   "tolerance": 0.0001,

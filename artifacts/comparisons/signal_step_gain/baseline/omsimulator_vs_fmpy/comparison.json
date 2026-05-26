@@ -18,7 +18,7 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 8.0,
-    "mean_abs_error": 3.9945054945054936,
+    "mean_abs_error": 3.9945054945054945,
     "rmse": 4.362023034486237,
     "run_a_label": "omsimulator",
     "run_b_label": "fmpy",

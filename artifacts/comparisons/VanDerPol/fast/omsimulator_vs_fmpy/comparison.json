@@ -17,9 +17,9 @@
   "status": "completed",
   "summary": {
     "compared_signal_count": 2,
-    "max_abs_error": 0.3737537343731893,
-    "mean_abs_error": 0.12562564305973392,
-    "rmse": 0.1524515685538761,
+    "max_abs_error": 0.3737537343727058,
+    "mean_abs_error": 0.1256256430597295,
+    "rmse": 0.15245156855398095,
     "run_a_label": "omsimulator",
     "run_b_label": "fmpy",
     "time_points": 1001

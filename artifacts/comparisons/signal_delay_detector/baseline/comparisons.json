@@ -16,8 +16,8 @@
       "summary": {
         "compared_signal_count": 4,
         "max_abs_error": 1.0,
-        "mean_abs_error": 0.0037462537462537465,
-        "rmse": 0.045320326594573954,
+        "mean_abs_error": 0.0027472527472527475,
+        "rmse": 0.03944090963453288,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
         "time_points": 1001
@@ -39,8 +39,8 @@
       "summary": {
         "compared_signal_count": 4,
         "max_abs_error": 3.0,
-        "mean_abs_error": 0.8759990009990011,
-        "rmse": 0.8771973889846203,
+        "mean_abs_error": 0.8752497502497503,
+        "rmse": 0.8762320540695687,
         "run_a_label": "ssp4sim",
         "run_b_label": "fmpy",
         "time_points": 1001

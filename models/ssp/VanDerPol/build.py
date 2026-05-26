@@ -1,14 +1,13 @@
-# !/usr/bin/env python3
+#!/usr/bin/env python3
 
 from __future__ import annotations
 
 import tempfile
-from pathlib import Path
 import sys
+from pathlib import Path
 
 from pyssp_standard import LSRefExperiments, SSP, get_repo_root
-from pyssp_standard.common.archive import package_archive, unpack_archive
-from pyssp_standard.fmu import FMU
+from pyssp_standard.common.archive import unpack_archive
 from pyssp_standard.standard.ls_ref.model import (
     LSRefExperiment,
     LSRefExperimentResource,
@@ -19,29 +18,22 @@ REPO_ROOT = get_repo_root(file="__SSP_REF_ROOT__")
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
+from utils.fmu import strip_model_exchange
 from utils.model import ModelMetaData
 
 
 def create_ssp(model: ModelMetaData, temp_dir, exp: LSRefExperiment):
-    fmu_path = temp_dir / "model.fmu"
     ssp_path = temp_dir / "model.ssp"
-    package_archive(model.paths.shared_fmu_dir("VanDerPol"), fmu_path)
-
-    with FMU(fmu_path, mode="a") as fmu:
-        with fmu.model_description as md:
-            md.strip_model_exchange()
-
-    build_dir = model.paths.build_dir / exp.name
-
-    with FMU(fmu_path, mode="r") as fmu:
-        fmu.package_as_ssp(
-            ssp_path,
-            system_name=model.name,
-            component_name="fmu",
-            implementation="CoSimulation",
-        )
+    ssp_path.unlink(missing_ok=True)
 
     with SSP(ssp_path, mode="a") as ssp:
+        copied_resource_name = ssp.add_fmu(
+            "fmu",
+            model.paths.shared_fmu_dir("VanDerPol"),
+            resource_name="VanDerPol.fmu",
+            implementation="CoSimulation",
+        )
+        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
         for parameters in exp.parameters:
             ssp.add_external_parameterset(
                 MODEL_DIR / parameters.source, MODEL_DIR / parameters.mapping
@@ -55,7 +47,7 @@ def create_ssp(model: ModelMetaData, temp_dir, exp: LSRefExperiment):
         with ssp.ls_ref_experiments() as experiments:
             experiments.add_experiment(exp)
 
-    unpack_archive(ssp_path, build_dir, recursive_fmus=True, overwrite=True)
+    unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
 
 
 EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"

@@ -11,7 +11,7 @@
   "ls_ref_experiments": "../../../models/Dahlquist/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "Dahlquist",
   "resources_dir": "../../../models/Dahlquist/baseline/resources",
-  "root_system_name": "Dahlquist",
+  "root_system_name": "system",
   "ssp_root": "../../../models/Dahlquist/baseline",
   "system_structure": "../../../models/Dahlquist/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,

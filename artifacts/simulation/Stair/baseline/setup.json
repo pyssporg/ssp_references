@@ -10,7 +10,7 @@
   "ls_ref_experiments": "../../../models/Stair/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "Stair",
   "resources_dir": "../../../models/Stair/baseline/resources",
-  "root_system_name": "Stair",
+  "root_system_name": "system",
   "ssp_root": "../../../models/Stair/baseline",
   "system_structure": "../../../models/Stair/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,

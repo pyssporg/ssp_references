@@ -12,45 +12,50 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import FMU, LSRefExperiments, SSP
-from pyssp_standard.common.archive import package_archive, unpack_archive
+from pyssp_standard import LSRefExperiments, SSP
+from pyssp_standard.common.archive import unpack_archive
 from pyssp_standard.standard.ls_ref.model import LSRefExperiment
 from pyssp_standard.ssd import Connection, DefaultExperiment
+from utils.fmu import strip_model_exchange
 from utils.model import ModelMetaData
 
 
 def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
-    sine_path = temp_dir / "Sine.fmu"
-    step_path = temp_dir / "Step.fmu"
-    gain_path = temp_dir / "Gain.fmu"
-    add_path = temp_dir / "Add.fmu"
     ssp_path = temp_dir / "model.ssp"
-    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Sine"), sine_path)
-    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"), step_path)
-    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), gain_path)
-    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"), add_path)
+    ssp_path.unlink(missing_ok=True)
 
-    with FMU(sine_path, mode="a") as fmu:
-        with fmu.model_description as md:
-            md.strip_model_exchange()
-    with FMU(step_path, mode="a") as fmu:
-        with fmu.model_description as md:
-            md.strip_model_exchange()
-    with FMU(gain_path, mode="a") as fmu:
-        with fmu.model_description as md:
-            md.strip_model_exchange()
-    with FMU(add_path, mode="a") as fmu:
-        with fmu.model_description as md:
-            md.strip_model_exchange()
-    
     with SSP(ssp_path, mode="w") as ssp:
         with ssp.system_structure() as ssd:
             ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
 
-        ssp.add_fmu("sine", sine_path, resource_name="Sine.fmu", implementation="CoSimulation")
-        ssp.add_fmu("step", step_path, resource_name="Step.fmu", implementation="CoSimulation")
-        ssp.add_fmu("gain", gain_path, resource_name="Gain.fmu", implementation="CoSimulation")
-        ssp.add_fmu("add", add_path, resource_name="Add.fmu", implementation="CoSimulation")
+        copied_resource_name = ssp.add_fmu(
+            "sine",
+            model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Sine"),
+            resource_name="Sine.fmu",
+            implementation="CoSimulation",
+        )
+        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
+        copied_resource_name = ssp.add_fmu(
+            "step",
+            model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"),
+            resource_name="Step.fmu",
+            implementation="CoSimulation",
+        )
+        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
+        copied_resource_name = ssp.add_fmu(
+            "gain",
+            model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"),
+            resource_name="Gain.fmu",
+            implementation="CoSimulation",
+        )
+        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
+        copied_resource_name = ssp.add_fmu(
+            "add",
+            model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"),
+            resource_name="Add.fmu",
+            implementation="CoSimulation",
+        )
+        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
 
         with ssp.system_structure() as ssd:
             system = ssd.xml.system

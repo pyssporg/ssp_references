@@ -10,7 +10,7 @@
   "ls_ref_experiments": "../../../models/Resource/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "Resource",
   "resources_dir": "../../../models/Resource/baseline/resources",
-  "root_system_name": "Resource",
+  "root_system_name": "system",
   "ssp_root": "../../../models/Resource/baseline",
   "system_structure": "../../../models/Resource/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,

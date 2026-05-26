@@ -14,34 +14,38 @@ sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyfmu_csv" / "python"))
 
 from pyfmu_csv.packaging import package_fmu_from_csv
-from pyssp_standard import FMU, LSRefExperiments, SSP
-from pyssp_standard.common.archive import package_archive, unpack_archive
+from pyssp_standard import LSRefExperiments, SSP
+from pyssp_standard.common.archive import unpack_archive
 from pyssp_standard.standard.ls_ref.model import LSRefExperiment
 from pyssp_standard.ssd import Connection, DefaultExperiment
+from utils.fmu import strip_model_exchange
 from utils.model import ModelMetaData
 
 
 def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
     source_csv = MODEL_DIR / "input" / "signals.csv"
     source_fmu = temp_dir / "CsvSource.fmu"
-    sink_fmu = temp_dir / "Gain.fmu"
     ssp_path = temp_dir / "model.ssp"
+    ssp_path.unlink(missing_ok=True)
 
     package_fmu_from_csv(source_csv, source_fmu, "CsvSource")
-    with FMU(source_fmu, mode="a") as fmu:
-        with fmu.model_description as md:
-            md.strip_model_exchange()
-    package_archive(model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"), sink_fmu)
-    with FMU(sink_fmu, mode="a") as fmu:
-        with fmu.model_description as md:
-            md.strip_model_exchange()
-
     with SSP(ssp_path, mode="w") as ssp:
         with ssp.system_structure() as ssd:
             ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
 
-        ssp.add_fmu("source", source_fmu, resource_name="CsvSource.fmu", implementation="CoSimulation")
-        ssp.add_fmu("sink", sink_fmu, resource_name="Gain.fmu", implementation="CoSimulation")
+        ssp.add_fmu(
+            "source",
+            source_fmu,
+            resource_name="CsvSource.fmu",
+            implementation="CoSimulation",
+        )
+        copied_resource_name = ssp.add_fmu(
+            "sink",
+            model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"),
+            resource_name="Gain.fmu",
+            implementation="CoSimulation",
+        )
+        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
 
         with ssp.system_structure() as ssd:
             ssd.extend_system_parameterset({"sink.k": 1.0})

@@ -13,30 +13,24 @@ sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
 from pyssp_standard import LSRefExperiments, SSP
-from pyssp_standard.common.archive import package_archive, unpack_archive
-from pyssp_standard.fmu import FMU
+from pyssp_standard.common.archive import unpack_archive
 from pyssp_standard.standard.ls_ref.model import LSRefExperiment
+from utils.fmu import strip_model_exchange
 from utils.model import ModelMetaData
 
 
 def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
-    fmu_path = temp_dir / "model.fmu"
     ssp_path = temp_dir / "model.ssp"
-    package_archive(model.paths.shared_fmu_dir("Stair"), fmu_path)
-
-    with FMU(fmu_path, mode="a") as fmu:
-        with fmu.model_description as md:
-            md.strip_model_exchange()
-
-    with FMU(fmu_path, mode="r") as fmu:
-        fmu.package_as_ssp(
-            ssp_path,
-            system_name=model.name,
-            component_name="fmu",
-            implementation="CoSimulation",
-        )
+    ssp_path.unlink(missing_ok=True)
 
     with SSP(ssp_path, mode="a") as ssp:
+        copied_resource_name = ssp.add_fmu(
+            "fmu",
+            model.paths.shared_fmu_dir("Stair"),
+            resource_name="Stair.fmu",
+            implementation="CoSimulation",
+        )
+        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
         for resource in [*exp.stimuli, *exp.references]:
             ssp.add_resource(MODEL_DIR / resource.source)
             if resource.mapping is not None:

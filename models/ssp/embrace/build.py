@@ -24,6 +24,7 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
         raise FileNotFoundError(f"Local SSP directory not found: {model.paths.source_ssp_dir}")
 
     ssp_path = temp_dir / "model.ssp"
+    ssp_path.unlink(missing_ok=True)
     ssp_copy = temp_dir / "ssp"
     shutil.copytree(model.paths.source_ssp_dir, ssp_copy)
     resources_dir = ssp_copy / "resources"
@@ -33,7 +34,7 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
                 with FMU(fmu_dir, mode="a") as fmu:
                     with fmu.model_description as md:
                         md.strip_model_exchange()
-    package_archive(ssp_copy, ssp_path, nested_fmus=True)
+    package_archive(ssp_copy, ssp_path, recursive=True)
 
     with SSP(ssp_path, mode="a") as ssp:
         for resource in [*exp.stimuli, *exp.references]:

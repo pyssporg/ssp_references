@@ -46,7 +46,8 @@ def create_ssp(
     _strip_source_fmus(ssp_copy / "resources")
 
     ssp_path = temp_dir / "model.ssp"
-    package_archive(ssp_copy, ssp_path, nested_fmus=True)
+    ssp_path.unlink(missing_ok=True)
+    package_archive(ssp_copy, ssp_path, recursive=True)
 
     with SSP(ssp_path, mode="a") as ssp:
         for resource in [*exp.stimuli, *exp.references]:

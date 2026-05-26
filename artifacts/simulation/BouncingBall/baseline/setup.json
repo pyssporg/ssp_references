@@ -11,7 +11,7 @@
   "ls_ref_experiments": "../../../models/BouncingBall/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "BouncingBall",
   "resources_dir": "../../../models/BouncingBall/baseline/resources",
-  "root_system_name": "BouncingBall",
+  "root_system_name": "system",
   "ssp_root": "../../../models/BouncingBall/baseline",
   "system_structure": "../../../models/BouncingBall/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,

@@ -15,9 +15,9 @@
       ],
       "summary": {
         "compared_signal_count": 4,
-        "max_abs_error": 2.8229416105788205,
-        "mean_abs_error": 0.7205387721101526,
-        "rmse": 0.7766098948304576,
+        "max_abs_error": 2.8478111082898945,
+        "mean_abs_error": 0.720990160808417,
+        "rmse": 0.7775969235977234,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
         "time_points": 1001
@@ -43,7 +43,7 @@
   "summary": {
     "backend_count": 2,
     "comparison_count": 1,
-    "max_abs_error": 2.8229416105788205,
+    "max_abs_error": 2.8478111082898945,
     "max_rel_error": 0.0,
     "min_compared_signal_count": 4
   }

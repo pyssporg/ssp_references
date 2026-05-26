@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="Stair" version="1.0">
-  <ssd:System name="Stair">
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="SystemStructure" version="1.0">
+  <ssd:System name="system">
     <ssd:Elements>
-      <ssd:Component name="fmu" source="resources/model.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+      <ssd:Component name="fmu" source="resources/Stair.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
         <ssd:Connectors>
           <ssd:Connector name="counter" kind="output">
             <ssc:Integer />

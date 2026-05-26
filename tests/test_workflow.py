@@ -23,7 +23,7 @@ from workflow.registry import (
 )
 from workflow.setup import prepare_setup
 from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
-from utils.csv import extract_series
+from utils.csv import extract_series, load_numeric_csv
 
 
 @pytest.fixture(autouse=True)
@@ -105,6 +105,44 @@ def test_extract_series_uses_signed_data_row_for_alias_sign() -> None:
     assert headers == ["time", "signal", "negated_alias"]
     np.testing.assert_array_equal(columns[1], np.array([2.0, 3.0]))
     np.testing.assert_array_equal(columns[2], np.array([-2.0, -3.0]))
+
+
+def test_reference_csvs_are_not_inverted() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    checks = [
+        (
+            repo_root / "models/ssp/BouncingBall/references/BouncingBall-cs.csv",
+            {
+                "default.BouncingBall.h": (0, 1.0),
+                "default.BouncingBall.v": (1, -0.00981),
+            },
+        ),
+        (
+            repo_root / "models/ssp/Dahlquist/references/Dahlquist-cs.csv",
+            {
+                "default.Dahlquist.x": (0, 1.0),
+                "default.Dahlquist.der(x)": (0, -1.0),
+            },
+        ),
+        (
+            repo_root / "models/ssp/Stair/references/Stair-cs.csv",
+            {
+                "default.Stair.counter": (0, 1.0),
+            },
+        ),
+        (
+            repo_root / "models/ssp/VanDerPol/references/VanDerPol-cs.csv",
+            {
+                "default.VanDerPol.x0": (0, 2.0),
+                "default.VanDerPol.der(x1)": (0, -2.0),
+            },
+        ),
+    ]
+
+    for path, expected_values in checks:
+        columns = load_numeric_csv(path)["columns"]
+        for column_name, (row_index, expected_value) in expected_values.items():
+            assert columns[column_name][row_index] == pytest.approx(expected_value)
 
 
 def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:

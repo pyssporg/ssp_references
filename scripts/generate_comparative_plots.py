@@ -21,6 +21,9 @@ from workflow.simulate import SimulationRun
 from utils.config import REPO_ROOT
 from utils.csv import load_numeric_csv, normalize_column_name
 
+LINE_STYLES = ("-", "--", ":", "-.")
+START_MARKERS = ("o", "s", "^", "D", "v", "P", "X")
+
 
 @dataclass(frozen=True)
 class EngineSeries:
@@ -78,6 +81,13 @@ def _sanitize_filename(value: str) -> str:
         cleaned.append(character if character.isalnum() or character in {"-", "_", "."} else "_")
     result = "".join(cleaned).strip("._")
     return result or "variable"
+
+
+def _series_plot_style(index: int) -> tuple[str, str]:
+    return (
+        LINE_STYLES[index % len(LINE_STYLES)],
+        START_MARKERS[index % len(START_MARKERS)],
+    )
 
 
 def _load_engine_series(run: SimulationRun, setup: SimulationSetup) -> EngineSeries:
@@ -162,8 +172,20 @@ def _plot_variable(
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     fig, ax = plt.subplots(figsize=(14, 6))
-    for engine, series in series_by_engine.items():
-        ax.plot(series.time, series.values_by_variable[variable], label=engine, linewidth=1.2)
+    for index, (engine, series) in enumerate(series_by_engine.items()):
+        line_style, start_marker = _series_plot_style(index)
+        ax.plot(
+            series.time,
+            series.values_by_variable[variable],
+            label=engine,
+            linewidth=1.4,
+            linestyle=line_style,
+            marker=start_marker,
+            markevery=[0],
+            markersize=7,
+            markerfacecolor="white",
+            markeredgewidth=1.3,
+        )
 
     ax.set_title(f"{model_name}/{case_name} - {variable}")
     ax.set_xlabel("time")

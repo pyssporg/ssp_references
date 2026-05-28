@@ -8,6 +8,6 @@
     "setup_manifest": "../setup.json"
   },
   "result": "result.csv",
-  "runtime_s": 0.09165329299867153,
+  "runtime_s": 0.09124711097683758,
   "status": "completed"
 }

@@ -37,7 +37,7 @@
       "wait_for": true
     },
     "ssd": "SystemStructure.ssd",
-    "ssp": "/tmp/baseline_b587hd9f/ssp",
+    "ssp": "/tmp/baseline_kogr58sj/ssp",
     "start_time": 0.0,
     "stop_time": 1.0,
     "timestep": 0.001,

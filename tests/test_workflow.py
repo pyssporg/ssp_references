@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 import numpy as np
 import pytest
@@ -20,6 +21,7 @@ from workflow.registry import (
     RegistryReferenceCsv,
     SimulationCaseSpec,
     SimulationRegistry,
+    load_registry,
 )
 from workflow.setup import prepare_setup
 from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
@@ -143,6 +145,40 @@ def test_reference_csvs_are_not_inverted() -> None:
         columns = load_numeric_csv(path)["columns"]
         for column_name, (row_index, expected_value) in expected_values.items():
             assert columns[column_name][row_index] == pytest.approx(expected_value)
+
+
+def test_modelica_block_fmus_expose_dependency_metadata() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    expected_dependencies = {
+        "Modelica.Blocks.Math.Gain": ("2", "2 4"),
+        "Modelica.Blocks.Math.Add": ("2 3", "2 3 5 6"),
+    }
+
+    for model_name, (output_dependencies, initial_dependencies) in expected_dependencies.items():
+        path = repo_root / "models" / "fmu" / model_name / "fmu" / "modelDescription.xml"
+        root = ET.parse(path).getroot()
+        outputs = root.find(".//{*}ModelStructure/{*}Outputs/{*}Unknown")
+        initial = root.find(".//{*}ModelStructure/{*}InitialUnknowns/{*}Unknown")
+
+        assert outputs is not None
+        assert outputs.attrib["dependencies"] == output_dependencies
+        assert initial is not None
+        assert initial.attrib["dependencies"] == initial_dependencies
+
+
+def test_registry_includes_algebraic_loop_fixtures() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    registry = load_registry(repo_root / "artifacts" / "simulation_registry.json")
+    models = {model.name: model for model in registry.models}
+
+    assert models["signal_algebraic_loop"].compare_signals == ("sine.y", "add.y", "gain.y")
+    assert models["signal_nested_algebraic_loop"].compare_signals == (
+        "sine.y",
+        "add_outer.y",
+        "gain_outer.y",
+        "add_inner.y",
+        "gain_inner.y",
+    )
 
 
 def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:

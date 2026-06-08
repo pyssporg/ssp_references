@@ -74,6 +74,8 @@ These fixtures now exist as SSP models under `models/ssp/`.
 | `signal_sine_gain_add` | Implemented | [signal_sine_gain_add](../models/ssp/signal_sine_gain_add/FIXTURE.md) |
 | `signal_step_product` | Implemented | [signal_step_product](../models/ssp/signal_step_product/FIXTURE.md) |
 | `signal_delay_detector` | Implemented | [signal_delay_detector](../models/ssp/signal_delay_detector/FIXTURE.md) |
+| `signal_algebraic_loop` | Implemented | [signal_algebraic_loop](../models/ssp/signal_algebraic_loop/FIXTURE.md) |
+| `signal_nested_algebraic_loop` | Implemented | [signal_nested_algebraic_loop](../models/ssp/signal_nested_algebraic_loop/FIXTURE.md) |
 
 ## Coverage Assessment
 
@@ -105,6 +107,9 @@ The deterministic signal fixtures now cover the main packaging alternatives:
 - `signal_step_product` generates the external `.ssv` and `.ssm` during its
   build script before linking them into the SSP.
 - `signal_sine_gain_add` remains the inline system-level regression anchor.
+- `signal_algebraic_loop` and `signal_nested_algebraic_loop` use checked-in
+  external `.ssv` files and deliberately close feedback cycles instead of
+  remaining acyclic.
 
 ## Comparison Expectations Per Fixture Class
 
@@ -139,9 +144,12 @@ Recommended pass/fail rules for these fixtures:
 - Algebraic relationships must hold within very small tolerances.
 - Any apparent one-step lag should be considered a failure unless explicitly
   designed into the fixture.
+- A closed algebraic loop that fails to converge, converges to the wrong
+  fixed point, or only works in one backend should be treated as a regression.
 
 ## Immediate Next Step
 
 The most useful follow-up is to run the full deterministic signal set through
-the comparison workflow and keep the five external-parameter variants plus the
-inline regression anchor in the maintained regression suite.
+the comparison workflow and keep the full mix of external-parameter fixtures,
+generated-parameter fixtures, the inline regression anchor, and the new
+algebraic-loop cases in the maintained regression suite.

@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssv:ParameterSet xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" version="1.0" name="signal_algebraic_loop_parameters">
+  <ssv:Parameters>
+    <ssv:Parameter name="sine.amplitude">
+      <ssv:Real value="1.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine.f">
+      <ssv:Real value="2.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine.offset">
+      <ssv:Real value="0.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine.phase">
+      <ssv:Real value="0.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="sine.startTime">
+      <ssv:Real value="0.0" />
+    </ssv:Parameter>
+    <ssv:Parameter name="gain.k">
+      <ssv:Real value="0.5" />
+    </ssv:Parameter>
+  </ssv:Parameters>
+</ssv:ParameterSet>

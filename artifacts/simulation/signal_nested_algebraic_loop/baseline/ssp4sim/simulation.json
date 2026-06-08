@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    "config.json",
+    "simulation.log"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "baseline",
+    "model": "signal_nested_algebraic_loop",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.1265559519524686,
+  "status": "completed"
+}

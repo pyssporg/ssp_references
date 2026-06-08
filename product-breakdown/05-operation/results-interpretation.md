@@ -108,7 +108,7 @@ As a rule of thumb:
 
 ## Fixture-Specific Notes
 
-- **Deterministic signal-propagation** models (signal_step_gain, signal_step_add, etc.): these have algebraically predictable outputs. Any `max_abs_error > 1e-12` across backends is a strong signal of a scheduling, propagation, or algebraic-loop issue.
+- **Deterministic signal-propagation** models (signal_step_gain, signal_step_add, signal_algebraic_loop, signal_nested_algebraic_loop, etc.): these have algebraically predictable outputs. Any `max_abs_error > 1e-12` across backends is a strong signal of a scheduling, propagation, or algebraic-loop issue.
 - **Simple reference models** (BouncingBall, VanDerPol, etc.): small numerical tolerance differences between solvers are normal. Tighter tolerances (`1e-8`) can be used if both backends use the same solver.
 - **Composite models** (dcmotor, embrace): broader tolerances are expected due to multi-FMU coupling and cross-component signal routing.
 

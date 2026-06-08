@@ -1,0 +1,100 @@
+{
+  "comparisons": [
+    {
+      "manifest": "ssp4sim_vs_omsimulator/comparison.json",
+      "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/signal_algebraic_loop/baseline/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/signal_algebraic_loop/baseline/omsimulator/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 3,
+        "max_abs_error": 0.05020199999999902,
+        "mean_abs_error": 0.013265596460853615,
+        "rmse": 0.014876900103235715,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "omsimulator",
+        "time_points": 1001
+      }
+    },
+    {
+      "manifest": "ssp4sim_vs_fmpy/comparison.json",
+      "metrics": "ssp4sim_vs_fmpy/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/signal_algebraic_loop/baseline/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "fmpy",
+          "manifest": "../../../simulation/signal_algebraic_loop/baseline/fmpy/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 3,
+        "max_abs_error": 159.33087783319286,
+        "mean_abs_error": 53.26354184724323,
+        "rmse": 65.27970532902214,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "fmpy",
+        "time_points": 1001
+      }
+    },
+    {
+      "manifest": "omsimulator_vs_fmpy/comparison.json",
+      "metrics": "omsimulator_vs_fmpy/metrics.csv",
+      "runs": [
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/signal_algebraic_loop/baseline/omsimulator/simulation.json"
+        },
+        {
+          "backend": "fmpy",
+          "manifest": "../../../simulation/signal_algebraic_loop/baseline/fmpy/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 3,
+        "max_abs_error": 159.29367901929285,
+        "mean_abs_error": 53.263851243053004,
+        "rmse": 65.27971018294978,
+        "run_a_label": "omsimulator",
+        "run_b_label": "fmpy",
+        "time_points": 1001
+      }
+    }
+  ],
+  "error": null,
+  "request": {
+    "case": "baseline",
+    "model": "signal_algebraic_loop",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../simulation/signal_algebraic_loop/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../simulation/signal_algebraic_loop/baseline/omsimulator/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../simulation/signal_algebraic_loop/baseline/fmpy/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "backend_count": 3,
+    "comparison_count": 3,
+    "max_abs_error": 159.33087783319286,
+    "max_rel_error": 0.0,
+    "min_compared_signal_count": 3
+  }
+}

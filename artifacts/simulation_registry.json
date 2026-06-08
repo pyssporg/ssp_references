@@ -100,8 +100,43 @@
           "name": "baseline",
           "backends": [
             "ssp4sim",
-            "omsimulator",
-            "fmpy"
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_algebraic_loop",
+      "compare_signals": [
+        "sine.y",
+        "add.y",
+        "gain.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_nested_algebraic_loop",
+      "compare_signals": [
+        "sine.y",
+        "add_outer.y",
+        "gain_outer.y",
+        "add_inner.y",
+        "gain_inner.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
           ]
         }
       ]

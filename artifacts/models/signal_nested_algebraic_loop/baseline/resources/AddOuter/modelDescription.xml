@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<fmiModelDescription fmiVersion="2.0" modelName="Modelica.Blocks.Math.Add" guid="{1e081e66-06db-4a8b-b0d0-c04b28e504ce}" description="Output the sum of the two inputs" version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-05-22T12:14:08Z" variableNamingConvention="structured" numberOfEventIndicators="0">
+  <CoSimulation modelIdentifier="Modelica_Blocks_Math_Add" needsExecutionTool="false" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" canBeInstantiatedOnlyOncePerProcess="false" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
+  <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="1e-06" />
+  <ModelVariables>
+    <ScalarVariable name="der(_D_outputAlias_y)" valueReference="0" description="Connector of Real output signal">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable name="u1" valueReference="3" description="Connector of Real input signal 1" causality="input">
+      <Real start="0.0" />
+    </ScalarVariable>
+    <ScalarVariable name="u2" valueReference="4" description="Connector of Real input signal 2" causality="input">
+      <Real start="0.0" />
+    </ScalarVariable>
+    <ScalarVariable name="y" valueReference="5" description="Connector of Real output signal" causality="output">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable name="k1" valueReference="6" description="Gain of input signal 1" causality="parameter" variability="fixed">
+      <Real start="1.0" />
+    </ScalarVariable>
+    <ScalarVariable name="k2" valueReference="7" description="Gain of input signal 2" causality="parameter" variability="fixed">
+      <Real start="1.0" />
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="4" dependencies="2 3" dependenciesKind="dependent dependent" />
+    </Outputs>
+    <InitialUnknowns>
+      <Unknown index="4" dependencies="2 3 5 6" dependenciesKind="dependent dependent dependent dependent" />
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

@@ -1,0 +1,13 @@
+{
+  "artifacts": [],
+  "error": null,
+  "request": {
+    "backend": "fmpy",
+    "case": "baseline",
+    "model": "signal_algebraic_loop",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.20741356804501265,
+  "status": "completed"
+}

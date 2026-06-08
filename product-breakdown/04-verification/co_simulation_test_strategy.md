@@ -145,10 +145,25 @@ Typical propagation scenarios include:
 - Step changes and sinusoidal inputs propagated through deterministic blocks.
 - Small networks where a one-step delay, wrong evaluation order, or incorrect
   connector mapping becomes immediately visible in the result traces.
+- Closed algebraic loops, both as a single loop and as a nested loop inside a
+  larger loop, to expose simultaneous-equation solving and feedback ordering.
 
 This class of tests is important because it isolates engine orchestration
 behavior. When such a test fails, the likely problem is in scheduling, data
 exchange, or connector handling rather than in the physical model itself.
+
+### Closed Algebraic-Loop Coverage
+
+The repository should keep at least two dedicated fixtures for closed feedback
+systems:
+
+- A sole algebraic loop around a single gain/add pair.
+- A nested loop where one closed loop feeds another closed loop.
+
+These are needed because acyclic signal chains do not exercise the part of the
+runtime that must resolve simultaneous equations across backends. A backend can
+appear correct on fan-in, fan-out, and delay-style fixtures while still
+failing on loop closure, so these cases provide a separate regression target.
 
 ## Comparison Policy
 
@@ -169,6 +184,9 @@ Recommended rule set:
 - Use tighter tolerances for simple reference models.
 - Use very tight tolerances for deterministic signal-propagation models built
   from algebraic Modelica FMUs.
+- Treat closed-loop deterministic fixtures with the same tight threshold, but
+  require them specifically to prove the engine converges on the loop solution
+  rather than merely matching an acyclic feedthrough trace.
 - Use broader tolerances for larger composite models.
 - Treat missing signals, NaNs, unstable spikes, or early termination as test
   failures even when aggregate metrics look acceptable.

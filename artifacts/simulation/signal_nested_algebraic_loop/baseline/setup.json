@@ -1,0 +1,26 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "compare_signals": [
+    "sine.y",
+    "add_outer.y",
+    "gain_outer.y",
+    "add_inner.y",
+    "gain_inner.y"
+  ],
+  "ls_ref_experiments": "../../../models/signal_nested_algebraic_loop/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "signal_nested_algebraic_loop",
+  "resources_dir": "../../../models/signal_nested_algebraic_loop/baseline/resources",
+  "root_system_name": "system",
+  "ssp_root": "../../../models/signal_nested_algebraic_loop/baseline",
+  "system_structure": "../../../models/signal_nested_algebraic_loop/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

@@ -6,7 +6,7 @@ and which backends support it.
 
 ## SSP Fixtures
 
-The 15 SSP fixtures are organized into four architectural classes per the
+The 17 SSP fixtures are organized into four architectural classes per the
 [fixture hierarchy](../product-breakdown/02-architecture/architecture.md#2-fixture-hierarchy).
 
 ### Simple Reference Models
@@ -23,12 +23,14 @@ Single-FMU SSPs for basic behavioral checks and smoke testing.
 
 ### Deterministic Signal-Propagation Fixtures
 
-SSPs with algebraically predictable output, suitable for tight-tolerance
-cross-engine comparison.
+SSPs with algebraically predictable output, including closed algebraic loops
+used as loop-resolution diagnostics, suitable for cross-engine comparison.
 
 | Model | Purpose | Expected Behavior | Backends | Test Level | FIXTURE.md |
 |-------|---------|-------------------|----------|------------|------------|
 | signal_step_gain | Step signal through a gain block | Output = gain × step amplitude | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_step_gain/FIXTURE.md) |
+| signal_algebraic_loop | Single closed algebraic loop around a gain/add pair driven by a sine wave | `add = 2 * sine`, `gain = sine` | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_algebraic_loop/FIXTURE.md) |
+| signal_nested_algebraic_loop | Nested algebraic loop inside a larger loop driven by a biased sine wave | Outer and inner loop solutions resolve simultaneously | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_algebraic_loop/FIXTURE.md) |
 | signal_step_add | Two step signals summed | Output = sum of both source signals | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_step_add/FIXTURE.md) |
 | signal_fanout_gain | One source fanned out to two gain blocks | Both outputs = identical (same gain × same source) | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_fanout_gain/FIXTURE.md) |
 | signal_sine_gain_add | Sine source through gain then summed with original | Output = (gain + 1) × sine | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_sine_gain_add/FIXTURE.md) |

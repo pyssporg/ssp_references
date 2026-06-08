@@ -1,0 +1,13 @@
+{
+  "artifacts": [],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "baseline",
+    "model": "signal_algebraic_loop",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.02299238898558542,
+  "status": "completed"
+}

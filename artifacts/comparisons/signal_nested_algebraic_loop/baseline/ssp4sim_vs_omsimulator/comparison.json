@@ -1,0 +1,27 @@
+{
+  "error": null,
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "baseline",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/signal_nested_algebraic_loop/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/signal_nested_algebraic_loop/baseline/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 5,
+    "max_abs_error": 2.00628318531,
+    "mean_abs_error": 0.02582545052057882,
+    "rmse": 0.06130105290043618,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "omsimulator",
+    "time_points": 1001
+  }
+}

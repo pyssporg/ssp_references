@@ -24,7 +24,6 @@ This fixture is registered for simulation with the following backends:
 ## Structure
 
 - Step (inline SSV + external SSM)
-- Self-connection: `step.y → step.y`
 
 ## Strategy Role
 

@@ -56,15 +56,6 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
                     )
                     break
 
-            # Self-connection: step.y → step.y
-            system.connections.append(
-                Connection(
-                    start_element="step",
-                    start_connector="y",
-                    end_element="step",
-                    end_connector="y",
-                )
-            )
 
         # Add the external SSM file as an SSP resource
         ssp.add_resource(MODEL_DIR / "ssp" / "resources" / "inline_mapping.ssm")

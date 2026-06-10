@@ -37,7 +37,7 @@ used as loop-resolution diagnostics, suitable for cross-engine comparison.
 | signal_sine_gain_add | Sine source through gain then summed with original | Output = (gain + 1) × sine | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_sine_gain_add/FIXTURE.md) |
 | signal_step_product | Two step signals multiplied | Output = product of both source amplitudes | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_step_product/FIXTURE.md) |
 | signal_delay_detector | Step input through a delayed connection | Output = step delayed by configured lag | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_delay_detector/FIXTURE.md) |
-| signal_parameter_inline_with_mapping | Step with inline SSV and external SSM mapping | Output tracks step configuration; self-connection enabled | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
+| signal_parameter_inline_with_mapping | Step with inline SSV and external SSM mapping | Output tracks step configuration | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
 | signal_nested_external_bindings | Nested system with external SSV+SSM bindings | Root step output routed to system connector | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_external_bindings/FIXTURE.md) |
 
 ### Composite SSPs

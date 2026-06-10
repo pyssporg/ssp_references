@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <fmiModelDescription fmiVersion="2.0" modelName="Modelica.Blocks.Math.Add" guid="{1e081e66-06db-4a8b-b0d0-c04b28e504ce}" description="Output the sum of the two inputs" version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-05-22T12:14:08Z" variableNamingConvention="structured" numberOfEventIndicators="0">
-  <CoSimulation modelIdentifier="Modelica_Blocks_Math_Add" needsExecutionTool="false" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" canBeInstantiatedOnlyOncePerProcess="false" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
+  <CoSimulation modelIdentifier="Modelica_Blocks_Math_Add" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" />
   <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="1e-06" />
   <ModelVariables>
     <ScalarVariable name="der(_D_outputAlias_y)" valueReference="0" description="Connector of Real output signal">

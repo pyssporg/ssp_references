@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <fmiModelDescription fmiVersion="2.0" modelName="Modelica.Blocks.Sources.Sine" guid="{f0f5d77d-4716-4ac9-b2ee-b3f3425fde6c}" description="Generate sine signal" version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-05-22T12:14:18Z" variableNamingConvention="structured" numberOfEventIndicators="1">
-  <CoSimulation modelIdentifier="Modelica_Blocks_Sources_Sine" needsExecutionTool="false" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" canBeInstantiatedOnlyOncePerProcess="false" canNotUseMemoryManagementFunctions="false" canGetAndSetFMUstate="false" canSerializeFMUstate="false" providesDirectionalDerivative="false" />
+  <CoSimulation modelIdentifier="Modelica_Blocks_Sources_Sine" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" />
   <UnitDefinitions>
     <Unit name="s">
       <BaseUnit s="1" />
@@ -22,16 +22,16 @@
       <Real start="1.0" />
     </ScalarVariable>
     <ScalarVariable name="f" valueReference="5" description="Frequency of sine wave" causality="parameter" variability="fixed">
-      <Real unit="Hz" start="1.0" />
+      <Real start="1.0" unit="Hz" />
     </ScalarVariable>
     <ScalarVariable name="offset" valueReference="6" description="Offset of output signal y" causality="parameter" variability="fixed">
       <Real start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="phase" valueReference="7" description="Phase of sine wave" causality="parameter" variability="fixed">
-      <Real unit="rad" start="0.0" />
+      <Real start="0.0" unit="rad" />
     </ScalarVariable>
     <ScalarVariable name="startTime" valueReference="8" description="Output y = offset for time &lt; startTime" causality="parameter" variability="fixed">
-      <Real unit="s" start="0.0" />
+      <Real start="0.0" unit="s" />
     </ScalarVariable>
     <ScalarVariable name="continuous" valueReference="0" description="Make output continuous by starting at offset + amplitude*sin(phase)" causality="calculatedParameter" variability="fixed">
       <Boolean />
@@ -39,11 +39,11 @@
   </ModelVariables>
   <ModelStructure>
     <Outputs>
-      <Unknown index="2" dependencies="" dependenciesKind="" />
+      <Unknown index="2" />
     </Outputs>
     <InitialUnknowns>
       <Unknown index="2" dependencies="3 4 5 6 7" dependenciesKind="dependent dependent dependent dependent dependent" />
-      <Unknown index="8" dependencies="" dependenciesKind="" />
+      <Unknown index="8" />
     </InitialUnknowns>
   </ModelStructure>
 </fmiModelDescription>

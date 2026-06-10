@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <fmiModelDescription fmiVersion="2.0" modelName="emachine_model" guid="{27927f3c-f4b6-4f27-ae7a-a6001766cad2}" description="DC-Motor for a mild hybrid application" version="1.2.0" generationTool="Dymola Version 2024x Refresh 1 Beta 1, 2024-03-01" generationDateAndTime="2024-03-06T12:53:54Z" variableNamingConvention="structured">
-  <CoSimulation modelIdentifier="emachine_model" canNotUseMemoryManagementFunctions="true" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
+  <CoSimulation modelIdentifier="emachine_model" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" canNotUseMemoryManagementFunctions="true" />
   <UnitDefinitions>
     <Unit name="1" />
     <Unit name="1/K">
@@ -66,22 +66,22 @@
   <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="0.0001" />
   <ModelVariables>
     <ScalarVariable name="resistor.R" valueReference="16777216" description="Resistance at temperature T_ref" causality="parameter" variability="tunable">
-      <Real declaredType="Modelica.Units.SI.Resistance" start="1" />
+      <Real declaredType="Modelica.Units.SI.Resistance" start="1.0" />
     </ScalarVariable>
     <ScalarVariable name="resistor.T_ref" valueReference="16777217" description="Reference temperature" causality="parameter" variability="tunable">
       <Real declaredType="Modelica.Units.SI.Temperature" start="300.15" />
     </ScalarVariable>
     <ScalarVariable name="resistor.alpha" valueReference="16777218" description="Temperature coefficient of resistance (R_actual = R*(1 + alpha*(T_heatPort - T_ref))" causality="parameter" variability="tunable">
-      <Real declaredType="Modelica.Units.SI.LinearTemperatureCoefficient" start="0" />
+      <Real declaredType="Modelica.Units.SI.LinearTemperatureCoefficient" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="resistor.T" valueReference="16777219" description="Fixed device temperature if useHeatPort = false" causality="parameter" variability="tunable">
       <Real declaredType="Modelica.Units.SI.Temperature" start="300.15" />
     </ScalarVariable>
     <ScalarVariable name="inductor.i" valueReference="33554432" description="Current flowing from pin p to pin n" initial="exact">
-      <Real declaredType="Modelica.Units.SI.Current" start="0" />
+      <Real declaredType="Modelica.Units.SI.Current" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="der(inductor.i)" valueReference="587202560" description="der(Current flowing from pin p to pin n)">
-      <Real unit="A/s" derivative="5" />
+      <Real derivative="5" unit="A/s" />
     </ScalarVariable>
     <ScalarVariable name="inductor.L" valueReference="16777220" description="Inductance" causality="parameter" variability="tunable">
       <Real declaredType="Modelica.Units.SI.Inductance" start="0.001" />
@@ -90,22 +90,22 @@
       <Real declaredType="Modelica.Units.SI.ElectricalTorqueConstant" start="0.01" />
     </ScalarVariable>
     <ScalarVariable name="I" valueReference="335544320" causality="output">
-      <Real unit="A" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="A" />
     </ScalarVariable>
     <ScalarVariable name="w" valueReference="352321536" causality="input">
-      <Real unit="rad/s" declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" unit="rad/s" />
     </ScalarVariable>
     <ScalarVariable name="phi" valueReference="352321537" causality="input">
-      <Real unit="rad" declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" unit="rad" />
     </ScalarVariable>
     <ScalarVariable name="M" valueReference="335544321" causality="output">
-      <Real unit="N.m" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="N.m" />
     </ScalarVariable>
     <ScalarVariable name="U" valueReference="352321538" causality="input">
-      <Real unit="V" declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" unit="V" />
     </ScalarVariable>
     <ScalarVariable name="M_gain.k" valueReference="16777223" description="Gain value multiplied with input signal" causality="parameter" variability="tunable">
-      <Real unit="1" start="-1" />
+      <Real start="-1.0" unit="1" />
     </ScalarVariable>
   </ModelVariables>
   <ModelStructure>

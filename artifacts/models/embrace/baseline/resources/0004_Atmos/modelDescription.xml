@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <fmiModelDescription fmiVersion="2.0" modelName="atmos" guid="{870fb078-b6e2-4034-90ef-1ef1fb7d227b}" generationTool="Dymola Version 2020 (64-bit), 2019-04-10" generationDateAndTime="2021-04-07T10:56:40Z" variableNamingConvention="structured" numberOfEventIndicators="2">
-  <CoSimulation modelIdentifier="atmos" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
+  <CoSimulation modelIdentifier="atmos" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" />
   <TypeDefinitions>
     <SimpleType name="Modelica.Blocks.Interfaces.RealOutput">
       <Real />
@@ -24,7 +24,7 @@
       <Real declaredType="ModelicaFluidLite.Common.RealIn" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="DTisa" valueReference="16777216" causality="parameter" variability="tunable">
-      <Real start="0" />
+      <Real start="0.0" />
     </ScalarVariable>
   </ModelVariables>
   <ModelStructure>

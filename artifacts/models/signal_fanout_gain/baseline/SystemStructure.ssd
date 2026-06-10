@@ -14,7 +14,7 @@
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="startTime" kind="parameter">
-            <ssc:Real unit="s" />
+            <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="y" kind="output">
             <ssc:Real />

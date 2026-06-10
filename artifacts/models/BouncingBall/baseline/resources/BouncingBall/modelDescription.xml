@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <fmiModelDescription fmiVersion="2.0" modelName="BouncingBall" description="This model calculates the trajectory, over time, of a ball dropped from a height of 1 m" generationTool="Reference FMUs (v0.0.36)" generationDateAndTime="2024-10-14T12:04:16.269782+00:00" guid="{1AE5E10D-9521-4DE3-80B9-D0EAAA7D5AF1}">
-  <CoSimulation modelIdentifier="BouncingBall" canNotUseMemoryManagementFunctions="true" canGetAndSetFMUstate="true" canSerializeFMUstate="true" />
+  <CoSimulation modelIdentifier="BouncingBall" canGetAndSetFMUstate="true" canSerializeFMUstate="true" canNotUseMemoryManagementFunctions="true" />
   <UnitDefinitions>
     <Unit name="m">
       <BaseUnit m="1" />
@@ -23,19 +23,19 @@
       <Real quantity="Acceleration" unit="m/s2" />
     </SimpleType>
   </TypeDefinitions>
-  <DefaultExperiment startTime="0.0" stopTime="3.0" />
+  <DefaultExperiment startTime="0.0" stopTime="3.0" stepSize="0.01" />
   <ModelVariables>
     <ScalarVariable name="time" valueReference="0" description="Simulation time" causality="independent" variability="continuous">
       <Real />
     </ScalarVariable>
     <ScalarVariable name="h" valueReference="1" description="Position of the ball" causality="output" variability="continuous" initial="exact">
-      <Real reinit="true" declaredType="Position" start="1" />
+      <Real reinit="true" declaredType="Position" start="1.0" />
     </ScalarVariable>
     <ScalarVariable name="der(h)" valueReference="2" description="Derivative of h" causality="local" variability="continuous" initial="calculated">
       <Real derivative="2" declaredType="Velocity" />
     </ScalarVariable>
     <ScalarVariable name="v" valueReference="3" description="Velocity of the ball" causality="output" variability="continuous" initial="exact">
-      <Real reinit="true" declaredType="Velocity" start="0" />
+      <Real reinit="true" declaredType="Velocity" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="der(v)" valueReference="4" description="Derivative of v" causality="local" variability="continuous" initial="calculated">
       <Real derivative="4" declaredType="Acceleration" />
@@ -52,8 +52,8 @@
   </ModelVariables>
   <ModelStructure>
     <Outputs>
-      <Unknown index="2" dependencies="" />
-      <Unknown index="4" dependencies="" />
+      <Unknown index="2" />
+      <Unknown index="4" />
     </Outputs>
     <InitialUnknowns>
       <Unknown index="3" dependencies="4" dependenciesKind="constant" />

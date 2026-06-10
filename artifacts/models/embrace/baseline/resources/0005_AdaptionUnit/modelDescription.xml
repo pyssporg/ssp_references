@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <fmiModelDescription fmiVersion="2.0" modelName="adaptionUnit" guid="{f0b9ad6a-61ef-4411-a683-3051577cc540}" generationTool="Dymola Version 2020 (64-bit), 2019-04-10" generationDateAndTime="2021-04-20T11:31:48Z" variableNamingConvention="structured" numberOfEventIndicators="6">
-  <CoSimulation modelIdentifier="adaptionUnit" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
+  <CoSimulation modelIdentifier="adaptionUnit" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" />
   <TypeDefinitions>
     <SimpleType name="Modelica.Blocks.Interfaces.IntegerOutput">
       <Integer />

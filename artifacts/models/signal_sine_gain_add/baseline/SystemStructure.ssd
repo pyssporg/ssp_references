@@ -51,16 +51,16 @@
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="f" kind="parameter">
-            <ssc:Real unit="Hz" />
+            <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="offset" kind="parameter">
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="phase" kind="parameter">
-            <ssc:Real unit="rad" />
+            <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="startTime" kind="parameter">
-            <ssc:Real unit="s" />
+            <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="y" kind="output">
             <ssc:Real />
@@ -76,7 +76,7 @@
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="startTime" kind="parameter">
-            <ssc:Real unit="s" />
+            <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="y" kind="output">
             <ssc:Real />

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 <fmiModelDescription fmiVersion="2.0" modelName="consumer" guid="{36eb613d-bdc1-41be-a72a-4cf7a59d2c9d}" generationTool="Dymola Version 2020 (64-bit), 2019-04-10" generationDateAndTime="2021-04-07T10:57:25Z" variableNamingConvention="structured" numberOfEventIndicators="2">
-  <CoSimulation modelIdentifier="consumer" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" />
+  <CoSimulation modelIdentifier="consumer" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" />
   <UnitDefinitions>
     <Unit name="1" />
     <Unit name="J/(kg.K)">
@@ -221,28 +221,28 @@
       <Real declaredType="ModelicaFluidLite.SIm.K" start="288.15" />
     </ScalarVariable>
     <ScalarVariable name="fd.Pamb_start" valueReference="16777217" description="Initial ambient pressure [Pa]" causality="parameter" variability="fixed">
-      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="101300" />
+      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="101300.0" />
     </ScalarVariable>
     <ScalarVariable name="fd.Ma_start" valueReference="16777218" description="Initial mach number [-]" causality="parameter" variability="fixed">
       <Real declaredType="ModelicaFluidLite.SIm.u" start="0.1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Alt_start" valueReference="16777219" description="Initial altitude [m]" causality="parameter" variability="fixed">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="10" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="10.0" />
     </ScalarVariable>
     <ScalarVariable name="fd.Nx_start" valueReference="16777220" description="Initial nx value [-]" causality="parameter" variability="fixed">
-      <Real declaredType="ModelicaFluidLite.SIm.u" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.u" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="fd.Ny_start" valueReference="16777221" description="Initial ny value [-]" causality="parameter" variability="fixed">
-      <Real declaredType="ModelicaFluidLite.SIm.u" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.u" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="fd.Nz_start" valueReference="16777222" description="Initial nz value [-]" causality="parameter" variability="fixed">
-      <Real declaredType="ModelicaFluidLite.SIm.u" start="1" />
+      <Real declaredType="ModelicaFluidLite.SIm.u" start="1.0" />
     </ScalarVariable>
     <ScalarVariable name="fd.Tbay" valueReference="16777223" causality="parameter" variability="fixed">
       <Real declaredType="ModelicaFluidLite.SIm.K" start="313.15" />
     </ScalarVariable>
     <ScalarVariable name="fd.Nx_filt.k" valueReference="16777224" description="Gain" causality="parameter" variability="tunable">
-      <Real unit="1" start="1" />
+      <Real start="1.0" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Nx_filt.T" valueReference="100663300" description="Time Constant" variability="tunable">
       <Real declaredType="Modelica.SIunits.Time" />
@@ -257,13 +257,13 @@
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" />
     </ScalarVariable>
     <ScalarVariable name="fd.Nx_filt.y" valueReference="33554432" description="Connector of Real output signal">
-      <Real unit="1" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="der(fd.Nx_filt.y)" valueReference="587202560" description="der(Connector of Real output signal)">
-      <Real unit="s-1" derivative="29" />
+      <Real derivative="29" unit="s-1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Ny_filt.k" valueReference="16777225" description="Gain" causality="parameter" variability="tunable">
-      <Real unit="1" start="1" />
+      <Real start="1.0" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Ny_filt.T" valueReference="100663303" description="Time Constant" variability="tunable">
       <Real declaredType="Modelica.SIunits.Time" />
@@ -278,13 +278,13 @@
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" />
     </ScalarVariable>
     <ScalarVariable name="fd.Ny_filt.y" valueReference="33554433" description="Connector of Real output signal">
-      <Real unit="1" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="der(fd.Ny_filt.y)" valueReference="587202561" description="der(Connector of Real output signal)">
-      <Real unit="s-1" derivative="36" />
+      <Real derivative="36" unit="s-1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Pamb_filt.k" valueReference="16777226" description="Gain" causality="parameter" variability="tunable">
-      <Real unit="1" start="1" />
+      <Real start="1.0" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Pamb_filt.T" valueReference="100663306" description="Time Constant" variability="tunable">
       <Real declaredType="Modelica.SIunits.Time" />
@@ -299,13 +299,13 @@
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" />
     </ScalarVariable>
     <ScalarVariable name="fd.Pamb_filt.y" valueReference="33554434" description="Connector of Real output signal">
-      <Real unit="Pa" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="Pa" />
     </ScalarVariable>
     <ScalarVariable name="der(fd.Pamb_filt.y)" valueReference="587202562" description="der(Connector of Real output signal)">
-      <Real unit="Pa/s" derivative="43" />
+      <Real derivative="43" unit="Pa/s" />
     </ScalarVariable>
     <ScalarVariable name="fd.Nz_filt.k" valueReference="16777227" description="Gain" causality="parameter" variability="tunable">
-      <Real unit="1" start="1" />
+      <Real start="1.0" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Nz_filt.T" valueReference="100663309" description="Time Constant" variability="tunable">
       <Real declaredType="Modelica.SIunits.Time" />
@@ -320,13 +320,13 @@
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" />
     </ScalarVariable>
     <ScalarVariable name="fd.Nz_filt.y" valueReference="33554435" description="Connector of Real output signal">
-      <Real unit="1" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="der(fd.Nz_filt.y)" valueReference="587202563" description="der(Connector of Real output signal)">
-      <Real unit="s-1" derivative="50" />
+      <Real derivative="50" unit="s-1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Tamb_filt.k" valueReference="16777228" description="Gain" causality="parameter" variability="tunable">
-      <Real unit="1" start="1" />
+      <Real start="1.0" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Tamb_filt.T" valueReference="100663313" description="Time Constant" variability="tunable">
       <Real declaredType="Modelica.SIunits.Time" />
@@ -341,13 +341,13 @@
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" />
     </ScalarVariable>
     <ScalarVariable name="fd.Tamb_filt.y" valueReference="33554436" description="Connector of Real output signal">
-      <Real unit="K" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="K" />
     </ScalarVariable>
     <ScalarVariable name="der(fd.Tamb_filt.y)" valueReference="587202564" description="der(Connector of Real output signal)">
-      <Real unit="K/s" derivative="57" />
+      <Real derivative="57" unit="K/s" />
     </ScalarVariable>
     <ScalarVariable name="fd.Ma_filt.k" valueReference="16777229" description="Gain" causality="parameter" variability="tunable">
-      <Real unit="1" start="1" />
+      <Real start="1.0" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Ma_filt.T" valueReference="100663316" description="Time Constant" variability="tunable">
       <Real declaredType="Modelica.SIunits.Time" />
@@ -362,13 +362,13 @@
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" />
     </ScalarVariable>
     <ScalarVariable name="fd.Ma_filt.y" valueReference="33554437" description="Connector of Real output signal">
-      <Real unit="1" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="der(fd.Ma_filt.y)" valueReference="587202565" description="der(Connector of Real output signal)">
-      <Real unit="s-1" derivative="64" />
+      <Real derivative="64" unit="s-1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Alt_filt.k" valueReference="16777230" description="Gain" causality="parameter" variability="tunable">
-      <Real unit="1" start="1" />
+      <Real start="1.0" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="fd.Alt_filt.T" valueReference="100663319" description="Time Constant" variability="tunable">
       <Real declaredType="Modelica.SIunits.Time" />
@@ -383,13 +383,13 @@
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" />
     </ScalarVariable>
     <ScalarVariable name="fd.Alt_filt.y" valueReference="33554438" description="Connector of Real output signal">
-      <Real unit="m" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="m" />
     </ScalarVariable>
     <ScalarVariable name="der(fd.Alt_filt.y)" valueReference="587202566" description="der(Connector of Real output signal)">
-      <Real unit="m/s" derivative="71" />
+      <Real derivative="71" unit="m/s" />
     </ScalarVariable>
     <ScalarVariable name="fd.gain.k" valueReference="16777231" description="Gain value multiplied with input signal" causality="parameter" variability="tunable">
-      <Real unit="1" start="-1" />
+      <Real start="-1.0" unit="1" />
     </ScalarVariable>
     <ScalarVariable name="fd.gain.u" valueReference="234881078" description="Input signal connector">
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" />
@@ -425,13 +425,13 @@
       <Real declaredType="ModelicaFluidLite.SIm.s" start="1.0" />
     </ScalarVariable>
     <ScalarVariable name="cd.damp" valueReference="16777241" description=" Damping coeff for pressure and spec enthalpy" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.u" start="5" />
+      <Real declaredType="ModelicaFluidLite.SIm.u" start="5.0" />
     </ScalarVariable>
     <ScalarVariable name="cd.P0" valueReference="16777242" description="Typical pressure in node" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="100000" />
+      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="100000.0" />
     </ScalarVariable>
     <ScalarVariable name="cd.DPlin" valueReference="16777243" description="linearisation limit around zero flow" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="100" />
+      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="100.0" />
     </ScalarVariable>
     <ScalarVariable name="cd.mmin" valueReference="16777244" description="eps mass flow" causality="parameter" variability="tunable">
       <Real declaredType="ModelicaFluidLite.SIm.kgps" start="0.001" />
@@ -488,7 +488,7 @@
       <Real declaredType="ModelicaFluidLite.SIm.m" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Qext" valueReference="436207624" description="External heat flow into pipe mass [W]">
-      <Real unit="W" declaredType="ModelicaFluidLite.Common.RealIn" />
+      <Real declaredType="ModelicaFluidLite.Common.RealIn" unit="W" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.looptype" valueReference="16777247" description="The pipe belongs to: 1 = hot, 2 = cold, 3 = inter 1, 4 = inter 2" causality="parameter" variability="tunable">
       <Integer start="1" />
@@ -503,16 +503,16 @@
       <Real declaredType="ModelicaFluidLite.SIm.m2" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Afact" valueReference="16777249" description="Factor for internal heat transfer area" causality="parameter" variability="tunable">
-      <Real start="1" />
+      <Real start="1.0" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.L" valueReference="16777250" description="length" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="1" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="1.0" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.rgh" valueReference="16777251" description="roughness" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="2E-05" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="2e-05" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.z" valueReference="16777252" description="local pressure drop coeff" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.u" start="1" />
+      <Real declaredType="ModelicaFluidLite.SIm.u" start="1.0" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Text_global" valueReference="100663328" description="0 = use Text_local, 1 = use fd.Tfrict, 2 = 2=use fix T_bay" variability="constant">
       <Integer start="0" />
@@ -524,16 +524,16 @@
       <Real declaredType="ModelicaFluidLite.SIm.K" start="373.15" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.tao_Tfrict" valueReference="16777255" description="Time constant in LP-filtering of Text" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.s" start="300" />
+      <Real declaredType="ModelicaFluidLite.SIm.s" start="300.0" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Text_local" valueReference="16777256" description="External temperature locally defined in component" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.K" start="293" />
+      <Real declaredType="ModelicaFluidLite.SIm.K" start="293.0" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.hext" valueReference="16777257" description="External coeff. of heat transfer" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.Wpm2K" start="10" />
+      <Real declaredType="ModelicaFluidLite.SIm.Wpm2K" start="10.0" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.MCp" valueReference="16777258" description="Thermal mass m*Cp of pipe" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.JpK" start="1000" />
+      <Real declaredType="ModelicaFluidLite.SIm.JpK" start="1000.0" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Vin" valueReference="16777259" description="Fluid volume [m3]" causality="parameter" variability="tunable">
       <Real declaredType="ModelicaFluidLite.SIm.m3" start="0.001" />
@@ -542,28 +542,28 @@
       <Real declaredType="ModelicaFluidLite.SIm.kgps" start="0.1" />
     </ScalarVariable>
     <ScalarVariable name="der(ConsumerA.m)" valueReference="587202567" description="der(mass flow)">
-      <Real unit="kg/s2" derivative="123" />
+      <Real derivative="123" unit="kg/s2" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Re" valueReference="33554440" description="Re-number (state)" initial="exact">
-      <Real declaredType="ModelicaFluidLite.SIm.u" start="100" />
+      <Real declaredType="ModelicaFluidLite.SIm.u" start="100.0" />
     </ScalarVariable>
     <ScalarVariable name="der(ConsumerA.Re)" valueReference="587202568" description="der(Re-number (state))">
-      <Real unit="s-1" derivative="125" />
+      <Real derivative="125" unit="s-1" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Tpipe" valueReference="33554441" description="Pipe wall temperature (lumped)" initial="exact">
-      <Real declaredType="ModelicaFluidLite.SIm.K" start="288" />
+      <Real declaredType="ModelicaFluidLite.SIm.K" start="288.0" />
     </ScalarVariable>
     <ScalarVariable name="der(ConsumerA.Tpipe)" valueReference="587202569" description="der(Pipe wall temperature (lumped))">
-      <Real unit="K/s" derivative="127" />
+      <Real derivative="127" unit="K/s" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Dp" valueReference="637534241">
       <Real declaredType="ModelicaFluidLite.SIm.Pa" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Dpg" valueReference="33554442" description="Delta pressure due to g-load" initial="exact">
-      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="der(ConsumerA.Dpg)" valueReference="587202570" description="der(Delta pressure due to g-load)">
-      <Real unit="Pa/s" derivative="130" />
+      <Real derivative="130" unit="Pa/s" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.qint" valueReference="637534242" description="internal heat transfer">
       <Real declaredType="ModelicaFluidLite.SIm.W" />
@@ -593,10 +593,10 @@
       <Real declaredType="ModelicaFluidLite.SIm.m" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.h" valueReference="33554443" description="internal spec enthalpy" initial="exact">
-      <Real declaredType="ModelicaFluidLite.SIm.Jpkg" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.Jpkg" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="der(ConsumerA.h)" valueReference="587202571" description="der(internal spec enthalpy)">
-      <Real unit="m2/s3" derivative="141" />
+      <Real derivative="141" unit="m2/s3" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.ztot" valueReference="637534251" description="total pressure drop coeff">
       <Real unit="1" />
@@ -659,7 +659,7 @@
       <Real declaredType="ModelicaFluidLite.SIm.K" />
     </ScalarVariable>
     <ScalarVariable name="der(ConsumerA.Text_fd)" valueReference="587202572" description="der(Filtered temperature based on fd.Tfrict)">
-      <Real unit="K/s" derivative="162" />
+      <Real derivative="162" unit="K/s" />
     </ScalarVariable>
     <ScalarVariable name="ConsumerA.Text" valueReference="100663358" description="External temperature used in component [K]" variability="tunable">
       <Real declaredType="ModelicaFluidLite.SIm.K" />
@@ -728,13 +728,13 @@
       <Integer start="1" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.X[1]" valueReference="16777261" description="Node position" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.X[2]" valueReference="16777262" description="Node position" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.X[3]" valueReference="16777263" description="Node position" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.pn[1].p" valueReference="905969747" description="pressure">
       <Real declaredType="ModelicaFluidLite.SIm.Pa" />
@@ -779,10 +779,10 @@
       <Real declaredType="ModelicaFluidLite.SIm.m" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.p" valueReference="33554445" description="Pressure in the node (state)" initial="exact">
-      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="100000" />
+      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="100000.0" />
     </ScalarVariable>
     <ScalarVariable name="der(nodePipeAToConsumer.p)" valueReference="587202573" description="der(Pressure in the node (state))">
-      <Real unit="Pa/s" derivative="203" />
+      <Real derivative="203" unit="Pa/s" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.accp" valueReference="587202574" description="p-change acceleration">
       <Real declaredType="ModelicaFluidLite.SIm.Paps2" />
@@ -791,13 +791,13 @@
       <Real derivative="203" declaredType="ModelicaFluidLite.SIm.Paps" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="der(nodePipeAToConsumer.vp)" valueReference="587202574" description="der(p-change velocity)">
-      <Real unit="Pa/s2" derivative="206" />
+      <Real derivative="206" unit="Pa/s2" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.h" valueReference="33554447" description="Specific enthalpy in the node (state)" initial="exact">
-      <Real declaredType="ModelicaFluidLite.SIm.Jpkg" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.Jpkg" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="der(nodePipeAToConsumer.h)" valueReference="587202575" description="der(Specific enthalpy in the node (state))">
-      <Real unit="m2/s3" derivative="208" />
+      <Real derivative="208" unit="m2/s3" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.mnet" valueReference="637534305" description="Net flow into the node">
       <Real declaredType="ModelicaFluidLite.SIm.kgps" />
@@ -818,10 +818,10 @@
       <Real declaredType="ModelicaFluidLite.SIm.Jpkg" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.Tout" valueReference="335544330">
-      <Real unit="K" declaredType="ModelicaFluidLite.Common.RealOut" />
+      <Real declaredType="ModelicaFluidLite.Common.RealOut" unit="K" />
     </ScalarVariable>
     <ScalarVariable name="nodePipeAToConsumer.pout" valueReference="369098779">
-      <Real unit="Pa" declaredType="ModelicaFluidLite.Common.RealOut" />
+      <Real declaredType="ModelicaFluidLite.Common.RealOut" unit="Pa" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.np" valueReference="100663398" description="Number of ports" variability="constant">
       <Integer start="2" />
@@ -830,13 +830,13 @@
       <Integer start="1" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.X[1]" valueReference="16777265" description="Node position" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.X[2]" valueReference="16777266" description="Node position" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.X[3]" valueReference="16777267" description="Node position" causality="parameter" variability="tunable">
-      <Real declaredType="ModelicaFluidLite.SIm.m" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.m" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.pn[1].p" valueReference="905969767" description="pressure">
       <Real declaredType="ModelicaFluidLite.SIm.Pa" />
@@ -881,10 +881,10 @@
       <Real declaredType="ModelicaFluidLite.SIm.m" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.p" valueReference="33554448" description="Pressure in the node (state)" initial="exact">
-      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="100000" />
+      <Real declaredType="ModelicaFluidLite.SIm.Pa" start="100000.0" />
     </ScalarVariable>
     <ScalarVariable name="der(nodeConsumerToPipeB.p)" valueReference="587202576" description="der(Pressure in the node (state))">
-      <Real unit="Pa/s" derivative="237" />
+      <Real derivative="237" unit="Pa/s" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.accp" valueReference="587202577" description="p-change acceleration">
       <Real declaredType="ModelicaFluidLite.SIm.Paps2" />
@@ -893,13 +893,13 @@
       <Real derivative="237" declaredType="ModelicaFluidLite.SIm.Paps" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="der(nodeConsumerToPipeB.vp)" valueReference="587202577" description="der(p-change velocity)">
-      <Real unit="Pa/s2" derivative="240" />
+      <Real derivative="240" unit="Pa/s2" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.h" valueReference="33554450" description="Specific enthalpy in the node (state)" initial="exact">
-      <Real declaredType="ModelicaFluidLite.SIm.Jpkg" start="0" />
+      <Real declaredType="ModelicaFluidLite.SIm.Jpkg" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="der(nodeConsumerToPipeB.h)" valueReference="587202578" description="der(Specific enthalpy in the node (state))">
-      <Real unit="m2/s3" derivative="242" />
+      <Real derivative="242" unit="m2/s3" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.mnet" valueReference="637534325" description="Net flow into the node">
       <Real declaredType="ModelicaFluidLite.SIm.kgps" />
@@ -920,10 +920,10 @@
       <Real declaredType="ModelicaFluidLite.SIm.Jpkg" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.Tout" valueReference="335544331">
-      <Real unit="K" declaredType="ModelicaFluidLite.Common.RealOut" />
+      <Real declaredType="ModelicaFluidLite.Common.RealOut" unit="K" />
     </ScalarVariable>
     <ScalarVariable name="nodeConsumerToPipeB.pout" valueReference="369098780">
-      <Real unit="Pa" declaredType="ModelicaFluidLite.Common.RealOut" />
+      <Real declaredType="ModelicaFluidLite.Common.RealOut" unit="Pa" />
     </ScalarVariable>
     <ScalarVariable name="consumerRet.p" valueReference="335544320" description="pressure" causality="output">
       <Real declaredType="ModelicaFluidLite.SIm.Pa" />
@@ -968,19 +968,19 @@
       <Real declaredType="ModelicaFluidLite.SIm.m" />
     </ScalarVariable>
     <ScalarVariable name="const1.k" valueReference="16777268" description="Constant output value" causality="parameter" variability="tunable">
-      <Real start="0" />
+      <Real start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="const1.y" valueReference="234881076" description="Connector of Real output signal">
       <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" />
     </ScalarVariable>
     <ScalarVariable name="const3.k" valueReference="16777269" description="Constant output value" causality="parameter" variability="tunable">
-      <Real start="0" />
+      <Real start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="const3.y" valueReference="234881077" description="Connector of Real output signal">
       <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" />
     </ScalarVariable>
     <ScalarVariable name="const4.k" valueReference="16777270" description="Constant output value" causality="parameter" variability="tunable">
-      <Real start="0" />
+      <Real start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="const4.y" valueReference="234881078" description="Connector of Real output signal">
       <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" />
@@ -998,27 +998,27 @@
       <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
     </ScalarVariable>
     <ScalarVariable name="inletTemp" valueReference="335544330" causality="output">
-      <Real unit="K" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="K" />
     </ScalarVariable>
     <ScalarVariable name="outletTemp" valueReference="335544331" causality="output">
-      <Real unit="K" declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" unit="K" />
     </ScalarVariable>
     <ScalarVariable name="heatLoad" valueReference="352321544" description="[W]" causality="input">
-      <Real unit="W" declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" />
+      <Real declaredType="Modelica.Blocks.Interfaces.RealInput" start="0.0" unit="W" />
     </ScalarVariable>
   </ModelVariables>
   <ModelStructure>
     <Outputs>
       <Unknown index="252" dependencies="237" dependenciesKind="fixed" />
       <Unknown index="254" dependencies="242" dependenciesKind="fixed" />
-      <Unknown index="256" dependencies="" dependenciesKind="" />
-      <Unknown index="257" dependencies="" dependenciesKind="" />
-      <Unknown index="258" dependencies="" dependenciesKind="" />
+      <Unknown index="256" />
+      <Unknown index="257" />
+      <Unknown index="258" />
       <Unknown index="259" dependencies="203" dependenciesKind="fixed" />
       <Unknown index="261" dependencies="208" dependenciesKind="fixed" />
-      <Unknown index="263" dependencies="" dependenciesKind="" />
-      <Unknown index="264" dependencies="" dependenciesKind="" />
-      <Unknown index="265" dependencies="" dependenciesKind="" />
+      <Unknown index="263" />
+      <Unknown index="264" />
+      <Unknown index="265" />
       <Unknown index="276" dependencies="208" dependenciesKind="dependent" />
       <Unknown index="277" dependencies="242" dependenciesKind="dependent" />
     </Outputs>

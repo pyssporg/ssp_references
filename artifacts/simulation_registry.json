@@ -332,6 +332,37 @@
           ]
         }
       ]
+    },
+    {
+      "name": "signal_parameter_inline_with_mapping",
+      "compare_signals": [
+        "step.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "signal_nested_external_bindings",
+      "compare_signals": [
+        "step.y",
+        "sine.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
     }
   ]
 }

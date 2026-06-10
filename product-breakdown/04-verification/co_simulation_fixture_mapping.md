@@ -76,6 +76,8 @@ These fixtures now exist as SSP models under `models/ssp/`.
 | `signal_delay_detector` | Implemented | [signal_delay_detector](../models/ssp/signal_delay_detector/FIXTURE.md) |
 | `signal_algebraic_loop` | Implemented | [signal_algebraic_loop](../models/ssp/signal_algebraic_loop/FIXTURE.md) |
 | `signal_nested_algebraic_loop` | Implemented | [signal_nested_algebraic_loop](../models/ssp/signal_nested_algebraic_loop/FIXTURE.md) |
+| `signal_parameter_inline_with_mapping` | Implemented | [signal_parameter_inline_with_mapping](../models/ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
+| `signal_nested_external_bindings` | Implemented | [signal_nested_external_bindings](../models/ssp/signal_nested_external_bindings/FIXTURE.md) |
 
 ## Coverage Assessment
 
@@ -108,6 +110,18 @@ The deterministic signal fixtures now cover the main packaging alternatives:
   build script before linking them into the SSP.
 - `signal_sine_gain_add` remains the inline system-level regression anchor.
 - `signal_algebraic_loop` and `signal_nested_algebraic_loop` use checked-in
+- `signal_parameter_inline_with_mapping` uses inline system-level SSV with an
+  external SSM mapping, covering the case where the ParameterBinding has
+  inline `<ssd:ParameterValues>` plus an external `<ssd:ParameterMapping>`.
+- `signal_nested_external_bindings` uses external SSV and SSM bindings inside
+  a nested `<ssd:System>`, covering the nested system external parameter
+  packaging path.
+-  uses inline system-level SSV with an
+  external SSM mapping, covering the case where the ParameterBinding has
+  inline  plus an external .
+-  uses external SSV and SSM bindings inside
+  a nested , covering the nested system external parameter
+  packaging path.
   external `.ssv` files and deliberately close feedback cycles instead of
   remaining acyclic.
 

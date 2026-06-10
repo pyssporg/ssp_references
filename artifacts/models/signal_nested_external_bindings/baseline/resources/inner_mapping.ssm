@@ -1,0 +1,5 @@
+<ssm:ParameterMapping xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0">
+  <ssm:MappingEntry source="amplitude" target="sine.amplitude" />
+  <ssm:MappingEntry source="f" target="sine.f" />
+  <ssm:MappingEntry source="offset" target="sine.offset" />
+</ssm:ParameterMapping>

@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<fmiModelDescription fmiVersion="2.0" modelName="Modelica.Blocks.Sources.Step" guid="{7dc6fc0d-740e-4913-a2fa-fa7d4bfbcede}" description="Generate step signal of type Real" version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-05-22T12:14:21Z" variableNamingConvention="structured" numberOfEventIndicators="1">
+  <CoSimulation modelIdentifier="Modelica_Blocks_Sources_Step" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" />
+  <UnitDefinitions>
+    <Unit name="s">
+      <BaseUnit s="1" />
+    </Unit>
+  </UnitDefinitions>
+  <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="1e-06" />
+  <ModelVariables>
+    <ScalarVariable name="der(_D_outputAlias_y)" valueReference="0" description="Connector of Real output signal">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable name="y" valueReference="3" description="Connector of Real output signal" causality="output">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable name="height" valueReference="4" description="Height of step" causality="parameter" variability="fixed">
+      <Real start="1.0" />
+    </ScalarVariable>
+    <ScalarVariable name="offset" valueReference="5" description="Offset of output signal y" causality="parameter" variability="fixed">
+      <Real start="0.0" />
+    </ScalarVariable>
+    <ScalarVariable name="startTime" valueReference="6" description="Output y = offset for time &lt; startTime" causality="parameter" variability="fixed">
+      <Real start="0.0" unit="s" />
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="2" />
+    </Outputs>
+    <InitialUnknowns>
+      <Unknown index="2" dependencies="3 4 5" dependenciesKind="dependent dependent dependent" />
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

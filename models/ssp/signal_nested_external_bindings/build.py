@@ -24,9 +24,7 @@ def _copy_shared_fmus(resources_dir: Path, model: ModelMetaData) -> None:
     """Copy shared FMU stubs into the build SSP resources directory."""
     fmus = [
         ("Step", "Modelica.Blocks.Sources.Step"),
-        ("Add", "Modelica.Blocks.Math.Add"),
         ("Sine", "Modelica.Blocks.Sources.Sine"),
-        ("Gain", "Modelica.Blocks.Math.Gain"),
     ]
     for dir_name, lib_name in fmus:
         src = model.paths.shared_fmu_dir(lib_name)
@@ -87,7 +85,7 @@ def main() -> int:
 
     LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
 
-    with tempfile.TemporaryDirectory(prefix="signal_nested_parameter_bindings_") as temp_dir:
+    with tempfile.TemporaryDirectory(prefix="signal_nested_external_bindings_") as temp_dir:
         with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
             for exp in experiments.xml.experiments:
                 create_ssp(model, Path(temp_dir), exp)

@@ -349,6 +349,22 @@
       ]
     },
     {
+      "name": "signal_nested_pass_through",
+      "compare_signals": [
+        "step.y",
+        "add.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ]
+    },
+    {
       "name": "signal_nested_external_bindings",
       "compare_signals": [
         "step.y",

@@ -26,6 +26,7 @@ ADRs document significant architectural choices and live in
 | ADR-001 | Three-Stage Pipeline Architecture | Architecture | Accepted | [02-architecture/decisions/ADR-001.md](./02-architecture/decisions/ADR-001.md) |
 | ADR-002 | Fixture Hierarchy | Architecture | Accepted | [02-architecture/decisions/ADR-002.md](./02-architecture/decisions/ADR-002.md) |
 | ADR-003 | Runtime Configuration Belongs to the Simulation Registry | Technical | Accepted | [02-architecture/decisions/ADR-003.md](./02-architecture/decisions/ADR-003.md) |
+| ADR-004 | Use-Case Coverage Taxonomy as the Primary Coverage Lens | Technical | Accepted | [02-architecture/decisions/ADR-004.md](./02-architecture/decisions/ADR-004.md) |
 
 ## Design Decisions
 

@@ -47,6 +47,7 @@ The canonical template is at
 | [ADR-001](./ADR-001.md) | Three-Stage Pipeline Architecture | Accepted | architecture-decision |
 | [ADR-002](./ADR-002.md) | Fixture Hierarchy | Accepted | architecture-decision |
 | [ADR-003](./ADR-003.md) | Runtime Configuration Belongs to the Simulation Registry | Accepted | technical-decision |
+| [ADR-004](./ADR-004.md) | Use-Case Coverage Taxonomy as the Primary Coverage Lens | Accepted | technical-decision |
 
 ## Layer Map
 
@@ -99,10 +100,13 @@ Technical Decisions (bridging architecture to build details):
         │
         └──► DD-005: Registry Technical Mechanism
               └─ JSON schema and maintenance convention
+        │
+        └──► ADR-004: Use-Case Coverage Taxonomy
+              └─ coverage analysis defines what the pipeline should validate
 
 ## Maintenance Note
 
-ADR-001 (pipeline) and ADR-002 (fixture hierarchy) describe system-structure
+ADR-001 (pipeline), ADR-002 (fixture hierarchy), and ADR-004 (coverage taxonomy) describe system-structure
 choices that are also documented in
 [architecture.md](../architecture.md).
 When either ADR or the architecture doc is updated, verify both documents stay

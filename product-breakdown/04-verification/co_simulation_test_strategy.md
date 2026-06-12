@@ -251,3 +251,20 @@ That means the immediate next step is not new infrastructure. It is selecting a
 small required model set, including deterministic signal-propagation fixtures,
 defining tolerances per model or signal group, and turning comparison outcomes
 into clear pass/fail criteria.
+
+## Coverage Taxonomy Reference
+
+The [System Simulation Use-Case Coverage Analysis](../06-evolution/use_case_coverage_analysis.md)
+defines the canonical coverage taxonomy (UC-1 through UC-16) for this fixture
+suite. Every test level defined in this strategy should be traceable to one or
+more use-cases in that taxonomy.
+
+New fixture and test work should be prioritized against the gap map in the
+coverage analysis document rather than ad-hoc.
+
+The taxonomy also identifies two engine-level verification tests
+(`test_reference_csvs_are_not_inverted`,
+`test_modelica_block_fmus_expose_dependency_metadata`) that should be
+transferred to the respective simulation engine repositories. These tests
+verify implementation details that belong in the engine projects, not in
+this fixture suite's test suite.

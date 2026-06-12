@@ -13,7 +13,7 @@ a scoped task contract.
 
 | File | ID | Theme | Status | Priority | Blast radius |
 | --- | --- | --- | --- | --- | --- |
-| `candidates/IMP-011.md` | IMP-011 | System simulation use-case coverage analysis and gap tracking | Proposed | High | Low |
+| `complete/IMP-011.md` | IMP-011 | System simulation use-case coverage analysis and gap tracking | Completed | High | Low |
 | `candidates/IMP-012.md` | IMP-012 | Parameter binding pipeline tests (pipeline-context only) | Proposed | High | Low |
 | `candidates/IMP-013.md` | IMP-013 | End-to-end pipeline integration test | Proposed | High | Medium |
 | `candidates/IMP-014.md` | IMP-014 | Gate pass/fail enforcement in comparison pipeline | Proposed | High | Medium |
@@ -25,7 +25,7 @@ a scoped task contract.
 
 | ID | Theme | Priority | Prerequisite | Blast radius |
 | --- | --- | --- | --- | --- |
-| IMP-011 | Use-case coverage taxonomy, gap analysis framework, engine-test flagging | High | None — artifact only | Low — documentary artifact, no code changes |
+| IMP-011 | Use-case coverage taxonomy, gap analysis framework, engine-test flagging | Completed | None — artifact only | Low — documentary artifact, no code changes |
 | IMP-012 | Parameter binding pipeline tests (pipeline-context only) | High | IMP-011 (taxonomy context) | Low — new test functions only |
 | IMP-013 | End-to-end pipeline integration test | High | None — requires simulated SSP artifacts | Medium — creates integration test infrastructure |
 | IMP-014 | Gate pass/fail enforcement | High | Existing metrics gate review (IMP-CAND-J) | Medium — changes to comparison pipeline |
@@ -50,23 +50,10 @@ a scoped task contract.
 - No modifications to existing fixture `build.py` scripts or `SystemStructure.ssd`
   checked-in files as part of test-only additions.
 
-## Use-Case Coverage Matrix (from IMP-011)
+## Use-Case Coverage Matrix
 
-| Use-Case | Coverage |
-|----------|----------|
-| UC-1: Single-component simulation | ❌ Not covered |
-| UC-2: Multi-component signal routing | ❌ Not covered |
-| UC-3: Arithmetic signal propagation (gain, add, product) | ❌ Not covered |
-| UC-4: Signal fan-out (one source → many receivers) | ❌ Not covered |
-| UC-5: Algebraic loops (feed-through, cyclic deps) | 🟡 Registry entry only |
-| UC-6: Nested system hierarchy | ❌ Not covered |
-| UC-7: Parameter binding — inline SSV | ❌ Not covered |
-| UC-8: Parameter binding — external SSV | ❌ Not covered |
-| UC-9: Parameter binding — mixed external+inline precedence | ❌ Not covered |
-| UC-10: Parameter binding — SSM mapping | ❌ Not covered |
-| UC-11: Cross-engine comparison | 🟡 Synthetic data only |
-| UC-12: Pipeline integrity (build→simulate→compare) | 🟡 Partial (stages in isolation) |
-| UC-13: Simulation registry management | ✅ Covered |
-| UC-14: Manifest round-trip | ✅ Covered |
-| UC-15: Signal name normalization | ✅ Covered |
-| UC-16: MAT-to-CSV extraction | ✅ Covered |
+The use-case coverage matrix (UC-1 through UC-16) is maintained in the
+[System Simulation Use-Case Coverage Analysis](../use_case_coverage_analysis.md)
+document. That document is the canonical reference for coverage status, gap
+assessments, and prioritization. This section is replaced by a cross-reference
+to avoid duplication.

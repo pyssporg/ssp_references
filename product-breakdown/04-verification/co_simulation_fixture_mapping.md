@@ -78,6 +78,7 @@ These fixtures now exist as SSP models under `models/ssp/`.
 | `signal_nested_algebraic_loop` | Implemented | [signal_nested_algebraic_loop](../models/ssp/signal_nested_algebraic_loop/FIXTURE.md) |
 | `signal_parameter_inline_with_mapping` | Implemented | [signal_parameter_inline_with_mapping](../models/ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
 | `signal_nested_external_bindings` | Implemented | [signal_nested_external_bindings](../models/ssp/signal_nested_external_bindings/FIXTURE.md) |
+| `signal_nested_parameter_bindings` | Implemented | [signal_nested_parameter_bindings](../models/ssp/signal_nested_parameter_bindings/FIXTURE.md) |
 
 ## Coverage Assessment
 
@@ -116,12 +117,7 @@ The deterministic signal fixtures now cover the main packaging alternatives:
 - `signal_nested_external_bindings` uses external SSV and SSM bindings inside
   a nested `<ssd:System>`, covering the nested system external parameter
   packaging path.
--  uses inline system-level SSV with an
-  external SSM mapping, covering the case where the ParameterBinding has
-  inline  plus an external .
--  uses external SSV and SSM bindings inside
-  a nested , covering the nested system external parameter
-  packaging path.
+- `signal_nested_parameter_bindings` uses external root SSV+SSM, inline nested-system bindings, and component-scoped inline bindings, covering the mixed-scope parameter packaging path.
   external `.ssv` files and deliberately close feedback cycles instead of
   remaining acyclic.
 

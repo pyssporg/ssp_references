@@ -1,7 +1,5 @@
 
 
-Create a parameter bindings, system disposition ( flat or nested ) coverage map to establish what fixtures cover the different cases in verification
-
 ---
 
 use pyssp standard to create all possible ssp and ssd
@@ -10,9 +8,4 @@ use pyssp standard to create all possible ssp and ssd
 
 ---
 
-Adapt the systems used for parameter binding verification and signal propagation to enable verification of model connections and signal propagation by observing the resulting data csv 
-
-for example, use gains and verify that there is a gain between each model
-use something easy to understand and manually verify
-
-
+Iterate over the improvement candidates until all are completed

@@ -38,8 +38,8 @@ def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
 
 
-def make_ssp_root(tmp_path: Path) -> Path:
-    ssp_root = tmp_path / "artifacts" / "models" / "ExampleModel" / "baseline"
+def make_ssp_root(tmp_path: Path, model_name: str = "ExampleModel") -> Path:
+    ssp_root = tmp_path / "artifacts" / "models" / model_name / "baseline"
     (ssp_root / "extra" / "org.fmi-standard.fmi-ls-ref").mkdir(parents=True)
     (ssp_root / "resources").mkdir()
     (ssp_root / "SystemStructure.ssd").write_text(
@@ -79,6 +79,18 @@ def write_prefixed_csv(path: Path, signal_name: str, signal_values: list[float])
     rows = ["time,{}".format(signal_name)]
     for index, value in enumerate(signal_values):
         rows.append(f"{float(index)},{value}")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(rows) + "\n")
+
+
+def write_columns(path: Path, columns: dict[str, list[float]]) -> None:
+    names = list(columns)
+    row_count = len(next(iter(columns.values())))
+    rows = [",".join(["time", *names])]
+    for index in range(row_count):
+        values = [str(float(index))]
+        values.extend(str(columns[name][index]) for name in names)
+        rows.append(",".join(values))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text("\n".join(rows) + "\n")
 
@@ -367,6 +379,76 @@ def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
 
     assert comparison.summary["compared_signal_count"] == 1
     assert comparison.summary["max_abs_error"] == pytest.approx(0.0)
+
+
+def test_compare_runs_validates_signal_invariants(tmp_path: Path) -> None:
+    ssp_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
+    spec = SimulationCaseSpec(
+        model_name="signal_step_gain",
+        case_name="baseline",
+        ssp_root=ssp_root,
+        backends=("ssp4sim", "omsimulator"),
+        compare_signals=("step.y", "gain.y"),
+    )
+    setup = prepare_setup(spec)
+    setup.write_manifest()
+
+    left_request = SimulationRequest(setup=setup, backend="ssp4sim")
+    right_request = SimulationRequest(setup=setup, backend="omsimulator")
+    columns = {
+        "step.y": [1.0, 3.0],
+        "gain.y": [3.0, 9.0],
+    }
+    write_columns(left_request.result_path, columns)
+    write_columns(right_request.result_path, columns)
+
+    left_run = SimulationRun(request=left_request, result_path=left_request.result_path)
+    right_run = SimulationRun(request=right_request, result_path=right_request.result_path)
+    left_run.write_manifest()
+    right_run.write_manifest()
+
+    comparison = compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
+
+    assert comparison.summary["signal_invariant_count"] == 2
+    assert comparison.summary["max_signal_invariant_abs_error"] == pytest.approx(0.0)
+
+
+def test_compare_runs_fails_on_signal_invariant_violation(tmp_path: Path) -> None:
+    ssp_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
+    spec = SimulationCaseSpec(
+        model_name="signal_step_gain",
+        case_name="baseline",
+        ssp_root=ssp_root,
+        backends=("ssp4sim", "omsimulator"),
+        compare_signals=("step.y", "gain.y"),
+    )
+    setup = prepare_setup(spec)
+    setup.write_manifest()
+
+    left_request = SimulationRequest(setup=setup, backend="ssp4sim")
+    right_request = SimulationRequest(setup=setup, backend="omsimulator")
+    write_columns(
+        left_request.result_path,
+        {
+            "step.y": [1.0, 3.0],
+            "gain.y": [3.0, 9.0],
+        },
+    )
+    write_columns(
+        right_request.result_path,
+        {
+            "step.y": [1.0, 3.0],
+            "gain.y": [3.0, 8.0],
+        },
+    )
+
+    left_run = SimulationRun(request=left_request, result_path=left_request.result_path)
+    right_run = SimulationRun(request=right_request, result_path=right_request.result_path)
+    left_run.write_manifest()
+    right_run.write_manifest()
+
+    with pytest.raises(ValueError, match="Signal invariant failed"):
+        compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
 
 
 def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) -> None:

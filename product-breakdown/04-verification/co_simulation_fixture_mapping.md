@@ -77,6 +77,7 @@ These fixtures now exist as SSP models under `models/ssp/`.
 | `signal_algebraic_loop` | Implemented | [signal_algebraic_loop](../models/ssp/signal_algebraic_loop/FIXTURE.md) |
 | `signal_nested_algebraic_loop` | Implemented | [signal_nested_algebraic_loop](../models/ssp/signal_nested_algebraic_loop/FIXTURE.md) |
 | `signal_parameter_inline_with_mapping` | Implemented | [signal_parameter_inline_with_mapping](../models/ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
+| `signal_nested_pass_through` | Implemented | [signal_nested_pass_through](../models/ssp/signal_nested_pass_through/FIXTURE.md) |
 | `signal_nested_external_bindings` | Implemented | [signal_nested_external_bindings](../models/ssp/signal_nested_external_bindings/FIXTURE.md) |
 | `signal_nested_parameter_bindings` | Implemented | [signal_nested_parameter_bindings](../models/ssp/signal_nested_parameter_bindings/FIXTURE.md) |
 
@@ -111,15 +112,17 @@ The deterministic signal fixtures now cover the main packaging alternatives:
   build script before linking them into the SSP.
 - `signal_sine_gain_add` remains the inline system-level regression anchor.
 - `signal_algebraic_loop` and `signal_nested_algebraic_loop` use checked-in
+  external `.ssv` files and deliberately close feedback cycles instead of
+  remaining acyclic.
 - `signal_parameter_inline_with_mapping` uses inline system-level SSV with an
   external SSM mapping, covering the case where the ParameterBinding has
   inline `<ssd:ParameterValues>` plus an external `<ssd:ParameterMapping>`.
+- `signal_nested_pass_through` uses inline parameter values only, isolating
+  nested system signal routing from external parameter packaging.
 - `signal_nested_external_bindings` uses external SSV and SSM bindings inside
   a nested `<ssd:System>`, covering the nested system external parameter
   packaging path.
 - `signal_nested_parameter_bindings` uses external root SSV+SSM, inline nested-system bindings, and component-scoped inline bindings, covering the mixed-scope parameter packaging path.
-  external `.ssv` files and deliberately close feedback cycles instead of
-  remaining acyclic.
 
 ## Comparison Expectations Per Fixture Class
 

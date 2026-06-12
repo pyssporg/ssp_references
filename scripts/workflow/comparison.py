@@ -4,7 +4,7 @@ from itertools import combinations
 from dataclasses import dataclass
 from pathlib import Path
 
-from utils.comparison import compare_result_sets, write_metrics_csv
+from utils.comparison import compare_result_sets, signal_invariant_metrics, write_metrics_csv
 from utils.filesystem import reset_dir
 
 from .io import read_json, relative_path, resolve_path, write_json
@@ -278,25 +278,67 @@ def _summarize_batch(
         (int(comparison.summary.get("compared_signal_count", 0)) for comparison in comparisons),
         default=0,
     )
+    max_signal_invariant_abs_error = max(
+        (
+            float(comparison.summary.get("max_signal_invariant_abs_error", 0.0))
+            for comparison in comparisons
+        ),
+        default=0.0,
+    )
     return {
         "backend_count": len(runs),
         "comparison_count": len(comparisons),
         "max_abs_error": max_abs_error,
         "max_rel_error": max_rel_error,
         "min_compared_signal_count": min_compared_signal_count,
+        "max_signal_invariant_abs_error": max_signal_invariant_abs_error,
     }
 
 
 def compare_runs(request: ComparisonRequest) -> ComparisonRun:
     request.validate()
     reset_dir(request.run_dir)
+    model_name = request.run_a.request.setup.model_name
+    window = request.run_a.request.setup.window
+    root_system_name = request.run_a.request.setup.root_system_name
     summary, metrics = compare_result_sets(
         request.run_a.to_result_set(),
         request.run_b.to_result_set(),
-        window=request.run_a.request.setup.window,
+        window=window,
         selected_signals=request.run_a.request.setup.compare_signals,
-        root_system_name=request.run_a.request.setup.root_system_name,
+        root_system_name=root_system_name,
     )
+    invariant_rows = [
+        *signal_invariant_metrics(
+            request.run_a.to_result_set(),
+            model_name=model_name,
+            window=window,
+            root_system_name=root_system_name,
+        ),
+        *signal_invariant_metrics(
+            request.run_b.to_result_set(),
+            model_name=model_name,
+            window=window,
+            root_system_name=root_system_name,
+        ),
+    ]
+    max_invariant_abs_error = max(
+        (float(row["max_abs_error"]) for row in invariant_rows),
+        default=0.0,
+    )
+    summary.update(
+        {
+            "signal_invariant_count": len(invariant_rows),
+            "max_signal_invariant_abs_error": max_invariant_abs_error,
+        }
+    )
+    if max_invariant_abs_error > 1e-8:
+        worst = max(invariant_rows, key=lambda row: float(row["max_abs_error"]))
+        raise ValueError(
+            "Signal invariant failed for "
+            f"{model_name} {worst['run_label']} {worst['invariant']}: "
+            f"max_abs_error={worst['max_abs_error']}"
+        )
     write_metrics_csv(request.metrics_path, metrics)
     run = ComparisonRun(
         request=request,

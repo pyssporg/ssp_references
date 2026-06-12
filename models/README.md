@@ -6,7 +6,7 @@ and which backends support it.
 
 ## SSP Fixtures
 
-The 20 SSP fixtures are organized into four architectural classes per the
+The 21 SSP fixtures are organized into four architectural classes per the
 [fixture hierarchy](../product-breakdown/02-architecture/architecture.md#2-fixture-hierarchy).
 
 ### Simple Reference Models
@@ -17,9 +17,9 @@ Single-FMU SSPs for basic behavioral checks and smoke testing.
 |-------|---------|----------|------------|------------|
 | BouncingBall | Classic bouncing-ball simulation; simple continuous dynamics | ssp4sim, OMSimulator | Smoke | [link](./ssp/BouncingBall/FIXTURE.md) |
 | VanDerPol | Van der Pol oscillator; self-excited limit-cycle dynamics | ssp4sim, OMSimulator, FMPy | Smoke | [link](./ssp/VanDerPol/FIXTURE.md) |
-| Dahlquist | Dahlquist test equation; numerical stability baseline | OMSimulator, FMPy | Smoke | [link](./ssp/Dahlquist/FIXTURE.md) |
+| Dahlquist | Dahlquist test equation; numerical stability baseline | ssp4sim, OMSimulator, FMPy | Smoke | [link](./ssp/Dahlquist/FIXTURE.md) |
 | Stair | Stair-step function; discrete-time output behavior | ssp4sim, OMSimulator | Smoke | [link](./ssp/Stair/FIXTURE.md) |
-| Resource | Resource consumption and memory management baseline | ssp4sim, OMSimulator, FMPy | Smoke | [link](./ssp/Resource/FIXTURE.md) |
+| Resource | Resource consumption and memory management baseline | ssp4sim, OMSimulator | Smoke | [link](./ssp/Resource/FIXTURE.md) |
 
 ### Deterministic Signal-Propagation Fixtures
 
@@ -29,15 +29,16 @@ used as loop-resolution diagnostics, suitable for cross-engine comparison.
 | Model | Purpose | Expected Behavior | Backends | Test Level | FIXTURE.md |
 |-------|---------|-------------------|----------|------------|------------|
 | signal_step_gain | Step signal through a gain block | Output = gain × step amplitude | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_step_gain/FIXTURE.md) |
-| signal_algebraic_loop | Single closed algebraic loop around a gain/add pair driven by a sine wave | `add = 2 * sine`, `gain = sine` | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_algebraic_loop/FIXTURE.md) |
+| signal_algebraic_loop | Single closed algebraic loop around a gain/add pair driven by a sine wave | `add = 2 * sine`, `gain = sine` | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_algebraic_loop/FIXTURE.md) |
 | signal_nested_algebraic_loop | Nested algebraic loop inside a larger loop driven by a biased sine wave | Outer and inner loop solutions resolve simultaneously | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_algebraic_loop/FIXTURE.md) |
-| signal_nested_parameter_bindings | Nested system with external root binding and inline inner binding | Root step is summed with nested sine/gain output | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_parameter_bindings/FIXTURE.md) |
-| signal_step_add | Two step signals summed | Output = sum of both source signals | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_step_add/FIXTURE.md) |
-| signal_fanout_gain | One source fanned out to two gain blocks | Both outputs = identical (same gain × same source) | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_fanout_gain/FIXTURE.md) |
-| signal_sine_gain_add | Sine source through gain then summed with original | Output = (gain + 1) × sine | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_sine_gain_add/FIXTURE.md) |
-| signal_step_product | Two step signals multiplied | Output = product of both source amplitudes | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_step_product/FIXTURE.md) |
-| signal_delay_detector | Step input through a delayed connection | Output = step delayed by configured lag | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_delay_detector/FIXTURE.md) |
+| signal_nested_parameter_bindings | Nested system with external root binding and inline inner binding | Root step is summed with nested sine/gain output | Not registered | Behavioral | [link](./ssp/signal_nested_parameter_bindings/FIXTURE.md) |
+| signal_step_add | Two step signals summed | Output = sum of both source signals | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_step_add/FIXTURE.md) |
+| signal_fanout_gain | One source fanned out to two gain blocks | Branch outputs track the same source with different gains | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_fanout_gain/FIXTURE.md) |
+| signal_sine_gain_add | Sine source through gain, then summed with a step source | Output = gain × sine + step | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_sine_gain_add/FIXTURE.md) |
+| signal_step_product | Step and sine sources multiplied | Output = step × sine | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_step_product/FIXTURE.md) |
+| signal_delay_detector | Step signal compared across direct and transformed paths | Direct and transformed paths stay time-aligned | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_delay_detector/FIXTURE.md) |
 | signal_parameter_inline_with_mapping | Step with inline SSV and external SSM mapping | Output tracks step configuration | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
+| signal_nested_pass_through | Step signal routed through a nested gain subsystem | Nested boundary output matches the source path | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_pass_through/FIXTURE.md) |
 | signal_nested_external_bindings | Nested system with external SSV+SSM bindings | Root step output routed to system connector | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_external_bindings/FIXTURE.md) |
 
 ### Composite SSPs
@@ -47,7 +48,7 @@ Multi-component SSPs exercising realistic coupling and scheduling.
 | Model | Purpose | Backends | Test Level | FIXTURE.md |
 |-------|---------|----------|------------|------------|
 | dcmotor | DC motor model with electrical and mechanical subsystems | ssp4sim, OMSimulator | Regression | [link](./ssp/dcmotor/FIXTURE.md) |
-| embrace | EMBRACE co-simulation benchmark; multi-FMU coupling | ssp4sim, OMSimulator, FMPy | Regression | [link](./ssp/embrace/FIXTURE.md) |
+| embrace | EMBRACE co-simulation benchmark; multi-FMU coupling | ssp4sim, OMSimulator | Regression | [link](./ssp/embrace/FIXTURE.md) |
 
 ### Special-Purpose SSPs
 

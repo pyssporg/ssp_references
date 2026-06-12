@@ -24,6 +24,60 @@ class ResultSet:
     engine: str
 
 
+@dataclass(frozen=True)
+class SignalInvariant:
+    name: str
+    output_signal: str
+    input_signals: tuple[str, ...]
+    coefficients: tuple[float, ...]
+
+    @property
+    def required_signals(self) -> tuple[str, ...]:
+        return (self.output_signal, *self.input_signals)
+
+
+SIGNAL_INVARIANTS: dict[str, tuple[SignalInvariant, ...]] = {
+    "signal_step_gain": (
+        SignalInvariant(
+            name="gain.y = 3.0 * step.y",
+            output_signal="gain.y",
+            input_signals=("step.y",),
+            coefficients=(3.0,),
+        ),
+    ),
+    "signal_step_add": (
+        SignalInvariant(
+            name="add.y = step_a.y + step_b.y",
+            output_signal="add.y",
+            input_signals=("step_a.y", "step_b.y"),
+            coefficients=(1.0, 1.0),
+        ),
+    ),
+    "signal_fanout_gain": (
+        SignalInvariant(
+            name="gain_a.y = 2.0 * step.y",
+            output_signal="gain_a.y",
+            input_signals=("step.y",),
+            coefficients=(2.0,),
+        ),
+        SignalInvariant(
+            name="gain_b.y = -1.0 * step.y",
+            output_signal="gain_b.y",
+            input_signals=("step.y",),
+            coefficients=(-1.0,),
+        ),
+    ),
+    "signal_nested_pass_through": (
+        SignalInvariant(
+            name="add.y = step.y",
+            output_signal="add.y",
+            input_signals=("step.y",),
+            coefficients=(1.0,),
+        ),
+    ),
+}
+
+
 def build_time_grid(window: SimulationWindow) -> np.ndarray:
     span = window.stop_time - window.start_time
     steps = int(round(span / window.interval))
@@ -174,6 +228,65 @@ def compare_result_sets(
         "rmse": float(np.nanmean([row["rmse"] for row in metrics])) if metrics else 0.0,
     }
     return summary, metrics
+
+
+def signal_invariant_metrics(
+    run: ResultSet,
+    *,
+    model_name: str,
+    window: SimulationWindow,
+    root_system_name: str,
+) -> list[dict[str, float | str]]:
+    invariants = SIGNAL_INVARIANTS.get(model_name, ())
+    if not invariants:
+        return []
+
+    run_data = load_numeric_csv(
+        run.path,
+        engine=run.engine,
+        root_system_name=root_system_name,
+    )["columns"]
+    run_time = run_data.get("time")
+    if run_time is None:
+        raise KeyError("Result set must contain a time column")
+
+    required_signals = tuple(
+        dict.fromkeys(signal for invariant in invariants for signal in invariant.required_signals)
+    )
+    signal_series = _select_signal_series(
+        run_data,
+        required_signals,
+        engine=run.engine,
+        root_system_name=root_system_name,
+    )
+    target_times = build_time_grid(window)
+
+    rows: list[dict[str, float | str]] = []
+    for invariant in invariants:
+        output_series = resample_series(
+            run_time,
+            signal_series[invariant.output_signal],
+            target_times,
+        )
+        expected_series = np.zeros(target_times.shape, dtype=float)
+        for signal, coefficient in zip(invariant.input_signals, invariant.coefficients):
+            expected_series += coefficient * resample_series(
+                run_time,
+                signal_series[signal],
+                target_times,
+            )
+        residual = np.abs(output_series - expected_series)
+        rows.append(
+            {
+                "run_label": run.label,
+                "invariant": invariant.name,
+                "max_abs_error": float(np.nanmax(residual)),
+                "mean_abs_error": float(np.nanmean(residual)),
+                "rmse": float(math.sqrt(np.nanmean(np.square(residual)))),
+            }
+        )
+
+    return rows
 
 
 def sanitize_label(label: str) -> str:

@@ -62,7 +62,7 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
         request = SimulationRequest(setup=setup, backend=backend)
         # Write 3-column CSV: time, step.y, gain.y
         result = np.array(
-            [(0.0, 0.0, 0.0), (0.1, 1.0, 5.0), (0.2, 1.0, 5.0)],
+            [(0.0, 0.0, 0.0), (0.1, 1.0, 3.0), (0.2, 1.0, 3.0)],
             dtype=[("time", "f8"), ("step.y", "f8"), ("gain.y", "f8")],
         )
         write_structured_csv(request.result_path, result)

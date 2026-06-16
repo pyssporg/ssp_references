@@ -1,4 +1,5 @@
 <ssm:ParameterMapping xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" version="1.0">
   <ssm:MappingEntry source="add_k1" target="add.k1" />
   <ssm:MappingEntry source="add_k2" target="add.k2" />
+  <ssm:MappingEntry source="inner_sine_amplitude" target="inner.sine.amplitude" />
 </ssm:ParameterMapping>

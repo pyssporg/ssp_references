@@ -16,7 +16,7 @@
       <ssv:Real value="1.0" />
     </ssv:Parameter>
     <ssv:Parameter name="inner.sine.amplitude">
-      <ssv:Real value="1.0" />
+      <ssv:Real value="2.0" />
     </ssv:Parameter>
     <ssv:Parameter name="inner.sine.f">
       <ssv:Real value="2.0" />

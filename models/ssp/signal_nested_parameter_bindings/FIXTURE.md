@@ -18,7 +18,8 @@ The resolved parameter state after loading is captured in
 
 `signal_nested_parameter_bindings` is a small nested SSP fixture that mixes an
 external root parameter set with inline system- and component-scoped parameter
-bindings.
+bindings. The root system now also parameterizes the nested system's sine
+amplitude via external SSV/SSM.
 
 ## Backends
 
@@ -57,6 +58,7 @@ for the full wording: https://ssp-standard.org/docs/2.0.1/
 - Root step: component-level inline parameter binding
 - Root add: external root parameter set
 - Nested system: system-level sine binding plus component-level gain binding
+- Root system → inner sine: external root parameter binding overrides inline nested-system sine amplitude
 - Root sum: `Add.y = Step.y + inner.y`
 
 ## Intent
@@ -66,12 +68,16 @@ for the full wording: https://ssp-standard.org/docs/2.0.1/
   binding inside each of the root and nested systems.
 - Validate that packaged resources, nested connectors, and parameter mapping
   all survive SSP assembly.
+- Exercise root-level parameter bindings that target parameters inside a nested
+  system, testing the SSP precedence rule where higher-level bindings override
+  lower-level ones.
 
 ## Expected Behavior
 
 - `step.y` stays at its offset until the configured step time, then jumps by
   the configured height.
-- `inner.y` follows the nested sine/gain configuration.
+- `inner.y` follows the nested sine/gain configuration **with sine.amplitude
+  overridden to 2.0 by the root-level binding**.
 - `add.y` is the sum of the root step signal and the nested subsystem output.
 
 ## Main Failures This Catches

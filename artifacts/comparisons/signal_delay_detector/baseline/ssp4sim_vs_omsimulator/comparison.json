@@ -1,5 +1,12 @@
 {
   "error": null,
+  "gate": {
+    "reasons": [
+      "gain_b.y: max_shift_abs_error=0.5 exceeds 0.016",
+      "add.y: max_shift_abs_error=1 exceeds 0.011"
+    ],
+    "status": "fail"
+  },
   "metrics": "metrics.csv",
   "request": {
     "case": "baseline",
@@ -18,10 +25,13 @@
   "summary": {
     "compared_signal_count": 4,
     "max_abs_error": 1.0,
+    "max_shift_abs_error": 1.0,
+    "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 0.0016233766233766235,
     "rmse": 0.028534156762031727,
     "run_a_label": "ssp4sim",
     "run_b_label": "omsimulator",
+    "signal_invariant_count": 0,
     "time_points": 1001
   }
 }

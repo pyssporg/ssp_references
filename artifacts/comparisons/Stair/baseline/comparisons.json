@@ -1,6 +1,10 @@
 {
   "comparisons": [
     {
+      "gate": {
+        "reasons": [],
+        "status": "pass"
+      },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
       "runs": [
@@ -16,15 +20,22 @@
       "summary": {
         "compared_signal_count": 1,
         "max_abs_error": 0.07500000000000284,
+        "max_shift_abs_error": 4.440892098500626e-15,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 0.009766385463984778,
         "rmse": 0.026028058397822063,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
+        "signal_invariant_count": 0,
         "time_points": 46
       }
     }
   ],
   "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
   "request": {
     "case": "baseline",
     "model": "Stair",
@@ -43,8 +54,11 @@
   "summary": {
     "backend_count": 2,
     "comparison_count": 1,
+    "gate_result": "pass",
     "max_abs_error": 0.07500000000000284,
     "max_rel_error": 0.0,
+    "max_shift_abs_error": 4.440892098500626e-15,
+    "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 1
   }
 }

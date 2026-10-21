@@ -1,5 +1,9 @@
 {
   "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
   "metrics": "metrics.csv",
   "request": {
     "case": "baseline",
@@ -17,11 +21,14 @@
   "status": "completed",
   "summary": {
     "compared_signal_count": 3,
-    "max_abs_error": 3.0,
-    "mean_abs_error": 1.167166167166167,
-    "rmse": 1.4888204496293416,
+    "max_abs_error": 4.0,
+    "max_shift_abs_error": 0.0,
+    "max_signal_invariant_abs_error": 1.1102230246251565e-13,
+    "mean_abs_error": 0.006327006327005864,
+    "rmse": 0.12462027493732046,
     "run_a_label": "omsimulator",
     "run_b_label": "fmpy",
+    "signal_invariant_count": 4,
     "time_points": 1001
   }
 }

@@ -6,5 +6,8 @@
     <ssv:Parameter name="add_k2">
       <ssv:Real value="1.0" />
     </ssv:Parameter>
+    <ssv:Parameter name="inner_sine_amplitude">
+      <ssv:Real value="2.0" />
+    </ssv:Parameter>
   </ssv:Parameters>
 </ssv:ParameterSet>

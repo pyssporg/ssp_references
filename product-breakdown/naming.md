@@ -30,6 +30,7 @@ DD-002-runtime-artifacts-under-artifacts.md
 DD-003-build-py-remains-build-only.md
 DD-004-signal-propagation-deterministic-blocks.md
 DD-005-simulation-registry-technical.md
+DD-006-time-shift-tolerant-vv-metrics.md
 ```
 
 **Notes:**

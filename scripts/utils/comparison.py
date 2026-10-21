@@ -3,6 +3,7 @@ from __future__ import annotations
 import csv
 import math
 from dataclasses import dataclass
+from itertools import product
 from pathlib import Path
 
 import numpy as np
@@ -109,6 +110,32 @@ def resample_series(times: np.ndarray, values: np.ndarray, target_times: np.ndar
     )
 
 
+SHIFT_TOLERANCE_SAMPLES = 2
+
+
+def shift_tolerant_error(
+    reference: np.ndarray,
+    candidate: np.ndarray,
+    *,
+    max_shift: int = SHIFT_TOLERANCE_SAMPLES,
+) -> np.ndarray:
+    """Absolute error that tolerates a small sample shift in either direction.
+
+    Co-simulation masters may expose a source and its downstream component a
+    few communication steps apart. Pointwise error then reports a large spike
+    at every discontinuity even when the signals are otherwise identical. This
+    metric compares each sample against candidate samples shifted by up to
+    ``max_shift`` steps and keeps the smallest error.
+    """
+    error = np.abs(reference - candidate)
+    for shift in range(1, max_shift + 1):
+        if error.size <= shift:
+            break
+        error[shift:] = np.minimum(error[shift:], np.abs(reference[shift:] - candidate[:-shift]))
+        error[:-shift] = np.minimum(error[:-shift], np.abs(reference[:-shift] - candidate[shift:]))
+    return error
+
+
 def canonicalize_signal_name(
     column_name: str,
     *,
@@ -158,6 +185,79 @@ def _select_signal_series(
     return selected_series
 
 
+def compare_column_sets(
+    run_a_data: dict[str, np.ndarray],
+    run_b_data: dict[str, np.ndarray],
+    *,
+    run_a_label: str,
+    run_b_label: str,
+    engine_a: str | None,
+    engine_b: str | None,
+    window: SimulationWindow,
+    selected_signals: tuple[str, ...],
+    root_system_name: str,
+) -> tuple[dict, list[dict[str, float | str]]]:
+    run_a_signals = _select_signal_series(
+        run_a_data,
+        selected_signals,
+        engine=engine_a,
+        root_system_name=root_system_name,
+    )
+    run_b_signals = _select_signal_series(
+        run_b_data,
+        selected_signals,
+        engine=engine_b,
+        root_system_name=root_system_name,
+    )
+
+    run_a_time = run_a_data.get("time")
+    run_b_time = run_b_data.get("time")
+    if run_a_time is None or run_b_time is None:
+        raise KeyError("Both result sets must contain a time column")
+
+    target_times = build_time_grid(window)
+
+    metrics: list[dict[str, float | str]] = []
+    for signal in selected_signals:
+        run_a_series = resample_series(run_a_time, run_a_signals[signal], target_times)
+        run_b_series = resample_series(run_b_time, run_b_signals[signal], target_times)
+        errors = np.abs(run_a_series - run_b_series)
+        shift_errors = shift_tolerant_error(run_a_series, run_b_series)
+        if shift_errors.size > 2 * SHIFT_TOLERANCE_SAMPLES:
+            # The first/last samples are initialization and shutdown artifacts
+            # in several engines; they are not comparable transient behavior.
+            shift_errors[:SHIFT_TOLERANCE_SAMPLES] = np.nan
+            shift_errors[-SHIFT_TOLERANCE_SAMPLES:] = np.nan
+
+        metrics.append(
+            {
+                "signal": signal,
+                "max_abs_error": float(np.nanmax(errors)),
+                "max_shift_abs_error": float(np.nanmax(shift_errors)),
+                "mean_abs_error": float(np.nanmean(errors)),
+                "rmse": float(math.sqrt(np.nanmean(np.square(errors)))),
+                "run_a_label": run_a_label,
+                "run_a_min": float(np.nanmin(run_a_series)),
+                "run_a_max": float(np.nanmax(run_a_series)),
+                "run_b_label": run_b_label,
+                "run_b_min": float(np.nanmin(run_b_series)),
+                "run_b_max": float(np.nanmax(run_b_series)),
+            }
+        )
+
+    summary = {
+        "run_a_label": run_a_label,
+        "run_b_label": run_b_label,
+        "time_points": int(len(target_times)),
+        "compared_signal_count": len(selected_signals),
+        "max_abs_error": max((row["max_abs_error"] for row in metrics), default=0.0),
+        "max_shift_abs_error": max((row["max_shift_abs_error"] for row in metrics), default=0.0),
+        "mean_abs_error": float(np.nanmean([row["mean_abs_error"] for row in metrics])) if metrics else 0.0,
+        "rmse": float(np.nanmean([row["rmse"] for row in metrics])) if metrics else 0.0,
+    }
+    return summary, metrics
+
+
 def compare_result_sets(
     run_a: ResultSet,
     run_b: ResultSet,
@@ -176,58 +276,17 @@ def compare_result_sets(
         engine=run_b.engine,
         root_system_name=root_system_name,
     )["columns"]
-
-    run_a_signals = _select_signal_series(
+    return compare_column_sets(
         run_a_data,
-        selected_signals,
-        engine=run_a.engine,
-        root_system_name=root_system_name,
-    )
-    run_b_signals = _select_signal_series(
         run_b_data,
-        selected_signals,
-        engine=run_b.engine,
+        run_a_label=run_a.label,
+        run_b_label=run_b.label,
+        engine_a=run_a.engine,
+        engine_b=run_b.engine,
+        window=window,
+        selected_signals=selected_signals,
         root_system_name=root_system_name,
     )
-
-    run_a_time = run_a_data.get("time")
-    run_b_time = run_b_data.get("time")
-    if run_a_time is None or run_b_time is None:
-        raise KeyError("Both result sets must contain a time column")
-
-    target_times = build_time_grid(window)
-
-    metrics: list[dict[str, float | str]] = []
-    for signal in selected_signals:
-        run_a_series = resample_series(run_a_time, run_a_signals[signal], target_times)
-        run_b_series = resample_series(run_b_time, run_b_signals[signal], target_times)
-        errors = np.abs(run_a_series - run_b_series)
-
-        metrics.append(
-            {
-                "signal": signal,
-                "max_abs_error": float(np.nanmax(errors)),
-                "mean_abs_error": float(np.nanmean(errors)),
-                "rmse": float(math.sqrt(np.nanmean(np.square(errors)))),
-                "run_a_label": run_a.label,
-                "run_a_min": float(np.nanmin(run_a_series)),
-                "run_a_max": float(np.nanmax(run_a_series)),
-                "run_b_label": run_b.label,
-                "run_b_min": float(np.nanmin(run_b_series)),
-                "run_b_max": float(np.nanmax(run_b_series)),
-            }
-        )
-
-    summary = {
-        "run_a_label": run_a.label,
-        "run_b_label": run_b.label,
-        "time_points": int(len(target_times)),
-        "compared_signal_count": len(selected_signals),
-        "max_abs_error": max((row["max_abs_error"] for row in metrics), default=0.0),
-        "mean_abs_error": float(np.nanmean([row["mean_abs_error"] for row in metrics])) if metrics else 0.0,
-        "rmse": float(np.nanmean([row["rmse"] for row in metrics])) if metrics else 0.0,
-    }
-    return summary, metrics
 
 
 def signal_invariant_metrics(
@@ -260,6 +319,10 @@ def signal_invariant_metrics(
         root_system_name=root_system_name,
     )
     target_times = build_time_grid(window)
+    # Co-simulation masters may expose a source and its downstream component
+    # one communication step apart around a discontinuity. Accept either the
+    # current or the previous sample for the input side of the invariant.
+    previous_times = target_times - window.interval
 
     rows: list[dict[str, float | str]] = []
     for invariant in invariants:
@@ -268,14 +331,35 @@ def signal_invariant_metrics(
             signal_series[invariant.output_signal],
             target_times,
         )
-        expected_series = np.zeros(target_times.shape, dtype=float)
-        for signal, coefficient in zip(invariant.input_signals, invariant.coefficients):
-            expected_series += coefficient * resample_series(
-                run_time,
-                signal_series[signal],
-                target_times,
+        current_inputs = [
+            coefficient
+            * resample_series(run_time, signal_series[signal], target_times)
+            for signal, coefficient in zip(invariant.input_signals, invariant.coefficients)
+        ]
+        previous_inputs = [
+            coefficient
+            * resample_series(run_time, signal_series[signal], previous_times)
+            for signal, coefficient in zip(invariant.input_signals, invariant.coefficients)
+        ]
+        # Each input may independently be one communication step behind.
+        expected_candidates = [
+            sum(
+                previous_inputs[index] if lag else current_inputs[index]
+                for index, lag in enumerate(lags)
             )
-        residual = np.abs(output_series - expected_series)
+            for lags in product((False, True), repeat=len(current_inputs))
+        ]
+        residual = np.nanmin(
+            np.stack([np.abs(output_series - expected) for expected in expected_candidates]),
+            axis=0,
+        )
+        # The first recorded sample is an initialization artifact for engines
+        # that start recording one communication step after t0; do not judge it
+        # as an algebraic error.
+        finite_times = run_time[np.isfinite(run_time)]
+        if finite_times.size:
+            first_index = int(np.searchsorted(target_times, finite_times.min()))
+            residual[: first_index + 1] = np.nan
         rows.append(
             {
                 "run_label": run.label,
@@ -309,6 +393,7 @@ def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
     fieldnames = [
         "signal",
         "max_abs_error",
+        "max_shift_abs_error",
         "mean_abs_error",
         "rmse",
         "run_a_label",
@@ -319,6 +404,6 @@ def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
         "run_b_max",
     ]
     with path.open("w", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)

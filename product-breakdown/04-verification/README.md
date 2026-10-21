@@ -17,6 +17,8 @@ correctly.
 | [co_simulation_test_strategy.md](./co_simulation_test_strategy.md) | Overall test strategy: fixture classes, oracles, fixture-to-strategy mapping, and the three-step test flow (prepare, simulate, compare). |
 | [co_simulation_fixture_mapping.md](./co_simulation_fixture_mapping.md) | Concrete mapping of fixtures to the test strategy, including custom composite fixtures for signal-propagation coverage. |
 | [backend_adapter_review.md](./backend_adapter_review.md) | Contract review of ssp4sim and OMSimulator backend adapters against config shape and result CSV contract (IMP-CAND-H). |
+| [ecosystem_adoption_assessment.md](./ecosystem_adoption_assessment.md) | Evaluation of `pyssp_simulate`, `pyssp_sysml2`, and `sequence_extensions` against the fixture suite, with current gate results and upstream gaps. |
+| [examples/signal_step_gain.architecture.sysml](./examples/signal_step_gain.architecture.sysml) | SysML v2 architecture bootstrapped from an existing SSD; evaluation artifact, not a build input. |
 
 ## Backward Trace
 

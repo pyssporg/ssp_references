@@ -9,6 +9,11 @@
     "add.y",
     "gain.y"
   ],
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
   "ls_ref_experiments": "../../../models/signal_algebraic_loop/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "signal_algebraic_loop",
   "resources_dir": "../../../models/signal_algebraic_loop/baseline/resources",

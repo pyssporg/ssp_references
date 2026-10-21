@@ -45,15 +45,20 @@ def main() -> int:
     specs = registry.expand(
         model_names=args.models,
         case_names=args.cases,
-        backend_names=args.backends,
     )
-    if not specs:
+    backend_filter = {str(name).lower() for name in (args.backends or ())}
+    selected = [
+        (spec, tuple(backend for backend in spec.backends if not backend_filter or backend in backend_filter))
+        for spec in specs
+    ]
+    selected = [(spec, backends) for spec, backends in selected if backends]
+    if not selected:
         raise ValueError("No simulation cases matched the selected registry filters")
 
-    for spec in specs:
+    for spec, backends in selected:
         setup = prepare_setup(spec)
         setup.write_manifest()
-        for backend in spec.backends:
+        for backend in backends:
             request = SimulationRequest(setup=setup, backend=backend)
             run = simulate_backend(request)
             print(run.manifest_path)

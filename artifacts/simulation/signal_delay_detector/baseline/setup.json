@@ -10,6 +10,11 @@
     "gain_b.y",
     "add.y"
   ],
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
   "ls_ref_experiments": "../../../models/signal_delay_detector/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "signal_delay_detector",
   "resources_dir": "../../../models/signal_delay_detector/baseline/resources",

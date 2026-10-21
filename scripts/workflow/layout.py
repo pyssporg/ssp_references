@@ -102,6 +102,23 @@ class ArtifactLayout:
     def comparison_metrics_path(self, run_a_backend: str, run_b_backend: str) -> Path:
         return self.comparison_run_dir(run_a_backend, run_b_backend) / "metrics.csv"
 
+    def reference_comparison_dir(self, backend: str, reference_label: str) -> Path:
+        return (
+            self.comparison_case_root
+            / "references"
+            / comparison_run_name(backend, reference_label)
+        )
+
+    def reference_comparison_manifest_path(self, backend: str, reference_label: str) -> Path:
+        return self.reference_comparison_dir(backend, reference_label) / "comparison.json"
+
+    def reference_comparison_metrics_path(self, backend: str, reference_label: str) -> Path:
+        return self.reference_comparison_dir(backend, reference_label) / "metrics.csv"
+
+    @property
+    def reference_comparison_batch_manifest_path(self) -> Path:
+        return self.comparison_case_root / "reference_comparisons.json"
+
     @property
     def comparison_batch_manifest_path(self) -> Path:
         return self.comparison_case_root / "comparisons.json"

@@ -1,6 +1,13 @@
 {
   "comparisons": [
     {
+      "gate": {
+        "reasons": [
+          "h: max_shift_abs_error=43.0127 exceeds 0.011",
+          "v: max_shift_abs_error=29.3908 exceeds 0.0453412"
+        ],
+        "status": "fail"
+      },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
       "runs": [
@@ -16,15 +23,25 @@
       "summary": {
         "compared_signal_count": 2,
         "max_abs_error": 43.130285,
+        "max_shift_abs_error": 43.0126631,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 14.148158112915695,
         "rmse": 17.981234448431195,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
+        "signal_invariant_count": 0,
         "time_points": 3001
       }
     }
   ],
   "error": null,
+  "gate": {
+    "reasons": [
+      "h: max_shift_abs_error=43.0127 exceeds 0.011",
+      "v: max_shift_abs_error=29.3908 exceeds 0.0453412"
+    ],
+    "status": "fail"
+  },
   "request": {
     "case": "baseline",
     "model": "BouncingBall",
@@ -43,8 +60,11 @@
   "summary": {
     "backend_count": 2,
     "comparison_count": 1,
+    "gate_result": "fail",
     "max_abs_error": 43.130285,
     "max_rel_error": 0.0,
+    "max_shift_abs_error": 43.0126631,
+    "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 2
   }
 }

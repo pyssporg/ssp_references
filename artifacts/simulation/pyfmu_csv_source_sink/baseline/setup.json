@@ -6,6 +6,11 @@
   "compare_signals": [
     "source.y"
   ],
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
   "ls_ref_experiments": "../../../models/pyfmu_csv_source_sink/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "pyfmu_csv_source_sink",
   "resources_dir": "../../../models/pyfmu_csv_source_sink/baseline/resources",

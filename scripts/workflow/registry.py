@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Sequence
 
 from utils.config import REPO_ROOT
 
+from .gate import GateConfig
 from .io import read_json, write_json
 from .layout import ArtifactLayout
 
@@ -18,19 +19,24 @@ def default_registry_path() -> Path:
 class RegistryReferenceCsv:
     label: str
     path: Path
+    gate: bool = True
 
     @classmethod
     def from_dict(cls, data: dict) -> "RegistryReferenceCsv":
         return cls(
             label=str(data["label"]),
             path=Path(str(data["path"])),
+            gate=bool(data.get("gate", True)),
         )
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        data: dict[str, object] = {
             "label": self.label,
             "path": self.path.as_posix(),
         }
+        if not self.gate:
+            data["gate"] = False
+        return data
 
 
 @dataclass(frozen=True)
@@ -38,6 +44,7 @@ class RegistryCase:
     name: str
     backends: tuple[str, ...]
     reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
+    gate: GateConfig = field(default_factory=GateConfig)
 
     @classmethod
     def from_dict(cls, data: dict) -> "RegistryCase":
@@ -54,6 +61,7 @@ class RegistryCase:
                 RegistryReferenceCsv.from_dict(reference)
                 for reference in data.get("reference_csvs", [])
             ),
+            gate=GateConfig.from_dict(data.get("gate")),
         )
 
     def to_dict(self) -> dict[str, object]:
@@ -63,6 +71,8 @@ class RegistryCase:
         }
         if self.reference_csvs:
             data["reference_csvs"] = [reference.to_dict() for reference in self.reference_csvs]
+        if self.gate != GateConfig():
+            data["gate"] = self.gate.to_dict()
         return data
 
 
@@ -106,6 +116,7 @@ class SimulationCaseSpec:
     backends: tuple[str, ...]
     compare_signals: tuple[str, ...]
     reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
+    gate: GateConfig = field(default_factory=GateConfig)
 
     @property
     def layout(self) -> ArtifactLayout:
@@ -174,6 +185,7 @@ class SimulationRegistry:
                         backends=selected_backends,
                         compare_signals=model.compare_signals,
                         reference_csvs=case.reference_csvs,
+                        gate=case.gate,
                     )
                 )
         return specs

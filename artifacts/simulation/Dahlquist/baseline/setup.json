@@ -8,6 +8,11 @@
   "compare_signals": [
     "x"
   ],
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
   "ls_ref_experiments": "../../../models/Dahlquist/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "Dahlquist",
   "resources_dir": "../../../models/Dahlquist/baseline/resources",

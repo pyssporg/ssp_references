@@ -1,0 +1,12 @@
+# Standalone SysML tool environment.
+#
+# The round-trip checker invokes this environment's `pyssp` executable and
+# exchanges only SSD artifacts, so this environment can pin different library
+# versions from the runtime venv.
+#
+#   python3 -m venv venv-sysml
+#   venv-sysml/bin/pip install -r requirements-sysml.txt
+#
+# The SysML submodule and the refactored pyssp_standard submodule.
+-e ./3rd_party/pyssp_standard
+-e ./3rd_party/pyssp_sysml2

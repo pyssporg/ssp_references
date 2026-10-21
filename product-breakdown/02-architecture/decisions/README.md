@@ -48,6 +48,8 @@ The canonical template is at
 | [ADR-002](./ADR-002.md) | Fixture Hierarchy | Accepted | architecture-decision |
 | [ADR-003](./ADR-003.md) | Runtime Configuration Belongs to the Simulation Registry | Accepted | technical-decision |
 | [ADR-004](./ADR-004.md) | Use-Case Coverage Taxonomy as the Primary Coverage Lens | Accepted | technical-decision |
+| [ADR-005](./ADR-005.md) | Adopt the pyssp Ecosystem Behind Existing Stage Boundaries | Accepted | architecture-decision |
+| [ADR-006](./ADR-006.md) | Exchange Standardized Artifacts at Tool Boundaries | Accepted | architecture-decision |
 
 ## Layer Map
 
@@ -103,6 +105,13 @@ Technical Decisions (bridging architecture to build details):
         │
         └──► ADR-004: Use-Case Coverage Taxonomy
               └─ coverage analysis defines what the pipeline should validate
+
+  ADR-005: pyssp Ecosystem Adoption
+    └─ pyssp_simulate substrate, VV gate, campaign, SysML round-trip
+        │
+        ▼
+  ADR-006: Artifact Tool Boundaries
+    └─ external tools exchange SSP files; no cross-library model shims
 
 ## Maintenance Note
 

@@ -19,7 +19,6 @@ def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo_root.mkdir()
     monkeypatch.setattr("workflow.layout.REPO_ROOT", repo_root)
     monkeypatch.setattr("workflow.registry.REPO_ROOT", repo_root)
-    monkeypatch.setattr("workflow.simulate.REPO_ROOT", repo_root)
     monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
 
 

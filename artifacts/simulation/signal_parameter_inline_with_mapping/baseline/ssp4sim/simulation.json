@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    "config.json",
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "baseline",
+    "model": "signal_parameter_inline_with_mapping",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.10245807701721787,
+  "status": "completed"
+}

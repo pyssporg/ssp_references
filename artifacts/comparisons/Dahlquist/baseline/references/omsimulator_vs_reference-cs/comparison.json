@@ -1,0 +1,26 @@
+{
+  "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
+  "metrics": "metrics.csv",
+  "request": {
+    "backend": "omsimulator",
+    "reference": "reference-cs",
+    "reference_gate": true,
+    "reference_path": "/home/eriro/pwa/2_work/ssp_references/models/ssp/Dahlquist/references/Dahlquist-cs.csv",
+    "run_manifest": "../../../../../simulation/Dahlquist/baseline/omsimulator/simulation.json"
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 1,
+    "max_abs_error": 1.921116044023563e-12,
+    "max_shift_abs_error": 1.921116044023563e-12,
+    "mean_abs_error": 3.579724321859898e-14,
+    "rmse": 1.174069312890612e-13,
+    "run_a_label": "reference-cs",
+    "run_b_label": "omsimulator",
+    "time_points": 10001
+  }
+}

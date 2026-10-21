@@ -1,5 +1,12 @@
 {
   "error": null,
+  "gate": {
+    "reasons": [
+      "x0: max_shift_abs_error=0.185147 exceeds 0.021",
+      "x1: max_shift_abs_error=0.368685 exceeds 0.00508711"
+    ],
+    "status": "fail"
+  },
   "metrics": "metrics.csv",
   "request": {
     "case": "fast",
@@ -18,10 +25,13 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 0.3737537343727058,
+    "max_shift_abs_error": 0.36868532682275007,
+    "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 0.1256256430597295,
     "rmse": 0.15245156855398095,
     "run_a_label": "omsimulator",
     "run_b_label": "fmpy",
+    "signal_invariant_count": 0,
     "time_points": 1001
   }
 }

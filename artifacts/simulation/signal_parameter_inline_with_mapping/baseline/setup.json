@@ -1,0 +1,27 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "compare_signals": [
+    "step.y"
+  ],
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
+  "ls_ref_experiments": "../../../models/signal_parameter_inline_with_mapping/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "signal_parameter_inline_with_mapping",
+  "resources_dir": "../../../models/signal_parameter_inline_with_mapping/baseline/resources",
+  "root_system_name": "system",
+  "ssp_root": "../../../models/signal_parameter_inline_with_mapping/baseline",
+  "system_structure": "../../../models/signal_parameter_inline_with_mapping/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

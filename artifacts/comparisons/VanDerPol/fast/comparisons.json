@@ -1,6 +1,10 @@
 {
   "comparisons": [
     {
+      "gate": {
+        "reasons": [],
+        "status": "pass"
+      },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
       "runs": [
@@ -16,14 +20,24 @@
       "summary": {
         "compared_signal_count": 2,
         "max_abs_error": 4.98909999979702e-07,
+        "max_shift_abs_error": 4.98909999979702e-07,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 2.471037547492135e-07,
         "rmse": 2.9146643686980796e-07,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     },
     {
+      "gate": {
+        "reasons": [
+          "x0: max_shift_abs_error=0.185147 exceeds 0.021",
+          "x1: max_shift_abs_error=0.368685 exceeds 0.00508711"
+        ],
+        "status": "fail"
+      },
       "manifest": "ssp4sim_vs_fmpy/comparison.json",
       "metrics": "ssp4sim_vs_fmpy/metrics.csv",
       "runs": [
@@ -39,14 +53,24 @@
       "summary": {
         "compared_signal_count": 2,
         "max_abs_error": 0.37375326751170584,
+        "max_shift_abs_error": 0.3686848599617501,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 0.12562564209301072,
         "rmse": 0.15245157770394485,
         "run_a_label": "ssp4sim",
         "run_b_label": "fmpy",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     },
     {
+      "gate": {
+        "reasons": [
+          "x0: max_shift_abs_error=0.185147 exceeds 0.021",
+          "x1: max_shift_abs_error=0.368685 exceeds 0.00508711"
+        ],
+        "status": "fail"
+      },
       "manifest": "omsimulator_vs_fmpy/comparison.json",
       "metrics": "omsimulator_vs_fmpy/metrics.csv",
       "runs": [
@@ -62,15 +86,27 @@
       "summary": {
         "compared_signal_count": 2,
         "max_abs_error": 0.3737537343727058,
+        "max_shift_abs_error": 0.36868532682275007,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 0.1256256430597295,
         "rmse": 0.15245156855398095,
         "run_a_label": "omsimulator",
         "run_b_label": "fmpy",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     }
   ],
   "error": null,
+  "gate": {
+    "reasons": [
+      "x0: max_shift_abs_error=0.185147 exceeds 0.021",
+      "x1: max_shift_abs_error=0.368685 exceeds 0.00508711",
+      "x0: max_shift_abs_error=0.185147 exceeds 0.021",
+      "x1: max_shift_abs_error=0.368685 exceeds 0.00508711"
+    ],
+    "status": "fail"
+  },
   "request": {
     "case": "fast",
     "model": "VanDerPol",
@@ -93,8 +129,11 @@
   "summary": {
     "backend_count": 3,
     "comparison_count": 3,
+    "gate_result": "fail",
     "max_abs_error": 0.3737537343727058,
     "max_rel_error": 0.0,
+    "max_shift_abs_error": 0.36868532682275007,
+    "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 2
   }
 }

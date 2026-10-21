@@ -1,5 +1,9 @@
 {
   "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
   "metrics": "metrics.csv",
   "request": {
     "case": "baseline",
@@ -18,10 +22,13 @@
   "summary": {
     "compared_signal_count": 3,
     "max_abs_error": 0.05020199999999902,
+    "max_shift_abs_error": 0.0125646293856,
+    "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 0.013265596460853615,
     "rmse": 0.014876900103235715,
     "run_a_label": "ssp4sim",
     "run_b_label": "omsimulator",
+    "signal_invariant_count": 0,
     "time_points": 1001
   }
 }

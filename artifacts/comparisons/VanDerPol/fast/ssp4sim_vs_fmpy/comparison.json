@@ -1,5 +1,12 @@
 {
   "error": null,
+  "gate": {
+    "reasons": [
+      "x0: max_shift_abs_error=0.185147 exceeds 0.021",
+      "x1: max_shift_abs_error=0.368685 exceeds 0.00508711"
+    ],
+    "status": "fail"
+  },
   "metrics": "metrics.csv",
   "request": {
     "case": "fast",
@@ -18,10 +25,13 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 0.37375326751170584,
+    "max_shift_abs_error": 0.3686848599617501,
+    "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 0.12562564209301072,
     "rmse": 0.15245157770394485,
     "run_a_label": "ssp4sim",
     "run_b_label": "fmpy",
+    "signal_invariant_count": 0,
     "time_points": 1001
   }
 }

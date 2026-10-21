@@ -36,7 +36,7 @@ definitions, fixture notes, and build metadata.
 │   ├── run_comparisons.py
 │   ├── workflow/
 │   └── utils/
-├── 3rd_party/                # vendored helpers and upstream source material
+├── 3rd_party/                # git submodules: pyssp_* and sequence_extensions
 ├── product-breakdown/
 │   ├── 00-intent/              # north star intent and commitments
 │   ├── 01-product/              # product decisions
@@ -65,10 +65,22 @@ contract:
   Each generated `artifacts/simulation/<model>/<case>/setup.json` records the
   explicit backend list and the explicit compare-signal list for that case.
   The current backend set is `ssp4sim`, `OMSimulator`, and `FMPy`.
+  `pyssp_simulate` is the execution substrate; local shims remain only for
+  documented upstream gaps (FMPy SSP-2.0 loading and OMSimulator step mode).
   `scripts/run_comparisons.py` compares every unique backend combination from
   that setup by default, or a filtered backend subset when `--backend` is
   repeated. Runtime artifacts live under `artifacts/simulation/` and
   `artifacts/comparisons/`; they do not live in `build.py`.
+
+The canonical artifact contract for the stages and external tools is
+[Pipeline and Tool Boundaries](product-breakdown/02-architecture/pipeline-boundaries.md):
+
+```text
+Build    -> SSP root: SSD / SSV / resources / experiments.xml
+Simulate -> reads SSP root + registry, writes CSV + run manifests
+Compare  -> reads run manifests + CSV, writes comparisons
+SysML    -> reads SSD, invokes external pyssp CLI, writes SSD
+```
 
 The build workflow discovers models from `models/*/*/build.py`:
 
@@ -112,6 +124,40 @@ listed in the corresponding `setup.json`, or a filtered backend subset when
 `--backend` is repeated. Cases that only have one backend, such as
 `pyfmu_csv_source_sink` and `scenario`, are simulated but not comparable.
 
+### VV gate and reference baselines
+
+`run_comparisons.py` records a `gate` verdict on every engine-to-engine pair
+and on every reference comparison. The gate uses a small time-shift tolerance
+so ordinary co-simulation scheduling skew does not fail an otherwise matching
+signal; raw pointwise error stays in `metrics.csv` for diagnosis.
+
+```bash
+# Record gates without failing the command
+python3 scripts/run_comparisons.py
+
+# Exit nonzero if any gate fails (CI / campaign use)
+python3 scripts/run_comparisons.py --fail-on-gate
+```
+
+Reference baselines configured in the registry are compared automatically and
+written under `artifacts/comparisons/<model>/<case>/references/`. A reference
+entry can set `"gate": false` when it is diagnostic only, such as a
+model-exchange baseline for a co-simulation fixture.
+
+### Campaign runner
+
+`run_campaign.py` runs the registered matrix as an audited, parallel campaign
+using `sequence_extensions`. It shells out to the normal entry points, so the
+simulation and comparison logic has a single home.
+
+```bash
+python3 scripts/run_campaign.py --model BouncingBall --model Dahlquist
+python3 scripts/run_campaign.py --model BouncingBall --fail-on-gate
+```
+
+The campaign runs in the same Python 3.11+ environment as the core pipeline.
+Run logs are written to `artifacts/runs/<run_id>.jsonl`.
+
 The registry maps each model to one or more cases, and each model also carries
 the explicit compare-signal list used for engine-to-engine comparisons. That
 keeps the runtime matrix explicit without pushing execution settings back into
@@ -127,10 +173,35 @@ reference-model cases, the matching CSV baselines live in
 
 `requirements.txt` currently targets Linux `x86_64`:
 
-- `pyssp4sim` is pinned to a Linux `x86_64` wheel.
-- `OMSimulator` is installed from PyPI.
+- `pyssp4sim` is pinned to the `v0.3.2` Linux `x86_64` wheel.
+- `pyssp_simulate` is installed editable from the `3rd_party/pyssp_simulate`
+  submodule so the repository and its simulation substrate develop together.
+- `OMSimulator` is installed from PyPI; its sdist can fail when nightly
+  binaries have been removed, so a manual install may be needed.
 
 If you work on another platform, expect to adjust dependencies manually.
+
+The campaign runner and `pyssp_sysml2` round-trip tool have their own
+environment constraints:
+
+- `scripts/run_campaign.py` requires Python 3.11+ and the editable
+  `3rd_party/sequence_extensions` submodule. The project declares the
+  distribution name `sequence-extensions-flow` to avoid the unrelated PyPI
+  project named `sequence-extensions` (same `sequence_extensions` import).
+  Use `requirements-campaign.txt`.
+- `scripts/check_sysml_roundtrip.py` is an artifact-only checker. It invokes
+  an external `pyssp` executable and exchanges only `SystemStructure.ssd`
+  files; it does not import `pyssp_sysml2` or `pyssp_standard`. Point it at a
+  dedicated SysML tool environment with `--pyssp /path/to/venv/bin/pyssp` or
+  the `PYSSP` environment variable. `requirements-sysml.txt` describes that
+  environment. The runtime venv does not need `pyssp_sysml2`.
+
+The pyssp and sequence submodules are editable checkouts. See
+[`3rd_party/README.md`](3rd_party/README.md) for initialization, update, and
+local-patch guidance.
+
+See [the ecosystem assessment](product-breakdown/04-verification/ecosystem_adoption_assessment.md)
+for the evaluated versions and remaining gaps.
 
 ## Quick Start
 
@@ -139,15 +210,19 @@ All commands run from the repository root.
 
 ### Prerequisites
 
-- Python 3.10+ and `python3-venv` (Ubuntu: `sudo apt install python3-venv`)
+- Python 3.11+ and `python3-venv` (Ubuntu: `sudo apt install python3-venv`)
 - Linux `x86_64` (required for the pinned `pyssp4sim` wheel)
 - OMSimulator system libraries (Ubuntu: `sudo apt install libomsimulator libomc`)
 
 ### 1. Clone and set up
 
 ```bash
-git clone <repo-url> ssp_references
+git clone --recurse-submodules <repo-url> ssp_references
 cd ssp_references
+
+# If the repository was cloned without submodules:
+# git submodule update --init --recursive
+
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt

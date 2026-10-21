@@ -10,6 +10,11 @@
     "x1"
   ],
   "description": "Variant configuration with mu set to 2.0.",
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
   "ls_ref_experiments": "../../../models/VanDerPol/fast/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "VanDerPol",
   "resources_dir": "../../../models/VanDerPol/fast/resources",

@@ -27,6 +27,8 @@ ADRs document significant architectural choices and live in
 | ADR-002 | Fixture Hierarchy | Architecture | Accepted | [02-architecture/decisions/ADR-002.md](./02-architecture/decisions/ADR-002.md) |
 | ADR-003 | Runtime Configuration Belongs to the Simulation Registry | Technical | Accepted | [02-architecture/decisions/ADR-003.md](./02-architecture/decisions/ADR-003.md) |
 | ADR-004 | Use-Case Coverage Taxonomy as the Primary Coverage Lens | Technical | Accepted | [02-architecture/decisions/ADR-004.md](./02-architecture/decisions/ADR-004.md) |
+| ADR-005 | Adopt the pyssp Ecosystem Behind Existing Stage Boundaries | Architecture | Accepted | [02-architecture/decisions/ADR-005.md](./02-architecture/decisions/ADR-005.md) |
+| ADR-006 | Exchange Standardized Artifacts at Tool Boundaries | Architecture | Accepted | [02-architecture/decisions/ADR-006.md](./02-architecture/decisions/ADR-006.md) |
 
 ## Design Decisions
 
@@ -40,6 +42,7 @@ DDs document smaller implementation choices and live beside the ADRs in
 | DD-003 | `build.py` Remains Build-Only | Technical | Accepted | [03-implementation/decisions/DD-003-build-py-remains-build-only.md](./03-implementation/decisions/DD-003-build-py-remains-build-only.md) |
 | DD-004 | Signal-Propagation Fixtures Use Deterministic Algebraic FMU Blocks | Technical | Accepted | [03-implementation/decisions/DD-004-signal-propagation-deterministic-blocks.md](./03-implementation/decisions/DD-004-signal-propagation-deterministic-blocks.md) |
 | DD-005 | Simulation Registry Technical Mechanism | Technical | Accepted | [03-implementation/decisions/DD-005-simulation-registry-technical.md](./03-implementation/decisions/DD-005-simulation-registry-technical.md) |
+| DD-006 | Time-Shift-Tolerant VV Metrics | Technical | Accepted | [03-implementation/decisions/DD-006-time-shift-tolerant-vv-metrics.md](./03-implementation/decisions/DD-006-time-shift-tolerant-vv-metrics.md) |
 
 ## Maintenance Rule
 

@@ -8,6 +8,11 @@
     "SuT_emachine_model.M",
     "SuT_edrive_mass.wB"
   ],
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
   "ls_ref_experiments": "../../../models/dcmotor/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "dcmotor",
   "resources_dir": "../../../models/dcmotor/baseline/resources",

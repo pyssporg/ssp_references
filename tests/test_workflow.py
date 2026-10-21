@@ -23,6 +23,8 @@ from workflow.registry import (
     SimulationRegistry,
     load_registry,
 )
+from workflow.gate import GateConfig
+from workflow.reference import compare_reference, load_reference_columns, ReferenceComparisonRequest
 from workflow.setup import prepare_setup
 from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
 from utils.csv import extract_series, load_numeric_csv
@@ -34,7 +36,6 @@ def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo_root.mkdir()
     monkeypatch.setattr("workflow.layout.REPO_ROOT", repo_root)
     monkeypatch.setattr("workflow.registry.REPO_ROOT", repo_root)
-    monkeypatch.setattr("workflow.simulate.REPO_ROOT", repo_root)
     monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
 
 
@@ -413,7 +414,7 @@ def test_compare_runs_validates_signal_invariants(tmp_path: Path) -> None:
     assert comparison.summary["max_signal_invariant_abs_error"] == pytest.approx(0.0)
 
 
-def test_compare_runs_fails_on_signal_invariant_violation(tmp_path: Path) -> None:
+def test_compare_runs_gate_fails_on_signal_invariant_violation(tmp_path: Path) -> None:
     ssp_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
     spec = SimulationCaseSpec(
         model_name="signal_step_gain",
@@ -447,8 +448,13 @@ def test_compare_runs_fails_on_signal_invariant_violation(tmp_path: Path) -> Non
     left_run.write_manifest()
     right_run.write_manifest()
 
-    with pytest.raises(ValueError, match="Signal invariant failed"):
-        compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
+    comparison = compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
+
+    assert comparison.gate.status == "fail"
+    assert any(
+        "gain.y = 3.0 * step.y" in reason
+        for reason in comparison.gate.reasons
+    )
 
 
 def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) -> None:
@@ -494,3 +500,66 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
     assert len(payload["request"]["runs"]) == 3
     assert len(payload["comparisons"]) == 3
     assert all("runs" in comparison for comparison in payload["comparisons"])
+
+
+def test_load_reference_columns_strips_default_model_prefix(tmp_path: Path) -> None:
+    path = tmp_path / "reference.csv"
+    path.write_text(
+        "time,default.ExampleModel.time,default.ExampleModel.x\n"
+        "0.0,0.0,1.0\n"
+        "1.0,1.0,2.0\n"
+    )
+
+    columns = load_reference_columns(path, "ExampleModel")
+
+    assert set(columns) == {"time", "x"}
+    assert columns["x"].tolist() == [1.0, 2.0]
+
+
+def test_compare_reference_writes_metrics_and_gate(tmp_path: Path) -> None:
+    ssp_root = make_ssp_root(tmp_path, model_name="ExampleModel")
+    spec = SimulationCaseSpec(
+        model_name="ExampleModel",
+        case_name="baseline",
+        ssp_root=ssp_root,
+        backends=("ssp4sim",),
+        compare_signals=("x",),
+        gate=GateConfig(atol=0.1),
+    )
+    setup = prepare_setup(spec)
+    setup.write_manifest()
+    request = SimulationRequest(setup=setup, backend="ssp4sim")
+    write_columns(request.result_path, {"x": [1.0, 2.0]})
+    run = SimulationRun(request=request, result_path=request.result_path)
+    run.write_manifest()
+
+    reference_path = tmp_path / "reference.csv"
+    reference_path.write_text(
+        "time,default.ExampleModel.time,default.ExampleModel.x\n"
+        "0.0,0.0,1.0\n"
+        "1.0,1.0,2.0\n"
+    )
+    reference = RegistryReferenceCsv(label="reference-cs", path=reference_path)
+
+    result = compare_reference(
+        ReferenceComparisonRequest(
+            run=run,
+            reference=reference,
+            reference_path=reference_path,
+        )
+    )
+
+    assert result.metrics_path.exists()
+    assert result.manifest_path.exists()
+    assert result.gate.status == "pass"
+    assert result.summary["max_shift_abs_error"] == pytest.approx(0.0)
+
+    write_columns(request.result_path, {"x": [1.0, 3.0]})
+    failing = compare_reference(
+        ReferenceComparisonRequest(
+            run=run,
+            reference=reference,
+            reference_path=reference_path,
+        )
+    )
+    assert failing.gate.status == "fail"

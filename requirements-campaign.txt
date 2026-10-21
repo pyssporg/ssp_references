@@ -1,0 +1,6 @@
+# Campaign orchestration environment (Python 3.11+).
+# The runtime requirements are the same; sequence_extensions adds the flow engine.
+# The project declares the distribution name sequence-extensions-flow to avoid
+# the unrelated PyPI project named sequence-extensions.
+-r requirements.txt
+-e ./3rd_party/sequence_extensions

@@ -1,0 +1,22 @@
+{
+  "backends": [
+    "omsimulator"
+  ],
+  "case": "baseline",
+  "compare_signals": [
+    "step.y",
+    "sine.y"
+  ],
+  "ls_ref_experiments": "../../../models/signal_nested_external_bindings/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "model": "signal_nested_external_bindings",
+  "resources_dir": "../../../models/signal_nested_external_bindings/baseline/resources",
+  "root_system_name": "system",
+  "ssp_root": "../../../models/signal_nested_external_bindings/baseline",
+  "system_structure": "../../../models/signal_nested_external_bindings/baseline/SystemStructure.ssd",
+  "tolerance": 0.0001,
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

@@ -1,7 +1,7 @@
 {
   "artifacts": [
     "config.json",
-    "simulation.log"
+    "result.csv"
   ],
   "error": null,
   "request": {
@@ -11,6 +11,6 @@
     "setup_manifest": "../setup.json"
   },
   "result": "result.csv",
-  "runtime_s": 0.11046539002563804,
+  "runtime_s": 0.1130532210227102,
   "status": "completed"
 }

@@ -4,6 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+from .gate import GateConfig
 from .io import read_json, relative_path, resolve_path, write_json
 from .layout import ArtifactLayout, LS_REF_EXPERIMENTS_RELATIVE
 from .registry import SimulationCaseSpec
@@ -74,6 +75,7 @@ class SimulationSetup:
     compare_signals: tuple[str, ...] = field(default_factory=tuple)
     root_system_name: str = ""
     description: str | None = None
+    gate: GateConfig = field(default_factory=GateConfig)
 
     def __post_init__(self) -> None:
         normalized_backends = tuple(str(backend).lower() for backend in self.backends)
@@ -110,6 +112,7 @@ class SimulationSetup:
             compare_signals=spec.compare_signals,
             root_system_name=root_system_name,
             description=description,
+            gate=spec.gate,
         )
 
     @classmethod
@@ -137,6 +140,7 @@ class SimulationSetup:
             compare_signals=tuple(str(signal).strip() for signal in compare_signals if str(signal).strip()),
             root_system_name=root_system_name,
             description=data.get("description"),
+            gate=GateConfig.from_dict(data.get("gate")),
         )
 
     @property
@@ -170,6 +174,7 @@ class SimulationSetup:
             "backends": list(self.backends),
             "compare_signals": list(self.compare_signals),
             "root_system_name": self.root_system_name,
+            "gate": self.gate.to_dict(),
             "system_structure": relative_path(manifest_root, self.layout.system_structure_path),
             "ls_ref_experiments": relative_path(manifest_root, self.layout.ls_ref_experiments_path),
             "resources_dir": relative_path(manifest_root, self.layout.resources_dir),

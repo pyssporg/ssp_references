@@ -6,6 +6,11 @@ interface contracts of the `ssp_references` repository. It sits at the
 [00-intent/intent.md](../00-intent/intent.md) (Intent and Product Commitments) and any future
 Technical Decisions records.
 
+The canonical artifact-level contract for the pipeline and external tools is
+[Pipeline and Tool Boundaries](pipeline-boundaries.md). This document describes
+the full architecture; that file is the single reference for what each
+boundary reads and writes.
+
 ---
 
 ## 1. Three-Stage Pipeline
@@ -57,7 +62,9 @@ produces a `simulation.json` run manifest at the same location.
 
 **Entry point:** `scripts/run_simulations.py` reads the registry, expands the
 model/case/backend matrix, prepares setup manifests, and dispatches to the
-appropriate backend adapter.
+appropriate backend adapter. The adapters are thin wrappers over
+`pyssp_simulate`; local compatibility shims exist only for documented upstream
+gaps (see [ADR-005](decisions/ADR-005.md)).
 
 **Invariant:** The simulate stage does not rebuild SSPs, does not modify model
 source directories, and does not run comparisons.
@@ -74,8 +81,11 @@ engine-to-engine — at least two distinct backend runs are required.
 **Output:** Per-pairwise-comparison metrics CSV files and comparison manifests
 under
 `artifacts/comparisons/<model_name>/<case_name>/<backend_a>_vs_<backend_b>/`.
+Reference comparisons are written under
+`artifacts/comparisons/<model_name>/<case_name>/references/<backend>_vs_<reference_label>/`.
 A batch-level comparison manifest is also written at
-`artifacts/comparisons/<model_name>/<case_name>/comparisons.json`.
+`artifacts/comparisons/<model_name>/<case_name>/comparisons.json`. Every
+comparison manifest records a `gate` verdict (`pass` or `fail`) and its reasons.
 
 **Entry point:** `scripts/run_comparisons.py` reads the registry, loads the
 setup and run manifests, and drives the comparison.
@@ -148,6 +158,21 @@ These boundaries ensure that each stage can be invoked, debugged, and tested
 independently. A build script failure does not corrupt simulation results; a
 simulation failure does not block comparison of already-valid runs.
 
+### Tool boundaries
+
+Evaluation tools follow the same rule. The SysML round-trip checker is an
+external-tool adapter: it consumes an SSD file, invokes a `pyssp` executable,
+and compares the regenerated SSD. It does not import `pyssp_sysml2` or
+`pyssp_standard`. This lets the SysML tool run in a separate environment with
+its own versions, as long as the SSD artifact remains standard-conformant.
+
+The exact boundary contract, artifact classes, and tool-environment rules are
+maintained in [Pipeline and Tool Boundaries](pipeline-boundaries.md).
+
+No tool may add compatibility behavior to a producer's Python model merely to
+satisfy a consumer. Adapt the consumer or the artifact boundary instead. See
+[ADR-006](decisions/ADR-006.md).
+
 ---
 
 ## 4. Data Flow
@@ -214,6 +239,7 @@ Written by `run_simulations.py` before dispatching any backend. Located at
 - The simulation window (start time, stop time, interval).
 - The tolerance and description from `experiments.xml`.
 - The explicit backend list and compare-signal list for this model/case.
+- The gate policy (`atol`, `rtol`, invariant tolerance) frozen from the registry.
 - The root system name and paths to `SystemStructure.ssd` and `experiments.xml`.
 
 The setup manifest is the fixed record of *what was configured*. Later stages
@@ -225,8 +251,10 @@ One directory per backend per case at
 - `simulation.json` — the run manifest recording backend name, result path,
   status, runtime, and error information.
 - `result.csv` — the raw simulation trajectory.
-- `config.json` — backend-specific configuration payload.
-- `simulation.log` / `stdout.log` — diagnostic output.
+- `config.json` — backend configuration payload when the backend produces one
+  (currently ssp4sim).
+- `simulation.log` / `stdout.log` — diagnostic output when the backend
+  produces it.
 
 ### Comparison artifacts
 Written by `run_comparisons.py`. Pairwise directories at
@@ -235,7 +263,9 @@ Written by `run_comparisons.py`. Pairwise directories at
 - `metrics.csv` — per-signal comparison metrics.
 
 A batch summary is written at
-`artifacts/comparisons/<model>/<case>/comparisons.json`.
+`artifacts/comparisons/<model>/<case>/comparisons.json`. Reference comparisons
+live under `artifacts/comparisons/<model>/<case>/references/` and use the same
+manifest and metrics shape.
 
 ### Connection chain
 
@@ -291,6 +321,12 @@ The following architectural violations are not allowed:
 7. **The simulation registry is the single source of truth for case/backend
    selection.** No pipeline stage derives the run matrix from directory
    scanning, `experiments.xml` content, or any other source.
+
+8. **External tools must not share Python model objects across the artifact
+   boundary.** The SysML round-trip checker invokes the `pyssp` CLI and
+   exchanges SSD files. Do not import `pyssp_sysml2`/`pyssp_standard` into the
+   runtime pipeline, and do not add compatibility shims to `pyssp_standard`
+   for a downstream consumer. See [ADR-006](decisions/ADR-006.md).
 
 ---
 

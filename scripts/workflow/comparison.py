@@ -7,6 +7,7 @@ from pathlib import Path
 from utils.comparison import compare_result_sets, signal_invariant_metrics, write_metrics_csv
 from utils.filesystem import reset_dir
 
+from .gate import GateOutcome, evaluate_gate
 from .io import read_json, relative_path, resolve_path, write_json
 from .simulate import SimulationRun
 
@@ -95,6 +96,7 @@ class ComparisonRun:
     metrics_path: Path
     status: str = "completed"
     error: str | None = None
+    gate: GateOutcome = GateOutcome(status="not_evaluated")
 
     @property
     def manifest_path(self) -> Path:
@@ -112,6 +114,7 @@ class ComparisonRun:
             "metrics": relative_path(run_dir, self.metrics_path),
             "status": self.status,
             "error": self.error,
+            "gate": self.gate.to_dict(),
         }
 
     def write_manifest(self) -> Path:
@@ -128,6 +131,10 @@ class ComparisonRun:
             metrics_path=resolve_path(path.parent, data["metrics"]),
             status=data.get("status", "completed"),
             error=data.get("error"),
+            gate=GateOutcome(
+                status=str(data.get("gate", {}).get("status", "not_evaluated")),
+                reasons=tuple(data.get("gate", {}).get("reasons", [])),
+            ),
         )
 
 
@@ -208,6 +215,7 @@ class ComparisonBatchRun:
     summary: dict[str, float | int | str]
     status: str = "completed"
     error: str | None = None
+    gate: GateOutcome = GateOutcome(status="not_evaluated")
 
     @property
     def manifest_path(self) -> Path:
@@ -234,11 +242,13 @@ class ComparisonBatchRun:
                     "manifest": relative_path(run_dir, comparison.manifest_path),
                     "metrics": relative_path(run_dir, comparison.metrics_path),
                     "summary": comparison.summary,
+                    "gate": comparison.gate.to_dict(),
                 }
                 for comparison in self.comparisons
             ],
             "status": self.status,
             "error": self.error,
+            "gate": self.gate.to_dict(),
         }
 
     def write_manifest(self) -> Path:
@@ -259,6 +269,10 @@ class ComparisonBatchRun:
             summary=data["summary"],
             status=data.get("status", "completed"),
             error=data.get("error"),
+            gate=GateOutcome(
+                status=str(data.get("gate", {}).get("status", "not_evaluated")),
+                reasons=tuple(data.get("gate", {}).get("reasons", [])),
+            ),
         )
 
 
@@ -268,6 +282,10 @@ def _summarize_batch(
 ) -> dict[str, float | int | str]:
     max_abs_error = max(
         (float(comparison.summary.get("max_abs_error", 0.0)) for comparison in comparisons),
+        default=0.0,
+    )
+    max_shift_abs_error = max(
+        (float(comparison.summary.get("max_shift_abs_error", 0.0)) for comparison in comparisons),
         default=0.0,
     )
     max_rel_error = max(
@@ -289,9 +307,13 @@ def _summarize_batch(
         "backend_count": len(runs),
         "comparison_count": len(comparisons),
         "max_abs_error": max_abs_error,
+        "max_shift_abs_error": max_shift_abs_error,
         "max_rel_error": max_rel_error,
         "min_compared_signal_count": min_compared_signal_count,
         "max_signal_invariant_abs_error": max_signal_invariant_abs_error,
+        "gate_result": "fail"
+        if any(comparison.gate.status == "fail" for comparison in comparisons)
+        else "pass",
     }
 
 
@@ -332,18 +354,17 @@ def compare_runs(request: ComparisonRequest) -> ComparisonRun:
             "max_signal_invariant_abs_error": max_invariant_abs_error,
         }
     )
-    if max_invariant_abs_error > 1e-8:
-        worst = max(invariant_rows, key=lambda row: float(row["max_abs_error"]))
-        raise ValueError(
-            "Signal invariant failed for "
-            f"{model_name} {worst['run_label']} {worst['invariant']}: "
-            f"max_abs_error={worst['max_abs_error']}"
-        )
+    gate = evaluate_gate(
+        metrics,
+        gate=request.run_a.request.setup.gate,
+        invariant_rows=invariant_rows,
+    )
     write_metrics_csv(request.metrics_path, metrics)
     run = ComparisonRun(
         request=request,
         summary=summary,
         metrics_path=request.metrics_path,
+        gate=gate,
     )
     run.write_manifest()
     return run
@@ -359,6 +380,16 @@ def compare_run_batch(request: ComparisonBatchRequest) -> ComparisonBatchRun:
         request=request,
         comparisons=comparisons,
         summary=_summarize_batch(request.runs, comparisons),
+        gate=GateOutcome(
+            status="fail"
+            if any(comparison.gate.status == "fail" for comparison in comparisons)
+            else "pass",
+            reasons=tuple(
+                reason
+                for comparison in comparisons
+                for reason in comparison.gate.reasons
+            ),
+        ),
     )
     batch.write_manifest()
     return batch

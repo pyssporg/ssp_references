@@ -1,6 +1,10 @@
 {
   "comparisons": [
     {
+      "gate": {
+        "reasons": [],
+        "status": "pass"
+      },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
       "runs": [
@@ -16,14 +20,21 @@
       "summary": {
         "compared_signal_count": 3,
         "max_abs_error": 0.006283,
+        "max_shift_abs_error": 4.997399999928653e-07,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 2.2361781833903823e-06,
         "rmse": 6.627784658689442e-05,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     },
     {
+      "gate": {
+        "reasons": [],
+        "status": "pass"
+      },
       "manifest": "ssp4sim_vs_fmpy/comparison.json",
       "metrics": "ssp4sim_vs_fmpy/metrics.csv",
       "runs": [
@@ -39,14 +50,21 @@
       "summary": {
         "compared_signal_count": 3,
         "max_abs_error": 1.0,
-        "mean_abs_error": 0.13841619173600425,
-        "rmse": 0.28689186247465487,
+        "max_shift_abs_error": 2.0099739386103543e-05,
+        "max_signal_invariant_abs_error": 0.0,
+        "mean_abs_error": 0.0026671342958525363,
+        "rmse": 0.03127808198205451,
         "run_a_label": "ssp4sim",
         "run_b_label": "fmpy",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     },
     {
+      "gate": {
+        "reasons": [],
+        "status": "pass"
+      },
       "manifest": "omsimulator_vs_fmpy/comparison.json",
       "metrics": "omsimulator_vs_fmpy/metrics.csv",
       "runs": [
@@ -62,15 +80,22 @@
       "summary": {
         "compared_signal_count": 3,
         "max_abs_error": 1.0,
-        "mean_abs_error": 0.13841827876910343,
-        "rmse": 0.28689334340719513,
+        "max_shift_abs_error": 1.973901000007494e-05,
+        "max_signal_invariant_abs_error": 0.0,
+        "mean_abs_error": 0.002669221328951709,
+        "rmse": 0.031279562913155694,
         "run_a_label": "omsimulator",
         "run_b_label": "fmpy",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     }
   ],
   "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
   "request": {
     "case": "baseline",
     "model": "signal_step_product",
@@ -93,8 +118,11 @@
   "summary": {
     "backend_count": 3,
     "comparison_count": 3,
+    "gate_result": "pass",
     "max_abs_error": 1.0,
     "max_rel_error": 0.0,
+    "max_shift_abs_error": 2.0099739386103543e-05,
+    "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 3
   }
 }

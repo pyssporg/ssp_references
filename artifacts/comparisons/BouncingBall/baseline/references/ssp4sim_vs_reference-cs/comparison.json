@@ -1,0 +1,26 @@
+{
+  "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
+  "metrics": "metrics.csv",
+  "request": {
+    "backend": "ssp4sim",
+    "reference": "reference-cs",
+    "reference_gate": true,
+    "reference_path": "/home/eriro/pwa/2_work/ssp_references/models/ssp/BouncingBall/references/BouncingBall-cs.csv",
+    "run_manifest": "../../../../../simulation/BouncingBall/baseline/ssp4sim/simulation.json"
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 2,
+    "max_abs_error": 0.00981,
+    "max_shift_abs_error": 5.000000006250005e-07,
+    "mean_abs_error": 1.8166870082149183e-06,
+    "rmse": 8.967421558169065e-05,
+    "run_a_label": "reference-cs",
+    "run_b_label": "ssp4sim",
+    "time_points": 3001
+  }
+}

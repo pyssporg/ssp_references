@@ -7,13 +7,10 @@ import numpy as np
 import pytest
 from scipy.io import savemat
 
+from workflow.engine_compat import fmpy_get_connections
 from workflow.layout import ArtifactLayout
 from workflow.setup import SimulationSetup, SimulationWindow
-from workflow.simulate import (
-    _fmpy_get_connections,
-    _ssp4sim_config_payload,
-    simulate_backend,
-)
+from workflow.simulate import SimulationRequest, _simulation_spec, simulate_backend
 from utils.csv import unpack_mat_to_csv
 
 try:
@@ -57,19 +54,19 @@ def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo_root = tmp_path / "repo"
     repo_root.mkdir()
     monkeypatch.setattr("workflow.layout.REPO_ROOT", repo_root)
-    monkeypatch.setattr("workflow.simulate.REPO_ROOT", repo_root)
     monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
 
 
-def test_ssp4sim_config_payload(tmp_path: Path) -> None:
-    """R-003: Verify _ssp4sim_config_payload produces expected config dict structure.
+def test_simulation_spec_maps_setup(tmp_path: Path) -> None:
+    """R-003: The adapter maps the frozen setup into a pyssp_simulate spec.
 
     Backward trace: IMP-015 contract R-003.
     """
     ssp_root = tmp_path / "ssp_root"
     ssp_root.mkdir(parents=True)
+    (ssp_root / "SystemStructure.ssd").write_text("<ssd:SystemStructureDescription />")
     layout = ArtifactLayout(model_name="TestModel", case_name="testcase", ssp_root=ssp_root)
-    window = SimulationWindow(start_time=0.0, stop_time=10.0, interval=0.1)
+    window = SimulationWindow(start_time=1.0, stop_time=11.0, interval=0.1)
     setup = SimulationSetup(
         layout=layout,
         window=window,
@@ -78,51 +75,17 @@ def test_ssp4sim_config_payload(tmp_path: Path) -> None:
         compare_signals=("signal",),
         root_system_name="system",
     )
-    result_file = tmp_path / "result.csv"
-    log_file = tmp_path / "sim.log"
+    request = SimulationRequest(setup=setup, backend="ssp4sim")
 
-    config = _ssp4sim_config_payload(
-        setup=setup,
-        ssp_root=ssp_root,
-        result_file=result_file,
-        log_file=log_file,
-    )
+    spec = _simulation_spec(request, ssp_root)
 
-    # 15 sub-checks
-    assert "simulation" in config
-    sim = config["simulation"]
-    assert isinstance(sim, dict)
-
-    assert sim["ssp"] == str(ssp_root.resolve())
-    assert sim["ssd"] == "SystemStructure.ssd"
-
-    assert sim["start_time"] == pytest.approx(0.0)
-    assert sim["stop_time"] == pytest.approx(10.0)
-    assert sim["timestep"] == pytest.approx(0.1)
-    assert sim["tolerance"] == pytest.approx(1e-5)
-    assert sim["realtime"] is False
-    assert sim["working_dir"] == str(result_file.parent.resolve())
-
-    executor = sim["executor"]
-    assert isinstance(executor, dict)
-    for key in ("method", "thread_pool_workers", "forward_derivatives", "sub_step", "jacobi", "seidel"):
-        assert key in executor
-
-    recording = sim["recording"]
-    assert recording["enable"] is True
-    assert recording["result_file"] == str(result_file.resolve())
-
-    csv_cfg = recording["csv"]
-    assert csv_cfg["enable"] is True
-    assert csv_cfg["file"] == str(result_file.resolve())
-    assert csv_cfg["interval"] == pytest.approx(0.1)
-
-    influx_cfg = recording["influx"]
-    assert influx_cfg["enable"] is False
-
-    log_cfg = sim["log"]
-    assert log_cfg["file"] == str(log_file.resolve())
-    assert log_cfg["level_terminal"] == "error"
+    assert spec.ssp == ssp_root
+    assert spec.start_time == pytest.approx(1.0)
+    assert spec.stop_time == pytest.approx(11.0)
+    assert spec.step_size == pytest.approx(0.1)
+    assert spec.tolerance == pytest.approx(1e-5)
+    assert spec.result_file == request.result_path
+    assert spec.working_dir == request.run_dir
 
 
 @pytest.mark.skipif(not _HAVE_FMPY, reason="fmpy not installed")
@@ -136,7 +99,7 @@ def test_fmpy_connections_empty(tmp_path: Path) -> None:
         patch("fmpy.ssp.ssd.build_path", side_effect=lambda obj: obj._path),
         patch("fmpy.ssp.ssd.find_connectors", return_value=[]),
     ):
-        result = _fmpy_get_connections(root)
+        result = fmpy_get_connections(root)
     assert result == []
 
 
@@ -153,7 +116,7 @@ def test_fmpy_connections_orphan_raises_keyerror(tmp_path: Path) -> None:
         patch("fmpy.ssp.ssd.find_connectors", return_value=[out_con]),
     ):
         with pytest.raises(KeyError, match="Missing connection"):
-            _fmpy_get_connections(root)
+            fmpy_get_connections(root)
 
 
 @pytest.mark.skipif(not _HAVE_FMPY, reason="fmpy not installed")
@@ -179,7 +142,7 @@ def test_fmpy_connections_root_to_child(tmp_path: Path) -> None:
         patch("fmpy.ssp.ssd.build_path", side_effect=lambda obj: obj._path),
         patch("fmpy.ssp.ssd.find_connectors", return_value=all_connectors),
     ):
-        result = _fmpy_get_connections(root)
+        result = fmpy_get_connections(root)
 
     # The function records the connection twice: once from the root output
     # processing loop, once from the child input processing loop.

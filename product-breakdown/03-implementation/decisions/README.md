@@ -43,6 +43,7 @@ There is no canonical DD template. Follow the general decision format in
 | [DD-003](./DD-003-build-py-remains-build-only.md) | `build.py` Remains Build-Only | Accepted | technical-decision |
 | [DD-004](./DD-004-signal-propagation-deterministic-blocks.md) | Signal-Propagation Fixtures Use Deterministic Algebraic FMU Blocks | Accepted | technical-decision |
 | [DD-005](./DD-005-simulation-registry-technical.md) | Simulation Registry Technical Mechanism | Accepted | technical-decision |
+| [DD-006](./DD-006-time-shift-tolerant-vv-metrics.md) | Time-Shift-Tolerant VV Metrics | Accepted | implementation-decision |
 
 ## Purpose
 
@@ -59,6 +60,8 @@ The DDs in this directory implement the architectural constraints defined by:
 - [ADR-001](../../02-architecture/decisions/ADR-001.md) — Three-Stage Pipeline
 - [ADR-002](../../02-architecture/decisions/ADR-002.md) — Fixture Hierarchy
 - [ADR-003](../../02-architecture/decisions/ADR-003.md) — Runtime Configuration
+- [ADR-005](../../02-architecture/decisions/ADR-005.md) — pyssp Ecosystem Adoption
+- [ADR-006](../../02-architecture/decisions/ADR-006.md) — Standardized Artifacts at Tool Boundaries
 
 ---
 

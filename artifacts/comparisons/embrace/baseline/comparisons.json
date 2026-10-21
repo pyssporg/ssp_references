@@ -1,6 +1,13 @@
 {
   "comparisons": [
     {
+      "gate": {
+        "reasons": [
+          "AdaptionUnit.sWsignals.TLiquid: max_shift_abs_error=32.3447 exceeds 3.18834",
+          "ECS_HW.LHexTout: max_shift_abs_error=17.542 exceeds 3.00057"
+        ],
+        "status": "fail"
+      },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
       "runs": [
@@ -16,15 +23,25 @@
       "summary": {
         "compared_signal_count": 6,
         "max_abs_error": 313.0,
+        "max_shift_abs_error": 32.344702788000006,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 0.1988214418470743,
         "rmse": 3.987560648637256,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     }
   ],
   "error": null,
+  "gate": {
+    "reasons": [
+      "AdaptionUnit.sWsignals.TLiquid: max_shift_abs_error=32.3447 exceeds 3.18834",
+      "ECS_HW.LHexTout: max_shift_abs_error=17.542 exceeds 3.00057"
+    ],
+    "status": "fail"
+  },
   "request": {
     "case": "baseline",
     "model": "embrace",
@@ -43,8 +60,11 @@
   "summary": {
     "backend_count": 2,
     "comparison_count": 1,
+    "gate_result": "fail",
     "max_abs_error": 313.0,
     "max_rel_error": 0.0,
+    "max_shift_abs_error": 32.344702788000006,
+    "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 6
   }
 }

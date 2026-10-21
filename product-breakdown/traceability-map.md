@@ -23,9 +23,9 @@ Intent (00)
 | --- | --- | --- |
 | Intent | [00-intent/](./00-intent/) | `intent.md` — repository purpose, commitments, non-goals |
 | Product Decisions | [01-product/](./01-product/) | PD-001 (comparison methodology), PD-002 (registry source of truth), PD-003 (supported backends) |
-| System Architecture | [02-architecture/](./02-architecture/) | `architecture.md` — stable boundaries, pipeline stages, fixture hierarchy, runtime contract |
-| Technical Decisions (ADRs) | [02-architecture/decisions/](./02-architecture/decisions/) | ADR-001 through ADR-003 — significant architectural rationale |
-| Technical Decisions (DDs) | [03-implementation/decisions/](./03-implementation/decisions/) | DD-001 through DD-005 — smaller implementation choices |
+| System Architecture | [02-architecture/](./02-architecture/) | `architecture.md` — stable boundaries, pipeline stages, fixture hierarchy, runtime contract; `pipeline-boundaries.md` — canonical stage/tool artifact contracts |
+| Technical Decisions (ADRs) | [02-architecture/decisions/](./02-architecture/decisions/) | ADR-001 through ADR-006 — significant architectural rationale |
+| Technical Decisions (DDs) | [03-implementation/decisions/](./03-implementation/decisions/) | DD-001 through DD-006 — smaller implementation choices |
 | Implementation | [03-implementation/](./03-implementation/) | `FIXTURE-template.md`, `ls_ref_ssp_experiment_workflow.md` |
 | Verification | [04-verification/](./04-verification/) | Test strategy, fixture mapping |
 | Operation | [05-operation/](./05-operation/) | **Currently empty** — stub README only |

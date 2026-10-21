@@ -6,7 +6,7 @@ import tempfile
 import sys
 from pathlib import Path
 
-from pyssp_standard import LSRefExperiments, SSP, get_repo_root
+from pyssp_standard import LSRefExperiments, SSP
 from pyssp_standard.common.archive import unpack_archive
 from pyssp_standard.standard.ls_ref.model import (
     LSRefExperiment,
@@ -14,7 +14,7 @@ from pyssp_standard.standard.ls_ref.model import (
 )
 
 MODEL_DIR = Path(__file__).resolve().parent
-REPO_ROOT = get_repo_root(file="__SSP_REF_ROOT__")
+REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 

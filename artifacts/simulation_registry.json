@@ -20,7 +20,8 @@
             },
             {
               "label": "reference-me",
-              "path": "models/ssp/BouncingBall/references/BouncingBall-me.csv"
+              "path": "models/ssp/BouncingBall/references/BouncingBall-me.csv",
+              "gate": false
             }
           ]
         }
@@ -46,7 +47,8 @@
             },
             {
               "label": "reference-me",
-              "path": "models/ssp/Dahlquist/references/Dahlquist-me.csv"
+              "path": "models/ssp/Dahlquist/references/Dahlquist-me.csv",
+              "gate": false
             }
           ]
         }
@@ -173,16 +175,6 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ],
-          "reference_csvs": [
-            {
-              "label": "reference-cs",
-              "path": "models/ssp/Stair/references/Stair-cs.csv"
-            },
-            {
-              "label": "reference-me",
-              "path": "models/ssp/Stair/references/Stair-me.csv"
-            }
           ]
         }
       ]
@@ -275,7 +267,8 @@
             },
             {
               "label": "reference-me",
-              "path": "models/ssp/VanDerPol/references/VanDerPol-me.csv"
+              "path": "models/ssp/VanDerPol/references/VanDerPol-me.csv",
+              "gate": false
             }
           ]
         },

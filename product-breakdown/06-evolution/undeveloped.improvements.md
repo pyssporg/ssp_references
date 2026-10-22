@@ -9,3 +9,57 @@ use pyssp standard to create all possible ssp and ssd
 ---
 
 Iterate over the improvement candidates until all are completed
+
+---
+
+
+package ParameterPortDemo {
+  // Marker is now a port def (one carrier, one marker name)
+  port def ParameterInterface;
+
+  port def AutopilotParameters :> ParameterInterface {
+    attribute waypointCount : Integer;
+    attribute waypointX_km : Real[3];
+    attribute maxSpeed_kmh : Real = 120.0;        // interface default -> FMI start
+  }
+
+  attribute def ParameterSet;
+  attribute def NominalSet :> ParameterSet {
+    attribute waypointCount  = 10;
+    attribute waypointX_km   = (0.0, 10.0, 20.0);
+  }
+
+  part def AutopilotModule {
+    in port parameters : AutopilotParameters;        // parameters are always inputs
+    attribute nominal : NominalSet;
+
+    bind parameters.waypointCount = nominal.waypointCount;
+    bind parameters.waypointX_km  = nominal.waypointX_km;
+  }
+
+  part def StudyComposition {
+    part autopilot : AutopilotModule;
+    attribute aggressive : AggressiveSet;
+    bind autopilot.parameters.waypointCount = aggressive.waypointCount;
+  }
+
+}
+
+---
+
+
+// defining common attributes all fmus should have
+attribute def FmuMetaData; {
+  attribute source;             // file or extracted FMU dir
+  attribute resource_name;       // name under resources/
+}
+
+attribute def AutopilotFmu :> FmuMetaData {
+  attribute source = "build/fmus/AutopilotModule.fmu";  // file or extracted FMU dir
+  attribute resource_name = "AutopilotModule.fmu";       // name under resources/
+}
+
+part def AutopilotModule {
+  attribute fmu_meta : AutopilotFmu;
+  in port parameters : AutopilotParameters;
+}

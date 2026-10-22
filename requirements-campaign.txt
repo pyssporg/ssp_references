@@ -3,4 +3,4 @@
 # The project declares the distribution name sequence-extensions-flow to avoid
 # the unrelated PyPI project named sequence-extensions.
 -r requirements.txt
--e ./3rd_party/sequence_extensions
+-e ./3rd_party/pyssp_workflow/3rd_party/sequence_extensions

@@ -36,7 +36,7 @@ definitions, fixture notes, and build metadata.
 │   ├── run_comparisons.py
 │   ├── workflow/
 │   └── utils/
-├── 3rd_party/                # git submodules: pyssp_* and sequence_extensions
+├── 3rd_party/                # git submodule: pyssp_workflow, which owns the capability checkouts
 ├── product-breakdown/
 │   ├── 00-intent/              # north star intent and commitments
 │   ├── 01-product/              # product decisions
@@ -174,8 +174,9 @@ reference-model cases, the matching CSV baselines live in
 `requirements.txt` currently targets Linux `x86_64`:
 
 - `pyssp4sim` is pinned to the `v0.3.2` Linux `x86_64` wheel.
-- `pyssp_simulate` is installed editable from the `3rd_party/pyssp_simulate`
-  submodule so the repository and its simulation substrate develop together.
+- `pyssp_simulate` is installed editable from
+  `3rd_party/pyssp_workflow/3rd_party/pyssp_simulate` so the repository and its
+  simulation substrate develop together.
 - `OMSimulator` is installed from PyPI; its sdist can fail when nightly
   binaries have been removed, so a manual install may be needed.
 
@@ -185,10 +186,10 @@ The campaign runner and `pyssp_sysml2` round-trip tool have their own
 environment constraints:
 
 - `scripts/run_campaign.py` requires Python 3.11+ and the editable
-  `3rd_party/sequence_extensions` submodule. The project declares the
-  distribution name `sequence-extensions-flow` to avoid the unrelated PyPI
-  project named `sequence-extensions` (same `sequence_extensions` import).
-  Use `requirements-campaign.txt`.
+  `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` checkout. The project
+  declares the distribution name `sequence-extensions-flow` to avoid the
+  unrelated PyPI project named `sequence-extensions` (same `sequence_extensions`
+  import). Use `requirements-campaign.txt`.
 - `scripts/check_sysml_roundtrip.py` is an artifact-only checker. It invokes
   an external `pyssp` executable and exchanges only `SystemStructure.ssd`
   files; it does not import `pyssp_sysml2` or `pyssp_standard`. Point it at a

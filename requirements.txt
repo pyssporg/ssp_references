@@ -1,11 +1,12 @@
--e ./3rd_party/pyssp_standard
+-e ./3rd_party/pyssp_workflow/3rd_party/pyssp_standard
 #-e ./3rd_party/pyfmu_csv
 numpy
 scipy
 fmpy
 OMSimulator
-# Local editable pyssp submodules under 3rd_party/.
--e ./3rd_party/pyssp_simulate
+# Local editable pyssp submodules. The development tree lives in
+# 3rd_party/pyssp_workflow; see 3rd_party/README.md.
+-e ./3rd_party/pyssp_workflow/3rd_party/pyssp_simulate
 # pyssp4sim is pinned: the old releases/latest URL changed asset names between
 # releases (v0.3.2 ships pyssp4sim-0.3.2-... not pyssp4sim-0.0.0+lat-...).
 https://github.com/jkCXf9X4/ssp4sim/releases/download/v0.3.2/pyssp4sim-0.3.2-cp39-abi3-linux_x86_64.whl

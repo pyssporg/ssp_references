@@ -70,17 +70,17 @@ paths are recorded relative to the manifest that contains them.
 Each tool may run in its own virtual environment. Version alignment is needed
 only when an artifact format changes, not when a Python model API changes.
 
-For development, the library dependencies are editable git submodules under
-`3rd_party/`:
+For development, one git submodule under `3rd_party/` owns the ecosystem
+checkouts. The capabilities are nested inside it:
 
 | Submodule | Used by |
 | --- | --- |
-| `3rd_party/pyssp_standard` | Build |
-| `3rd_party/pyssp_simulate` | Simulate |
-| `3rd_party/pyssp_sysml2` | SysML |
-| `3rd_party/sequence_extensions` | Campaign orchestration |
-| `3rd_party/pyssp_vv` | Verification and validation capability (measurement, judgment, evidence) |
-| `3rd_party/pyssp_workflow` | Workflow composition as nodes (submodule only; not imported by the pipeline yet) |
+| `3rd_party/pyssp_workflow` | Composition layer and development tree (submodule only; not imported by the pipeline yet) |
+| `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` | Build |
+| `3rd_party/pyssp_workflow/3rd_party/pyssp_simulate` | Simulate |
+| `3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2` | SysML |
+| `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` | Campaign orchestration |
+| `3rd_party/pyssp_workflow/3rd_party/pyssp_vv` | Verification and validation capability (measurement, judgment, evidence) |
 
 See [`3rd_party/README.md`](../../3rd_party/README.md) for initialization and
 local-patch guidance.

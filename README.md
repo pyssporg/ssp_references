@@ -54,16 +54,22 @@ definitions, fixture notes, and build metadata.
 Each model directory under `models/ssp/<model_name>/` follows the same basic
 contract:
 
-- `build.py` is the source of truth for how that SSP gets assembled.
+- `architecture/*.sysml` is the authored source for migrated fixtures.
+- `part def <Model> :> SspModel` exports one SSP; `part def <Study> :> Study`
+  supplies scenario data and is never exported as an SSP.
+- `build.py` is the source of truth for how that model and its studies get
+  built.
 - `FIXTURE.md` provides the fixture notes for each model.
-- Running `build.py` prepares the generated fixture under `artifacts/models/`
-  by validating sources, packaging the `.ssp`, and unpacking a runtime layout.
-- Some fixtures also carry `experiments.xml`, but that file is only packaging
-  metadata for variant SSP assembly. It is not the main runtime contract.
+- Running `build.py` writes the exported model under
+  `artifacts/models/<model>/<build>/` and study artifacts under
+  `artifacts/studies/<model>/<study>/`.
+- A study artifact directory contains a scenario SSV, an SSM mapping, and
+  `study.json`; it contains no SSD or SSP.
 - Simulation and comparison run through the shared entry points in `scripts/`
-  and consume the built SSP root plus `artifacts/simulation_registry.json`.
-  Each generated `artifacts/simulation/<model>/<case>/setup.json` records the
-  explicit backend list and the explicit compare-signal list for that case.
+  and consume the exported model, study descriptor, and
+  `artifacts/simulation_registry.json`. Each generated
+  `artifacts/simulation/<model>/<case>/setup.json` records the study, scenario
+  paths, explicit backend list, and explicit compare-signal list for that case.
   The current backend set is `ssp4sim`, `OMSimulator`, and `FMPy`.
   `pyssp_simulate` is the execution substrate; local shims remain only for
   documented upstream gaps (FMPy SSP-2.0 loading and OMSimulator step mode).
@@ -76,10 +82,10 @@ The canonical artifact contract for the stages and external tools is
 [Pipeline and Tool Boundaries](product-breakdown/02-architecture/pipeline-boundaries.md):
 
 ```text
-Build    -> SSP root: SSD / SSV / resources / experiments.xml
-Simulate -> reads SSP root + registry, writes CSV + run manifests
+Build    -> exported model SSP + study SSV/SSM/study.json
+Simulate -> reads model SSP + study + registry, writes CSV + run manifests
 Compare  -> reads run manifests + CSV, writes comparisons
-SysML    -> reads SSD, invokes external pyssp CLI, writes SSD
+SysML    -> reads .sysml, invokes external pyssp CLI, writes SSP/study
 ```
 
 The build workflow discovers models from `models/*/*/build.py`:
@@ -127,15 +133,17 @@ listed in the corresponding `setup.json`, or a filtered backend subset when
 ### VV gate and reference baselines
 
 `run_comparisons.py` records a `gate` verdict on every engine-to-engine pair
-and on every reference comparison. The gate uses a small time-shift tolerance
-so ordinary co-simulation scheduling skew does not fail an otherwise matching
-signal; raw pointwise error stays in `metrics.csv` for diagnosis.
+and on every reference comparison. Measurement and judgment come from
+`pyssp_vv`; `invalid` is distinct from `fail` when a comparison is not fit to
+judge. The gate uses a small time-shift tolerance so ordinary co-simulation
+scheduling skew does not fail an otherwise matching signal; raw pointwise error
+stays in `metrics.csv` for diagnosis.
 
 ```bash
 # Record gates without failing the command
 python3 scripts/run_comparisons.py
 
-# Exit nonzero if any gate fails (CI / campaign use)
+# Exit nonzero if any gate fails or is invalid (CI / campaign use)
 python3 scripts/run_comparisons.py --fail-on-gate
 ```
 
@@ -153,6 +161,7 @@ simulation and comparison logic has a single home.
 ```bash
 python3 scripts/run_campaign.py --model BouncingBall --model Dahlquist
 python3 scripts/run_campaign.py --model BouncingBall --fail-on-gate
+python3 scripts/run_campaign.py --model signal_step_gain --fail-on-gate
 ```
 
 The campaign runs in the same Python 3.11+ environment as the core pipeline.
@@ -195,7 +204,8 @@ environment constraints:
   files; it does not import `pyssp_sysml2` or `pyssp_standard`. Point it at a
   dedicated SysML tool environment with `--pyssp /path/to/venv/bin/pyssp` or
   the `PYSSP` environment variable. `requirements-sysml.txt` describes that
-  environment. The runtime venv does not need `pyssp_sysml2`.
+  environment. The build stage also needs `pyssp_sysml2`; `requirements.txt`
+  installs it through the `pyssp_workflow` submodule.
 
 The pyssp and sequence submodules are editable checkouts. See
 [`3rd_party/README.md`](3rd_party/README.md) for initialization, update, and
@@ -242,6 +252,15 @@ python3 scripts/build_models.py run BouncingBall
 ```
 
 Built artifacts appear under `artifacts/models/BouncingBall/`.
+
+To build the SysML-authored pilot model and its study:
+
+```bash
+python3 scripts/build_models.py run signal_step_gain
+```
+
+This writes `artifacts/models/signal_step_gain/model/` and
+`artifacts/studies/signal_step_gain/test_baseline/`.
 
 To build every model at once:
 ```bash

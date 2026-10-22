@@ -13,6 +13,7 @@ stream.
 | 2026-10-22 | PD-003 | Supported Simulation Backends | product | accepted | `PD-003` |
 | 2026-10-22 | PD-002 | Simulation Registry Is the Single Source of Truth | product | accepted | `PD-002` |
 | 2026-10-22 | PD-001 | Comparison Methodology — Engine-to-Engine Only | product | accepted | `PD-001` |
+| 2026-10-22 | DD-010 | `pyssp_vv` Owns Comparison Measurement and Judgment | implementation | accepted | `DD-010` |
 | 2026-10-22 | DD-009 | Runtime Scenario Injection and Registry Build/Case Split | implementation | accepted | `DD-009` |
 | 2026-10-22 | DD-008 | Study Scenario Generation and SSM Prefix Stripping | implementation | accepted | `DD-008` |
 | 2026-10-22 | DD-007 | `signal_step_gain` Model Export | implementation | accepted | `DD-007` |

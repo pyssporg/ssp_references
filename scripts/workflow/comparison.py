@@ -4,11 +4,17 @@ from itertools import combinations
 from dataclasses import dataclass
 from pathlib import Path
 
-from utils.comparison import compare_result_sets, signal_invariant_metrics, write_metrics_csv
+from utils.comparison import (
+    compare_result_sets,
+    comparison_metric_rows,
+    comparison_summary,
+    write_metrics_csv,
+)
 from utils.filesystem import reset_dir
 
-from .gate import GateOutcome, evaluate_gate
+from .gate import GateOutcome, combine_gate_outcomes, evaluate_gate
 from .io import read_json, relative_path, resolve_path, write_json
+from .model_policy import signal_invariant_rows
 from .simulate import SimulationRun
 
 
@@ -131,10 +137,7 @@ class ComparisonRun:
             metrics_path=resolve_path(path.parent, data["metrics"]),
             status=data.get("status", "completed"),
             error=data.get("error"),
-            gate=GateOutcome(
-                status=str(data.get("gate", {}).get("status", "not_evaluated")),
-                reasons=tuple(data.get("gate", {}).get("reasons", [])),
-            ),
+            gate=GateOutcome.from_dict(data.get("gate")),
         )
 
 
@@ -269,10 +272,7 @@ class ComparisonBatchRun:
             summary=data["summary"],
             status=data.get("status", "completed"),
             error=data.get("error"),
-            gate=GateOutcome(
-                status=str(data.get("gate", {}).get("status", "not_evaluated")),
-                reasons=tuple(data.get("gate", {}).get("reasons", [])),
-            ),
+            gate=GateOutcome.from_dict(data.get("gate")),
         )
 
 
@@ -303,6 +303,9 @@ def _summarize_batch(
         ),
         default=0.0,
     )
+    gate_result = combine_gate_outcomes(
+        comparison.gate for comparison in comparisons
+    ).status
     return {
         "backend_count": len(runs),
         "comparison_count": len(comparisons),
@@ -311,9 +314,7 @@ def _summarize_batch(
         "max_rel_error": max_rel_error,
         "min_compared_signal_count": min_compared_signal_count,
         "max_signal_invariant_abs_error": max_signal_invariant_abs_error,
-        "gate_result": "fail"
-        if any(comparison.gate.status == "fail" for comparison in comparisons)
-        else "pass",
+        "gate_result": gate_result,
     }
 
 
@@ -323,21 +324,23 @@ def compare_runs(request: ComparisonRequest) -> ComparisonRun:
     model_name = request.run_a.request.setup.model_name
     window = request.run_a.request.setup.window
     root_system_name = request.run_a.request.setup.root_system_name
-    summary, metrics = compare_result_sets(
+    comparison = compare_result_sets(
         request.run_a.to_result_set(),
         request.run_b.to_result_set(),
         window=window,
         selected_signals=request.run_a.request.setup.compare_signals,
         root_system_name=root_system_name,
     )
+    summary = comparison_summary(comparison, window=window)
+    metrics = comparison_metric_rows(comparison)
     invariant_rows = [
-        *signal_invariant_metrics(
+        *signal_invariant_rows(
             request.run_a.to_result_set(),
             model_name=model_name,
             window=window,
             root_system_name=root_system_name,
         ),
-        *signal_invariant_metrics(
+        *signal_invariant_rows(
             request.run_b.to_result_set(),
             model_name=model_name,
             window=window,
@@ -380,15 +383,8 @@ def compare_run_batch(request: ComparisonBatchRequest) -> ComparisonBatchRun:
         request=request,
         comparisons=comparisons,
         summary=_summarize_batch(request.runs, comparisons),
-        gate=GateOutcome(
-            status="fail"
-            if any(comparison.gate.status == "fail" for comparison in comparisons)
-            else "pass",
-            reasons=tuple(
-                reason
-                for comparison in comparisons
-                for reason in comparison.gate.reasons
-            ),
+        gate=combine_gate_outcomes(
+            comparison.gate for comparison in comparisons
         ),
     )
     batch.write_manifest()

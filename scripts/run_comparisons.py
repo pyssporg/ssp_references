@@ -46,7 +46,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--fail-on-gate",
         action="store_true",
-        help="Exit nonzero when any engine-to-engine or reference comparison fails its gate.",
+        help=(
+            "Exit nonzero when any engine-to-engine or reference comparison "
+            "does not pass its gate (fail or invalid)."
+        ),
     )
     return parser.parse_args()
 
@@ -98,9 +101,10 @@ def main() -> int:
                 print(comparison.manifest_path)
                 print(comparison.metrics_path)
             print(result.summary)
-            if result.gate.status == "fail":
+            if result.gate.status in {"fail", "invalid"}:
                 gate_failures.extend(
-                    f"{spec.model_name}/{spec.case_name} engine pair: {reason}"
+                    f"{spec.model_name}/{spec.case_name} engine pair "
+                    f"({result.gate.status}): {reason}"
                     for reason in result.gate.reasons
                 )
         else:
@@ -113,17 +117,18 @@ def main() -> int:
                 print(reference_run.manifest_path)
                 print(reference_run.metrics_path)
                 print(reference_run.summary)
-                if reference_run.gate.status == "fail":
+                if reference_run.gate.status in {"fail", "invalid"}:
                     gate_failures.extend(
                         f"{spec.model_name}/{spec.case_name} {run.request.backend} "
-                        f"vs {reference_run.request.label}: {reason}"
+                        f"vs {reference_run.request.label} "
+                        f"({reference_run.gate.status}): {reason}"
                         for reason in reference_run.gate.reasons
                     )
 
     if skipped:
         print(f"Skipped {skipped} case(s) with fewer than two engine results")
     if gate_failures:
-        print("Gate failures:")
+        print("Gate failures and invalid comparisons:")
         for failure in gate_failures:
             print(f"  - {failure}")
         if args.fail_on_gate:

@@ -107,14 +107,14 @@ Reference comparisons are written under
 `artifacts/comparisons/<model_name>/<study_name>/references/<backend>_vs_<reference_label>/`.
 A batch-level comparison manifest is also written at
 `artifacts/comparisons/<model_name>/<study_name>/comparisons.json`. Every
-comparison manifest records a `gate` verdict and its reasons. The current gate
-records `pass` or `fail`; the target `pyssp_vv` judgment also records `invalid`
-for comparisons that are not fit to judge.
+comparison manifest records a `gate` verdict and its reasons. The gate records
+`pass`, `fail`, or `invalid`; `invalid` means the comparison was not fit to
+judge.
 
 **Entry point:** `scripts/run_comparisons.py` reads the registry, loads the
-setup and run manifests, and drives the comparison. The target implementation
-for measurement and judgment is `pyssp_vv.measure` / `pyssp_vv.judge`, composed
-by `pyssp_workflow` nodes; the local comparison layer is transitional.
+setup and run manifests, and drives the comparison. `pyssp_vv.measure` produces
+the metrics, `pyssp_vv.judge` produces the verdict, and model-specific signal
+invariants live in `workflow/model_policy.py`.
 
 **Invariant:** The compare stage does not re-run simulations, does not rebuild
 SSPs, and does not modify model sources or simulation outputs.

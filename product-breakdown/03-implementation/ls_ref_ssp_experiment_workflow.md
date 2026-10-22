@@ -29,8 +29,8 @@ For SysML-authored fixtures:
 - the `SspModel` composition is the authored source for the exported SSP;
 - a `Study` composition is the authored source for scenario values and the
   experiment window;
-- `extra/org.fmi-standard.fmi-ls-ref/experiments.xml` in the exported SSP is a
-  generated default for standalone use, not the study contract;
+- `extra/org.fmi-standard.fmi-ls-ref/experiments.xml` in the exported SSP, when
+  present, is a generated default for standalone use, not the study contract;
 - the study descriptor drives the runtime window and tolerance.
 
 For legacy fixtures, `experiments.xml` may still be authored. Keep it focused on

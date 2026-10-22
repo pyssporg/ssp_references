@@ -69,3 +69,5 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   A study generates SSV, SSM, and an experiment descriptor; SSM targets strip the `sut.` prefix.
 - **DD-009** — Runtime Scenario Injection and Registry Build/Case Split · accepted · 2026-10-22 · `DD-009`
   Runtime scenario injection copies the exported SSP, adds a root `ParameterBinding`, and never mutates the build artifact.
+- **DD-010** — `pyssp_vv` Owns Comparison Measurement and Judgment · accepted · 2026-10-22 · `DD-010`
+  Comparison metrics and verdicts come from pyssp_vv; this repo keeps registry and model policy.

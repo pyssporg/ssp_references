@@ -25,6 +25,7 @@ class ArtifactLayout:
     model_name: str
     case_name: str
     ssp_root: Path
+    study_root: Path | None = None
 
     @classmethod
     def from_ssp_root(cls, ssp_root: Path) -> "ArtifactLayout":
@@ -35,6 +36,24 @@ class ArtifactLayout:
             model_name=resolved_root.parent.name,
             case_name=resolved_root.name,
             ssp_root=resolved_root,
+        )
+
+    @classmethod
+    def from_model_root(
+        cls,
+        model_name: str,
+        case_name: str,
+        ssp_root: Path,
+        study_root: Path | None = None,
+    ) -> "ArtifactLayout":
+        resolved_root = ssp_root.resolve()
+        if not resolved_root.exists():
+            raise FileNotFoundError(f"SSP root not found: {resolved_root}")
+        return cls(
+            model_name=model_name,
+            case_name=case_name,
+            ssp_root=resolved_root,
+            study_root=study_root.resolve() if study_root is not None else None,
         )
 
     @property
@@ -74,6 +93,12 @@ class ArtifactLayout:
     @property
     def resources_dir(self) -> Path:
         return self.ssp_root / "resources"
+
+    @property
+    def study_descriptor_path(self) -> Path | None:
+        if self.study_root is None:
+            return None
+        return self.study_root / "study.json"
 
     def simulation_run_dir(self, backend: str) -> Path:
         return self.simulation_case_root / sanitize_label(backend)

@@ -23,10 +23,17 @@ from workflow.registry import (
     SimulationRegistry,
     load_registry,
 )
-from workflow.gate import GateConfig
+from workflow.gate import (
+    GateConfig,
+    GateOutcome,
+    combine_gate_outcomes,
+    evaluate_gate,
+)
 from workflow.reference import compare_reference, load_reference_columns, ReferenceComparisonRequest
 from workflow.setup import prepare_setup
-from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
+from pyssp_simulate.result import write_result_csv
+
+from workflow.simulate import SimulationRequest, SimulationRun
 from utils.csv import extract_series, load_numeric_csv
 
 
@@ -73,7 +80,7 @@ def write_series(path: Path, signal_values: list[float]) -> None:
         dtype=[("time", float), ("signal", float)],
     )
     path.parent.mkdir(parents=True, exist_ok=True)
-    write_structured_csv(path, result)
+    write_result_csv(path, result)
 
 
 def write_prefixed_csv(path: Path, signal_name: str, signal_values: list[float]) -> None:
@@ -215,6 +222,30 @@ def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:
 
     loaded = SimulationRegistry.from_dict(registry.to_dict())
     assert loaded == registry
+
+
+def test_registry_roundtrip_supports_model_build_and_study() -> None:
+    registry = SimulationRegistry(
+        models=(
+            RegistryModel(
+                name="ExampleModel",
+                compare_signals=("signal",),
+                build="model",
+                cases=(
+                    RegistryCase(
+                        name="baseline",
+                        study="test_baseline",
+                        backends=("ssp4sim",),
+                    ),
+                ),
+            ),
+        ),
+    )
+
+    loaded = SimulationRegistry.from_dict(registry.to_dict())
+    assert loaded == registry
+    assert loaded.models[0].build == "model"
+    assert loaded.models[0].cases[0].study == "test_baseline"
 
 
 def test_registry_roundtrip_supports_reference_csvs() -> None:
@@ -455,6 +486,28 @@ def test_compare_runs_gate_fails_on_signal_invariant_violation(tmp_path: Path) -
         "gain.y = 3.0 * step.y" in reason
         for reason in comparison.gate.reasons
     )
+
+
+def test_gate_keeps_invalid_distinct_from_failure() -> None:
+    metric = {
+        "signal": "signal",
+        "max_shift_abs_error": float("nan"),
+        "mean_abs_error": 0.0,
+        "rmse": 0.0,
+        "run_a_min": 0.0,
+        "run_a_max": 1.0,
+        "coverage": 1.0,
+        "undefined": "",
+    }
+
+    outcome = evaluate_gate([metric], gate=GateConfig(atol=0.1))
+    assert outcome.status == "invalid"
+    assert any("non-finite-metric" in reason for reason in outcome.reasons)
+
+    combined = combine_gate_outcomes(
+        (outcome, GateOutcome(status="fail", reasons=("failed",)))
+    )
+    assert combined.status == "invalid"
 
 
 def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) -> None:

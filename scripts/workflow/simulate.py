@@ -1,30 +1,25 @@
 from __future__ import annotations
 
-import csv
 import os
+import tempfile
 import time
-import zipfile
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
-import tempfile
 
 from pyssp_simulate import SimulationSpec, simulate
-from pyssp_simulate.result import SimulationResult, read_result_csv
+from pyssp_simulate.result import SimulationResult, read_result_csv, write_result_csv
 from pyssp_simulate.runtime import prepare_runtime_ssp
+from pyssp_standard.common.archive import package_archive
+from pyssp_workflow.execute import inject_scenario
+from pyssp_workflow.params import read_study_descriptor
 
+from utils.domain import ResultSet
 from utils.filesystem import reset_dir
 
 from .engine_compat import configure_omsimulator, patched_fmpy_ssp_runtime
 from .io import read_json, relative_path, resolve_path, write_json
 from .setup import SimulationSetup
-
-
-@dataclass(frozen=True)
-class ResultSet:
-    label: str
-    path: Path
-    engine: str
 
 
 @dataclass(frozen=True)
@@ -133,16 +128,6 @@ class SimulationRun:
         )
 
 
-def write_structured_csv(path: Path, result) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    headers = list(result.dtype.names or ())
-    with path.open("w", newline="") as handle:
-        writer = csv.writer(handle, lineterminator="\n")
-        writer.writerow(headers)
-        for row in result:
-            writer.writerow([row[name] for name in headers])
-
-
 def _simulation_spec(request: SimulationRequest, ssp: Path) -> SimulationSpec:
     return SimulationSpec(
         ssp=ssp,
@@ -165,10 +150,12 @@ def _raw_ssp_archive(ssp_root: Path):
     """
     with tempfile.TemporaryDirectory(prefix=f"{ssp_root.name}_") as temp_dir:
         archive = Path(temp_dir) / "runtime.ssp"
-        with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as handle:
-            for path in sorted(ssp_root.rglob("*")):
-                if path.is_file():
-                    handle.write(path, path.relative_to(ssp_root))
+        package_archive(
+            ssp_root,
+            archive,
+            recursive=False,
+            overwrite=True,
+        )
         yield archive
 
 
@@ -204,8 +191,8 @@ def _run_backend(
     return run
 
 
-def simulate_ssp4sim(request: SimulationRequest) -> SimulationRun:
-    with _raw_ssp_archive(request.setup.ssp_root) as runtime_ssp:
+def simulate_ssp4sim(request: SimulationRequest, ssp_root: Path) -> SimulationRun:
+    with _raw_ssp_archive(ssp_root) as runtime_ssp:
         return _run_backend(request, runtime_ssp, "ssp4sim")
 
 
@@ -219,7 +206,7 @@ def _temporary_cwd(path: Path):
         os.chdir(previous)
 
 
-def simulate_omsimulator(request: SimulationRequest) -> SimulationRun:
+def simulate_omsimulator(request: SimulationRequest, ssp_root: Path) -> SimulationRun:
     """Run OMSimulator without forcing a fixed step size.
 
     ``pyssp_simulate`` calls ``setFixedStepSize``, which suppresses event
@@ -233,7 +220,7 @@ def simulate_omsimulator(request: SimulationRequest) -> SimulationRun:
     configure_omsimulator()
     Settings.suppressPath = True
 
-    with prepare_runtime_ssp(request.setup.ssp_root) as runtime:
+    with prepare_runtime_ssp(ssp_root) as runtime:
         with _temporary_cwd(request.run_dir):
             model = OMSSP(str(runtime.archive))
             instance = model.instantiate()
@@ -273,25 +260,65 @@ def simulate_omsimulator(request: SimulationRequest) -> SimulationRun:
     return run
 
 
-def simulate_fmpy(request: SimulationRequest) -> SimulationRun:
+def _apply_fmpy_mapping(binding):
+    """Resolve FMPy's externally loaded SSM into target-named parameters."""
+    from fmpy.ssp.ssd import Parameter, ParameterSet
+
+    if not binding.parameterValues:
+        return None
+    parameter_set = binding.parameterValues[0]
+    mappings = [
+        entry
+        for mapping in binding.parameterMapping
+        for entry in mapping.mappingEntries
+    ]
+    if not mappings:
+        return parameter_set
+
+    by_name = {parameter.name: parameter for parameter in parameter_set.parameters}
+    resolved = ParameterSet(name=parameter_set.name)
+    for entry in mappings:
+        source = by_name.get(entry.source)
+        if source is None:
+            raise ValueError(
+                f"FMPy mapping source '{entry.source}' is not present in "
+                f"parameter set '{parameter_set.name}'"
+            )
+        resolved.parameters.append(
+            Parameter(
+                name=entry.target,
+                type=source.type,
+                value=source.value,
+                unit=source.unit,
+            )
+        )
+    return resolved
+
+
+def simulate_fmpy(request: SimulationRequest, ssp_root: Path) -> SimulationRun:
     """Run FMPy with the SSP parameter bindings applied.
 
     ``pyssp_simulate``'s FMPy backend calls ``simulate_ssp`` without a
     parameter set, so SSV values are silently ignored. FMPy supports the
-    argument, so pass the SSD's first parameter set explicitly.
+    argument, so pass the SSD's first parameter set explicitly and apply its
+    external SSM mapping before simulation.
     """
     from fmpy.ssp.simulation import simulate_ssp
     from fmpy.ssp.ssd import read_ssd
 
     reset_dir(request.run_dir)
-    with prepare_runtime_ssp(request.setup.ssp_root) as runtime:
+    with prepare_runtime_ssp(ssp_root) as runtime:
         with patched_fmpy_ssp_runtime():
             ssd = read_ssd(str(runtime.archive), validate=False)
-            parameter_set = None
-            for binding in ssd.system.parameterBindings:
-                if binding.parameterValues:
-                    parameter_set = binding.parameterValues[0]
-                    break
+            binding = next(
+                (
+                    candidate
+                    for candidate in ssd.system.parameterBindings
+                    if candidate.parameterValues
+                ),
+                None,
+            )
+            parameter_set = _apply_fmpy_mapping(binding) if binding is not None else None
 
             start = time.perf_counter()
             raw = simulate_ssp(
@@ -303,7 +330,7 @@ def simulate_fmpy(request: SimulationRequest) -> SimulationRun:
             )
             runtime_s = time.perf_counter() - start
 
-    write_structured_csv(request.result_path, raw)
+    write_result_csv(request.result_path, raw)
     if not request.result_path.is_file():
         raise FileNotFoundError(f"FMPy did not write result CSV: {request.result_path}")
 
@@ -316,12 +343,27 @@ def simulate_fmpy(request: SimulationRequest) -> SimulationRun:
     return run
 
 
-def simulate_backend(request: SimulationRequest) -> SimulationRun:
+def _simulate_backend(request: SimulationRequest, ssp_root: Path) -> SimulationRun:
     backend = request.backend.lower()
     if backend == "ssp4sim":
-        return simulate_ssp4sim(request)
+        return simulate_ssp4sim(request, ssp_root)
     if backend == "omsimulator":
-        return simulate_omsimulator(request)
+        return simulate_omsimulator(request, ssp_root)
     if backend == "fmpy":
-        return simulate_fmpy(request)
+        return simulate_fmpy(request, ssp_root)
     raise NotImplementedError(f"Unsupported backend: {request.backend}")
+
+
+def simulate_backend(request: SimulationRequest) -> SimulationRun:
+    setup = getattr(request, "setup", None)
+    if setup is None or setup.descriptor_path is None:
+        return _simulate_backend(request, getattr(setup, "ssp_root", None))
+
+    study = read_study_descriptor(setup.descriptor_path)
+    with inject_scenario(
+        setup.ssp_root,
+        study.ssv_path,
+        study.ssm_path,
+        target_ssd=study.target_ssd,
+    ) as runtime_root:
+        return _simulate_backend(request, runtime_root)

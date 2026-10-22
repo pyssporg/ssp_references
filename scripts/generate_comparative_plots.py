@@ -19,7 +19,7 @@ from workflow.registry import RegistryReferenceCsv, default_registry_path, load_
 from workflow.setup import SimulationSetup
 from workflow.simulate import SimulationRun
 from utils.config import REPO_ROOT
-from utils.csv import load_numeric_csv, normalize_column_name
+from utils.csv import load_numeric_csv
 
 LINE_STYLES = ("-", "--", ":", "-.")
 START_MARKERS = ("o", "s", "^", "D", "v", "P", "X")
@@ -101,6 +101,7 @@ def _load_engine_series(run: SimulationRun, setup: SimulationSetup) -> EngineSer
         result_path,
         engine=run.request.backend,
         root_system_name=setup.root_system_name,
+        prefix="fmu.",
     )["columns"]
 
     time_series = payload.get("time")
@@ -108,15 +109,10 @@ def _load_engine_series(run: SimulationRun, setup: SimulationSetup) -> EngineSer
         raise KeyError(f"Result file does not contain a time column: {result_path}")
 
     values_by_variable: dict[str, list[float]] = {}
-    for raw_name, series in payload.items():
-        if raw_name == "time":
+    for signal_name, series in payload.items():
+        if signal_name == "time":
             continue
-        canonical_name = normalize_column_name(
-            raw_name,
-            engine=run.request.backend,
-            root_system_name=setup.root_system_name,
-        )
-        values_by_variable[canonical_name] = series.tolist()
+        values_by_variable[signal_name] = series.tolist()
 
     return EngineSeries(
         engine=run.request.backend,
@@ -136,7 +132,7 @@ def _load_reference_series(reference: RegistryReferenceCsv, setup: SimulationSet
 
     payload = load_numeric_csv(
         result_path,
-        root_system_name=f"default.{setup.model_name}",
+        prefix=f"default.{setup.model_name}.",
     )["columns"]
 
     time_series = payload.get("time")
@@ -144,14 +140,10 @@ def _load_reference_series(reference: RegistryReferenceCsv, setup: SimulationSet
         raise KeyError(f"Reference CSV does not contain a time column: {result_path}")
 
     values_by_variable: dict[str, list[float]] = {}
-    for raw_name, series in payload.items():
-        if raw_name == "time":
+    for signal_name, series in payload.items():
+        if signal_name == "time":
             continue
-        canonical_name = normalize_column_name(
-            raw_name,
-            root_system_name=f"default.{setup.model_name}",
-        )
-        values_by_variable[canonical_name] = series.tolist()
+        values_by_variable[signal_name] = series.tolist()
 
     return EngineSeries(
         engine=reference.label,

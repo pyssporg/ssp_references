@@ -14,7 +14,7 @@ Nested under `pyssp_workflow/3rd_party/`:
 | --- | --- | --- |
 | `pyssp_standard/` | `jkCXf9X4/pyssp_standard` | SSP XML model and archive APIs used by the build stage |
 | `pyssp_simulate/` | `pyssporg/pyssp_simulate` | Simulation substrate used by the simulate stage |
-| `pyssp_sysml2/` | `pyssporg/pyssp_sysml2` | External SysML/SSD round-trip tool |
+| `pyssp_sysml2/` | `pyssporg/pyssp_sysml2` | SysML authoring, study generation, and SSD round-trip tool |
 | `pyssp_vv/` | `pyssporg/pyssp_vv` | V&V capability: measurement, judgment, evidence |
 | `sequence_extensions/` | `jkCXf9X4/sequence_extensions` | Campaign flow engine |
 

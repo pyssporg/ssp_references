@@ -26,8 +26,8 @@ boundaries:
 | --- | --- | --- |
 | SSP runtime prep, ssp4sim config, result CSV parsing | Local implementation in `scripts/workflow/simulate.py` | `pyssp_simulate` (`SimulationSpec`, `prepare_runtime_ssp`, backend adapters) |
 | FMPy / OMSimulator calls | Local adapters | Local adapters only where upstream behavior differs; see §4 |
-| Comparison gate | Metrics only, invariant violations raised | `pyssp_vv.measure` / `pyssp_vv.judge` target; local gate during migration |
-| Reference baselines | Plot input only | `scripts/workflow/reference.py` compares runs to reference CSVs; target is `pyssp_vv` |
+| Comparison gate | Metrics only, invariant violations raised | `pyssp_vv.measure` metrics and `pyssp_vv.judge` verdicts |
+| Reference baselines | Plot input only | `scripts/workflow/reference.py` compares runs to reference CSVs through `pyssp_vv` |
 | Campaign orchestration | Sequential CLI loops | `scripts/run_campaign.py` via `sequence_extensions` (Python 3.11+) |
 | SysML v2 authoring | Round-trip checker only | `pyssp_workflow.authoring` → `pyssp` CLI for `SspModel` export and `Study` scenario generation |
 | Capability ownership | Local pipeline implementations | `pyssp_workflow` composition over `pyssp_standard` / `pyssp_simulate` / `pyssp_vv` / `pyssp_sysml2` |
@@ -102,8 +102,8 @@ primitives, permutation runs, CLI.
    process (`scenario`, `pyfmu_csv_source_sink`). The campaign runner isolates
    each simulation in a subprocess.
 5. **Comparison is engine-to-engine only.** There is no reference-CSV mode and
-   no explicit signal-selection/window contract. This repository keeps its
-   comparison layer for that reason.
+   no explicit signal-selection/window contract. This repository uses
+   `pyssp_vv.measure` and `pyssp_vv.judge` for that contract instead.
    **Patched upstream in 0.1.1:** `compare_to_reference`,
    `SimulationResult.from_reference_csv`, and `ComparisonWindow` now exist, and
    the CLI accepts `--reference`, `--model-name`, and an explicit grid.
@@ -204,8 +204,9 @@ pyssp generate ssp \
 # Study scenario + experiment data (no SSP)
 pyssp generate study \
   --architecture models/ssp/signal_step_gain/architecture \
-  --study test_baseline \
-  --output-dir artifacts/studies/signal_step_gain/baseline
+  --composition test_baseline \
+  --model signal_step_gain \
+  --output-dir artifacts/studies/signal_step_gain/test_baseline
 
 # Structural round-trip check
 python3 scripts/check_sysml_roundtrip.py \
@@ -227,9 +228,9 @@ python3 scripts/check_sysml_roundtrip.py \
 | No reference-CSV comparison | pyssp_simulate | Patched in 0.1.1 |
 | No explicit comparison window | pyssp_simulate | Patched in 0.1.1 |
 | SSD → SysML → SSD loses metadata | pyssp_sysml2 | Patched in 0.1.1 |
-| No `SspModel`/`Study` role markers or study generation | pyssp_sysml2 | Planned (ADR-009) |
-| No runtime scenario SSV/SSM injection | pyssp_workflow | Planned (ADR-010) |
-| Custom comparison/gate layer still local | this repo → pyssp_vv | Planned (ADR-008) |
+| No `SspModel`/`Study` role markers or study generation | pyssp_sysml2 | Implemented in pilot (ADR-009) |
+| No runtime scenario SSV/SSM injection | pyssp_workflow | Implemented in pilot (ADR-010) |
+| Comparison and gate ownership | this repo → pyssp_vv | Migrated to `pyssp_vv.measure` and `pyssp_vv.judge` (DD-010) |
 | `pyssp_standard` version skew / LS-REF split | pyssp_sysml2 / pyssp_standard | Resolved by artifact boundary: pyssp_sysml2 targets the refactored API; checker invokes `pyssp` via CLI |
 | PyPI name collision | sequence_extensions | Patched: publishes as `sequence-extensions-flow` |
 | Broken `latest` ssp4sim wheel URL | ssp4sim / this repo | Pinned to `v0.3.2` |
@@ -238,10 +239,10 @@ python3 scripts/check_sysml_roundtrip.py \
 
 ## 6. VV Implications
 
-- **Pass/fail is now first-class.** Every pair and reference comparison records
-  `gate.status` and reasons in its manifest. The target `pyssp_vv` migration
-  adds `invalid` as a distinct "not fit to judge" outcome; campaign exit codes
-  must not collapse it into `fail`.
+- **Pass/fail/invalid are first-class.** Every pair and reference comparison
+  records `gate.status` and reasons in its manifest. `invalid` means the
+  comparison was not fit to judge; campaign exit codes do not collapse it into
+  `fail`.
 - **Model and study evidence are separate.** The exported SSP checksum is part
   of provenance; the study scenario and experiment descriptor are run inputs.
   Neither is rewritten by simulation.

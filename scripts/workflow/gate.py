@@ -1,14 +1,25 @@
-"""Pass/fail policy for simulation comparisons.
+"""V&V judgment adapter over :mod:`pyssp_vv.judge`.
 
-The metrics are produced by :mod:`utils.comparison`; this module only turns
-them into a verdict. The gate uses the lag-tolerant max error so ordinary
-one-step co-simulation skew does not fail an otherwise matching signal.
+Measurement comes from ``pyssp_vv.measure``. This module keeps the repository
+policy inputs (tolerances, model invariants) and maps the resulting verdict back
+to the manifest shape. ``invalid`` is preserved as its own verdict.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Iterable, Mapping
+
+from pyssp_vv.judge import judge
+from pyssp_vv.policy import (
+    ComparisonPolicy,
+    Criterion,
+    MetricName,
+    Policy,
+    Sufficiency,
+)
+
+from utils.comparison import SHIFT_TOLERANCE_SAMPLES
 
 
 @dataclass(frozen=True)
@@ -38,12 +49,39 @@ class GateConfig:
             "max_invariant_abs_error": self.max_invariant_abs_error,
         }
 
-    def limit(self, row: Mapping[str, object]) -> float:
-        reference_peak = max(
-            abs(float(row.get("run_a_min", 0.0))),
-            abs(float(row.get("run_a_max", 0.0))),
+    def comparison_policy(self) -> Policy:
+        """Policy for engine/reference trajectory comparisons."""
+        return Policy(
+            comparison=ComparisonPolicy(
+                shift_samples=SHIFT_TOLERANCE_SAMPLES,
+                max_gap_samples=None,
+            ),
+            criterion=Criterion(
+                atol=self.atol,
+                rtol=self.rtol,
+                metric=MetricName.MAX_ABS,
+            ),
+            sufficiency=Sufficiency(
+                min_coverage=0.0,
+                degenerate_range=0.0,
+                reject_shift_at_boundary=False,
+            ),
         )
-        return self.atol + self.rtol * reference_peak
+
+    def invariant_policy(self) -> Policy:
+        """Policy for model-specific algebraic invariants."""
+        return Policy(
+            criterion=Criterion(
+                atol=self.max_invariant_abs_error,
+                rtol=0.0,
+                metric=MetricName.MAX_ABS,
+            ),
+            sufficiency=Sufficiency(
+                min_coverage=0.0,
+                degenerate_range=0.0,
+                reject_shift_at_boundary=False,
+            ),
+        )
 
 
 @dataclass(frozen=True)
@@ -57,6 +95,79 @@ class GateOutcome:
             "reasons": list(self.reasons),
         }
 
+    @classmethod
+    def from_dict(cls, data: Mapping[str, object] | None) -> "GateOutcome":
+        payload = data or {}
+        return cls(
+            status=str(payload.get("status", "not_evaluated")),
+            reasons=tuple(str(reason) for reason in payload.get("reasons", [])),
+        )
+
+
+@dataclass(frozen=True)
+class _Metric:
+    signal: str
+    coverage: float
+    max_abs_error: float
+    mean_abs_error: float
+    rmse: float
+    normalised_max_abs_error: float
+    reference_min: float
+    reference_max: float
+    shift_samples: int
+    undefined: tuple[str, ...] = ()
+
+
+def _comparison_metric(row: Mapping[str, object]) -> _Metric:
+    undefined = tuple(
+        part for part in str(row.get("undefined", "")).split(";") if part
+    )
+    return _Metric(
+        signal=str(row["signal"]),
+        coverage=float(row.get("coverage", 1.0)),
+        # The gate uses the lag-tolerant error as its acceptance value.
+        max_abs_error=float(row["max_shift_abs_error"]),
+        mean_abs_error=float(row["mean_abs_error"]),
+        rmse=float(row["rmse"]),
+        normalised_max_abs_error=float(
+            row.get("normalised_max_abs_error", float("nan"))
+        ),
+        reference_min=float(row["run_a_min"]),
+        reference_max=float(row["run_a_max"]),
+        shift_samples=int(row.get("shift_samples", 0)),
+        undefined=undefined,
+    )
+
+
+def _invariant_metric(row: Mapping[str, object]) -> _Metric:
+    return _Metric(
+        signal=str(row["invariant"]),
+        coverage=1.0,
+        max_abs_error=float(row["max_abs_error"]),
+        mean_abs_error=float(row.get("mean_abs_error", float("nan"))),
+        rmse=float(row.get("rmse", float("nan"))),
+        normalised_max_abs_error=float("nan"),
+        reference_min=0.0,
+        reference_max=1.0,
+        shift_samples=0,
+    )
+
+
+def _verdict(statuses: Iterable[str]) -> str:
+    values = set(statuses)
+    if "invalid" in values:
+        return "invalid"
+    if "fail" in values:
+        return "fail"
+    if values and values <= {"pass"}:
+        return "pass"
+    return "not_evaluated"
+
+
+def _reason_text(item, reason) -> str:
+    detail = f" ({reason.detail})" if reason.detail else ""
+    return f"{item.signal}: {reason.code}{detail}"
+
 
 def evaluate_gate(
     metrics: Iterable[Mapping[str, object]],
@@ -64,26 +175,34 @@ def evaluate_gate(
     gate: GateConfig,
     invariant_rows: Iterable[Mapping[str, object]] = (),
 ) -> GateOutcome:
-    reasons: list[str] = []
+    comparison_metrics = [_comparison_metric(row) for row in metrics]
+    invariant_metrics = [_invariant_metric(row) for row in invariant_rows]
 
-    for row in metrics:
-        signal = str(row["signal"])
-        value = float(row["max_shift_abs_error"])
-        limit = gate.limit(row)
-        if value != value:  # NaN
-            reasons.append(f"{signal}: non-finite comparison error")
-        elif value > limit:
-            reasons.append(
-                f"{signal}: max_shift_abs_error={value:.6g} exceeds {limit:.6g}"
-            )
+    judgments = []
+    if comparison_metrics:
+        judgments.append(judge(comparison_metrics, gate.comparison_policy()))
+    if invariant_metrics:
+        judgments.append(judge(invariant_metrics, gate.invariant_policy()))
 
-    for row in invariant_rows:
-        value = float(row["max_abs_error"])
-        if value > gate.max_invariant_abs_error:
-            reasons.append(
-                f"{row['invariant']} ({row['run_label']}): "
-                f"invariant error={value:.6g} exceeds "
-                f"{gate.max_invariant_abs_error:.6g}"
-            )
+    if not judgments:
+        return GateOutcome(
+            status="invalid",
+            reasons=("no-signals: nothing was measured",),
+        )
 
-    return GateOutcome(status="fail" if reasons else "pass", reasons=tuple(reasons))
+    reasons = tuple(
+        _reason_text(item, reason)
+        for judgment in judgments
+        for item in judgment.signals
+        for reason in item.reasons
+    )
+    status = _verdict(judgment.verdict.value for judgment in judgments)
+    return GateOutcome(status=status, reasons=reasons)
+
+
+def combine_gate_outcomes(outcomes: Iterable[GateOutcome]) -> GateOutcome:
+    """Aggregate verdicts pessimistically: invalid dominates fail."""
+    items = tuple(outcomes)
+    status = _verdict(item.status for item in items)
+    reasons = tuple(reason for item in items for reason in item.reasons)
+    return GateOutcome(status=status, reasons=reasons)

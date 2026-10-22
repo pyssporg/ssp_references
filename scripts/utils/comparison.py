@@ -1,188 +1,109 @@
+"""Measurement adapter over :mod:`pyssp_vv.measure`.
+
+The alignment, resampling, metric families, and shift search live in
+``pyssp_vv``. This module only loads repository result sets, selects the
+canonical signals, and maps the measurement back to the local CSV/manifest
+shape.
+"""
+
 from __future__ import annotations
 
 import csv
 import math
 from dataclasses import dataclass
-from itertools import product
 from pathlib import Path
 
 import numpy as np
+from pyssp_vv.measure import (
+    Alignment,
+    Comparison,
+    Grid,
+    Trajectory,
+    compare,
+    local_shift_error,
+    resample,
+)
 
+from .domain import ResultSet, SimulationWindow
 from .filesystem import ensure_parent
-from .csv import load_numeric_csv, normalize_column_name
-
-
-@dataclass(frozen=True)
-class SimulationWindow:
-    start_time: float
-    stop_time: float
-    interval: float
-
-@dataclass(frozen=True)
-class ResultSet:
-    label: str
-    path: Path
-    engine: str
-
-
-@dataclass(frozen=True)
-class SignalInvariant:
-    name: str
-    output_signal: str
-    input_signals: tuple[str, ...]
-    coefficients: tuple[float, ...]
-
-    @property
-    def required_signals(self) -> tuple[str, ...]:
-        return (self.output_signal, *self.input_signals)
-
-
-SIGNAL_INVARIANTS: dict[str, tuple[SignalInvariant, ...]] = {
-    "signal_step_gain": (
-        SignalInvariant(
-            name="gain.y = 3.0 * step.y",
-            output_signal="gain.y",
-            input_signals=("step.y",),
-            coefficients=(3.0,),
-        ),
-    ),
-    "signal_step_add": (
-        SignalInvariant(
-            name="add.y = step_a.y + step_b.y",
-            output_signal="add.y",
-            input_signals=("step_a.y", "step_b.y"),
-            coefficients=(1.0, 1.0),
-        ),
-    ),
-    "signal_fanout_gain": (
-        SignalInvariant(
-            name="gain_a.y = 2.0 * step.y",
-            output_signal="gain_a.y",
-            input_signals=("step.y",),
-            coefficients=(2.0,),
-        ),
-        SignalInvariant(
-            name="gain_b.y = -1.0 * step.y",
-            output_signal="gain_b.y",
-            input_signals=("step.y",),
-            coefficients=(-1.0,),
-        ),
-    ),
-    "signal_nested_pass_through": (
-        SignalInvariant(
-            name="add.y = step.y",
-            output_signal="add.y",
-            input_signals=("step.y",),
-            coefficients=(1.0,),
-        ),
-    ),
-}
-
-
-def build_time_grid(window: SimulationWindow) -> np.ndarray:
-    span = window.stop_time - window.start_time
-    steps = int(round(span / window.interval))
-    return np.linspace(window.start_time, window.stop_time, steps + 1, dtype=float)
-
-
-def resample_series(times: np.ndarray, values: np.ndarray, target_times: np.ndarray) -> np.ndarray:
-    valid_mask = np.isfinite(times) & np.isfinite(values)
-    valid_times = times[valid_mask]
-    valid_values = values[valid_mask]
-    if len(valid_times) == 0:
-        return np.full(target_times.shape, np.nan, dtype=float)
-
-    order = np.argsort(valid_times)
-    valid_times = valid_times[order]
-    valid_values = valid_values[order]
-    unique_times, unique_indices = np.unique(valid_times, return_index=True)
-    unique_values = valid_values[unique_indices]
-
-    if len(unique_times) == 1:
-        return np.full(target_times.shape, unique_values[0], dtype=float)
-
-    return np.interp(
-        target_times,
-        unique_times,
-        unique_values,
-        left=unique_values[0],
-        right=unique_values[-1],
-    )
-
 
 SHIFT_TOLERANCE_SAMPLES = 2
 
 
-def shift_tolerant_error(
-    reference: np.ndarray,
-    candidate: np.ndarray,
-    *,
-    max_shift: int = SHIFT_TOLERANCE_SAMPLES,
-) -> np.ndarray:
-    """Absolute error that tolerates a small sample shift in either direction.
+@dataclass(frozen=True)
+class Measurement:
+    """A ``pyssp_vv`` comparison plus edge-masked local shift errors."""
 
-    Co-simulation masters may expose a source and its downstream component a
-    few communication steps apart. Pointwise error then reports a large spike
-    at every discontinuity even when the signals are otherwise identical. This
-    metric compares each sample against candidate samples shifted by up to
-    ``max_shift`` steps and keeps the smallest error.
-    """
-    error = np.abs(reference - candidate)
-    for shift in range(1, max_shift + 1):
-        if error.size <= shift:
-            break
-        error[shift:] = np.minimum(error[shift:], np.abs(reference[shift:] - candidate[:-shift]))
-        error[:-shift] = np.minimum(error[:-shift], np.abs(reference[:-shift] - candidate[shift:]))
-    return error
+    comparison: Comparison
+    local_shift_errors: dict[str, float]
 
 
-def canonicalize_signal_name(
-    column_name: str,
-    *,
-    engine: str | None = None,
-    root_system_name: str | None = None,
-) -> str:
-    normalized = column_name.strip()
-    if normalized == "time":
-        return "time"
-    return normalize_column_name(
-        normalized,
-        engine=engine,
-        root_system_name=root_system_name,
+def _grid(window: SimulationWindow) -> Grid | None:
+    if window.stop_time <= window.start_time or window.interval <= 0:
+        return None
+    return Grid(
+        start_time=window.start_time,
+        stop_time=window.stop_time,
+        step_size=window.interval,
     )
 
 
-def _select_signal_series(
+def _load_columns(result: ResultSet, *, root_system_name: str) -> dict[str, np.ndarray]:
+    # Local import keeps this module importable without the simulation backend.
+    from pyssp_simulate.result import read_result_csv
+
+    data = read_result_csv(
+        result.path,
+        root_system=root_system_name,
+        prefix="fmu.",
+    )
+    return {name: data[name] for name in data.dtype.names or ()}
+
+
+def _trajectory(
     columns: dict[str, np.ndarray],
-    selected_signals: tuple[str, ...],
     *,
-    engine: str | None,
-    root_system_name: str,
-) -> dict[str, np.ndarray]:
-    selected_set = set(selected_signals)
-    selected_series: dict[str, np.ndarray] = {}
-
-    for signal in selected_signals:
-        if signal in columns:
-            selected_series[signal] = columns[signal]
-
-    for raw_name, series in columns.items():
-        canonical_name = canonicalize_signal_name(
-            raw_name,
-            engine=engine,
-            root_system_name=root_system_name,
-        )
-        if canonical_name in selected_set and canonical_name not in selected_series:
-            selected_series[canonical_name] = series
-
-    missing_signals = [signal for signal in selected_signals if signal not in selected_series]
-    if missing_signals:
+    label: str,
+    selected_signals: tuple[str, ...],
+) -> Trajectory:
+    missing = [signal for signal in selected_signals if signal not in columns]
+    if missing:
         raise KeyError(
             "Selected comparison signals missing from result sets: "
-            + ", ".join(missing_signals)
+            + ", ".join(missing)
         )
+    time = columns.get("time")
+    if time is None:
+        raise KeyError("Both result sets must contain a time column")
+    return Trajectory(
+        time=time,
+        channels={signal: columns[signal] for signal in selected_signals},
+        label=label,
+    )
 
-    return selected_series
+
+def _local_shift_errors(
+    reference: Trajectory,
+    candidate: Trajectory,
+    *,
+    target: np.ndarray,
+    selected_signals: tuple[str, ...],
+) -> dict[str, float]:
+    errors: dict[str, float] = {}
+    for signal in selected_signals:
+        reference_values = resample(reference.time, reference[signal], target)
+        candidate_values = resample(candidate.time, candidate[signal], target)
+        local = local_shift_error(
+            reference_values,
+            candidate_values,
+            max_shift=SHIFT_TOLERANCE_SAMPLES,
+        )
+        if local.size > 2 * SHIFT_TOLERANCE_SAMPLES:
+            # Initialization and shutdown samples are not comparable transients.
+            local[:SHIFT_TOLERANCE_SAMPLES] = np.nan
+            local[-SHIFT_TOLERANCE_SAMPLES:] = np.nan
+        errors[signal] = float(np.nanmax(local))
+    return errors
 
 
 def compare_column_sets(
@@ -191,71 +112,37 @@ def compare_column_sets(
     *,
     run_a_label: str,
     run_b_label: str,
-    engine_a: str | None,
-    engine_b: str | None,
     window: SimulationWindow,
     selected_signals: tuple[str, ...],
-    root_system_name: str,
-) -> tuple[dict, list[dict[str, float | str]]]:
-    run_a_signals = _select_signal_series(
-        run_a_data,
-        selected_signals,
-        engine=engine_a,
-        root_system_name=root_system_name,
+) -> Measurement:
+    """Measure two canonical column sets with ``pyssp_vv``."""
+    reference = _trajectory(
+        run_a_data, label=run_a_label, selected_signals=selected_signals
     )
-    run_b_signals = _select_signal_series(
-        run_b_data,
-        selected_signals,
-        engine=engine_b,
-        root_system_name=root_system_name,
+    candidate = _trajectory(
+        run_b_data, label=run_b_label, selected_signals=selected_signals
     )
-
-    run_a_time = run_a_data.get("time")
-    run_b_time = run_b_data.get("time")
-    if run_a_time is None or run_b_time is None:
-        raise KeyError("Both result sets must contain a time column")
-
-    target_times = build_time_grid(window)
-
-    metrics: list[dict[str, float | str]] = []
-    for signal in selected_signals:
-        run_a_series = resample_series(run_a_time, run_a_signals[signal], target_times)
-        run_b_series = resample_series(run_b_time, run_b_signals[signal], target_times)
-        errors = np.abs(run_a_series - run_b_series)
-        shift_errors = shift_tolerant_error(run_a_series, run_b_series)
-        if shift_errors.size > 2 * SHIFT_TOLERANCE_SAMPLES:
-            # The first/last samples are initialization and shutdown artifacts
-            # in several engines; they are not comparable transient behavior.
-            shift_errors[:SHIFT_TOLERANCE_SAMPLES] = np.nan
-            shift_errors[-SHIFT_TOLERANCE_SAMPLES:] = np.nan
-
-        metrics.append(
-            {
-                "signal": signal,
-                "max_abs_error": float(np.nanmax(errors)),
-                "max_shift_abs_error": float(np.nanmax(shift_errors)),
-                "mean_abs_error": float(np.nanmean(errors)),
-                "rmse": float(math.sqrt(np.nanmean(np.square(errors)))),
-                "run_a_label": run_a_label,
-                "run_a_min": float(np.nanmin(run_a_series)),
-                "run_a_max": float(np.nanmax(run_a_series)),
-                "run_b_label": run_b_label,
-                "run_b_min": float(np.nanmin(run_b_series)),
-                "run_b_max": float(np.nanmax(run_b_series)),
-            }
-        )
-
-    summary = {
-        "run_a_label": run_a_label,
-        "run_b_label": run_b_label,
-        "time_points": int(len(target_times)),
-        "compared_signal_count": len(selected_signals),
-        "max_abs_error": max((row["max_abs_error"] for row in metrics), default=0.0),
-        "max_shift_abs_error": max((row["max_shift_abs_error"] for row in metrics), default=0.0),
-        "mean_abs_error": float(np.nanmean([row["mean_abs_error"] for row in metrics])) if metrics else 0.0,
-        "rmse": float(np.nanmean([row["rmse"] for row in metrics])) if metrics else 0.0,
-    }
-    return summary, metrics
+    grid = _grid(window)
+    comparison = compare(
+        reference,
+        candidate,
+        signals=selected_signals,
+        alignment=Alignment(
+            grid=grid,
+            shift_samples=SHIFT_TOLERANCE_SAMPLES,
+            max_gap_samples=None,
+        ),
+    )
+    target = grid.time_grid() if grid is not None else reference.time
+    return Measurement(
+        comparison=comparison,
+        local_shift_errors=_local_shift_errors(
+            reference,
+            candidate,
+            target=target,
+            selected_signals=selected_signals,
+        ),
+    )
 
 
 def compare_result_sets(
@@ -265,130 +152,81 @@ def compare_result_sets(
     window: SimulationWindow,
     selected_signals: tuple[str, ...],
     root_system_name: str,
-) -> tuple[dict, list[dict[str, float | str]]]:
-    run_a_data = load_numeric_csv(
-        run_a.path,
-        engine=run_a.engine,
-        root_system_name=root_system_name,
-    )["columns"]
-    run_b_data = load_numeric_csv(
-        run_b.path,
-        engine=run_b.engine,
-        root_system_name=root_system_name,
-    )["columns"]
+) -> Measurement:
+    """Load two result files and measure them with ``pyssp_vv``."""
     return compare_column_sets(
-        run_a_data,
-        run_b_data,
+        _load_columns(run_a, root_system_name=root_system_name),
+        _load_columns(run_b, root_system_name=root_system_name),
         run_a_label=run_a.label,
         run_b_label=run_b.label,
-        engine_a=run_a.engine,
-        engine_b=run_b.engine,
         window=window,
         selected_signals=selected_signals,
-        root_system_name=root_system_name,
     )
 
 
-def signal_invariant_metrics(
-    run: ResultSet,
-    *,
-    model_name: str,
-    window: SimulationWindow,
-    root_system_name: str,
-) -> list[dict[str, float | str]]:
-    invariants = SIGNAL_INVARIANTS.get(model_name, ())
-    if not invariants:
-        return []
-
-    run_data = load_numeric_csv(
-        run.path,
-        engine=run.engine,
-        root_system_name=root_system_name,
-    )["columns"]
-    run_time = run_data.get("time")
-    if run_time is None:
-        raise KeyError("Result set must contain a time column")
-
-    required_signals = tuple(
-        dict.fromkeys(signal for invariant in invariants for signal in invariant.required_signals)
-    )
-    signal_series = _select_signal_series(
-        run_data,
-        required_signals,
-        engine=run.engine,
-        root_system_name=root_system_name,
-    )
-    target_times = build_time_grid(window)
-    # Co-simulation masters may expose a source and its downstream component
-    # one communication step apart around a discontinuity. Accept either the
-    # current or the previous sample for the input side of the invariant.
-    previous_times = target_times - window.interval
-
-    rows: list[dict[str, float | str]] = []
-    for invariant in invariants:
-        output_series = resample_series(
-            run_time,
-            signal_series[invariant.output_signal],
-            target_times,
-        )
-        current_inputs = [
-            coefficient
-            * resample_series(run_time, signal_series[signal], target_times)
-            for signal, coefficient in zip(invariant.input_signals, invariant.coefficients)
-        ]
-        previous_inputs = [
-            coefficient
-            * resample_series(run_time, signal_series[signal], previous_times)
-            for signal, coefficient in zip(invariant.input_signals, invariant.coefficients)
-        ]
-        # Each input may independently be one communication step behind.
-        expected_candidates = [
-            sum(
-                previous_inputs[index] if lag else current_inputs[index]
-                for index, lag in enumerate(lags)
-            )
-            for lags in product((False, True), repeat=len(current_inputs))
-        ]
-        residual = np.nanmin(
-            np.stack([np.abs(output_series - expected) for expected in expected_candidates]),
-            axis=0,
-        )
-        # The first recorded sample is an initialization artifact for engines
-        # that start recording one communication step after t0; do not judge it
-        # as an algebraic error.
-        finite_times = run_time[np.isfinite(run_time)]
-        if finite_times.size:
-            first_index = int(np.searchsorted(target_times, finite_times.min()))
-            residual[: first_index + 1] = np.nan
+def comparison_metric_rows(
+    measurement: Measurement,
+) -> list[dict[str, float | int | str]]:
+    """Map ``pyssp_vv`` signal metrics to the repository metrics CSV shape."""
+    comparison = measurement.comparison
+    rows: list[dict[str, float | int | str]] = []
+    for item in comparison.signals:
         rows.append(
             {
-                "run_label": run.label,
-                "invariant": invariant.name,
-                "max_abs_error": float(np.nanmax(residual)),
-                "mean_abs_error": float(np.nanmean(residual)),
-                "rmse": float(math.sqrt(np.nanmean(np.square(residual)))),
+                "signal": item.signal,
+                "max_abs_error": item.max_abs_error,
+                "max_shift_abs_error": measurement.local_shift_errors[item.signal],
+                "mean_abs_error": item.mean_abs_error,
+                "rmse": item.rmse,
+                "run_a_label": comparison.reference_label,
+                "run_a_min": item.reference_min,
+                "run_a_max": item.reference_max,
+                "run_b_label": comparison.candidate_label,
+                "run_b_min": item.candidate_min,
+                "run_b_max": item.candidate_max,
+                "coverage": item.coverage,
+                "shift_samples": item.shift_samples,
+                "normalisation": item.normalisation,
+                "denominator": item.denominator,
+                "normalised_max_abs_error": item.normalised_max_abs_error,
+                "undefined": ";".join(item.undefined),
             }
         )
-
     return rows
 
 
-def sanitize_label(label: str) -> str:
-    sanitized = []
-    for character in label:
-        sanitized.append(character if character.isalnum() or character in {"-", "_"} else "_")
-    return "".join(sanitized).strip("_")
+def comparison_summary(
+    measurement: Measurement, *, window: SimulationWindow
+) -> dict[str, float | int | str]:
+    """Summarize one ``pyssp_vv`` comparison for the local manifest."""
+    comparison = measurement.comparison
+    metrics = comparison.signals
+    rows = comparison_metric_rows(measurement)
+    grid = _grid(window)
+    finite_rel = [
+        float(row["normalised_max_abs_error"])
+        for row in rows
+        if math.isfinite(float(row["normalised_max_abs_error"]))
+    ]
+    return {
+        "run_a_label": comparison.reference_label,
+        "run_b_label": comparison.candidate_label,
+        "time_points": int(grid.time_grid().size) if grid is not None else 0,
+        "compared_signal_count": len(metrics),
+        "max_abs_error": max((item.max_abs_error for item in metrics), default=0.0),
+        "max_shift_abs_error": max(
+            measurement.local_shift_errors.values(), default=0.0
+        ),
+        "mean_abs_error": float(np.nanmean([item.mean_abs_error for item in metrics]))
+        if metrics
+        else 0.0,
+        "rmse": float(np.nanmean([item.rmse for item in metrics])) if metrics else 0.0,
+        "max_rel_error": max(finite_rel, default=0.0),
+        "min_coverage": min((item.coverage for item in metrics), default=0.0),
+    }
 
 
-def comparison_run_name(run_a_label: str, run_b_label: str) -> str:
-    return f"{sanitize_label(run_a_label)}_vs_{sanitize_label(run_b_label)}"
-
-
-def comparison_stem(run_a: ResultSet, run_b: ResultSet) -> str:
-    return comparison_run_name(run_a.label, run_b.label)
-
-
-def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
+def write_metrics_csv(path: Path, rows: list[dict[str, float | int | str]]) -> None:
     ensure_parent(path)
     fieldnames = [
         "signal",
@@ -402,6 +240,12 @@ def write_metrics_csv(path: Path, rows: list[dict[str, float | str]]) -> None:
         "run_b_label",
         "run_b_min",
         "run_b_max",
+        "coverage",
+        "shift_samples",
+        "normalisation",
+        "denominator",
+        "normalised_max_abs_error",
+        "undefined",
     ]
     with path.open("w", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")

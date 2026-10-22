@@ -21,7 +21,7 @@ if sys.version_info < (3, 11):
         "use scripts/run_simulations.py and scripts/run_comparisons.py instead."
     )
 
-from sequence_extensions.flow import RunOptions, execute_flow, node
+from sequence_extensions.flow import RunOptions, execute_flow, gather, node
 
 from workflow.registry import default_registry_path, load_registry
 
@@ -44,7 +44,50 @@ def _run(command: list[str]) -> dict[str, object]:
 
 
 @node(retries=1, retry_delay_seconds=0.5, timeout=1800.0)
-def simulate_task(model: str, case: str, backend: str) -> dict[str, object]:
+def build_model_task(model: str) -> dict[str, object]:
+    return _run(
+        [
+            sys.executable,
+            "scripts/build_models.py",
+            "run",
+            model,
+        ]
+    )
+
+
+@node(retries=1, retry_delay_seconds=0.5, timeout=1800.0)
+def build_model_only_task(model: str) -> dict[str, object]:
+    return _run(
+        [
+            sys.executable,
+            f"models/ssp/{model}/build.py",
+            "--only",
+            "model",
+        ]
+    )
+
+
+@node(retries=1, retry_delay_seconds=0.5, timeout=1800.0)
+def build_study_task(model: str, study: str) -> dict[str, object]:
+    return _run(
+        [
+            sys.executable,
+            f"models/ssp/{model}/build.py",
+            "--only",
+            "study",
+            "--study",
+            study,
+        ]
+    )
+
+
+@node(retries=1, retry_delay_seconds=0.5, timeout=1800.0)
+def simulate_task(
+    model: str,
+    case: str,
+    backend: str,
+    *dependencies: object,
+) -> dict[str, object]:
     return _run(
         [
             sys.executable,
@@ -79,12 +122,27 @@ def compare_task(
     return _run(command)
 
 
+@node
+def summarize_campaign(payload: dict[str, object]) -> dict[str, object]:
+    results = payload["comparisons"]
+    assert isinstance(results, list)
+    return {
+        "case_count": len(results),
+        "failed_cases": [
+            result
+            for result in results
+            if int(result["returncode"]) != 0
+        ],
+    }
+
+
 @node(name="ssp-campaign")
 def campaign(
     models: tuple[str, ...] = (),
     cases: tuple[str, ...] = (),
     *,
     fail_on_gate: bool = False,
+    build: bool = True,
     registry_path: Path | None = None,
 ) -> dict[str, object]:
     registry = load_registry(registry_path or default_registry_path())
@@ -94,8 +152,23 @@ def campaign(
 
     comparisons = []
     for spec in specs:
+        dependencies: tuple[object, ...] = ()
+        if build:
+            if spec.study_name is not None:
+                dependencies = (
+                    build_model_only_task.submit(spec.model_name),
+                    build_study_task.submit(spec.model_name, spec.study_name),
+                )
+            else:
+                dependencies = (build_model_task.submit(spec.model_name),)
+
         simulations = [
-            simulate_task.submit(spec.model_name, spec.case_name, backend)
+            simulate_task.submit(
+                spec.model_name,
+                spec.case_name,
+                backend,
+                *dependencies,
+            )
             for backend in spec.backends
         ]
         comparisons.append(
@@ -107,15 +180,7 @@ def campaign(
             )
         )
 
-    results = [future.result() for future in comparisons]
-    return {
-        "case_count": len(results),
-        "failed_cases": [
-            result
-            for result in results
-            if int(result["returncode"]) != 0
-        ],
-    }
+    return summarize_campaign.submit(gather({"comparisons": comparisons}))
 
 
 def parse_args() -> argparse.Namespace:
@@ -123,6 +188,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--model", dest="models", action="append", default=[])
     parser.add_argument("--case", dest="cases", action="append", default=[])
     parser.add_argument("--fail-on-gate", action="store_true")
+    parser.add_argument(
+        "--no-build",
+        action="store_true",
+        help="Use existing model and study artifacts instead of building them.",
+    )
     return parser.parse_args()
 
 
@@ -133,6 +203,7 @@ def main() -> int:
         tuple(args.models),
         tuple(args.cases),
         fail_on_gate=args.fail_on_gate,
+        build=not args.no_build,
         options=RunOptions(
             name="ssp-campaign",
             log=str(REPO_ROOT / "artifacts" / "runs"),

@@ -1,16 +1,13 @@
 {
-  "artifacts": [
-    "config.json",
-    "result.csv"
-  ],
+  "artifacts": [],
   "error": null,
   "request": {
-    "backend": "ssp4sim",
-    "case": "baseline",
+    "backend": "omsimulator",
+    "case": "test_baseline",
     "model": "signal_step_gain",
     "setup_manifest": "../setup.json"
   },
   "result": "result.csv",
-  "runtime_s": 0.10689062403980643,
+  "runtime_s": 0.011084510013461113,
   "status": "completed"
 }

@@ -1,0 +1,36 @@
+{
+  "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "test_baseline",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/signal_step_gain/test_baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../../simulation/signal_step_gain/test_baseline/fmpy/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 2,
+    "max_abs_error": 6.0,
+    "max_rel_error": 0.6666666666666666,
+    "max_shift_abs_error": 0.0,
+    "max_signal_invariant_abs_error": 1.6697754290362354e-13,
+    "mean_abs_error": 0.009490509490508798,
+    "min_coverage": 1.0,
+    "rmse": 0.18693041240598068,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "fmpy",
+    "signal_invariant_count": 2,
+    "time_points": 1001
+  }
+}

@@ -4,35 +4,8 @@ import csv
 from pathlib import Path
 
 import numpy as np
+from pyssp_simulate.result import read_result_csv
 from scipy.io import loadmat
-
-
-def normalize_column_name(
-    column_name: str,
-    *,
-    engine: str | None = None,
-    root_system_name: str | None = None,
-) -> str:
-    normalized = column_name.strip()
-    if engine == "omsimulator" and normalized.startswith("root."):
-        normalized = normalized[len("root.") :]
-
-    if root_system_name:
-        root_prefix = f"{root_system_name}."
-        if normalized.startswith(root_prefix):
-            normalized = normalized[len(root_prefix) :]
-
-    if normalized.startswith("fmu."):
-        normalized = normalized[len("fmu.") :]
-
-    return normalized
-
-
-def parse_float(value: str) -> float:
-    stripped = value.strip()
-    if stripped == "":
-        return float("nan")
-    return float(stripped)
 
 
 def load_numeric_csv(
@@ -40,23 +13,16 @@ def load_numeric_csv(
     *,
     engine: str | None = None,
     root_system_name: str | None = None,
+    prefix: str | None = None,
 ) -> dict:
-    with path.open(newline="") as handle:
-        reader = csv.reader(handle)
-        raw_headers = next(reader)
-        headers = [header.strip() for header in raw_headers]
-        rows = [[parse_float(value) for value in row] for row in reader]
-
-    if not rows:
-        return {"headers": headers, "columns": {header: np.array([], dtype=float) for header in headers}}
-
-    data = np.asarray(rows, dtype=float)
-    columns: dict[str, np.ndarray] = {}
-    for index, header in enumerate(headers):
-        if header in columns:
-            raise ValueError(f"Duplicate column name '{header}' in {path}")
-        columns[header] = data[:, index]
-    return {"headers": headers, "columns": columns}
+    """Read a result CSV through ``pyssp_simulate``."""
+    del engine  # canonicalization is engine-independent once prefixes are known.
+    data = read_result_csv(path, root_system=root_system_name, prefix=prefix)
+    headers = list(data.dtype.names or ())
+    return {
+        "headers": headers,
+        "columns": {header: data[header] for header in headers},
+    }
 
 
 def default_csv_output_path(mat_path: Path) -> Path:

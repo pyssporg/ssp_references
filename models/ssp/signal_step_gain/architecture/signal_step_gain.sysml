@@ -1,0 +1,94 @@
+package SignalStepGain {
+  part def SspModel;
+  part def Study;
+
+  port def ParameterInterface;
+
+  port def StepParameters :> ParameterInterface {
+    attribute height : Real;
+    attribute offset : Real;
+    attribute startTime : Real;
+  }
+
+  port def GainParameters :> ParameterInterface {
+    attribute k : Real;
+  }
+
+  port def RealSignal {
+    attribute pyssp_flat_connector : Boolean = true;
+    attribute value : Real;
+  }
+
+  attribute def ParameterSet;
+
+  attribute def ScenarioSet :> ParameterSet {
+    attribute height = 2.0;
+    attribute offset = 1.0;
+    attribute startTime = 0.25;
+    attribute k = 3.0;
+  }
+
+  attribute def Experiment {
+    attribute startTime : Real;
+    attribute stopTime : Real;
+    attribute stepSize : Real;
+    attribute tolerance : Real;
+  }
+
+  attribute def BaselineExperiment :> Experiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 1.0;
+    attribute stepSize = 0.001;
+    attribute tolerance = 0.0001;
+  }
+
+  attribute def FmuMetadata {
+    attribute source : String;
+    attribute resource_name : String;
+    attribute implementation : String;
+  }
+
+  attribute def StepFmu :> FmuMetadata {
+    attribute source = "models/fmu/Modelica.Blocks.Sources.Step/fmu";
+    attribute resource_name = "Step.fmu";
+    attribute implementation = "CoSimulation";
+  }
+
+  attribute def GainFmu :> FmuMetadata {
+    attribute source = "models/fmu/Modelica.Blocks.Math.Gain/fmu";
+    attribute resource_name = "Gain.fmu";
+    attribute implementation = "CoSimulation";
+  }
+
+  part def Step {
+    attribute fmu_meta : StepFmu;
+    in port parameters : StepParameters;
+    out port y : RealSignal;
+  }
+
+  part def Gain {
+    attribute fmu_meta : GainFmu;
+    in port parameters : GainParameters;
+    in port u : RealSignal;
+    out port y : RealSignal;
+  }
+
+  part def System :> SspModel {
+    attribute pyssp_default_start_time : Real = 0.0;
+    attribute pyssp_default_stop_time : Real = 1.0;
+    part step : Step;
+    part gain : Gain;
+    connect step.y to gain.u;
+  }
+
+  part def test_baseline :> Study {
+    attribute experiment_baseline : BaselineExperiment;
+    attribute scenario : ScenarioSet;
+    part sut : System;
+
+    bind sut.step.parameters.height = scenario.height;
+    bind sut.step.parameters.offset = scenario.offset;
+    bind sut.step.parameters.startTime = scenario.startTime;
+    bind sut.gain.parameters.k = scenario.k;
+  }
+}

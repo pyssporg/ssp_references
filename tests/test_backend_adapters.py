@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import numpy as np
@@ -267,16 +268,16 @@ def test_simulate_backend_dispatch_routes(backend: str, expected_adapter_name: s
 
     Backward trace: IMP-015 contract R-007.
     """
-    class _MockRequest:
-        def __init__(self, backend: str) -> None:
-            self.backend = backend
-
-    request = _MockRequest(backend)
+    ssp_root = Path("/tmp/example-model")
+    request = SimpleNamespace(
+        backend=backend,
+        setup=SimpleNamespace(descriptor_path=None, ssp_root=ssp_root),
+    )
     adapter_path = f"workflow.simulate.{expected_adapter_name}"
     with patch(adapter_path) as mock_adapter:
         mock_adapter.return_value = None
         simulate_backend(request)
-    mock_adapter.assert_called_once_with(request)
+    mock_adapter.assert_called_once_with(request, ssp_root)
 
 
 def test_simulate_backend_unknown_raises() -> None:

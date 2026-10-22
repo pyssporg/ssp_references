@@ -61,6 +61,11 @@ Migrated fixtures separate the exported model from the study that exercises it:
 - Build, study generation, simulation, and comparison are submitted as
   `sequence_extensions` nodes so models and studies can run in parallel.
 
+Pilot status: `signal_step_gain` exports `System :> SspModel` to
+`artifacts/models/signal_step_gain/model/`, generates `test_baseline` under
+`artifacts/studies/signal_step_gain/test_baseline/`, round-trips its SSD, and
+passes the engine-to-engine gate for `ssp4sim`, `OMSimulator`, and `FMPy`.
+
 A migrated fixture is verified in four steps:
 
 1. The `SspModel` builds and its SSD round-trips through
@@ -69,7 +74,7 @@ A migrated fixture is verified in four steps:
    the exported SSP root.
 3. All registered backends simulate the same exported SSP with the study
    scenario and agree within the gate.
-4. The `pyssp_vv` target verdict distinguishes `pass`, `fail`, and `invalid`.
+4. The `pyssp_vv` verdict distinguishes `pass`, `fail`, and `invalid`.
 
 ## Test Levels
 
@@ -211,7 +216,7 @@ The strategy should compare:
 - Trend agreement across the simulation window.
 
 Acceptance should be based on per-signal tolerances, not bitwise equality.
-Different model classes will need different tolerance levels. The target
+Different model classes will need different tolerance levels. The
 `pyssp_vv` judgment records `pass`, `fail`, or `invalid`; `invalid` means the
 comparison was not fit to judge and must not be reported as a numerical
 failure.
@@ -283,8 +288,8 @@ This repository already supports the core workflow needed for the strategy:
   experiment window for that setup.
 - Simulation is driven by `scripts/run_simulations.py` and the target
   `pyssp_workflow` execute nodes.
-- Comparison is driven by `scripts/run_comparisons.py`; the target
-  measurement/judgment owner is `pyssp_vv`.
+- Comparison is driven by `scripts/run_comparisons.py`; measurement and
+  judgment come from `pyssp_vv`.
 
 That means the immediate next step is selecting a small required model set,
 including deterministic signal-propagation fixtures, defining tolerances per

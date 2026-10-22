@@ -209,9 +209,11 @@
             "ssp4sim",
             "omsimulator",
             "fmpy"
-          ]
+          ],
+          "study": "test_baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_step_product",

@@ -43,6 +43,7 @@ class RegistryReferenceCsv:
 class RegistryCase:
     name: str
     backends: tuple[str, ...]
+    study: str | None = None
     reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
     gate: GateConfig = field(default_factory=GateConfig)
 
@@ -54,9 +55,11 @@ class RegistryCase:
         normalized_backends = tuple(str(backend).lower() for backend in backends)
         if not normalized_backends:
             raise ValueError("Registry case backends must not be empty")
+        study = data.get("study")
         return cls(
             name=str(data["name"]),
             backends=normalized_backends,
+            study=str(study) if study is not None else None,
             reference_csvs=tuple(
                 RegistryReferenceCsv.from_dict(reference)
                 for reference in data.get("reference_csvs", [])
@@ -69,6 +72,8 @@ class RegistryCase:
             "name": self.name,
             "backends": list(self.backends),
         }
+        if self.study is not None:
+            data["study"] = self.study
         if self.reference_csvs:
             data["reference_csvs"] = [reference.to_dict() for reference in self.reference_csvs]
         if self.gate != GateConfig():
@@ -81,6 +86,7 @@ class RegistryModel:
     name: str
     compare_signals: tuple[str, ...]
     cases: tuple[RegistryCase, ...]
+    build: str | None = None
 
     @classmethod
     def from_dict(cls, data: dict) -> "RegistryModel":
@@ -94,18 +100,23 @@ class RegistryModel:
         cases = data.get("cases")
         if not isinstance(cases, list):
             raise TypeError("Registry model cases must be a list")
+        build = data.get("build")
         return cls(
             name=str(data["name"]),
             compare_signals=normalized_compare_signals,
             cases=tuple(RegistryCase.from_dict(case) for case in cases),
+            build=str(build) if build is not None else None,
         )
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        data: dict[str, object] = {
             "name": self.name,
             "compare_signals": list(self.compare_signals),
             "cases": [case.to_dict() for case in self.cases],
         }
+        if self.build is not None:
+            data["build"] = self.build
+        return data
 
 
 @dataclass(frozen=True)
@@ -117,9 +128,23 @@ class SimulationCaseSpec:
     compare_signals: tuple[str, ...]
     reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
     gate: GateConfig = field(default_factory=GateConfig)
+    build_name: str | None = None
+    study_name: str | None = None
+    study_root: Path | None = None
+
+    @property
+    def is_study_case(self) -> bool:
+        return self.study_root is not None and self.study_name is not None
 
     @property
     def layout(self) -> ArtifactLayout:
+        if self.is_study_case:
+            return ArtifactLayout.from_model_root(
+                self.model_name,
+                self.study_name,
+                self.ssp_root,
+                self.study_root,
+            )
         return ArtifactLayout.from_ssp_root(self.ssp_root)
 
 
@@ -176,7 +201,31 @@ class SimulationRegistry:
                 if not selected_backends:
                     continue
 
-                ssp_root = REPO_ROOT / "artifacts" / "models" / model.name / case.name
+                if model.build is not None or case.study is not None:
+                    build_name = model.build or "model"
+                    study_name = case.study or case.name
+                    ssp_root = (
+                        REPO_ROOT
+                        / "artifacts"
+                        / "models"
+                        / model.name
+                        / build_name
+                    )
+                    study_root = (
+                        REPO_ROOT
+                        / "artifacts"
+                        / "studies"
+                        / model.name
+                        / study_name
+                    )
+                else:
+                    build_name = None
+                    study_name = None
+                    ssp_root = (
+                        REPO_ROOT / "artifacts" / "models" / model.name / case.name
+                    )
+                    study_root = None
+
                 specs.append(
                     SimulationCaseSpec(
                         model_name=model.name,
@@ -186,6 +235,9 @@ class SimulationRegistry:
                         compare_signals=model.compare_signals,
                         reference_csvs=case.reference_csvs,
                         gate=case.gate,
+                        build_name=build_name,
+                        study_name=study_name,
+                        study_root=study_root,
                     )
                 )
         return specs

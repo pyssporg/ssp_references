@@ -14,30 +14,25 @@ import numpy as np
 
 from pyssp_simulate import SimulationResult
 
-from utils.comparison import compare_column_sets, signal_invariant_metrics, write_metrics_csv
+from utils.comparison import (
+    compare_column_sets,
+    comparison_metric_rows,
+    comparison_summary,
+    write_metrics_csv,
+)
 from utils.csv import load_numeric_csv
 
 from .gate import GateOutcome, evaluate_gate
 from .io import read_json, relative_path, resolve_path, write_json
+from .model_policy import signal_invariant_rows
 from .registry import RegistryReferenceCsv
 from .simulate import SimulationRun
 
 
 def load_reference_columns(path: Path, model_name: str) -> dict[str, np.ndarray]:
     """Load a reference CSV and strip its ``default.<model>.`` prefixes."""
-    if hasattr(SimulationResult, "from_reference_csv"):
-        result = SimulationResult.from_reference_csv(path, model_name=model_name)
-        return {name: result.data[name] for name in result.data.dtype.names or ()}
-
-    # pyssp_simulate 0.1.0 predates the reference loader.
-    data = load_numeric_csv(path)["columns"]
-    prefix = f"default.{model_name}."
-    columns: dict[str, np.ndarray] = {}
-    for name, values in data.items():
-        canonical = "time" if name == "time" else name[len(prefix) :] if name.startswith(prefix) else name
-        if canonical not in columns:
-            columns[canonical] = values
-    return columns
+    result = SimulationResult.from_reference_csv(path, model_name=model_name)
+    return {name: result.data[name] for name in result.data.dtype.names or ()}
 
 
 @dataclass(frozen=True)
@@ -136,10 +131,7 @@ class ReferenceComparisonRun:
             metrics_path=resolve_path(path.parent, data["metrics"]),
             status=data.get("status", "completed"),
             error=data.get("error"),
-            gate=GateOutcome(
-                status=str(data.get("gate", {}).get("status", "not_evaluated")),
-                reasons=tuple(data.get("gate", {}).get("reasons", [])),
-            ),
+            gate=GateOutcome.from_dict(data.get("gate")),
         )
 
 
@@ -149,21 +141,21 @@ def compare_reference(request: ReferenceComparisonRequest) -> ReferenceCompariso
         request.run.result_path,
         engine=request.run.request.backend,
         root_system_name=setup.root_system_name,
+        prefix="fmu.",
     )["columns"]
     reference_columns = load_reference_columns(request.reference_path, setup.model_name)
 
-    summary, metrics = compare_column_sets(
+    comparison = compare_column_sets(
         reference_columns,
         run_columns,
         run_a_label=request.reference.label,
         run_b_label=request.run.request.backend,
-        engine_a=None,
-        engine_b=request.run.request.backend,
         window=setup.window,
         selected_signals=setup.compare_signals,
-        root_system_name=setup.root_system_name,
     )
-    invariant_rows = signal_invariant_metrics(
+    summary = comparison_summary(comparison, window=setup.window)
+    metrics = comparison_metric_rows(comparison)
+    invariant_rows = signal_invariant_rows(
         request.run.to_result_set(),
         model_name=setup.model_name,
         window=setup.window,

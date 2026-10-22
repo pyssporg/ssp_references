@@ -104,7 +104,7 @@ local-patch guidance.
 | Authoring | `pyssp_workflow.authoring` + external `pyssp` CLI (`pyssp_sysml2`) | Runtime venv or a separate SysML environment via `PYSSP` |
 | Build | `pyssp_workflow` + `pyssp_standard` with the refactored model API | Runtime venv |
 | Simulate | `pyssp_workflow` + `pyssp_simulate` plus the selected engines | Runtime venv |
-| Compare | `pyssp_workflow` + `pyssp_vv` (target); local comparison utilities during migration | Runtime venv or a compatible environment |
+| Compare | `pyssp_workflow` + `pyssp_vv` measurement and judgment | Runtime venv or a compatible environment |
 | SysML checker | `pyssp_sysml2` targeting the refactored `pyssp_standard` API | Separate environment allowed |
 
 The SysML checker accepts an explicit executable:

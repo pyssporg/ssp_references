@@ -6,10 +6,12 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from pyssp_simulate.result import write_result_csv
+
 from workflow.comparison import ComparisonBatchRequest, compare_run_batch
 from workflow.registry import load_registry
 from workflow.setup import prepare_setup
-from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
+from workflow.simulate import SimulationRequest, SimulationRun
 
 
 @pytest.fixture(autouse=True)
@@ -26,22 +28,19 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
     """Exercises build→simulate→compare for signal_step_gain within a single test function."""
 
     # === Stage 1: Build — copy real SSP artifacts into isolated repo ===
-    real_ssp_root = (
-        Path(__file__).resolve().parents[1]
-        / "artifacts"
-        / "models"
-        / "signal_step_gain"
-        / "baseline"
+    repo = Path(__file__).resolve().parents[1]
+    real_ssp_root = repo / "artifacts" / "models" / "signal_step_gain" / "model"
+    real_study_root = (
+        repo / "artifacts" / "studies" / "signal_step_gain" / "test_baseline"
     )
     isolated_ssp_root = (
-        tmp_path
-        / "repo"
-        / "artifacts"
-        / "models"
-        / "signal_step_gain"
-        / "baseline"
+        tmp_path / "repo" / "artifacts" / "models" / "signal_step_gain" / "model"
+    )
+    isolated_study_root = (
+        tmp_path / "repo" / "artifacts" / "studies" / "signal_step_gain" / "test_baseline"
     )
     shutil.copytree(real_ssp_root, isolated_ssp_root)
+    shutil.copytree(real_study_root, isolated_study_root)
 
     # Load real registry
     real_registry_path = (
@@ -64,7 +63,7 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
             [(0.0, 0.0, 0.0), (0.1, 1.0, 3.0), (0.2, 1.0, 3.0)],
             dtype=[("time", "f8"), ("step.y", "f8"), ("gain.y", "f8")],
         )
-        write_structured_csv(request.result_path, result)
+        write_result_csv(request.result_path, result)
         run = SimulationRun(request=request, result_path=request.result_path)
         run.write_manifest()
         runs.append(run)

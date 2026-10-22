@@ -50,6 +50,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Studies apply SSV, SSM, and experiment data to a runtime copy of an exported SSP.
 - **ADR-011** — Library Boundaries Use Standard Artifacts or Public API · accepted · 2026-10-22 · `ADR-011`
   Library borders prefer standard artifacts; non-standard crossings use only documented public API types.
+- **ADR-012** — pyssp_standard Comes From the Organization Experimental Fork · accepted · 2026-10-22 · `ADR-012`
+  The pinned `pyssp_standard` checkout is the organization's experimental fork, not the release line.
 
 ### Implementation
 

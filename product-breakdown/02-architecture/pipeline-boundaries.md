@@ -99,6 +99,9 @@ checkouts. The capabilities are nested inside it:
 See [`3rd_party/README.md`](../../3rd_party/README.md) for initialization and
 local-patch guidance.
 
+`pyssp_standard` is the organization's experimental fork,
+`pyssporg/experimental_pyssp_standard`, not the release line.
+
 | Tool | Dependency expectation | Environment |
 | --- | --- | --- |
 | Authoring | `pyssp_workflow.authoring` + external `pyssp` CLI (`pyssp_sysml2`) | Runtime venv or a separate SysML environment via `PYSSP` |

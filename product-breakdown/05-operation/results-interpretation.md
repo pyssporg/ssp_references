@@ -1,3 +1,13 @@
+---
+id: INFO-006
+type: info
+title: Results Interpretation Guide
+summary: How to read simulation and comparison artifacts.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Results Interpretation Guide
 
 This document explains the output files produced by the comparison pipeline.

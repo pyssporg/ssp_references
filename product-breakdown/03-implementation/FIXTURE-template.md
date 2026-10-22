@@ -1,4 +1,14 @@
-# <FIXTURE_NAME>
+---
+id: INFO-004
+type: info
+title: Fixture Note Template
+summary: Canonical FIXTURE.md shape for model fixtures.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
+# Fixture Note Template
 
 ## Origin
 

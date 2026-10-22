@@ -1,3 +1,13 @@
+---
+id: EVAL-001
+type: eval
+title: Co-Simulation Engine Test Strategy
+summary: Prepare an exported model and study, simulate every registered backend, compare results.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Co-Simulation Engine Test Strategy
 
 ## Purpose

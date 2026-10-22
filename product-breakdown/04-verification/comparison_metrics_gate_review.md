@@ -1,3 +1,13 @@
+---
+id: EVAL-005
+type: eval
+title: Comparison Metrics Gate Review
+summary: Review of comparison metrics, tolerances, and gate behavior.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Comparison Metrics Gate Review
 
 **Review ID:** IMP-CAND-J  
@@ -220,8 +230,8 @@ class ComparisonBatchRun:
 | `04-verification/comparison_metrics_gate_review.md` (this document) | Verification (04) | Gate specification produced by this review |
 | `06-evolution/backlog/IMP-CAND-J-comparison-metrics-gate-review.md` | Evolution (06) | Task contract — proposed this review as a candidate |
 | `04-verification/co_simulation_test_strategy.md` | Verification (04) | Comparison policy: per-class tolerances, signal presence, NaN handling |
-| `02-architecture/decisions/ADR-002.md` | Architecture (02) | Fixture hierarchy (four classes) mapped to threshold recommendations |
-| `02-architecture/decisions/ADR-001.md` | Architecture (02) | Three-stage pipeline: build → simulate → compare; gate check added to the compare stage |
+| `ADR-002` | Architecture (02) | Fixture hierarchy (four classes) mapped to threshold recommendations |
+| `ADR-001` | Architecture (02) | Three-stage pipeline: build → simulate → compare; gate check added to the compare stage |
 | `scripts/utils/comparison.py` | Implementation (03) | Metrics producer — all per-signal and summary metrics |
 | `scripts/workflow/comparison.py` | Implementation (03) | Comparison pipeline — `compare_runs()` is the recommended gate insertion point |
 | `04-verification/backend_adapter_review.md` | Verification (04) | Sister review (IMP-CAND-H): backend adapter contracts |

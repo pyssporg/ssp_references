@@ -1,3 +1,13 @@
+---
+id: EVAL-002
+type: eval
+title: Ecosystem Adoption Assessment
+summary: Fit of pyssp_simulate, pyssp_sysml2, pyssp_vv, and sequence_extensions to the fixture suite.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Ecosystem Adoption Assessment
 
 **Date:** 2026-10-22
@@ -25,9 +35,7 @@ boundaries:
 The Build → Simulate → Compare stage contract is unchanged. Migrated fixtures
 add an exported model SSP plus study artifacts, and the runtime copies the
 model SSP before applying a study scenario. The runtime venv is now Python 3.11.
-See [ADR-005](../02-architecture/decisions/ADR-005.md),
-[ADR-007](../02-architecture/decisions/ADR-007.md), and
-[ADR-010](../02-architecture/decisions/ADR-010.md).
+See `ADR-005`, `ADR-007`, and `ADR-010`.
 
 ---
 

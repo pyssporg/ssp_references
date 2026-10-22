@@ -1,3 +1,13 @@
+---
+id: INFO-003
+type: info
+title: Pipeline and Tool Boundaries
+summary: Artifact and tool contracts at the build, simulate, compare, and SysML boundaries.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Pipeline and Tool Boundaries
 
 **Status:** Canonical
@@ -131,10 +141,10 @@ python3 scripts/check_sysml_roundtrip.py \
 
 ## Backward Trace
 
-- [ADR-001](decisions/ADR-001.md) — three-stage pipeline
-- [ADR-005](decisions/ADR-005.md) — pyssp ecosystem adoption
-- [ADR-006](decisions/ADR-006.md) — standardized artifacts at tool boundaries
-- [ADR-007](decisions/ADR-007.md) — SysML authoring at the build boundary
-- [ADR-008](decisions/ADR-008.md) — workflow capability ownership
-- [ADR-009](decisions/ADR-009.md) — `SspModel`/`Study` markers
-- [ADR-010](decisions/ADR-010.md) — runtime scenario injection
+- `ADR-001` - three-stage pipeline
+- `ADR-005` - pyssp ecosystem adoption
+- `ADR-006` - standardized artifacts at tool boundaries
+- `ADR-007` - SysML authoring at the build boundary
+- `ADR-008` - workflow capability ownership
+- `ADR-009` - `SspModel`/`Study` markers
+- `ADR-010` - runtime scenario injection

@@ -1,3 +1,13 @@
+---
+id: INFO-009
+type: info
+title: Improvement Backlog Overview
+summary: Legacy improvement candidates awaiting scoping.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Improvement Backlog Overview
 
 ## Usage
@@ -13,7 +23,7 @@ a scoped task contract.
 
 | File | ID | Theme | Status | Priority | Blast radius |
 | --- | --- | --- | --- | --- | --- |
-| `complete/IMP-011.md` | IMP-011 | System simulation use-case coverage analysis and gap tracking | Completed | High | Low |
+| `../implemented/IMP-011.md` | IMP-011 | System simulation use-case coverage analysis and gap tracking | Completed | High | Low |
 | `candidates/IMP-012.md` | IMP-012 | Parameter binding pipeline tests (pipeline-context only) | Proposed | High | Low |
 | `candidates/IMP-013.md` | IMP-013 | End-to-end pipeline integration test | Proposed | High | Medium |
 | `candidates/IMP-014.md` | IMP-014 | Gate pass/fail enforcement in comparison pipeline | Proposed | High | Medium |

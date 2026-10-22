@@ -1,71 +1,60 @@
+---
+id: INFO-007
+type: info
+title: Naming Conventions
+summary: Stable ID prefixes, archive record names, and citation rules.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Naming Conventions
 
-This document records the stable identifier prefixes and filename conventions
-used in this repository. Follow these conventions when creating new artifacts.
+- **Current state**: layer leaves carry `id`, `type`, `title`, `summary`, `date`, and `status` front-matter.
+- **Citations**: cite another node by ID in backticks, never by a markdown path.
+- **Decision records**: live in `product-breakdown/archive.zip`, read with `pb archive read <ID>`.
+- **Generated registers**: `decisions/README.md`, `design-choice-log.md`, and `traceability-map.md` are generated; never edit them by hand.
 
-## Active Prefixes
+## Leaf ID Prefixes
 
-| Prefix | Meaning | Location |
-| --- | --- | --- |
-| INT | Intent | `00-intent/intent.md` |
-| PD | Product Decision | `01-product/decisions/PD-*.md` |
-| ADR | Architecture Decision Record | `02-architecture/decisions/ADR-*.md` |
-| DD | Design Decision | `03-implementation/decisions/DD-*.md` |
-| IMP | Improvement Candidate | `06-evolution/backlog/IMP-*.md` and `06-evolution/backlog/complete/IMP-*.md` |
+- `INFO` - current-state reference leaf.
+- `EVAL` - verification, review, or assessment leaf.
+- `CP` - product capability or promise.
+- `IMP` - evolution candidate.
+- `CON` - constraint.
+- `REQ` - requirement.
+- `TEST` - test or verification asset.
+- `RQ` - research question.
+- `TR` - trace.
 
-## Filename Convention
+## Record ID Prefixes
 
-All decision files use lowercase kebab-case after the stable ID prefix and
-sequence number:
+- `PD` - product decision.
+- `ADR` - architecture decision record.
+- `DD` - design decision.
+
+## Archive Record Names
+
+Decision records use `<PREFIX>-<NNN>-<kebab-slug>.md` inside the archive:
 
 ```text
 PD-001-comparison-engine-to-engine.md
-PD-002-simulation-registry-source-of-truth.md
-PD-003-supported-backends.md
 PD-004-sysml-sspmodel-authoring.md
-PD-005-fixtures-and-policy-not-pipeline.md
-PD-006-studies-consume-exported-ssps.md
-ADR-001.md
-ADR-002.md
-ADR-003.md
-ADR-007.md
-ADR-008.md
-ADR-009.md
-ADR-010.md
-DD-001-simulation-settings-runtime-layer.md
-DD-002-runtime-artifacts-under-artifacts.md
-DD-003-build-py-remains-build-only.md
-DD-004-signal-propagation-deterministic-blocks.md
-DD-005-simulation-registry-technical.md
-DD-006-time-shift-tolerant-vv-metrics.md
+ADR-001-three-stage-pipeline.md
+ADR-007-sysml-build-boundary.md
 DD-007-signal-step-gain-model-export.md
-DD-008-study-scenario-generation.md
 DD-009-runtime-scenario-injection.md
 ```
 
-**Notes:**
-- ADR files use only the prefix and number (e.g., `ADR-001.md`) — no kebab-case
-  title suffix.
-- PD files include a kebab-case title suffix after the sequence number.
-- DD files include a kebab-case title suffix after the sequence number.
-- IMP files use the prefix with either `-NNN` (completed items) or `-CAND-X`
-  (proposed candidates).
+## Adding a Record
 
-## Reference Prefixes (from templates, not yet in active use)
+1. Write the record with the skill template.
+2. Run `pb archive add <record>`.
+3. The command validates, stores the record, and deletes the loose file.
+4. Update the owning layer leaf in the same change so its `state:` target holds the current fact.
 
-The following prefixes are defined in the product-breakdown naming template
-but are not currently used in this repository. They are reserved for future
-use when the corresponding layer artifacts are created:
+## Adding a Leaf
 
-| Prefix | Meaning |
-| --- | --- |
-| OUT | Outcome |
-| ASM | Assumption |
-| CON | Constraint |
-| CAP | Capability |
-| UC | Use case |
-| REQ | Requirement |
-| OD | Operational Decision |
-| ED | Evolution Decision |
-| RISK | Risk |
-| TEST | Test or verification artifact |
+1. Run `pb new <layer-dir> "<Title>" --summary "<one-line>" --type <type>`.
+2. Keep one current-state fact per line, present tense.
+3. Cite other nodes by ID, not by path.

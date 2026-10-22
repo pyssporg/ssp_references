@@ -1,3 +1,13 @@
+---
+id: INFO-005
+type: info
+title: LS-REF Packaging Note
+summary: LS-REF experiment XML is packaging metadata, not the runtime contract.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # LS-REF Packaging Note
 
 LS-REF experiment XML is packaging metadata. It is not the runtime contract for

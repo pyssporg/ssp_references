@@ -1,0 +1,26 @@
+# Product-breakdown configuration for ssp_references.
+# Only values that differ from the standard are listed.
+
+[layout]
+archive = "archive.zip"
+exclude_dirs = ["tools"]
+
+[layers]
+order = ["intent", "product", "architecture", "implementation", "verification", "operation", "evolution"]
+prefixes = { intent = "ID", product = "PD", architecture = "AD", implementation = "IMD", verification = "VD", operation = "OD", evolution = "IMP" }
+
+[records]
+sections = ["Context", "Decision", "Rationale", "Alternatives Considered", "Consequences", "Verification", "Review Trigger"]
+budgets = { Context = [5, 40], Decision = [4, 50], Rationale = [5, 40] }
+
+[ids]
+# ADR- and DD- are grandfathered record prefixes kept for existing citations.
+prefixes = { info = "INFO", decision = "DEC", eval = "EVAL", imp = "IMP", research-question = "RQ", constraint = "CON", trace = "TR", capability = "CP", requirement = "REQ", test = "TEST", architecture-decision = "ADR", design-decision = "DD" }
+# Completed legacy IMP files predate the ID scheme; keep their numeric handles resolvable.
+reserved_ids = ["IMP-001", "IMP-002", "IMP-003", "IMP-004", "IMP-005", "IMP-006", "IMP-007", "IMP-008", "IMP-009", "IMP-010", "IMP-011", "IMP-012", "IMP-013", "IMP-014", "IMP-015", "IMP-016", "IMP-017", "IMP-041"]
+
+[nodes]
+exempt = ["design-choice-log.md", "traceability-map.md", "06-evolution/implemented"]
+
+[registers]
+log = "design-choice-log.md"

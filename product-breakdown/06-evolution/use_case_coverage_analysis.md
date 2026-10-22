@@ -1,3 +1,13 @@
+---
+id: EVAL-008
+type: eval
+title: System Simulation Use-Case Coverage Analysis
+summary: Coverage analysis of simulation use cases.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # System Simulation Use-Case Coverage Analysis
 
 ## Status

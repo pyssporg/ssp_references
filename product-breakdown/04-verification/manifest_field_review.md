@@ -1,3 +1,13 @@
+---
+id: EVAL-006
+type: eval
+title: Manifest Field Review
+summary: Review of setup and run manifest fields.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Manifest Field Review
 
 **Review ID:** IMP-CAND-I  

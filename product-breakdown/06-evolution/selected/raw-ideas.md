@@ -1,4 +1,14 @@
+---
+id: IMP-100
+type: imp
+title: Raw Improvement Ideas
+summary: Unscoped improvement ideas; route each through the change pipeline.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
 
+# Raw Improvement Ideas
 
 ---
 

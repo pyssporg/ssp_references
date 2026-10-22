@@ -44,11 +44,17 @@ Keep changes direct and explicit.
 - Use the canonical template at `product-breakdown/03-implementation/FIXTURE-template.md`
   when creating new FIXTURE.md files; reformat existing files to match when
   editing them
-- Record significant architectural decisions as ADRs in `product-breakdown/02-architecture/decisions/` using the
-  template at `.opencode/templates/others/adr-template.md`. Create an ADR when
-  a decision affects pipeline boundaries, fixture hierarchy, runtime contracts,
-  entry point responsibilities, or repository layout. Smaller implementation
-  choices belong in the Design Decisions (DD) files in `product-breakdown/03-implementation/decisions/`.
+- Follow the `product-breakdown` skill for `product-breakdown/`:
+  - current state lives in layer leaves, present tense
+  - dated decisions live in `product-breakdown/archive.zip`, read via
+    `python3 .agents/skills/product-breakdown/scripts/pb archive list` and
+    `... archive read <ID>`
+  - add a decision record with
+    `python3 .agents/skills/product-breakdown/scripts/pb archive add <record>`
+  - never add per-layer `decisions/` folders or hand-maintain decision logs
+  - regenerate `decisions/README.md`, `design-choice-log.md`, and
+    `traceability-map.md` with `pb registers`; never edit them by hand
+  - run `pb check --strict` and `pb node-size --strict` after edits
 - Keep cross-cutting workflow or strategy notes in `product-breakdown/`
 - When docs move or commands change, update references so the documented build
   and simulation flow stays accurate

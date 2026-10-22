@@ -1,3 +1,13 @@
+---
+id: EVAL-007
+type: eval
+title: Simulation Registry Coverage Review
+summary: Audit of active model, study, and backend combinations.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Simulation Registry Coverage Review
 
 **Date:** 2026-05-20  

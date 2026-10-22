@@ -1,3 +1,13 @@
+---
+id: EVAL-004
+type: eval
+title: Backend Adapter Contract Review
+summary: Contract review of ssp4sim and OMSimulator backend adapters.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Backend Adapter Contract Review
 
 **Review ID:** IMP-CAND-H  

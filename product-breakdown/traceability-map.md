@@ -1,60 +1,12 @@
+<!-- GENERATED FILE — do not edit. Regenerate with pb-registers. -->
+
 # Traceability Map
 
-This document records the cross-layer trace chain for the `ssp_references`
-repository. Per KM-005, traceability connects intent, product behavior,
-architecture, implementation, verification, operation, and evolution.
+Generated from each record's `state:` field: current-state leaf ->
+decisions -> artifacts. Current state is the leaf; the records are its
+history.
 
-## Trace Chain
-
-```
-Intent (00)
-  └─► Product Decisions (01)
-        └─► System Architecture (02)
-              └─► Technical Decisions (03) [ADRs + DDs]
-                    └─► Implementation (03)
-                          └─► Verification (04-verification/)
-                                └─► Operation (05-operation/) [stub - empty]
-                                      └─► Evolution (06) [backlog]
-```
-
-## Layer Directories
-
-| Layer | Directory | Contents |
-| --- | --- | --- |
-| Intent | [00-intent/](./00-intent/) | `intent.md` — repository purpose, commitments, non-goals |
-| Product Decisions | [01-product/](./01-product/) | PD-001 (comparison methodology), PD-002 (registry source of truth), PD-003 (supported backends), PD-004 (SysML authoring), PD-005 (capability ownership), PD-006 (studies consume exported SSPs) |
-| System Architecture | [02-architecture/](./02-architecture/) | `architecture.md` — stable boundaries, pipeline stages, fixture hierarchy, runtime contract; `pipeline-boundaries.md` — canonical stage/tool artifact contracts |
-| Technical Decisions (ADRs) | [02-architecture/decisions/](./02-architecture/decisions/) | ADR-001 through ADR-010 — significant architectural rationale |
-| Technical Decisions (DDs) | [03-implementation/decisions/](./03-implementation/decisions/) | DD-001 through DD-009 — smaller implementation choices |
-| Implementation | [03-implementation/](./03-implementation/) | `FIXTURE-template.md`, `ls_ref_ssp_experiment_workflow.md` |
-| Verification | [04-verification/](./04-verification/) | Test strategy, fixture mapping |
-| Operation | [05-operation/](./05-operation/) | **Currently empty** — stub README only |
-| Evolution | [06-evolution/](./06-evolution/) | Backlog artifacts (IMP-CAND candidates, completed IMP items, review plan) |
-
-## Cross-Layer Decision Index
-
-| Decision Type | Prefix | Layer Directory | Purpose |
-| --- | --- | --- | --- |
-| Intent | INT | `00-intent/` | Repository purpose and scope |
-| Product Decision | PD | `01-product/` | Durable product promises |
-| Architecture Decision Record | ADR | `02-architecture/decisions/` | Significant architectural rationale |
-| Design Decision | DD | `03-implementation/decisions/` | Smaller implementation choices |
-| Improvement Candidate | IMP | `06-evolution/backlog/` | Deferred or scheduled work |
-
-## Trace Rules (per KM-005)
-
-1. **Backward-only:** Every artifact traces upward to intent, product commit-
-   ments, or architectural constraints. No artifact links downward to
-   implementation details or verification specifics.
-2. **Explicit trace sections:** Every ADR and PD includes a `Trace` section at
-   the bottom linking to the artifact it satisfies.
-3. **Evolution items trace backward:** Improvement candidates identify the layer
-   where the pain or gap was detected. They do not prescribe implementation.
-4. **Decision log is index-only:** The root `decision-log.md` lists decisions
-   without duplicating their rationale.
-
-## Maintenance
-
-When adding, renaming, superseding, or deprecating a decision or layer
-artifact, update this map and the root decision log in the same change. Keep
-entries short — full detail belongs in the artifact itself.
+- **Model export, study, and comparison contract** — Decisions: PD-001, PD-002, PD-003, PD-004, PD-005, PD-006 · Artifacts: `scripts/run_comparisons.py`, `product-breakdown/04-verification/co_simulation_test_strategy.md`, `artifacts/simulation_registry.json`, `scripts/run_simulations.py`, `models/ssp`, `product-breakdown/02-architecture/architecture.md`, `scripts`, `3rd_party/pyssp_workflow`, `product-breakdown/03-implementation/workflow.md` · State: `01-product/contract.md`
+- **System Architecture** — Decisions: ADR-001, ADR-002, ADR-003, ADR-004, ADR-005, ADR-006, ADR-007, ADR-008, ADR-009, ADR-010 · Artifacts: `scripts/build_models.py`, `scripts/run_simulations.py`, `scripts/run_comparisons.py`, `models/ssp`, `models/fmu`, `artifacts/simulation_registry.json`, `product-breakdown/04-verification/co_simulation_fixture_mapping.md`, `3rd_party/pyssp_workflow`, `scripts/run_campaign.py`, `scripts/check_sysml_roundtrip.py`, `product-breakdown/02-architecture/pipeline-boundaries.md`, `models/ssp/signal_step_gain/build.py`, `scripts`, `product-breakdown/02-architecture/architecture.md`, `product-breakdown/03-implementation/workflow.md` · State: `02-architecture/architecture.md`
+- **Build, study, and runtime workflow** — Decisions: DD-001, DD-002, DD-003, DD-004, DD-005, DD-006, DD-007, DD-008, DD-009 · Artifacts: `scripts/run_simulations.py`, `product-breakdown/03-implementation/workflow.md`, `artifacts/simulation`, `artifacts/comparisons`, `models/ssp/signal_step_gain/build.py`, `scripts/build_models.py`, `models/fmu`, `models/ssp`, `artifacts/simulation_registry.json`, `product-breakdown/04-verification/co_simulation_test_strategy.md`, `scripts/run_comparisons.py`, `models/ssp/signal_step_gain/ssp`, `scripts/run_campaign.py` · State: `03-implementation/workflow.md`
+- **Product-breakdown maintenance** — Decisions: AD-011 · Artifacts: `product-breakdown/pb.toml`, `product-breakdown/archive.zip`, `product-breakdown/README.md` · State: `05-operation/breakdown-maintenance.md`

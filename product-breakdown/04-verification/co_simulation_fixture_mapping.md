@@ -1,3 +1,13 @@
+---
+id: EVAL-003
+type: eval
+title: Co-Simulation Fixture Mapping
+summary: Fixture classes mapped to the test strategy and oracles.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Co-Simulation Fixture Mapping
 
 This document complements

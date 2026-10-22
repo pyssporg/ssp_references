@@ -1,3 +1,13 @@
+---
+id: INFO-001
+type: info
+title: Repository Intent
+summary: Why ssp_references exists, who it serves, and what it refuses to become.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # Repository Intent
 
 This document states the overarching purpose, commitments, and boundaries of this repository.
@@ -41,7 +51,7 @@ general-purpose simulation framework or a specification conformance suite.
 ## Forward Trace
 
 The product commitments in this document are translated into durable product
-promises in the [Product Decisions](../01-product/README.md) artifact
+promises in the `CP-001` artifact
 (decisions about comparison methodology, backend support, and the simulation registry).
 The stable boundaries that preserve these commitments are defined in the
-[System Architecture](../02-architecture/architecture.md) document.
+`INFO-002` document.

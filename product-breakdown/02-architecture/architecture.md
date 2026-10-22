@@ -1,3 +1,13 @@
+---
+id: INFO-002
+type: info
+title: System Architecture
+summary: Stable stages, fixture hierarchy, runtime contract, and stage boundaries.
+date: 2026-10-22
+status: current
+pb_exempt: true
+---
+
 # System Architecture
 
 This document describes the stable guarantees, component boundaries, and
@@ -75,7 +85,7 @@ model/study/backend matrix, prepares setup manifests, and dispatches through
 `pyssp_workflow` execute nodes. Runtime scenario injection and backend
 execution are `pyssp_workflow` / `pyssp_simulate` responsibilities; local
 compatibility shims exist only for documented upstream gaps (see
-[ADR-005](decisions/ADR-005.md) and [ADR-008](decisions/ADR-008.md)).
+`ADR-005` and `ADR-008`).
 
 **Invariant:** The simulate stage does not rebuild SSPs, does not mutate
 exported model artifacts or model source directories, and does not run
@@ -189,7 +199,7 @@ maintained in [Pipeline and Tool Boundaries](pipeline-boundaries.md).
 
 No tool may add compatibility behavior to a producer's Python model merely to
 satisfy a consumer. Adapt the consumer or the artifact boundary instead. See
-[ADR-006](decisions/ADR-006.md).
+`ADR-006`.
 
 ---
 
@@ -312,7 +322,7 @@ manifest and metrics shape.
 
 ---
 
-## 6. Forbidden Shortcuts
+## 6. Boundary Rules
 
 The following architectural violations are not allowed:
 
@@ -353,13 +363,13 @@ The following architectural violations are not allowed:
    `pyssp_workflow.authoring` and exchanges SysML/SSP artifacts. Do not import
    `pyssp_sysml2` into the build; `pyssp_standard` remains the build-stage SSP
    API. Do not add compatibility shims to `pyssp_standard` for a downstream
-   consumer. See [ADR-006](decisions/ADR-006.md) and
-   [ADR-007](decisions/ADR-007.md).
+   consumer. See `ADR-006` and
+   `ADR-007`.
 
 9. **Studies must not be exported as SSPs.** Only `part def ... :> SspModel`
    definitions are exportable. A `part def ... :> Study` produces scenario
    SSV/SSM and experiment data, and consumes an exported model. See
-   [ADR-009](decisions/ADR-009.md) and [ADR-010](decisions/ADR-010.md).
+   `ADR-009` and `ADR-010`.
 
 ---
 

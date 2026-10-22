@@ -9,7 +9,8 @@ so the repository and its tooling can be developed together.
 | `pyssp_simulate/` | `git@github.com:pyssporg/pyssp_simulate.git` | Simulation substrate used by the simulate stage |
 | `pyssp_sysml2/` | `git@github.com:pyssporg/pyssp_sysml2.git` | External SysML/SSD round-trip tool |
 | `sequence_extensions/` | `git@github.com:jkCXf9X4/sequence_extensions.git` | Campaign flow engine |
-| `pyssp_vv/` | `git@github.com:pyssporg/pyssp_vv.git` | Node-ready verification library being extracted from `scripts/workflow/`; not yet wired into the pipeline |
+| `pyssp_vv/` | `git@github.com:pyssporg/pyssp_vv.git` | V&V capability: measurement policies, criteria, judgment, evidence |
+| `pyssp_workflow/` | `git@github.com:pyssporg/pyssp_workflow.git` | Composable build/run/compare/verify workflows as nodes; not wired into the pipeline yet |
 
 ## Initialize
 
@@ -35,7 +36,7 @@ Check before updating or resetting:
 git submodule status
 for d in 3rd_party/pyssp_standard 3rd_party/pyssp_simulate \
         3rd_party/pyssp_sysml2 3rd_party/sequence_extensions \
-        3rd_party/pyssp_vv; do
+        3rd_party/pyssp_vv 3rd_party/pyssp_workflow; do
   echo "=== $d"
   git -C "$d" status --short
 done

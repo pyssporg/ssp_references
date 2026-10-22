@@ -17,6 +17,27 @@ purpose (e.g., "simple reference SSP", "deterministic signal-propagation
 fixture", "composite SSP model").
 -->
 
+## Architecture Source
+
+<!--
+Required for SysML-authored fixtures.
+- Path to architecture/*.sysml.
+- Composition name of the exportable `SspModel`.
+- Parameter interfaces and sets authored in SysML.
+- Whether any legacy SSD/SSV/SSM remains checked in (and why).
+-->
+
+## Studies
+
+<!--
+Required for SysML-authored fixtures with studies.
+- Study composition names (`part def ... :> Study`).
+- Scenario/parameter-set names applied by each study.
+- Experiment windows and tolerances.
+- Artifact locations under artifacts/studies/<model>/<study>/.
+- Confirmation that studies are not exported as SSPs.
+-->
+
 ## Strategy Role
 
 <!--
@@ -75,8 +96,10 @@ Optional. Notes specific to running this fixture:
 ## Packaging Notes
 
 <!--
-Optional. Notes about how this SSP is packaged:
-- External SSV/SSM files (checked-in vs generated).
+Optional. Notes about how this fixture is packaged:
+- Exported model SSP path and build name.
+- Generated vs checked-in SSD/SSV/SSM.
+- Study scenario and experiment artifacts.
 - FMU source references.
 - Special build steps or resource handling.
 -->

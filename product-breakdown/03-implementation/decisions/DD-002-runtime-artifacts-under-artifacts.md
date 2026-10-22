@@ -7,14 +7,15 @@
 
 ## Context
 
-Simulation results could be stored next to each model's build output under
-`artifacts/models/<model>/<case>/`.
+Simulation results could be stored next to each model's exported SSP under
+`artifacts/models/<model>/<build>/`.
 
 ## Decision
 
-Runtime artifacts live in `artifacts/simulation/<model>/<case>/` and
-`artifacts/comparisons/<model>/<case>/`, completely separate from build
-artifacts under `artifacts/models/`.
+Runtime artifacts live in `artifacts/simulation/<model>/<study>/` and
+`artifacts/comparisons/<model>/<study>/`, completely separate from exported
+model artifacts under `artifacts/models/` and study data under
+`artifacts/studies/`.
 
 ## Rationale
 
@@ -24,8 +25,8 @@ coupling between build logic and runtime configuration.
 
 ## Consequences
 
-- Three parallel directory trees under `artifacts/` (models, simulation,
-  comparisons).
+- Four parallel directory trees under `artifacts/` (models, studies,
+  simulation, comparisons).
 - Cleanup must target each tree independently.
 - Pipeline stages can be independently cleaned and re-run without rebuild.
 
@@ -36,5 +37,5 @@ Satisfies the pipeline stage isolation described in Section 1 of
 
 ## See Also
 
-- [ADR-001: Three-Stage Pipeline Architecture](./ADR-001.md) — the pipeline
+- [ADR-001: Three-Stage Pipeline Architecture](../../02-architecture/decisions/ADR-001.md) — the pipeline
   structure that this artifact layout supports.

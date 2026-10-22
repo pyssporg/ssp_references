@@ -44,6 +44,9 @@ There is no canonical DD template. Follow the general decision format in
 | [DD-004](./DD-004-signal-propagation-deterministic-blocks.md) | Signal-Propagation Fixtures Use Deterministic Algebraic FMU Blocks | Accepted | technical-decision |
 | [DD-005](./DD-005-simulation-registry-technical.md) | Simulation Registry Technical Mechanism | Accepted | technical-decision |
 | [DD-006](./DD-006-time-shift-tolerant-vv-metrics.md) | Time-Shift-Tolerant VV Metrics | Accepted | implementation-decision |
+| [DD-007](./DD-007-signal-step-gain-model-export.md) | `signal_step_gain` Model Export | Accepted | implementation-decision |
+| [DD-008](./DD-008-study-scenario-generation.md) | Study Scenario Generation and SSM Prefix Stripping | Accepted | implementation-decision |
+| [DD-009](./DD-009-runtime-scenario-injection.md) | Runtime Scenario Injection and Registry Build/Case Split | Accepted | implementation-decision |
 
 ## Purpose
 
@@ -62,6 +65,10 @@ The DDs in this directory implement the architectural constraints defined by:
 - [ADR-003](../../02-architecture/decisions/ADR-003.md) — Runtime Configuration
 - [ADR-005](../../02-architecture/decisions/ADR-005.md) — pyssp Ecosystem Adoption
 - [ADR-006](../../02-architecture/decisions/ADR-006.md) — Standardized Artifacts at Tool Boundaries
+- [ADR-007](../../02-architecture/decisions/ADR-007.md) — Authoring SysML at the Build Boundary
+- [ADR-008](../../02-architecture/decisions/ADR-008.md) — Workflow Capability Ownership
+- [ADR-009](../../02-architecture/decisions/ADR-009.md) — `SspModel` and `Study` Marker Specialization
+- [ADR-010](../../02-architecture/decisions/ADR-010.md) — Runtime Scenario and Experiment Application
 
 ---
 

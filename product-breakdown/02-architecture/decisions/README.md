@@ -50,6 +50,10 @@ The canonical template is at
 | [ADR-004](./ADR-004.md) | Use-Case Coverage Taxonomy as the Primary Coverage Lens | Accepted | technical-decision |
 | [ADR-005](./ADR-005.md) | Adopt the pyssp Ecosystem Behind Existing Stage Boundaries | Accepted | architecture-decision |
 | [ADR-006](./ADR-006.md) | Exchange Standardized Artifacts at Tool Boundaries | Accepted | architecture-decision |
+| [ADR-007](./ADR-007.md) | Authoring SysML at the Build Boundary | Accepted | architecture-decision |
+| [ADR-008](./ADR-008.md) | Workflow Capability Ownership and Node Boundaries | Accepted | architecture-decision |
+| [ADR-009](./ADR-009.md) | `SspModel` and `Study` Marker Specialization | Accepted | architecture-decision |
+| [ADR-010](./ADR-010.md) | Runtime Scenario and Experiment Application to Exported SSPs | Accepted | architecture-decision |
 
 ## Layer Map
 
@@ -112,6 +116,22 @@ Technical Decisions (bridging architecture to build details):
         ▼
   ADR-006: Artifact Tool Boundaries
     └─ external tools exchange SSP files; no cross-library model shims
+        │
+        ▼
+  ADR-007: SysML Authoring at the Build Boundary
+    └─ pyssp_workflow invokes the pyssp CLI; no pyssp_sysml2 import
+        │
+        ▼
+  ADR-008: Workflow Capability Ownership
+    └─ generic build/run/measure/judge/report behavior moves to pyssp_workflow
+        │
+        ▼
+  ADR-009: SspModel/Study Markers
+    └─ models are exportable; studies are never SSPs
+        │
+        ▼
+  ADR-010: Runtime Scenario Injection
+    └─ studies apply SSV/SSM and experiment data to an exported SSP
 
 ## Maintenance Note
 

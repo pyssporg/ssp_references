@@ -1,8 +1,9 @@
 # Ecosystem Adoption Assessment
 
-**Date:** 2026-10-21
-**Scope:** `pyssp_simulate` 0.1.1, `pyssp_sysml2` 0.1.1, `sequence_extensions`
-3.0.0, evaluated against the 21 built fixtures in this repository.
+**Date:** 2026-10-22
+**Scope:** `pyssp_simulate` 0.2.0, `pyssp_sysml2` 0.1.1, `pyssp_vv` 0.1.0,
+`sequence_extensions` 3.0.0, evaluated against the 21 built fixtures in this
+repository.
 
 ---
 
@@ -15,14 +16,18 @@ boundaries:
 | --- | --- | --- |
 | SSP runtime prep, ssp4sim config, result CSV parsing | Local implementation in `scripts/workflow/simulate.py` | `pyssp_simulate` (`SimulationSpec`, `prepare_runtime_ssp`, backend adapters) |
 | FMPy / OMSimulator calls | Local adapters | Local adapters only where upstream behavior differs; see §4 |
-| Comparison gate | Metrics only, invariant violations raised | `scripts/workflow/gate.py`, records `gate` pass/fail |
-| Reference baselines | Plot input only | `scripts/workflow/reference.py` compares runs to reference CSVs |
+| Comparison gate | Metrics only, invariant violations raised | `pyssp_vv.measure` / `pyssp_vv.judge` target; local gate during migration |
+| Reference baselines | Plot input only | `scripts/workflow/reference.py` compares runs to reference CSVs; target is `pyssp_vv` |
 | Campaign orchestration | Sequential CLI loops | `scripts/run_campaign.py` via `sequence_extensions` (Python 3.11+) |
-| SysML v2 authoring | None | `scripts/check_sysml_roundtrip.py` evaluation tool (separate env) |
+| SysML v2 authoring | Round-trip checker only | `pyssp_workflow.authoring` → `pyssp` CLI for `SspModel` export and `Study` scenario generation |
+| Capability ownership | Local pipeline implementations | `pyssp_workflow` composition over `pyssp_standard` / `pyssp_simulate` / `pyssp_vv` / `pyssp_sysml2` |
 
-The build, simulate, and compare stage contracts and artifact locations are
-unchanged. The runtime venv is now Python 3.11. See
-[ADR-005](../02-architecture/decisions/ADR-005.md).
+The Build → Simulate → Compare stage contract is unchanged. Migrated fixtures
+add an exported model SSP plus study artifacts, and the runtime copies the
+model SSP before applying a study scenario. The runtime venv is now Python 3.11.
+See [ADR-005](../02-architecture/decisions/ADR-005.md),
+[ADR-007](../02-architecture/decisions/ADR-007.md), and
+[ADR-010](../02-architecture/decisions/ADR-010.md).
 
 ---
 
@@ -101,6 +106,14 @@ primitives, permutation runs, CLI.
 existing SSD; `generate ssd` regenerates a runnable SSD; the CLI and Python
 module APIs both work.
 
+**Direction:** SysML is now an authoring source, not only a round-trip checker.
+`part def ... :> SspModel` definitions are exported as SSPs;
+`part def ... :> Study` definitions generate scenario SSV/SSM and experiment
+descriptors but are never exported as SSPs. Part-def specialization must be
+recorded for the role markers. Studies compose the model with `part sut : Model`;
+structural inheritance of parts/connections is not supported and is not
+required.
+
 **Gap: the round-trip was lossy.** For
 `artifacts/models/signal_step_gain/baseline/SystemStructure.ssd` the original
 implementation lost connector `kind`, parameter bindings, the default
@@ -123,8 +136,13 @@ as an evaluation artifact, not a build input.
 exchanges only SSD files, so the SysML tool can run in a separate environment
 with its own library versions (ADR-006).
 
-**Remaining limitation:** nested SSD systems are still unsupported by the
-SysML sync path.
+**Remaining limitations:**
+
+- Nested SSD systems are still unsupported by the SysML sync path.
+- Part-def structural inheritance is not modeled; `SspModel`/`Study` roles use
+  marker specialization and studies compose the model with `part sut`.
+- One study declares one experiment initially. Multiple experiments per study
+  require a registry/layout distinction between study/build and case/experiment.
 
 ### `sequence_extensions`
 
@@ -165,11 +183,25 @@ python3 scripts/run_campaign.py --model BouncingBall --fail-on-gate
 
 Logs are written under `artifacts/runs/<run_id>.jsonl`.
 
-SysML round-trip (artifact-only; point at the SysML tool environment):
+SysML authoring and round-trip (point at the SysML tool environment):
 
 ```bash
+# Exported model SSP from an SspModel composition
+pyssp generate ssp \
+  --architecture models/ssp/signal_step_gain/architecture \
+  --composition System \
+  --output artifacts/models/signal_step_gain/model/model.ssp \
+  --fmu-root .
+
+# Study scenario + experiment data (no SSP)
+pyssp generate study \
+  --architecture models/ssp/signal_step_gain/architecture \
+  --study test_baseline \
+  --output-dir artifacts/studies/signal_step_gain/baseline
+
+# Structural round-trip check
 python3 scripts/check_sysml_roundtrip.py \
-  artifacts/models/signal_step_gain/baseline/SystemStructure.ssd \
+  artifacts/models/signal_step_gain/model/SystemStructure.ssd \
   --output /tmp/sysml_roundtrip \
   --pyssp /path/to/venv-sysml/bin/pyssp
 ```
@@ -187,6 +219,9 @@ python3 scripts/check_sysml_roundtrip.py \
 | No reference-CSV comparison | pyssp_simulate | Patched in 0.1.1 |
 | No explicit comparison window | pyssp_simulate | Patched in 0.1.1 |
 | SSD → SysML → SSD loses metadata | pyssp_sysml2 | Patched in 0.1.1 |
+| No `SspModel`/`Study` role markers or study generation | pyssp_sysml2 | Planned (ADR-009) |
+| No runtime scenario SSV/SSM injection | pyssp_workflow | Planned (ADR-010) |
+| Custom comparison/gate layer still local | this repo → pyssp_vv | Planned (ADR-008) |
 | `pyssp_standard` version skew / LS-REF split | pyssp_sysml2 / pyssp_standard | Resolved by artifact boundary: pyssp_sysml2 targets the refactored API; checker invokes `pyssp` via CLI |
 | PyPI name collision | sequence_extensions | Patched: publishes as `sequence-extensions-flow` |
 | Broken `latest` ssp4sim wheel URL | ssp4sim / this repo | Pinned to `v0.3.2` |
@@ -196,7 +231,12 @@ python3 scripts/check_sysml_roundtrip.py \
 ## 6. VV Implications
 
 - **Pass/fail is now first-class.** Every pair and reference comparison records
-  `gate.status` and reasons in its manifest.
+  `gate.status` and reasons in its manifest. The target `pyssp_vv` migration
+  adds `invalid` as a distinct "not fit to judge" outcome; campaign exit codes
+  must not collapse it into `fail`.
+- **Model and study evidence are separate.** The exported SSP checksum is part
+  of provenance; the study scenario and experiment descriptor are run inputs.
+  Neither is rewritten by simulation.
 - **Timing skew is handled explicitly.** The gate uses a ±2-sample
   shift-tolerant maximum error; raw pointwise `max_abs_error` remains in the
   metrics for diagnosis. Startup/shutdown samples are excluded from the gate.

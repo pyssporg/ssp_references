@@ -15,10 +15,11 @@ points and tests.
 ## Canonical Boundary
 
 ```text
-Build    -> SSP root: SSD / SSV / resources / experiments.xml
-Simulate -> reads SSP root + registry, writes CSV + run manifests
-Compare  -> reads run manifests + CSV, writes comparisons
-SysML    -> reads SSD, invokes external pyssp CLI, writes SSD
+Authoring -> reads SysML, invokes external pyssp CLI, writes SSP + study data
+Build     -> reads model/study sources + FMU sources, writes model SSP + study artifacts
+Simulate  -> reads model SSP + study artifacts + registry, writes CSV + run manifests
+Compare   -> reads run manifests + CSV, writes comparisons
+SysML     -> reads SSD, invokes external pyssp CLI, writes SSD (round-trip checker)
 ```
 
 The arrows describe artifacts, not Python objects. No stage imports another
@@ -29,10 +30,11 @@ library to satisfy a consumer.
 
 | Boundary | Entry point | Reads | Writes | Must not |
 | --- | --- | --- | --- | --- |
-| Build | `scripts/build_models.py` → `models/ssp/<model>/build.py` | Model directory, FMU sources, authored `.ssv` / `.ssm` / `experiments.xml` | `artifacts/models/<model>/<case>/` containing `SystemStructure.ssd`, `resources/`, `extra/org.fmi-standard.fmi-ls-ref/experiments.xml` | Simulate, write comparison output, modify `artifacts/simulation_registry.json` |
-| Simulate | `scripts/run_simulations.py` | Built SSP root + `artifacts/simulation_registry.json` | `setup.json`, `artifacts/simulation/<model>/<case>/<backend>/result.csv`, `simulation.json`, `config.json`, logs | Rebuild the SSP, modify model sources, run comparisons |
-| Compare | `scripts/run_comparisons.py` | `simulation.json` run manifests, `result.csv`, `setup.json`, registry reference entries | `artifacts/comparisons/<model>/<case>/<pair>/comparison.json`, `metrics.csv`, batch summary | Re-run simulations, rebuild SSPs, modify simulation outputs |
-| SysML | `scripts/check_sysml_roundtrip.py` → external `pyssp` | `SystemStructure.ssd` | Generated SysML and regenerated `SystemStructure.ssd` under the requested output directory | Import `pyssp_sysml2` / `pyssp_standard`, modify the source SSD, read simulation or comparison artifacts |
+| Authoring | `pyssp_workflow.authoring` → external `pyssp` | `architecture/*.sysml`, FMU sources | Derived `.ssp`, SSD, SSV, SSM, study descriptor | Import `pyssp_sysml2` / `pyssp_vv`, mutate source SysML |
+| Build | `scripts/build_models.py` → `models/ssp/<model>/build.py` | Model directory incl. `architecture/*.sysml`, FMU sources, legacy `.ssv` / `.ssm` / `experiments.xml` | Exported model SSP at `artifacts/models/<model>/<build>/`; study artifacts at `artifacts/studies/<model>/<study>/` | Simulate, write comparison output, modify `artifacts/simulation_registry.json` |
+| Simulate | `scripts/run_simulations.py` → `pyssp_workflow` / `pyssp_simulate` | Exported model SSP, study artifacts, `artifacts/simulation_registry.json` | `setup.json`, `artifacts/simulation/<model>/<study>/<backend>/result.csv`, `simulation.json`, `config.json`, logs | Rebuild the SSP, mutate exported model artifacts, run comparisons |
+| Compare | `scripts/run_comparisons.py` → `pyssp_vv` target | `simulation.json` run manifests, `result.csv`, `setup.json`, registry reference entries | `artifacts/comparisons/<model>/<study>/<pair>/comparison.json`, `metrics.csv`, batch summary | Re-run simulations, rebuild SSPs, modify simulation outputs |
+| SysML checker | `scripts/check_sysml_roundtrip.py` → external `pyssp` | `SystemStructure.ssd` | Generated SysML and regenerated SSD under the requested output directory | Import `pyssp_sysml2` / `pyssp_standard`, modify the source SSD, read simulation or comparison artifacts |
 
 ## Artifact Classes
 
@@ -40,10 +42,11 @@ library to satisfy a consumer.
 
 These are the only artifacts that may cross a tool boundary:
 
-- The unpacked SSP root: `SystemStructure.ssd`, `resources/`, and
-  `extra/org.fmi-standard.fmi-ls-ref/experiments.xml`.
-- SSP XML members inside the root: `.ssd`, `.ssv`, `.ssm`, and the LS-REF
-  experiment file.
+- The exported model SSP root: `SystemStructure.ssd`, `resources/`, and an
+  optional default `extra/org.fmi-standard.fmi-ls-ref/experiments.xml`.
+- SSP XML members: `.ssd`, `.ssv`, `.ssm`, and the LS-REF experiment file.
+- Study scenario artifacts: the scenario `.ssv` and `.ssm`. These are
+  standardized SSP XML even though they live outside the exported SSP.
 - Simulation result CSV: the normalized trajectory written by the simulate
   stage.
 
@@ -56,11 +59,12 @@ These are contracts between stages in this repository, not general SSP
 interchange formats:
 
 - `artifacts/simulation_registry.json`
-- `artifacts/simulation/<model>/<case>/setup.json`
-- `artifacts/simulation/<model>/<case>/<backend>/simulation.json`
-- `artifacts/comparisons/<model>/<case>/comparison.json`
-- `artifacts/comparisons/<model>/<case>/metrics.csv`
-- `artifacts/comparisons/<model>/<case>/comparisons.json`
+- `artifacts/studies/<model>/<study>/study.json` (study/experiment descriptor)
+- `artifacts/simulation/<model>/<study>/setup.json`
+- `artifacts/simulation/<model>/<study>/<backend>/simulation.json`
+- `artifacts/comparisons/<model>/<study>/comparison.json`
+- `artifacts/comparisons/<model>/<study>/metrics.csv`
+- `artifacts/comparisons/<model>/<study>/comparisons.json`
 
 They may use repository-specific fields, but they must remain self-contained:
 paths are recorded relative to the manifest that contains them.
@@ -75,28 +79,29 @@ checkouts. The capabilities are nested inside it:
 
 | Submodule | Used by |
 | --- | --- |
-| `3rd_party/pyssp_workflow` | Composition layer and development tree (submodule only; not imported by the pipeline yet) |
-| `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` | Build |
+| `3rd_party/pyssp_workflow` | Composition layer: authoring, build, execute, measure/judge nodes, development tree |
+| `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` | Build and SSP XML inspection |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_simulate` | Simulate |
-| `3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2` | SysML |
-| `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` | Campaign orchestration |
-| `3rd_party/pyssp_workflow/3rd_party/pyssp_vv` | Verification and validation capability (measurement, judgment, evidence) |
+| `3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2` | Authoring (CLI) and SysML round-trip checker |
+| `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` | Build/simulation/compare campaign orchestration |
+| `3rd_party/pyssp_workflow/3rd_party/pyssp_vv` | Measurement, judgment, evidence, and reporting |
 
 See [`3rd_party/README.md`](../../3rd_party/README.md) for initialization and
 local-patch guidance.
 
 | Tool | Dependency expectation | Environment |
 | --- | --- | --- |
-| Build | `pyssp_standard` with the refactored model API | Runtime venv |
-| Simulate | `pyssp_simulate` plus the selected engines | Runtime venv |
-| Compare | Python standard library and repository comparison utilities | Runtime venv or a compatible environment |
-| SysML | `pyssp_sysml2` targeting the refactored `pyssp_standard` API | Separate environment allowed |
+| Authoring | `pyssp_workflow.authoring` + external `pyssp` CLI (`pyssp_sysml2`) | Runtime venv or a separate SysML environment via `PYSSP` |
+| Build | `pyssp_workflow` + `pyssp_standard` with the refactored model API | Runtime venv |
+| Simulate | `pyssp_workflow` + `pyssp_simulate` plus the selected engines | Runtime venv |
+| Compare | `pyssp_workflow` + `pyssp_vv` (target); local comparison utilities during migration | Runtime venv or a compatible environment |
+| SysML checker | `pyssp_sysml2` targeting the refactored `pyssp_standard` API | Separate environment allowed |
 
 The SysML checker accepts an explicit executable:
 
 ```bash
 python3 scripts/check_sysml_roundtrip.py \
-  artifacts/models/<model>/<case>/SystemStructure.ssd \
+  artifacts/models/<model>/<build>/SystemStructure.ssd \
   --output /tmp/sysml_roundtrip \
   --pyssp /path/to/venv-sysml/bin/pyssp
 ```
@@ -118,9 +123,18 @@ python3 scripts/check_sysml_roundtrip.py \
 5. **Fail loudly on missing or invalid artifacts.** A missing SSP root,
    manifest, or result CSV is an error, not a silent fallback to a model
    object or a different tool.
+6. **Exported SSPs are immutable build outputs.** Scenario and experiment data
+   is applied to a runtime copy. A study must not modify
+   `artifacts/models/<model>/<build>/`.
+7. **Studies are data, not SSPs.** A `Study` definition produces SSV, SSM, and
+   a study descriptor. It must not produce a `SystemStructure.ssd` or `.ssp`.
 
 ## Backward Trace
 
 - [ADR-001](decisions/ADR-001.md) — three-stage pipeline
 - [ADR-005](decisions/ADR-005.md) — pyssp ecosystem adoption
 - [ADR-006](decisions/ADR-006.md) — standardized artifacts at tool boundaries
+- [ADR-007](decisions/ADR-007.md) — SysML authoring at the build boundary
+- [ADR-008](decisions/ADR-008.md) — workflow capability ownership
+- [ADR-009](decisions/ADR-009.md) — `SspModel`/`Study` markers
+- [ADR-010](decisions/ADR-010.md) — runtime scenario injection

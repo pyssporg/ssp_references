@@ -18,8 +18,8 @@ result trajectory?"
 
 Every test level should therefore be organized around three steps:
 
-1. Prepare a stable SSP model fixture.
-2. Simulate the model with one or more engines.
+1. Prepare a stable exported `SspModel` and, where needed, a `Study` scenario.
+2. Simulate the exported model with one or more engines under that study.
 3. Compare the produced result signals against a trusted reference.
 
 ## Primary Oracles
@@ -36,6 +36,30 @@ These oracles serve different purposes:
 - Reference trajectories validate model behavior against known expected output.
 - Cross-engine comparison validates compatibility with established tooling.
 - Regression baselines detect unintended changes between engine versions.
+
+## Model and Study Preparation
+
+Migrated fixtures separate the exported model from the study that exercises it:
+
+- A `part def ... :> SspModel` is exported once as an SSP. It contains the
+  component wiring and parameter interfaces, but no study-specific parameter
+  values.
+- A `part def ... :> Study` supplies a scenario SSV/SSM and one experiment
+  descriptor. It is never exported as an SSP.
+- Simulation applies the study scenario to a runtime copy of the exported SSP.
+  The exported artifact is immutable.
+- Build, study generation, simulation, and comparison are submitted as
+  `sequence_extensions` nodes so models and studies can run in parallel.
+
+A migrated fixture is verified in four steps:
+
+1. The `SspModel` builds and its SSD round-trips through
+   `check_sysml_roundtrip.py --strict`.
+2. The `Study` generates scenario values and mappings with targets relative to
+   the exported SSP root.
+3. All registered backends simulate the same exported SSP with the study
+   scenario and agree within the gate.
+4. The `pyssp_vv` target verdict distinguishes `pass`, `fail`, and `invalid`.
 
 ## Test Levels
 
@@ -177,7 +201,10 @@ The strategy should compare:
 - Trend agreement across the simulation window.
 
 Acceptance should be based on per-signal tolerances, not bitwise equality.
-Different model classes will need different tolerance levels.
+Different model classes will need different tolerance levels. The target
+`pyssp_vv` judgment records `pass`, `fail`, or `invalid`; `invalid` means the
+comparison was not fit to judge and must not be reported as a numerical
+failure.
 
 Recommended rule set:
 
@@ -229,28 +256,30 @@ This repository already supports the core workflow needed for the strategy:
 
 - SSP fixtures live under `models/ssp/`.
 - Reusable FMU building blocks live under `models/fmu/`.
-- Generated SSPs live under `artifacts/models/<model_name>/<experiment>/`.
-- Some fixtures also use `experiments.xml` to package SSP variants, but the
-  runtime comparison flow does not depend on LS-REF.
+- Migrated fixtures author `SspModel` and `Study` definitions under
+  `models/ssp/<model>/architecture/`.
+- Exported model SSPs live under `artifacts/models/<model>/<build>/`.
+- Study scenario and experiment artifacts live under
+  `artifacts/studies/<model>/<study>/`. Studies are not SSPs.
 - Runtime setup, simulation, and comparison outputs live under
-  `artifacts/simulation/<model_name>/<experiment>/` and
-  `artifacts/comparisons/<model_name>/<experiment>/`.
-- `artifacts/simulation_registry.json` maps models to one or more named cases,
-  records the backends for each case explicitly, and stores the selected compare
-  signals for each model. The current backend set is `ssp4sim`,
+  `artifacts/simulation/<model>/<study>/` and
+  `artifacts/comparisons/<model>/<study>/`.
+- `artifacts/simulation_registry.json` maps model builds to one or more studies,
+  records the backends for each study explicitly, and stores the selected
+  compare signals for each model. The current backend set is `ssp4sim`,
   `OMSimulator`, and `FMPy`.
-- Each generated `artifacts/simulation/<model>/<case>/setup.json` also stores
-  the explicit backend list and selected compare signals for that setup.
-- Simulation is driven by `scripts/run_simulations.py`.
-- Comparison is driven by `scripts/run_comparisons.py` and implemented in
-  `scripts/workflow/comparison.py`. The compare entry point uses the backend
-  list from `setup.json` and emits comparisons for every unique backend
-  combination by default.
+- Each generated `artifacts/simulation/<model>/<study>/setup.json` also stores
+  the explicit backend list, selected compare signals, scenario paths, and
+  experiment window for that setup.
+- Simulation is driven by `scripts/run_simulations.py` and the target
+  `pyssp_workflow` execute nodes.
+- Comparison is driven by `scripts/run_comparisons.py`; the target
+  measurement/judgment owner is `pyssp_vv`.
 
-That means the immediate next step is not new infrastructure. It is selecting a
-small required model set, including deterministic signal-propagation fixtures,
-defining tolerances per model or signal group, and turning comparison outcomes
-into clear pass/fail criteria.
+That means the immediate next step is selecting a small required model set,
+including deterministic signal-propagation fixtures, defining tolerances per
+model or signal group, and turning comparison outcomes into clear
+pass/fail/invalid criteria.
 
 ## Coverage Taxonomy Reference
 

@@ -36,7 +36,15 @@ Satisfies the runtime contract described in Section 5 of
 
 ## See Also
 
-- [ADR-003: Runtime Configuration Belongs to the Simulation Registry](./ADR-003.md)
+- [ADR-003: Runtime Configuration Belongs to the Simulation Registry](../../02-architecture/decisions/ADR-003.md)
   — this ADR establishes the registry as the configuration source; DD-001
   specifies that the runtime layer consumes the frozen `setup.json` rather than
   `experiments.xml`.
+
+## Amendment (2026-10-22): Study Descriptor Is the Setup Source
+
+For migrated fixtures, the window and tolerance are read from the study
+descriptor instead of `experiments.xml`. The runtime still consumes only
+`setup.json`. The exported SSP's `experiments.xml` is a standalone default and
+is not required for a study run. See
+[DD-009](./DD-009-runtime-scenario-injection.md).

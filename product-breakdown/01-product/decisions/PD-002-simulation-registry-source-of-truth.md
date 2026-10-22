@@ -46,7 +46,22 @@ points" commitment in [00-intent/intent.md](../../00-intent/intent.md).
 
 ## See Also
 
-- [DD-005: Simulation Registry Technical Mechanism](../03-implementation/decisions/DD-005-simulation-registry-technical.md)
+- [DD-005: Simulation Registry Technical Mechanism](../../03-implementation/decisions/DD-005-simulation-registry-technical.md)
   describes the JSON schema and implementation details.
-- [ADR-003: Runtime Configuration Belongs to the Simulation Registry](../02-architecture/decisions/ADR-003.md)
+- [ADR-003: Runtime Configuration Belongs to the Simulation Registry](../../02-architecture/decisions/ADR-003.md)
   describes how the registry feeds into `setup.json`.
+
+## Amendment (2026-10-22): Build and Study Are Separate Registry Fields
+
+The registry remains the exclusive source of truth for the active run matrix.
+The model/study split adds two explicit fields:
+
+- `build` selects the exported model SSP under
+  `artifacts/models/<model>/<build>/`;
+- a case's `study` selects the study artifacts under
+  `artifacts/studies/<model>/<study>/`.
+
+A case is no longer assumed to be the same name as the built SSP directory.
+`build` defaults to `model` and `study` defaults to the case name for transition
+compatibility. See
+[DD-009](../../03-implementation/decisions/DD-009-runtime-scenario-injection.md).

@@ -46,5 +46,17 @@ the product decision
 
 - [PD-002: Simulation Registry Is the Single Source of Truth](../../01-product/decisions/PD-002-simulation-registry-source-of-truth.md)
   — the product-level commitment that this technical mechanism implements.
-- [ADR-003: Runtime Configuration Belongs to the Simulation Registry](./ADR-003.md)
+- [ADR-003: Runtime Configuration Belongs to the Simulation Registry](../../02-architecture/decisions/ADR-003.md)
   — describes how the registry feeds into the `setup.json` contract.
+
+## Amendment (2026-10-22): `build` and `study` Fields
+
+The model/study split adds two fields to the schema:
+
+- `build` (model-level, default `model`) selects the exported SSP under
+  `artifacts/models/<model>/<build>/`;
+- `study` (case-level, default the case name) selects the study artifacts under
+  `artifacts/studies/<model>/<study>/`.
+
+The registry remains hand-maintained and authoritative. See
+[DD-009](./DD-009-runtime-scenario-injection.md).

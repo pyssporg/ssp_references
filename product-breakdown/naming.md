@@ -22,15 +22,25 @@ sequence number:
 PD-001-comparison-engine-to-engine.md
 PD-002-simulation-registry-source-of-truth.md
 PD-003-supported-backends.md
+PD-004-sysml-sspmodel-authoring.md
+PD-005-fixtures-and-policy-not-pipeline.md
+PD-006-studies-consume-exported-ssps.md
 ADR-001.md
 ADR-002.md
 ADR-003.md
+ADR-007.md
+ADR-008.md
+ADR-009.md
+ADR-010.md
 DD-001-simulation-settings-runtime-layer.md
 DD-002-runtime-artifacts-under-artifacts.md
 DD-003-build-py-remains-build-only.md
 DD-004-signal-propagation-deterministic-blocks.md
 DD-005-simulation-registry-technical.md
 DD-006-time-shift-tolerant-vv-metrics.md
+DD-007-signal-step-gain-model-export.md
+DD-008-study-scenario-generation.md
+DD-009-runtime-scenario-injection.md
 ```
 
 **Notes:**

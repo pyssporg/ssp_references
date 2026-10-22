@@ -9,11 +9,11 @@ diagnose mismatches between simulation backends.
 After running the full pipeline, comparison artifacts appear under:
 
 ```
-artifacts/comparisons/<model>/<case>/<backend_a>_vs_<backend_b>/
+artifacts/comparisons/<model>/<study>/<backend_a>_vs_<backend_b>/
 ├── comparison.json        # pairwise comparison manifest
 └── metrics.csv            # per-signal comparison metrics
 
-artifacts/comparisons/<model>/<case>/comparisons.json   # batch summary
+artifacts/comparisons/<model>/<study>/comparisons.json   # batch summary
 ```
 
 ## `metrics.csv` Schema
@@ -90,7 +90,7 @@ One row per signal per model per comparison. Columns:
 }
 ```
 
-Lists all pairwise comparisons completed for a model/case combination.
+Lists all pairwise comparisons completed for a model/study combination.
 
 ## Pass/Fail Criteria
 

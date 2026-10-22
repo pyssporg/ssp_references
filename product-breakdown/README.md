@@ -51,6 +51,7 @@ decision records that most directly affect that layer.
 |------------------|-----------|
 | Understand the repository's purpose | [`00-intent/intent.md`](./00-intent/intent.md) |
 | See what the repository promises | [`01-product/README.md`](./01-product/README.md) |
+| Learn how models and studies are authored | [PD-004](./01-product/decisions/PD-004-sysml-sspmodel-authoring.md) and [PD-006](./01-product/decisions/PD-006-studies-consume-exported-ssps.md) |
 | Learn the pipeline architecture | [`02-architecture/architecture.md`](./02-architecture/architecture.md) |
 | See the exact stage/tool artifact contract | [`02-architecture/pipeline-boundaries.md`](./02-architecture/pipeline-boundaries.md) |
 | Add a new model fixture | [`03-implementation/FIXTURE-template.md`](./03-implementation/FIXTURE-template.md) |

@@ -79,6 +79,7 @@ For development, the library dependencies are editable git submodules under
 | `3rd_party/pyssp_simulate` | Simulate |
 | `3rd_party/pyssp_sysml2` | SysML |
 | `3rd_party/sequence_extensions` | Campaign orchestration |
+| `3rd_party/pyssp_vv` | Verification library (submodule only; not imported by the pipeline yet) |
 
 See [`3rd_party/README.md`](../../3rd_party/README.md) for initialization and
 local-patch guidance.

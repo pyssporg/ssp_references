@@ -13,3 +13,6 @@
 	path = 3rd_party/sequence_extensions
 	url = git@github.com:jkCXf9X4/sequence_extensions.git
 	branch = main
+[submodule "3rd_party/pyssp_vv"]
+	path = 3rd_party/pyssp_vv
+	url = git@github.com:pyssporg/pyssp_vv.git

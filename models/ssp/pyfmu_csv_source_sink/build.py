@@ -14,9 +14,7 @@ sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyfmu_csv" / "python"))
 
 from pyfmu_csv.packaging import package_fmu_from_csv
-from pyssp_standard import LSRefExperiments, SSP
-from pyssp_standard.common.archive import unpack_archive
-from pyssp_standard.standard.ls_ref.model import LSRefExperiment
+from pyssp_standard import LSRefExperiments, SSP, unpack_archive, LSRefExperiment
 from pyssp_standard.ssd import Connection, DefaultExperiment
 from utils.fmu import strip_model_exchange
 from utils.model import ModelMetaData

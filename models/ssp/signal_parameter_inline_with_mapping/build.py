@@ -12,11 +12,12 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import LSRefExperiments, SSP
-from pyssp_standard.common.archive import unpack_archive
-from pyssp_standard.standard.ls_ref.model import LSRefExperiment
-from pyssp_standard.ssd import Connection, DefaultExperiment
-from pyssp_standard.standard.ssp1.model.ssd_model import Ssd1ParameterMappingReference
+from pyssp_standard import LSRefExperiment, LSRefExperiments, SSP, unpack_archive
+from pyssp_standard.ssd import (
+    Connection,
+    DefaultExperiment,
+    ParameterMappingReference,
+)
 from utils.fmu import strip_model_exchange
 from utils.model import ModelMetaData
 
@@ -51,7 +52,7 @@ def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> No
             # Add external ParameterMapping to the inline ParameterBinding
             for binding in system.parameter_bindings:
                 if binding.source is None and binding.parameter_set is not None:
-                    binding.parameter_mapping = Ssd1ParameterMappingReference(
+                    binding.parameter_mapping = ParameterMappingReference(
                         source="resources/inline_mapping.ssm"
                     )
                     break

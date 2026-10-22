@@ -6,12 +6,7 @@ import tempfile
 import sys
 from pathlib import Path
 
-from pyssp_standard import LSRefExperiments, SSP
-from pyssp_standard.common.archive import unpack_archive
-from pyssp_standard.standard.ls_ref.model import (
-    LSRefExperiment,
-    LSRefExperimentResource,
-)
+from pyssp_standard import LSRefExperiments, SSP, unpack_archive, LSRefExperiment, LSRefExperimentResource
 
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]

@@ -120,8 +120,19 @@ python3 scripts/check_sysml_roundtrip.py \
 
 ## Rules
 
-1. **Artifacts, not object models.** A boundary is crossed by reading or
-   writing a file, never by passing a `pyssp_standard` model object.
+1. **Standard artifact first.** A boundary is crossed by reading or writing a
+   standardized file (SSP, SSD, SSV, SSM, LS-REF, or result CSV), never by
+   passing a `pyssp_standard` model object.
+   - **Public API fallback only.** If no standard covers the need, the only
+     allowed non-standard crossing is a type that is explicitly part of the
+     producer's public API. It must be documented and importable from the
+     producer's public surface.
+   - **No internal or adapter-only objects.** Internal modules, private
+     objects, and structures created only for one consumer never cross a
+     library border.
+   - **No accidental exports.** Adding a public type is a deliberate API
+     decision. Do not expose an internal module just because a consumer
+     already imports it.
 2. **No producer-side compatibility shims.** Adapt the consumer or the
    artifact boundary. Do not add legacy facade properties to the producer
    library for a downstream caller.

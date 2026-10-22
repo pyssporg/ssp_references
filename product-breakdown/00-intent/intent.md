@@ -36,6 +36,16 @@ general-purpose simulation framework or a specification conformance suite.
 - Result trajectories against baselines determine correctness: comparison metrics,
   not inspection or manual review, constitute the acceptance criteria.
 
+## Library Boundary Commitment
+
+- A library border carries a standardized artifact first: SSP, SSD, SSV, SSM,
+  LS-REF, or result CSV.
+- When no standard covers the need, only a type that is explicitly part of the
+  producer's public API may cross.
+- Internal modules, private objects, and adapter-only structures never cross a
+  library border.
+- Adding a public type is a deliberate API decision, not an accidental export.
+
 ## Non-Goals
 
 - Validating engine correctness in an absolute or analytical sense. The repository

@@ -48,6 +48,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   `SspModel` definitions are exportable; `Study` definitions supply scenario data and are never exported.
 - **ADR-010** — Runtime Scenario and Experiment Application to Exported SSPs · accepted · 2026-10-22 · `ADR-010`
   Studies apply SSV, SSM, and experiment data to a runtime copy of an exported SSP.
+- **ADR-011** — Library Boundaries Use Standard Artifacts or Public API · accepted · 2026-10-22 · `ADR-011`
+  Library borders prefer standard artifacts; non-standard crossings use only documented public API types.
 
 ### Implementation
 

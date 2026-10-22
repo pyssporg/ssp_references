@@ -8,7 +8,7 @@ import sys
 import tempfile
 from pathlib import Path
 
-from pyssp_standard.common.archive import unpack_archive
+from pyssp_standard import unpack_archive
 from pyssp_workflow.authoring import derive_ssp_from_sysml, derive_study_from_sysml
 
 

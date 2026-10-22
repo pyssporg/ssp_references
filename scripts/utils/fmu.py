@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pyssp_standard.fmu import FMU
+from pyssp_standard import FMU
 
 
 def strip_model_exchange(fmu_dir: Path) -> None:

@@ -50,7 +50,7 @@ def _grid(window: SimulationWindow) -> Grid | None:
 
 def _load_columns(result: ResultSet, *, root_system_name: str) -> dict[str, np.ndarray]:
     # Local import keeps this module importable without the simulation backend.
-    from pyssp_simulate.result import read_result_csv
+    from pyssp_simulate import read_result_csv
 
     data = read_result_csv(
         result.path,

@@ -13,9 +13,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import FMU, LSRefExperiments, SSP
-from pyssp_standard.common.archive import package_archive, unpack_archive
-from pyssp_standard.standard.ls_ref.model import LSRefExperiment
+from pyssp_standard import FMU, LSRefExperiments, SSP, package_archive, unpack_archive, LSRefExperiment
 from utils.model import ModelMetaData
 
 

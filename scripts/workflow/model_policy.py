@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from itertools import product
 
 import numpy as np
-from pyssp_simulate.result import read_result_csv
+from pyssp_simulate import read_result_csv
 from pyssp_vv.measure import Grid, resample
 
 from utils.domain import ResultSet, SimulationWindow

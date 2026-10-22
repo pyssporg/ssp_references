@@ -21,6 +21,23 @@ The canonical artifact-level contract for the pipeline and external tools is
 the full architecture; that file is the single reference for what each
 boundary reads and writes.
 
+## Library Boundary Rule
+
+Library borders follow one rule:
+
+1. Carry a standardized artifact first: SSP, SSD, SSV, SSM, LS-REF, or result
+   CSV.
+2. When no standard covers the need, carry only a type that is explicitly part
+   of the producer's public API.
+3. Never carry internal modules, private objects, or adapter-only structures
+   across a library border.
+4. Treat a new public type as a deliberate API decision, not an accidental
+   export.
+
+This applies to Python imports as well as files. A consumer imports the
+producer's public surface; it does not reach into an internal module because
+that module happens to be importable today. See `ADR-011`.
+
 ---
 
 ## 1. Three-Stage Pipeline
@@ -358,13 +375,12 @@ The following architectural violations are not allowed:
    selection.** No pipeline stage derives the run matrix from directory
    scanning, `experiments.xml` content, or any other source.
 
-8. **External tools must not share Python model objects across the artifact
-   boundary.** The SysML authoring path invokes the `pyssp` CLI through
-   `pyssp_workflow.authoring` and exchanges SysML/SSP artifacts. Do not import
-   `pyssp_sysml2` into the build; `pyssp_standard` remains the build-stage SSP
-   API. Do not add compatibility shims to `pyssp_standard` for a downstream
-   consumer. See `ADR-006` and
-   `ADR-007`.
+8. **Library borders exchange standard artifacts first.** The SysML authoring
+   path invokes the `pyssp` CLI through `pyssp_workflow.authoring` and exchanges
+   SysML/SSP artifacts. Do not import `pyssp_sysml2` into the build. When a
+   Python object must cross, it belongs to the producer's public API; internal
+   model objects and compatibility shims do not. See `ADR-006`, `ADR-007`, and
+   `ADR-011`.
 
 9. **Studies must not be exported as SSPs.** Only `part def ... :> SspModel`
    definitions are exportable. A `part def ... :> Study` produces scenario

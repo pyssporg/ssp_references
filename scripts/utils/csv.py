@@ -4,7 +4,7 @@ import csv
 from pathlib import Path
 
 import numpy as np
-from pyssp_simulate.result import read_result_csv
+from pyssp_simulate import read_result_csv
 from scipy.io import loadmat
 
 

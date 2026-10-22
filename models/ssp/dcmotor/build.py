@@ -13,11 +13,15 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import FMU, LSRefExperiments, SSP
-from pyssp_standard.common.archive import package_archive, unpack_archive
-from pyssp_standard.standard.ls_ref.model import LSRefExperiment
-from pyssp_standard.standard.ssp1.codec.ssd_codec import Ssp1SsdCodec
-from pyssp_standard.standard.ssp1.operations.ssd_flatten import flatten_ssd
+from pyssp_standard import (
+    FMU,
+    LSRefExperiment,
+    LSRefExperiments,
+    SSD,
+    SSP,
+    package_archive,
+    unpack_archive,
+)
 from utils.model import ModelMetaData
 
 
@@ -60,10 +64,7 @@ def create_ssp(
 
         if flattened:
             with ssp.system_structure() as ssd:
-                codec = Ssp1SsdCodec()
-                flat = flatten_ssd(ssd.xml)
-                flat.version = "1.0"
-                ssd.from_xml(codec.serialize(flat))
+                ssd.flatten()
 
     unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
 

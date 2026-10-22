@@ -18,5 +18,5 @@ How claims about models, studies, and backends are checked.
 - **EVAL-005** [Comparison Metrics Gate Review](comparison_metrics_gate_review.md) — Review of comparison metrics, tolerances, and gate behavior.
 - **EVAL-006** [Manifest Field Review](manifest_field_review.md) — Review of setup and run manifest fields.
 - **EVAL-007** [Simulation Registry Coverage Review](simulation_registry_coverage_review.md) — Audit of active model, study, and backend combinations.
-- **EVAL-009** [Standard-artifact boundary audit](standard-boundary-audit.md) — SSP, SSV, SSM, and SSD pass through pyssp_standard; comparison measurement and judgment pass through pyssp_vv.
+- **EVAL-009** [Standard-artifact boundary audit](standard-boundary-audit.md) — SSP, SSV, SSM, and SSD pass through pyssp_standard; comparison passes through pyssp_vv; non-standard crossings use public API only.
 <!-- pb:index:end -->

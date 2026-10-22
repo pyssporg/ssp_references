@@ -23,6 +23,7 @@ stream.
 | 2026-10-22 | DD-003 | `build.py` Remains Build-Only | implementation | accepted | `DD-003` |
 | 2026-10-22 | DD-002 | Runtime Artifacts Stay Under `artifacts/` | implementation | accepted | `DD-002` |
 | 2026-10-22 | DD-001 | Simulation Settings Belong to the Runtime Layer | implementation | accepted | `DD-001` |
+| 2026-10-22 | ADR-011 | Library Boundaries Use Standard Artifacts or Public API | architecture | accepted | `ADR-011` |
 | 2026-10-22 | ADR-010 | Runtime Scenario and Experiment Application to Exported SSPs | architecture | accepted | `ADR-010` |
 | 2026-10-22 | ADR-009 | `SspModel` and `Study` Marker Specialization | architecture | accepted | `ADR-009` |
 | 2026-10-22 | ADR-008 | Workflow Capability Ownership and Node Boundaries | architecture | accepted | `ADR-008` |

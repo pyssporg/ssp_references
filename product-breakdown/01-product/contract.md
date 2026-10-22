@@ -17,6 +17,7 @@ status: current
 - **Registry**: the simulation registry selects active model builds, studies, backends, signals, references, and gate policy.
 - **Verdict**: a comparison verdict is pass, fail, or invalid.
 - **Ownership**: generic build, run, compare, and verify behavior comes from the pyssp ecosystem.
+- **Library boundaries**: pass standardized artifacts first; when no standard exists, pass only documented public API types, never private or adapter-only structures.
 
 ## Owns
 - Product promise for model export, study runs, and comparison.

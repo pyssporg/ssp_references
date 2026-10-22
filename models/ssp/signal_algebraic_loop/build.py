@@ -12,9 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import LSRefExperiments, SSP
-from pyssp_standard.common.archive import unpack_archive
-from pyssp_standard.standard.ls_ref.model import LSRefExperiment
+from pyssp_standard import LSRefExperiments, SSP, unpack_archive, LSRefExperiment
 from pyssp_standard.ssd import Connection, DefaultExperiment
 from utils.fmu import strip_model_exchange
 from utils.model import ModelMetaData

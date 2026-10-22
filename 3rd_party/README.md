@@ -38,11 +38,9 @@ while the local patches are still required.
 The submodule working trees may carry uncommitted changes that this repository
 depends on. Keeping them visible is deliberate.
 
-One patch is deliberate and long-lived: `pyssp_sysml2`'s nested
-`3rd_party/pyssp_standard` submodule points at the experimental fork and checks
-out its refactored revision, so the SysML tool sees the same library the build
-stage uses. It is a working-tree change because the URL line belongs to
-`pyssp_sysml2`, whose own upstream pin is still the release line.
+`pyssp_sysml2`'s nested `3rd_party/pyssp_standard` submodule follows the
+experimental fork too, so the SysML tool is developed against the same
+refactored API the build stage uses.
 
 Check before updating or resetting:
 

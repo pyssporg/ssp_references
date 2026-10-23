@@ -257,6 +257,11 @@ def test_pyfmu_csv_source_sink_structure_needs_no_fmu(tmp_path: Path) -> None:
     assert _components(system) == ["sink", "source"]
     assert _subsystems(system) == []
     assert _wiring(system) == [("source", "y", "sink", "u")]
+    sources = {
+        element.get("name"): element.get("source")
+        for element in system.findall(f"{SSD}Elements/{SSD}Component")
+    }
+    assert sources == {"sink": "resources/Gain.fmu", "source": ""}
 
 
 def test_registry_resolves_model_study_build_layout() -> None:

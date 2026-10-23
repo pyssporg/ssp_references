@@ -48,19 +48,16 @@ package SignalNestedExternalBindings {
 
   attribute def FmuMetadata {
     attribute source : String;
-    attribute resource_name : String;
     attribute implementation : String;
   }
 
   attribute def StepFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Step/fmu";
-    attribute resource_name = "Step.fmu";
     attribute implementation = "CoSimulation";
   }
 
   attribute def SineFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Sine/fmu";
-    attribute resource_name = "Sine.fmu";
     attribute implementation = "CoSimulation";
   }
 

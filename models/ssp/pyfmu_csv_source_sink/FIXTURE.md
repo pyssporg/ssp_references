@@ -18,7 +18,8 @@ FMU and a shared Modelica block sink FMU.
 - Exportable composition: `System :> SspModel`
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 - `CsvSourceFmu` deliberately has no `fmu_meta.source`: the composition is
-  exported as a design structure and populated with the generated FMU.
+  exported with an empty `source` on the `source` component, and the build
+  attaches the generated FMU to the built artifact afterwards.
 
 ## Backends
 
@@ -50,9 +51,13 @@ The source signal is defined by `input/signals.csv` in the model directory.
 
 ## Packaging Notes
 
-- `build.py` exports the structure with `--allow-missing-fmus`, generates
-  `CsvSource.fmu` from `input/signals.csv`, and attaches it with
-  `SSP.attach_fmu`, which checks the SSD connectors and implementation against
-  the FMU.
+- `build.py` exports the structure (the `source` component has an empty SSD
+  `source`), generates `CsvSource.fmu` from `input/signals.csv`, and attaches it
+  to the built artifact with `SSP.attach_fmu`, which checks the SSD connectors
+  and implementation against the FMU.
+- The attached FMU stays a `resources/CsvSource.fmu` archive rather than being
+  unpacked into `resources/CsvSource/` like the prebuilt FMUs. Engines accept
+  it, but the artifact shape is inconsistent; revisit if attached FMUs need the
+  same extraction and model-exchange stripping as exported ones.
 - `experiments.xml` supplies the baseline window and tolerance and is packaged
   as LS-REF metadata.

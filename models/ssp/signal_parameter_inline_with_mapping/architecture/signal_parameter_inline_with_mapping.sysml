@@ -37,13 +37,11 @@ package SignalParameterInlineWithMapping {
 
   attribute def FmuMetadata {
     attribute source : String;
-    attribute resource_name : String;
     attribute implementation : String;
   }
 
   attribute def StepFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Step/fmu";
-    attribute resource_name = "Step.fmu";
     attribute implementation = "CoSimulation";
   }
 

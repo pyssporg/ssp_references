@@ -51,25 +51,21 @@ package SignalAlgebraicLoop {
 
   attribute def FmuMetadata {
     attribute source : String;
-    attribute resource_name : String;
     attribute implementation : String;
   }
 
   attribute def SineFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Sine/fmu";
-    attribute resource_name = "Sine.fmu";
     attribute implementation = "CoSimulation";
   }
 
   attribute def GainFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Math.Gain/fmu";
-    attribute resource_name = "Gain.fmu";
     attribute implementation = "CoSimulation";
   }
 
   attribute def AddFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Math.Add/fmu";
-    attribute resource_name = "Add.fmu";
     attribute implementation = "CoSimulation";
   }
 

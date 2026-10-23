@@ -2,8 +2,8 @@
 """Build pyfmu_csv_source_sink and its baseline study.
 
 The SysML authors the composition. The CsvSource FMU is generated from
-``input/signals.csv``, so the SSP is exported as a design structure first and
-populated with that FMU before the artifact is unpacked.
+``input/signals.csv`` and attached to the built artifact, whose ``source``
+component is exported without an FMU.
 """
 
 from __future__ import annotations
@@ -28,11 +28,11 @@ SOURCE_CSV = MODEL_DIR / "input" / "signals.csv"
 EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
 
 
-def _populate_source_fmu(archive: Path) -> None:
+def _attach_source_fmu(model_build_dir: Path) -> None:
     with tempfile.TemporaryDirectory(prefix="pyfmu_csv_source_sink_") as temp_dir:
         fmu_path = Path(temp_dir) / "CsvSource.fmu"
         package_fmu_from_csv(SOURCE_CSV, fmu_path, "CsvSource")
-        with SSP(archive, mode="a") as ssp:
+        with SSP(model_build_dir, mode="a") as ssp:
             ssp.attach_fmu("source", fmu_path)
 
 
@@ -58,9 +58,8 @@ def main() -> int:
         model_build_dir,
         MODEL_COMPOSITION,
         REPO_ROOT,
-        allow_missing_fmus=True,
-        populate=_populate_source_fmu,
     )
+    _attach_source_fmu(model_build_dir)
     _package(model_build_dir)
 
     print(f"Built {model.name}")

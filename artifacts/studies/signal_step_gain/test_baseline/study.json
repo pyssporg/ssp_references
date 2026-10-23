@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Step through a fixed gain over the test window.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

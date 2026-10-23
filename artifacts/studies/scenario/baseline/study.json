@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Model-owned scenario set driving the scenario FMU outputs.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

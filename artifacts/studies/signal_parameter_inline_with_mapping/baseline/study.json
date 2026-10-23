@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Inline step parameters with an external mapping resource.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

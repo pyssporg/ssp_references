@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "CSV source driving a gain sink; the System owns the scenario.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

@@ -89,6 +89,7 @@ package SignalNestedExternalBindings {
   }
 
   part def baseline :> Study {
+    doc /* Nested system boundary wired through an external binding. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

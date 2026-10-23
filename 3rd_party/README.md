@@ -51,6 +51,11 @@ The `scenario` fixture's multi-line `scenario_input` also depends on a
 `pyssp_sysml2` gitlink in `pyssp_workflow` before recording a new
 `pyssp_workflow` revision here.
 
+Study descriptions depend on a second pair of working-tree changes:
+`pyssp_sysml2.study.generate_study` writes the `Study` definition's `doc` as
+`description` in `study.json`, and `pyssp_workflow.params` reads it back into
+`StudyDescriptor`. Push both upstream before bumping the respective gitlinks.
+
 Check before updating or resetting:
 
 ```bash

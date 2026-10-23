@@ -134,6 +134,7 @@ package SignalNestedParameterBindings {
   }
 
   part def baseline :> Study {
+    doc /* Nested inline parameter sets plus a root external mapping. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

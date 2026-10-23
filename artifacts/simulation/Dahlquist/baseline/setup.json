@@ -8,6 +8,7 @@
   "compare_signals": [
     "x"
   ],
+  "description": "Dahlquist test equation over the baseline window; no scenario.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

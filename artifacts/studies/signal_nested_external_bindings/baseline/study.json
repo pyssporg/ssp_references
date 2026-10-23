@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Nested system boundary wired through an external binding.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

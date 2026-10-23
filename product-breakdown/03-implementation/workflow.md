@@ -12,8 +12,8 @@ status: current
 - **Authoring**: `pyssp_workflow.authoring.derive_ssp_from_sysml` and `derive_study_from_sysml` invoke the `pyssp` CLI; no `pyssp_sysml2` import.
 - **Layout**: a runnable SSP lives at `artifacts/models/<model>/<study>/<build>/`; study artifacts at `artifacts/studies/<model>/<study>/`.
 - **Model build**: `build.py` derives the model SSP from `architecture/*.sysml` and unpacks it into the build directory.
-- **Study build**: `pyssp generate study` writes the scenario SSV, the SSM, and `study.json` under `artifacts/studies/<model>/<study>/`.
-- **Study descriptor**: `study.json` records model, composition, sut name, target SSD, the experiment window (start, stop, step), and scenario paths. It carries no tolerance.
+- **Study build**: `pyssp generate study` writes the scenario SSV, the SSM, and `study.json` under `artifacts/studies/<model>/<study>/`; a model may build several studies.
+- **Study descriptor**: `study.json` records model, composition, sut name, target SSD, the authored `Study` description, the experiment window (start, stop, step), and scenario paths. It carries no tolerance.
 - **Scenario packaging**: `pyssp_workflow.execute.package_scenario` copies the study SSV/SSM into the SSP and adds one root `ParameterBinding`. A fixture that exercises another parameter form applies it with `pyssp_standard` in its build hook.
 - **Tolerance**: read from the composed FMUs' model descriptions; not part of the experiment.
 - **Runtime**: `run_simulations.py` runs the built SSP as-is. No scenario injection.

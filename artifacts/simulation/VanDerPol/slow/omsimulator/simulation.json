@@ -1,0 +1,13 @@
+{
+  "artifacts": [],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "slow",
+    "model": "VanDerPol",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.1230538779636845,
+  "status": "completed"
+}

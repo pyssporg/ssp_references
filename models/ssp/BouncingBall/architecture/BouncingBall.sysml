@@ -50,6 +50,7 @@ package BouncingBall {
   }
 
   part def baseline :> Study {
+    doc /* Event-driven bouncing ball over the baseline window; no scenario. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }

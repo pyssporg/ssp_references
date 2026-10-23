@@ -7,6 +7,7 @@
   "compare_signals": [
     "y"
   ],
+  "description": "Constant integer output loaded from the FMU's bundled resource file.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

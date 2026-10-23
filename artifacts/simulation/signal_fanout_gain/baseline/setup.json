@@ -10,6 +10,7 @@
     "gain_a.y",
     "gain_b.y"
   ],
+  "description": "Step fanned out to two gains with fixed coefficients.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

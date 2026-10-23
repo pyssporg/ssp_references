@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Variant configuration with mu set to 2.0.",
   "experiment": {
     "name": "experiment_fast",
     "start_time": 0.0,

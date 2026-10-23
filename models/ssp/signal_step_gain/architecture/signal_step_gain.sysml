@@ -79,6 +79,7 @@ package SignalStepGain {
   }
 
   part def test_baseline :> Study {
+    doc /* Step through a fixed gain over the test window. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

@@ -27,6 +27,7 @@ package Embrace {
   }
 
   part def baseline :> Study {
+    doc /* Legacy embrace SSP body over the baseline experiment window. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : EmbraceModel;
   }

@@ -125,6 +125,7 @@ package SignalSineGainAdd {
   }
 
   part def baseline :> Study {
+    doc /* Sine through a gain plus a step, added at the root. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

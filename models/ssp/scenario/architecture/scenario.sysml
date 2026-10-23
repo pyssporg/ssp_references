@@ -66,6 +66,7 @@ package Scenario {
   }
 
   part def baseline :> Study {
+    doc /* Model-owned scenario set driving the scenario FMU outputs. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }

@@ -8,6 +8,7 @@
     "h",
     "v"
   ],
+  "description": "Event-driven bouncing ball over the baseline window; no scenario.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

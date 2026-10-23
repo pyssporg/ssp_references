@@ -13,7 +13,8 @@ from __future__ import annotations
 
 import shutil
 import tempfile
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 
 from pyssp_standard import (
@@ -34,6 +35,18 @@ from utils.filesystem import reset_dir
 from utils.fmu import strip_model_exchange
 
 PackageStep = Callable[[Path, StudyDescriptor], None]
+
+
+@dataclass(frozen=True)
+class StudyBuild:
+    """One study to build, with the fixture's packaging form.
+
+    ``package=None`` uses the default external SSV+SSM packaging. A study with
+    no scenario passes ``package_nothing``.
+    """
+
+    name: str
+    package: PackageStep | None = None
 
 
 def _strip_model_exchange(model_root: Path) -> None:
@@ -235,6 +248,37 @@ def build_fixture(
     return model_build_dir
 
 
+def build_studies(
+    *,
+    model_dir: Path,
+    repo_root: Path,
+    model_name: str,
+    composition: str,
+    studies: Sequence[str | StudyBuild],
+    build_name: str = "model",
+    validate_fmus: bool = True,
+) -> dict[str, Path]:
+    """Build one runnable SSP per study, keyed by study name.
+
+    Each study gets its own study artifacts and its own packaged model SSP.
+    A plain string entry uses the default scenario packaging.
+    """
+    outputs: dict[str, Path] = {}
+    for entry in studies:
+        spec = entry if isinstance(entry, StudyBuild) else StudyBuild(entry)
+        outputs[spec.name] = build_fixture(
+            model_dir=model_dir,
+            repo_root=repo_root,
+            model_name=model_name,
+            composition=composition,
+            study=spec.name,
+            build_name=build_name,
+            package=spec.package,
+            validate_fmus=validate_fmus,
+        )
+    return outputs
+
+
 def _strip_legacy_resources(
     resources_dir: Path, strip_resources: tuple[str, ...] | None
 ) -> None:
@@ -307,6 +351,7 @@ def build_legacy_fixture(
                 experiments.add_experiment(
                     LSRefExperiment(
                         name=descriptor.study,
+                        description=descriptor.description,
                         target=descriptor.target_ssd,
                         start_time=descriptor.experiment.start_time,
                         stop_time=descriptor.experiment.stop_time,

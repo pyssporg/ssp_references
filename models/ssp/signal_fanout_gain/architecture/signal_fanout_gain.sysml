@@ -80,6 +80,7 @@ package SignalFanoutGain {
   }
 
   part def baseline :> Study {
+    doc /* Step fanned out to two gains with fixed coefficients. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

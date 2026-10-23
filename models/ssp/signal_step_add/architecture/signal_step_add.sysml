@@ -85,6 +85,7 @@ package SignalStepAdd {
   }
 
   part def baseline :> Study {
+    doc /* Two steps added at the root. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

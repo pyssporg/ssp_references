@@ -13,4 +13,5 @@ Scoped improvement candidates awaiting implementation.
 <!-- GENERATED FILE — do not edit. Regenerate with pb-registers. -->
 - **IMP-100** [Raw Improvement Ideas](raw-ideas.md) — Unscoped improvement ideas; route each through the change pipeline.
 - **IMP-101** [Scenario ownership strategy for SSP fixtures](scenario-ownership-strategy-for-ssp-fixtures.md) — One strategy selects whether a scenario parameter set is applied by the model, the study, or the build; pyfmu motivates the model-owned option.
+- **IMP-102** [Per-reference signal selection and reference data](per-reference-signal-selection-and-reference-data.md) — Let a reference CSV name its own signals and mapping so comparisons can target a subset of parameters without changing model-level compare signals.
 <!-- pb:index:end -->

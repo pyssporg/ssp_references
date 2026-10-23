@@ -10,6 +10,7 @@
     "scenario.Wgt_On_Whl",
     "scenario.Aircraft_state"
   ],
+  "description": "Model-owned scenario set driving the scenario FMU outputs.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

@@ -9,6 +9,7 @@
     "x0",
     "x1"
   ],
+  "description": "Baseline configuration with mu set to 1.0.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

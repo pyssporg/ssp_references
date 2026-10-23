@@ -8,6 +8,7 @@
     "step.y",
     "add.y"
   ],
+  "description": "Nested pass-through system feeding the add block.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

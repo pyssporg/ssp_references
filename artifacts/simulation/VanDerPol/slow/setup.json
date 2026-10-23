@@ -1,0 +1,30 @@
+{
+  "backends": [
+    "ssp4sim",
+    "omsimulator",
+    "fmpy"
+  ],
+  "case": "slow",
+  "compare_signals": [
+    "x0",
+    "x1"
+  ],
+  "description": "Variant configuration with mu set to 0.5.",
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
+  "model": "VanDerPol",
+  "resources_dir": "../../../models/VanDerPol/slow/model/resources",
+  "root_system_name": "System",
+  "ssp_root": "../../../models/VanDerPol/slow/model",
+  "study": "slow",
+  "study_root": "../../../studies/VanDerPol/slow",
+  "system_structure": "../../../models/VanDerPol/slow/model/SystemStructure.ssd",
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 20.0
+  }
+}

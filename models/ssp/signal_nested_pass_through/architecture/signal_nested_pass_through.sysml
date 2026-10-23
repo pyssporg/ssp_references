@@ -109,6 +109,7 @@ package SignalNestedPassThrough {
   }
 
   part def baseline :> Study {
+    doc /* Nested pass-through system feeding the add block. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

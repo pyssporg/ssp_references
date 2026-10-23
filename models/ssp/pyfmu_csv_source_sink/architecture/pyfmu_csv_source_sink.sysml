@@ -72,6 +72,7 @@ package PyfmuCsvSourceSink {
   }
 
   part def baseline :> Study {
+    doc /* CSV source driving a gain sink; the System owns the scenario. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }

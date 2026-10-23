@@ -61,20 +61,23 @@ contract:
 
 - `architecture/*.sysml` is the authored source for migrated fixtures.
 - `part def <Model> :> SspModel` exports one SSP; `part def <Study> :> Study`
-  supplies scenario data and one experiment (`startTime`, `stopTime`,
-  `stepSize`) and is never exported as an SSP.
+  supplies scenario data, a description, and one experiment (`startTime`,
+  `stopTime`, `stepSize`) and is never exported as an SSP. A model may author
+  several studies; each is built and registered as its own case.
 - A fixture may keep a legacy `ssp/` body and author only the study. Its
   `SspModel` composition is then a boundary marker that selects the body with
   `ssp_meta.source`, and is not exported.
 - `build.py` derives the model SSP and the study, then packages the scenario
-  into a runnable SSP. A fixture that exercises a different parameter form
-  applies it with `pyssp_standard` in its build hook.
+  into a runnable SSP. `build_studies` builds one runnable SSP per study. A
+  fixture that exercises a different parameter form applies it with
+  `pyssp_standard` in its build hook.
 - `FIXTURE.md` provides the fixture notes for each model.
 - Running `build.py` writes the runnable SSP under
   `artifacts/models/<model>/<study>/<build>/` and study artifacts under
   `artifacts/studies/<model>/<study>/`.
 - A study artifact directory contains a scenario SSV, an SSM mapping, and
-  `study.json`; it contains no SSD or SSP.
+  `study.json` with the experiment window and the authored description; it
+  contains no SSD or SSP.
 - Simulation runs the built SSP as-is; there is no runtime scenario injection.
   Each generated `artifacts/simulation/<model>/<study>/setup.json` records the
   window, explicit backend list, and explicit compare-signal list for that case.

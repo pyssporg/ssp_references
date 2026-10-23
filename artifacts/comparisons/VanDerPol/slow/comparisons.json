@@ -1,0 +1,134 @@
+{
+  "comparisons": [
+    {
+      "gate": {
+        "reasons": [],
+        "status": "pass"
+      },
+      "manifest": "ssp4sim_vs_omsimulator/comparison.json",
+      "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/VanDerPol/slow/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/VanDerPol/slow/omsimulator/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 2,
+        "max_abs_error": 4.998350000562368e-07,
+        "max_rel_error": 2.4659010238243796e-07,
+        "max_shift_abs_error": 4.998350000562368e-07,
+        "max_signal_invariant_abs_error": 0.0,
+        "mean_abs_error": 2.493643587657836e-07,
+        "min_coverage": 1.0,
+        "rmse": 2.888422253666066e-07,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "omsimulator",
+        "signal_invariant_count": 0,
+        "time_points": 20001
+      }
+    },
+    {
+      "gate": {
+        "reasons": [],
+        "status": "pass"
+      },
+      "manifest": "ssp4sim_vs_fmpy/comparison.json",
+      "metrics": "ssp4sim_vs_fmpy/metrics.csv",
+      "runs": [
+        {
+          "backend": "ssp4sim",
+          "manifest": "../../../simulation/VanDerPol/slow/ssp4sim/simulation.json"
+        },
+        {
+          "backend": "fmpy",
+          "manifest": "../../../simulation/VanDerPol/slow/fmpy/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 2,
+        "max_abs_error": 0.030599163879510227,
+        "max_rel_error": 0.013615761555474276,
+        "max_shift_abs_error": 4.998345375373248e-07,
+        "max_signal_invariant_abs_error": 0.0,
+        "mean_abs_error": 0.0013171418684464302,
+        "min_coverage": 1.0,
+        "rmse": 0.004741168949164232,
+        "run_a_label": "ssp4sim",
+        "run_b_label": "fmpy",
+        "signal_invariant_count": 0,
+        "time_points": 20001
+      }
+    },
+    {
+      "gate": {
+        "reasons": [],
+        "status": "pass"
+      },
+      "manifest": "omsimulator_vs_fmpy/comparison.json",
+      "metrics": "omsimulator_vs_fmpy/metrics.csv",
+      "runs": [
+        {
+          "backend": "omsimulator",
+          "manifest": "../../../simulation/VanDerPol/slow/omsimulator/simulation.json"
+        },
+        {
+          "backend": "fmpy",
+          "manifest": "../../../simulation/VanDerPol/slow/fmpy/simulation.json"
+        }
+      ],
+      "summary": {
+        "compared_signal_count": 2,
+        "max_abs_error": 0.03059871635951028,
+        "max_rel_error": 0.013615563022388838,
+        "max_shift_abs_error": 4.997779967652605e-12,
+        "max_signal_invariant_abs_error": 0.0,
+        "mean_abs_error": 0.001316916934340578,
+        "min_coverage": 1.0,
+        "rmse": 0.004741167538770831,
+        "run_a_label": "omsimulator",
+        "run_b_label": "fmpy",
+        "signal_invariant_count": 0,
+        "time_points": 20001
+      }
+    }
+  ],
+  "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
+  "request": {
+    "case": "slow",
+    "model": "VanDerPol",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../simulation/VanDerPol/slow/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../simulation/VanDerPol/slow/omsimulator/simulation.json"
+      },
+      {
+        "backend": "fmpy",
+        "manifest": "../../../simulation/VanDerPol/slow/fmpy/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "backend_count": 3,
+    "comparison_count": 3,
+    "gate_result": "pass",
+    "max_abs_error": 0.030599163879510227,
+    "max_rel_error": 0.013615761555474276,
+    "max_shift_abs_error": 4.998350000562368e-07,
+    "max_signal_invariant_abs_error": 0.0,
+    "min_compared_signal_count": 2
+  }
+}

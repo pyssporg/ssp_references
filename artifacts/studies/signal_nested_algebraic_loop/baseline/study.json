@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Nested systems closing an algebraic loop around add and gain.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

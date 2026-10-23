@@ -30,7 +30,7 @@ pb_exempt: true
 | 9 | signal_step_gain | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ |
 | 10 | signal_step_product | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ |
 | 11 | Stair | ✅ | ✅ | ssp4sim, OMSimulator | baseline | ✅ |
-| 12 | VanDerPol | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline, fast | ✅ |
+| 12 | VanDerPol | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline, fast, slow | ✅ |
 | 13 | dcmotor | ✅ | ❌→✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ (added) |
 | 14 | pyfmu_csv_source_sink | ✅ | ❌→✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ (added) |
 | 15 | scenario | ✅ | ❌→✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ (added) |
@@ -61,8 +61,8 @@ pb_exempt: true
 
 **5. VanDerPol**
 - **Test level:** Smoke
-- **Backend rationale:** Three backends provide broad coverage for continuous nonlinear dynamics. Two cases (`baseline`, `fast`) exercise different parameter regimes (mu = 1.0, mu = 2.0) to validate solver adaptability across engines.
-- **Registry verification:** Present with `baseline` and `fast` cases, backends `ssp4sim`, `omsimulator`, `fmpy`.
+- **Backend rationale:** Three backends provide broad coverage for continuous nonlinear dynamics. Three cases (`baseline`, `fast`, `slow`) exercise different parameter regimes (mu = 1.0, mu = 2.0, mu = 0.5) to validate solver adaptability across engines and the multi-study build.
+- **Registry verification:** Present with `baseline`, `fast`, and `slow` cases, backends `ssp4sim`, `omsimulator`, `fmpy`.
 
 ### Deterministic Signal-Propagation Fixtures
 

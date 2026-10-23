@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Step routed through two gains and add, with a delayed detection path.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

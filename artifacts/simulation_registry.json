@@ -300,6 +300,15 @@
             "fmpy"
           ],
           "study": "fast"
+        },
+        {
+          "name": "slow",
+          "backends": [
+            "ssp4sim",
+            "omsimulator",
+            "fmpy"
+          ],
+          "study": "slow"
         }
       ],
       "build": "model"

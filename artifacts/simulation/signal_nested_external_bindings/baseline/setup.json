@@ -8,6 +8,7 @@
     "step.y",
     "sine.y"
   ],
+  "description": "Nested system boundary wired through an external binding.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

@@ -41,6 +41,7 @@ package Resource {
   }
 
   part def baseline :> Study {
+    doc /* Constant integer output loaded from the FMU's bundled resource file. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }

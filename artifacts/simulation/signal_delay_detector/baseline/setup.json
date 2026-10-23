@@ -10,6 +10,7 @@
     "gain_b.y",
     "add.y"
   ],
+  "description": "Step routed through two gains and add, with a delayed detection path.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

@@ -58,6 +58,7 @@ package SignalParameterInlineWithMapping {
   }
 
   part def baseline :> Study {
+    doc /* Inline step parameters with an external mapping resource. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

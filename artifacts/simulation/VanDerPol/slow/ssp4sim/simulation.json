@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    "config.json",
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "slow",
+    "model": "VanDerPol",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.10827217600308359,
+  "status": "completed"
+}

@@ -14,6 +14,7 @@ The expected structures are the verified migration targets. Rebuild with
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -402,3 +403,41 @@ def test_study_descriptor_has_step_and_no_tolerance(model: str) -> None:
     experiment = json.loads(descriptor.read_text(encoding="utf-8"))["experiment"]
     assert "step_size" in experiment
     assert "tolerance" not in experiment
+
+
+def test_vanderpol_registers_three_studies() -> None:
+    """VanDerPol exercises one exported model with three registered studies."""
+    from workflow.registry import load_registry
+
+    registry = load_registry(REPO_ROOT / "artifacts" / "simulation_registry.json")
+    specs = registry.expand(model_names=["VanDerPol"])
+
+    assert [spec.case_name for spec in specs] == ["baseline", "fast", "slow"]
+    assert [spec.study_name for spec in specs] == ["baseline", "fast", "slow"]
+    assert all(spec.ssp_root.name == "model" for spec in specs)
+
+
+@pytest.mark.parametrize(
+    ("study", "expected"),
+    [
+        ("baseline", "mu set to 1.0"),
+        ("fast", "mu set to 2.0"),
+        ("slow", "mu set to 0.5"),
+    ],
+)
+def test_vanderpol_study_description_reaches_setup(
+    study: str, expected: str
+) -> None:
+    """The Study doc reaches the descriptor and the frozen setup manifest."""
+    descriptor_path = REPO_ROOT / "artifacts" / "studies" / "VanDerPol" / study / "study.json"
+    setup_path = REPO_ROOT / "artifacts" / "simulation" / "VanDerPol" / study / "setup.json"
+    if not descriptor_path.is_file():
+        pytest.skip(f"study descriptor missing for VanDerPol/{study}")
+
+    descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
+    assert expected in descriptor["description"]
+    if not setup_path.is_file():
+        pytest.skip(f"setup manifest missing for VanDerPol/{study}; run simulations")
+
+    setup = json.loads(setup_path.read_text(encoding="utf-8"))
+    assert setup["description"] == descriptor["description"]

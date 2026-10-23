@@ -1,0 +1,36 @@
+{
+  "error": null,
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
+  "metrics": "metrics.csv",
+  "request": {
+    "case": "slow",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/VanDerPol/slow/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/VanDerPol/slow/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "status": "completed",
+  "summary": {
+    "compared_signal_count": 2,
+    "max_abs_error": 4.998350000562368e-07,
+    "max_rel_error": 2.4659010238243796e-07,
+    "max_shift_abs_error": 4.998350000562368e-07,
+    "max_signal_invariant_abs_error": 0.0,
+    "mean_abs_error": 2.493643587657836e-07,
+    "min_coverage": 1.0,
+    "rmse": 2.888422253666066e-07,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "omsimulator",
+    "signal_invariant_count": 0,
+    "time_points": 20001
+  }
+}

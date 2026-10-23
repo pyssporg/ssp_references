@@ -6,6 +6,7 @@
   "compare_signals": [
     "source.y"
   ],
+  "description": "CSV source driving a gain sink; the System owns the scenario.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

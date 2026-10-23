@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Dahlquist test equation over the baseline window; no scenario.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

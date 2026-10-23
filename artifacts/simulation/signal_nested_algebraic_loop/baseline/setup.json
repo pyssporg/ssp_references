@@ -11,6 +11,7 @@
     "add_inner.y",
     "gain_inner.y"
   ],
+  "description": "Nested systems closing an algebraic loop around add and gain.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

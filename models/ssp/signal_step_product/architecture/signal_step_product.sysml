@@ -98,6 +98,7 @@ package SignalStepProduct {
   }
 
   part def baseline :> Study {
+    doc /* Step multiplied by a sine at the root. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

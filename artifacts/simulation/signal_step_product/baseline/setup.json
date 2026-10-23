@@ -10,6 +10,7 @@
     "sine.y",
     "product.y"
   ],
+  "description": "Step multiplied by a sine at the root.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

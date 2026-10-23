@@ -48,6 +48,7 @@ package Dahlquist {
   }
 
   part def baseline :> Study {
+    doc /* Dahlquist test equation over the baseline window; no scenario. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }

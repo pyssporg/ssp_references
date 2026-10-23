@@ -27,6 +27,7 @@ package DcMotor {
   }
 
   part def baseline :> Study {
+    doc /* Legacy dcmotor SSP body over the baseline experiment window. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : DcMotorModel;
   }

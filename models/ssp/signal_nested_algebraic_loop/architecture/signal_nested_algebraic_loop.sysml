@@ -108,6 +108,7 @@ package SignalNestedAlgebraicLoop {
   }
 
   part def baseline :> Study {
+    doc /* Nested systems closing an algebraic loop around add and gain. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

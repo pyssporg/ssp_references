@@ -9,6 +9,7 @@
     "step.y",
     "gain.y"
   ],
+  "description": "Step through a fixed gain over the test window.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

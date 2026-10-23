@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Baseline configuration with mu set to 1.0.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

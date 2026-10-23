@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "description": "Constant integer output loaded from the FMU's bundled resource file.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

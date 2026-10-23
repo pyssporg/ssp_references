@@ -102,6 +102,7 @@ package SignalAlgebraicLoop {
   }
 
   part def baseline :> Study {
+    doc /* Sine through gain, with the algebraic loop closed by add. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

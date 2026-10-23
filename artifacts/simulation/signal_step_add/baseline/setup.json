@@ -9,6 +9,7 @@
     "step_b.y",
     "add.y"
   ],
+  "description": "Two steps added at the root.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

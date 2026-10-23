@@ -41,6 +41,7 @@ package Stair {
   }
 
   part def baseline :> Study {
+    doc /* Integer counter driven by time events over the baseline window. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }

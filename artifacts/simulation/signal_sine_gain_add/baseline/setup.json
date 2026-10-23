@@ -10,6 +10,7 @@
     "gain.y",
     "add.y"
   ],
+  "description": "Sine through a gain plus a step, added at the root.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

@@ -19,6 +19,10 @@ package VanDerPol {
     attribute mu = 2.0;
   }
 
+  attribute def SlowScenario :> ParameterSet {
+    attribute mu = 0.5;
+  }
+
   attribute def Experiment {
     attribute startTime : Real;
     attribute stopTime : Real;
@@ -34,6 +38,12 @@ package VanDerPol {
   attribute def FastExperiment :> Experiment {
     attribute startTime = 0.0;
     attribute stopTime = 1.0;
+    attribute stepSize = 0.001;
+  }
+
+  attribute def SlowExperiment :> Experiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 20.0;
     attribute stepSize = 0.001;
   }
 
@@ -61,13 +71,24 @@ package VanDerPol {
   }
 
   part def baseline :> Study {
+    doc /* Baseline configuration with mu set to 1.0. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }
 
   part def fast :> Study {
+    doc /* Variant configuration with mu set to 2.0. */
     attribute experiment_fast : FastExperiment;
     attribute scenario : FastScenario;
+    part sut : System;
+
+    bind sut.fmu.parameters.mu = scenario.mu;
+  }
+
+  part def slow :> Study {
+    doc /* Variant configuration with mu set to 0.5. */
+    attribute experiment_slow : SlowExperiment;
+    attribute scenario : SlowScenario;
     part sut : System;
 
     bind sut.fmu.parameters.mu = scenario.mu;

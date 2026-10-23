@@ -9,6 +9,7 @@
     "add.y",
     "gain.y"
   ],
+  "description": "Sine through gain, with the algebraic loop closed by add.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

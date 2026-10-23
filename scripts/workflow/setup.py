@@ -133,6 +133,7 @@ class SimulationSetup:
                 gate=spec.gate,
                 study_name=study.study,
                 study_root=spec.study_root,
+                description=study.description,
             )
 
         layout = ArtifactLayout.from_ssp_root(spec.ssp_root)

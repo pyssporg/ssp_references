@@ -75,7 +75,7 @@ A model-owned set fixes the scenario for all studies.
 ## Risk And Blast Radius
 
 - **Cross-repo**: `pyssp_sysml2` dialect and tests.
-- **Repo**: `scripts/utils/authoring.py`, pyfmu build, tests, `FIXTURE.md`.
+- **Repo**: `pyssp_workflow.authoring`, pyfmu build, tests, `FIXTURE.md`.
 - **Artifact**: form changes from inline to external SSV plus mapping.
 - **Flexibility**: studies over a model-owned scenario cannot vary the scenario.
 

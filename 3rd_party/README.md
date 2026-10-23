@@ -30,31 +30,33 @@ The recursive flag is required: `pyssp_workflow` pins its own dependencies.
 
 `requirements.txt`, `requirements-sysml.txt`, and `requirements-campaign.txt`
 install the relevant checkouts as editable packages. The paths run through
-`3rd_party/pyssp_workflow/3rd_party/`. Do not replace them with released wheels
-while the local patches are still required.
+`3rd_party/pyssp_workflow/3rd_party/`. The installs stay editable because the
+pinned commits are the development state, not a released version.
 
-## Local patches
+## Pinning and updates
 
-The submodule working trees may carry uncommitted changes that this repository
-depends on. Keeping them visible is deliberate.
+Each capability checkout is pinned by the commit recorded in its parent
+repository's gitlink. The `pyssp_workflow` gitlink in this repository is the
+single version record for the whole tree.
+
+- All six checkouts are clean: `pyssp_workflow`, `pyssp_standard`,
+  `pyssp_simulate`, `pyssp_sysml2`, `pyssp_vv`, and `sequence_extensions`.
+- This repository carries no patch that waits on a local working tree.
+- The multi-line string handling (`\n`, `\r`, `\t` decode on read, re-escape on
+  export) and the study `doc` to `study.json` `description` path are committed
+  upstream in `pyssp_sysml2` and `pyssp_workflow`.
+- Update order: land the change upstream, bump the capability gitlink in
+  `pyssp_workflow`, then bump the `pyssp_workflow` gitlink here.
+
+The build and simulate stages now consume generic code from upstream
+`pyssp_workflow`, `pyssp_simulate`, and `pyssp_vv`; this repository keeps
+artifact layout, registry, gate policy, signal invariants, and fixture data.
 
 `pyssp_sysml2`'s nested `3rd_party/pyssp_standard` submodule follows the
 experimental fork too, so the SysML tool is developed against the same
 refactored API the build stage uses. The checkout under
 `pyssp_workflow/3rd_party/pyssp_standard` is the only editable copy; the nested
-one is a pinned dependency and stays at the commit `pyssp_sysml2` records. Local
-patches belong in the canonical checkout.
-
-The `scenario` fixture's multi-line `scenario_input` also depends on a
-`pyssp_sysml2` working-tree change: the string adapter decodes `\n`, `\r`, and
-`\t`, and the exporter re-escapes them. Push that upstream and bump the
-`pyssp_sysml2` gitlink in `pyssp_workflow` before recording a new
-`pyssp_workflow` revision here.
-
-Study descriptions depend on a second pair of working-tree changes:
-`pyssp_sysml2.study.generate_study` writes the `Study` definition's `doc` as
-`description` in `study.json`, and `pyssp_workflow.params` reads it back into
-`StudyDescriptor`. Push both upstream before bumping the respective gitlinks.
+one is a pinned dependency and stays at the commit `pyssp_sysml2` records.
 
 Check before updating or resetting:
 
@@ -63,9 +65,8 @@ git -C 3rd_party/pyssp_workflow status --short
 git -C 3rd_party/pyssp_workflow submodule foreach --recursive 'echo "=== $displaypath"; git status --short'
 ```
 
-When updating one, review its local diff first, then run the relevant tests in
-`ssp_references` and in the owning repository before recording the new gitlink
-in `pyssp_workflow`.
+When updating one, run the relevant tests in `ssp_references` and in the owning
+repository, then record the new gitlink in `pyssp_workflow`.
 
 ## Upstream URLs
 

@@ -25,7 +25,7 @@ boundaries:
 | Concern | Before | After |
 | --- | --- | --- |
 | SSP runtime prep, ssp4sim config, result CSV parsing | Local implementation in `scripts/workflow/simulate.py` | `pyssp_simulate` (`SimulationSpec`, `prepare_runtime_ssp`, backend adapters) |
-| FMPy / OMSimulator calls | Local adapters | Local adapters only where upstream behavior differs; see §4 |
+| FMPy / OMSimulator calls | Local shims | `pyssp_simulate` spec fields (`fixed_step`, `validate_ssd`, `omsimulator_options`) |
 | Comparison gate | Metrics only, invariant violations raised | `pyssp_vv.measure` metrics and `pyssp_vv.judge` verdicts |
 | Reference baselines | Plot input only | `scripts/workflow/reference.py` compares runs to reference CSVs through `pyssp_vv` |
 | Campaign orchestration | Sequential CLI loops | `scripts/run_campaign.py` via `sequence_extensions` (Python 3.11+) |
@@ -85,28 +85,27 @@ backlog produced by the gate.
 subprocess isolation, result canonicalization, reference/engine comparison
 primitives, permutation runs, CLI.
 
-**Gaps found:**
+**Boundary behavior:**
 
-1. **FMPy ignores SSP parameter bindings.** `simulate_ssp` accepts a
-   `parameter_set`, but the upstream FMPy backend does not pass one, so SSV
-   values are silently ignored. This repository now passes the SSD's first
-   parameter set explicitly.
-2. **FMPy rejects SSP 2.0 details and some boundary connections.** The
-   repository keeps its validation bypass and connection resolver as a scoped
-   shim (`engine_compat.py`).
-3. **OMSimulator fixed-step mode suppresses events.** The upstream backend
-   calls `setFixedStepSize`, which makes BouncingBall fall through the floor.
-   The repository keeps the OMSimulator call local and sets only the logging
-   interval.
-4. **OMSimulator runs in-process.** A malformed fixture can abort the host
+1. **FMPy applies the parameter set the SSD declares.** The backend reads the
+   binding from the system definition and applies the SSM mapping to target
+   names. If the SSD declares no binding, no parameter set is passed: an
+   unreferenced SSV is never merged (`DD-013`).
+2. **FMPy SSP 2.0 details need the validation bypass.** `validate_ssd=False`
+   skips FMPy's bundled SSP 1.0 schema check, and the backend resolves
+   system-boundary connections with its own traversal.
+3. **OMSimulator fixed step is opt-in.** With `fixed_step=False` the backend
+   sets only the logging interval, so the master keeps event handling and
+   BouncingBall keeps its bounces. `fixed_step=True` forces the step size.
+
+**Gaps and policy:**
+
+1. **OMSimulator runs in-process.** A malformed fixture can abort the host
    process (`scenario`, `pyfmu_csv_source_sink`). The campaign runner isolates
    each simulation in a subprocess.
-5. **Comparison is engine-to-engine only.** There is no reference-CSV mode and
-   no explicit signal-selection/window contract. This repository uses
-   `pyssp_vv.measure` and `pyssp_vv.judge` for that contract instead.
-   **Patched upstream in 0.1.1:** `compare_to_reference`,
-   `SimulationResult.from_reference_csv`, and `ComparisonWindow` now exist, and
-   the CLI accepts `--reference`, `--model-name`, and an explicit grid.
+2. **Comparison policy stays in the repository.** Signal selection, window,
+   tolerances, and manifests are repository-specific; measurement and judgment
+   come from `pyssp_vv.measure` and `pyssp_vv.judge`.
 
 ### `pyssp_sysml2`
 
@@ -217,19 +216,19 @@ python3 scripts/check_sysml_roundtrip.py \
 
 ---
 
-## 5. Gaps to Push Upstream
+## 5. Gap Status
 
 | Gap | Repository | Status |
 | --- | --- | --- |
-| FMPy backend does not apply SSV parameter bindings | pyssp_simulate | Open |
-| FMPy SSP 2.0 validation/boundary connections | pyssp_simulate / FMPy | Open |
-| OMSimulator fixed step suppresses events | pyssp_simulate | Open |
+| FMPy backend does not apply SSV parameter bindings | pyssp_simulate | Closed: applies the parameter set the SSD declares |
+| FMPy SSP 2.0 validation/boundary connections | pyssp_simulate / FMPy | Closed: `validate_ssd` spec field plus the backend connection resolver |
+| OMSimulator fixed step suppresses events | pyssp_simulate | Closed: `fixed_step=False` keeps event handling |
 | OMSimulator crashes abort the caller | pyssp_simulate | Open |
 | No reference-CSV comparison | pyssp_simulate | Patched in 0.1.1 |
 | No explicit comparison window | pyssp_simulate | Patched in 0.1.1 |
 | SSD → SysML → SSD loses metadata | pyssp_sysml2 | Patched in 0.1.1 |
 | No `SspModel`/`Study` role markers or study generation | pyssp_sysml2 | Implemented in pilot (ADR-009) |
-| No runtime scenario SSV/SSM injection | pyssp_workflow | Implemented in pilot (ADR-010) |
+| Scenario packaging in the build | pyssp_workflow | Implemented: `pyssp_workflow.execute` packaging forms (`DD-011`) |
 | Comparison and gate ownership | this repo → pyssp_vv | Migrated to `pyssp_vv.measure` and `pyssp_vv.judge` (DD-010) |
 | `pyssp_standard` version skew / LS-REF split | pyssp_sysml2 / pyssp_standard | Resolved by artifact boundary: pyssp_sysml2 targets the refactored API; checker invokes `pyssp` via CLI |
 | PyPI name collision | sequence_extensions | Patched: publishes as `sequence-extensions-flow` |

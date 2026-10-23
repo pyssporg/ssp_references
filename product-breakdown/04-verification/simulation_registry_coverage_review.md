@@ -92,7 +92,7 @@ pb_exempt: true
 
 **15. scenario**
 - **Test level:** Behavioral
-- **Backend rationale:** Three backends ensure SSV/SSM parameter injection works consistently. Parameter handling is an SSP-specific feature that deserves broad backend coverage.
+- **Backend rationale:** Three backends ensure SSV/SSM parameter handling works consistently. Parameter handling is an SSP-specific feature that deserves broad backend coverage.
 - **Registry verification:** ❌ Missing before review → ✅ Added during IMP-CAND-G.
 
 ## Cross-Cutting Findings

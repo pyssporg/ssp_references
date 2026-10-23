@@ -67,9 +67,10 @@ contract:
   `SspModel` composition is then a boundary marker that selects the body with
   `ssp_meta.source`, and is not exported.
 - `build.py` derives the model SSP and the study, then packages the scenario
-  into a runnable SSP. `build_studies` builds one runnable SSP per study. A
-  fixture that exercises a different parameter form applies it with
-  `pyssp_standard` in its build hook.
+  into a runnable SSP. `build_studies` builds one runnable SSP per study. Each
+  fixture passes one `pyssp_workflow.execute` packaging form: the default
+  external SSV/SSM form, `package_nothing`, `package_inline_root`,
+  `package_external_target_named`, or `package_inline_with_mapping`.
 - `FIXTURE.md` provides the fixture notes for each model.
 - Running `build.py` writes the runnable SSP under
   `artifacts/models/<model>/<study>/<build>/` and study artifacts under
@@ -80,14 +81,24 @@ contract:
 - Simulation runs the built SSP as-is; there is no runtime scenario injection.
   Each generated `artifacts/simulation/<model>/<study>/setup.json` records the
   window, explicit backend list, and explicit compare-signal list for that case.
-  Tolerance is read from the composed FMUs.
+  The setup manifest carries no solver tolerance; each engine applies its own
+  default, and the gate compares with the registry's `atol` and `rtol`.
   The current backend set is `ssp4sim`, `OMSimulator`, and `FMPy`.
-  `pyssp_simulate` is the execution substrate; local shims remain only for
-  documented upstream gaps (FMPy SSP-2.0 loading and OMSimulator step mode).
+  `pyssp_simulate` is the execution substrate: it loads the built SSP,
+  prepares the runtime copy, and runs each engine. It takes the step mode,
+  SSD validation, and engine options as `SimulationSpec` fields; the
+  repository holds no engine workarounds.
   `scripts/run_comparisons.py` compares every unique backend combination from
   that setup by default, or a filtered backend subset when `--backend` is
   repeated. Runtime artifacts live under `artifacts/simulation/` and
   `artifacts/comparisons/`; they do not live in `build.py`.
+
+Local repository code owns the artifact layout (`scripts/workflow/layout.py`),
+the registry data and schema (`registry.py`, `artifacts/simulation_registry.json`),
+the gate policy and tolerances (`gate.py`), signal invariants
+(`model_policy.py`), the reference CSVs, and the fixture SysML and legacy
+bodies. Generic build, simulate, compare, and figure code lives in the
+vendored pyssp packages.
 
 The canonical artifact contract for the stages and external tools is
 [Pipeline and Tool Boundaries](product-breakdown/02-architecture/pipeline-boundaries.md):
@@ -126,6 +137,10 @@ The plot generator writes one PNG per model, case, and variable under
 engine for that case and renders the full stored timeseries without resampling.
 It only plots the case's registered `compare_signals`. Use `--model`, `--case`,
 and `--backend` to narrow the selection.
+
+Figures are data first: `pyssp_vv.measure.build_figure_spec` builds a
+`FigureSpec`, and `render_figure` draws it. The renderer imports matplotlib
+inside the function, so the plot script never imports it at module level.
 
 To run the full registered suite and generate comparisons for every case that
 has at least two recorded backends:
@@ -219,8 +234,8 @@ environment constraints:
   installs it through the `pyssp_workflow` submodule.
 
 The pyssp and sequence submodules are editable checkouts. See
-[`3rd_party/README.md`](3rd_party/README.md) for initialization, update, and
-local-patch guidance.
+[`3rd_party/README.md`](3rd_party/README.md) for initialization, pinning, and
+update rules.
 
 See [the ecosystem assessment](product-breakdown/04-verification/ecosystem_adoption_assessment.md)
 for the evaluated versions and remaining gaps.

@@ -96,7 +96,8 @@ simulation registry at `artifacts/simulation_registry.json`, which maps each
 model build to named studies, backends, compare signals, references, and gate
 policy. The study descriptor supplies the simulation window (start time, stop
 time, step size). The scenario is already packaged in the SSP, so the simulate
-stage does not inject one. Tolerance is read from the composed FMUs.
+stage does not inject one. The setup manifest records no solver tolerance; each
+engine applies its own default.
 
 **Output:** Per-backend simulation result files (CSV, and optionally `.mat`
 for some backends) under
@@ -104,10 +105,12 @@ for some backends) under
 produces a `simulation.json` run manifest at the same location.
 
 **Entry point:** `scripts/run_simulations.py` reads the registry, expands the
-model/study/backend matrix, prepares setup manifests, and dispatches through
-`pyssp_workflow` execute nodes. Engine execution is a `pyssp_simulate`
-responsibility; local compatibility shims exist only for documented upstream
-gaps (see `ADR-005` and `ADR-008`).
+model/study/backend matrix, prepares setup manifests, and calls
+`workflow.simulate.simulate_backend` per backend. Engine execution is a
+`pyssp_simulate` responsibility: the local wrapper builds a `SimulationSpec`
+and records the run manifest. This repository owns no engine workaround; the
+step mode, SSD validation, and engine options travel as spec fields
+(`DD-013`).
 
 **Invariant:** The simulate stage does not rebuild SSPs, does not inject a
 scenario, does not mutate build artifacts or model source directories, and does
@@ -134,9 +137,11 @@ comparison manifest records a `gate` verdict and its reasons. The gate records
 judge.
 
 **Entry point:** `scripts/run_comparisons.py` reads the registry, loads the
-setup and run manifests, and drives the comparison. `pyssp_vv.measure` produces
-the metrics, `pyssp_vv.judge` produces the verdict, and model-specific signal
-invariants live in `workflow/model_policy.py`.
+setup and run manifests, and drives the comparison.
+`pyssp_workflow.execute.compare_result_csvs` composes each pair,
+`pyssp_vv.measure` produces the metrics, `pyssp_vv.judge` produces the verdict,
+the gate policy and tolerances live in `workflow/gate.py`, and model-specific
+signal invariants live in `workflow/model_policy.py`.
 
 **Invariant:** The compare stage does not re-run simulations, does not rebuild
 SSPs, and does not modify model sources or simulation outputs.
@@ -199,13 +204,20 @@ forbidden from doing.
 | Entry Point | Owns | Forbidden From |
 |---|---|---|
 | `build_models.py` | Model discovery and dispatch to per-model `build.py`; exports `SspModel` SSPs and generates study artifacts | Running simulations, writing to `artifacts/simulation/` or `artifacts/comparisons/`, modifying the simulation registry |
-| `run_simulations.py` | Registry expansion, study setup, runtime scenario injection, backend dispatch, result recording | Rebuilding SSPs, mutating exported model artifacts, running comparisons |
+| `run_simulations.py` | Registry expansion, study setup, backend dispatch, result recording | Rebuilding SSPs, mutating exported model artifacts, running comparisons |
 | `run_comparisons.py` | Pairwise engine-to-engine comparison, reference comparison, verdict recording | Re-running simulations, modifying model sources, rebuilding SSPs |
 | `run_campaign.py` | Submitting build, study, simulate, and compare nodes through `sequence_extensions` | Implementing domain logic; bypassing the stage entry points |
 
 These boundaries ensure that each stage can be invoked, debugged, and tested
 independently. A build script failure does not corrupt simulation results; a
 simulation failure does not block comparison of already-valid runs.
+
+Repository code keeps only what is local to this fixture suite: artifact layout
+(`workflow/layout.py`), registry data and schema (`workflow/registry.py`,
+`artifacts/simulation_registry.json`), gate policy and tolerances
+(`workflow/gate.py`), signal invariants (`workflow/model_policy.py`), reference
+CSVs, and the fixture SysML and legacy bodies. Generic build, simulate,
+compare, and figure code lives in the vendored pyssp packages (`DD-013`).
 
 ### Tool boundaries
 
@@ -295,7 +307,8 @@ Written by `run_simulations.py` before dispatching any backend. Located at
 - The runnable SSP path, study, and build name.
 - The study artifact directory.
 - The simulation window (start time, stop time, interval) from the study
-  descriptor. Tolerance is read from the composed FMUs, not the descriptor.
+  descriptor. The manifest carries no solver tolerance; each engine applies its
+  own default.
 - The explicit backend list and compare-signal list for this model/study.
 - The gate policy (`atol`, `rtol`, invariant tolerance) frozen from the registry.
 - The root system name and path to `SystemStructure.ssd`.
@@ -362,9 +375,9 @@ The following architectural violations are not allowed:
    adapters directly or indirectly.
 
 4. **The study descriptor is the experiment contract.** The window and step
-   come from `study.json` and are frozen into `setup.json`; tolerance comes from
-   the FMUs. No pipeline stage parses LS-REF, and the build writes no
-   `experiments.xml`.
+   come from `study.json` and are frozen into `setup.json`; the gate
+   tolerances come from the registry. No pipeline stage parses LS-REF, and the
+   build writes no `experiments.xml`.
 
 5. **Simulation artifacts must not be stored in model directories.** Results,
    configs, logs, and manifests live under `artifacts/simulation/` and
@@ -392,9 +405,10 @@ The following architectural violations are not allowed:
    `ADR-009` and `ADR-013`.
 
 10. **Parameter form is applied where it is known.** Default packaging is a
-    root external SSV/SSM binding. A fixture that exercises another form applies
-    it with `pyssp_standard` in its build hook. The simulate stage does not
-    inject or reshape parameters. See `PD-007` and `ADR-013`.
+    root external SSV/SSM binding. A fixture that exercises another form passes
+    the matching `pyssp_workflow.execute` packaging callable, which mutates
+    through `pyssp_standard`. The simulate stage does not inject or reshape
+    parameters. See `PD-007` and `ADR-013`.
 
 ---
 

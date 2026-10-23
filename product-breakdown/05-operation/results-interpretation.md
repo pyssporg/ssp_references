@@ -3,7 +3,7 @@ id: INFO-006
 type: info
 title: Results Interpretation Guide
 summary: How to read simulation and comparison artifacts.
-date: 2026-10-22
+date: 2026-10-23
 status: current
 pb_exempt: true
 ---
@@ -11,7 +11,7 @@ pb_exempt: true
 # Results Interpretation Guide
 
 This document explains the output files produced by the comparison pipeline.
-Use it to understand comparison metrics, interpret pass/fail results, and
+Use it to understand comparison metrics, interpret the gate verdict, and
 diagnose mismatches between simulation backends.
 
 ## Artifact Layout
@@ -28,108 +28,73 @@ artifacts/comparisons/<model>/<study>/comparisons.json   # batch summary
 
 ## `metrics.csv` Schema
 
-One row per signal per model per comparison. Columns:
+One row per signal per comparison. `run_a` is the reference, `run_b` the
+candidate. Columns, in declared order:
 
-| Column | Type | Description |
-|--------|------|-------------|
-| `model` | string | Model name (e.g. `BouncingBall`) |
-| `signal` | string | Signal name as listed in `compare_signals` in the registry |
-| `backend_a` | string | First backend in the pair (e.g. `ssp4sim`) |
-| `backend_b` | string | Second backend in the pair (e.g. `omsimulator`) |
-| `max_abs_error` | float | Maximum absolute difference across all time steps |
-| `mae` | float | Mean absolute error across all time steps |
-| `rmse` | float | Root mean square error across all time steps |
-| `n_points` | int | Number of time steps compared |
+- **Identity:** `signal`, `run_a_label`, `run_b_label`.
+- **Pointwise error:** `max_abs_error`, `mean_abs_error`, `rmse`.
+- **Shift-tolerant error:** `max_shift_abs_error`, `shift_samples`.
+- **Normalised error:** `normalisation`, `denominator`,
+  `normalised_max_abs_error`.
+- **Range:** `run_a_min`, `run_a_max`, `run_b_min`, `run_b_max`.
+- **Quality:** `coverage`, `undefined`.
+
+The schema is `pyssp_vv.evidence.METRIC_COLUMNS`.
 
 ### Metric Interpretation
 
-| Metric | What It Measures | Interpretation |
-|--------|-----------------|----------------|
-| `max_abs_error` | Worst single-step deviation | A single outlier indicates a spike or timing shift; broad agreement otherwise is acceptable |
-| `mae` | Average per-step deviation | Low MAE + spikes in max_abs_error → occasional glitch; both high → systematic difference |
-| `rmse` | RMS of errors (penalizes large deviations) | RMSE >> MAE → large but infrequent errors; RMSE ≈ MAE → uniform small errors |
-
-### Tolerance Guidance
-
-| Fixture Class | Typical Tolerance | Rationale |
-|--------------|-------------------|-----------|
-| Deterministic signal-propagation | `max_abs_error < 1e-12` | Algebraically predictable; any deviation is a bug |
-| Simple reference models | `max_abs_error < 1e-6` | Slight numerical drift across solvers is expected |
-| Composite SSPs | `max_abs_error < 1e-4` | Multi-FMU coupling introduces solver-dependent variation |
+- **`max_abs_error`:** worst single-step deviation; a spike here with a low
+  `mean_abs_error` points at a timing offset.
+- **`max_shift_abs_error`:** the same maximum after searching the declared lag
+  window; the gate judges this value.
+- **`mean_abs_error`:** average per-step deviation; a broad difference.
+- **`rmse`:** RMS of the errors; penalises large deviations.
+- **`coverage`:** fraction of the grid where both series carry a value.
+- **`undefined`:** reasons a derived value could not be computed.
 
 ## `comparison.json` Schema (pairwise)
 
-```json
-{
-  "model": "BouncingBall",
-  "case": "baseline",
-  "backend_a": "ssp4sim",
-  "backend_b": "omsimulator",
-  "signals": ["h", "v", "t"],
-  "status": "completed",
-  "metrics_path": "artifacts/comparisons/BouncingBall/baseline/ssp4sim_vs_omsimulator/metrics.csv",
-  "n_signals_matched": 3,
-  "n_signals_total": 3,
-  "start_time": 0.0,
-  "end_time": 20.0
-}
-```
-
-| Field | Description |
-|-------|-------------|
-| `model` | Model name |
-| `case` | Simulation case name |
-| `backend_a`, `backend_b` | The two backends being compared |
-| `signals` | List of signals successfully compared |
-| `status` | `completed`, `partial`, or `failed` |
-| `metrics_path` | Relative path to the metrics CSV |
-| `n_signals_matched` | Number of signals present in both backends' output |
-| `n_signals_total` | Total signals requested for comparison |
-| `start_time`, `end_time` | Simulation time window |
+- **Labels:** `reference_label`, `candidate_label` (written as `run_a_label`
+  and `run_b_label` inside `summary`).
+- **Paths:** `metrics` relative to the manifest.
+- **Summary:** `time_points`, `compared_signal_count`, `max_abs_error`,
+  `max_shift_abs_error`, `mean_abs_error`, `rmse`, `max_rel_error`,
+  `min_coverage`.
+- **Gate:** `gate.status` and `gate.reasons`.
+- **Run status:** `status` and `error`.
 
 ## `comparisons.json` Schema (batch)
 
-```json
-{
-  "model": "BouncingBall",
-  "case": "baseline",
-  "pairs": ["ssp4sim_vs_omsimulator"],
-  "comparisons": [
-    "artifacts/comparisons/BouncingBall/baseline/ssp4sim_vs_omsimulator/comparison.json"
-  ]
-}
-```
+- **Request:** the compared runs and their manifests.
+- **Comparisons:** each pair's record, manifest path, and gate.
+- **Summary:** `backend_count`, `comparison_count`,
+  `max_signal_invariant_abs_error`, `gate_result`.
+- **Gate:** the pessimistic combination of the pair verdicts.
 
-Lists all pairwise comparisons completed for a model/study combination.
+## Gate Criteria
 
-## Pass/Fail Criteria
+The gate records `pass`, `fail`, or `invalid` per pair and per reference
+comparison. `invalid` means the comparison was not fit to judge; it is not a
+`fail`.
 
-The comparison pipeline is **diagnostic** — it produces metrics but does not
-enforce pass/fail gates. That decision belongs to the consumer.
+- **Pass:** every judged signal meets `atol`/`rtol`; invariants hold.
+- **Fail:** a signal or invariant misses its criterion.
+- **Invalid:** no measurement supported a judgment.
+- **Tolerance source:** the registry `gate` entry, frozen into `setup.json`.
 
-As a rule of thumb:
-
-| Condition | Assessment |
-|-----------|-----------|
-| All signals matched, all metrics within tolerance | ✅ Pass |
-| All signals matched, metrics outside tolerance | ⚠️ Investigate — likely numerical drift or scheduling difference |
-| Signals missing (`n_signals_matched < n_signals_total`) | ❌ Fail — output schema mismatch or backend limitation |
-| Status is `failed` | ❌ Fail — comparison script error or incompatible output format |
+`run_comparisons.py` records gates without failing; `--fail-on-gate` exits
+nonzero when any gate fails or is invalid.
 
 ## Fixture-Specific Notes
 
-- **Deterministic signal-propagation** models (signal_step_gain, signal_step_add, signal_algebraic_loop, signal_nested_algebraic_loop, etc.): these have algebraically predictable outputs. Any `max_abs_error > 1e-12` across backends is a strong signal of a scheduling, propagation, or algebraic-loop issue.
-- **Simple reference models** (BouncingBall, VanDerPol, etc.): small numerical tolerance differences between solvers are normal. Tighter tolerances (`1e-8`) can be used if both backends use the same solver.
-- **Composite models** (dcmotor, embrace): broader tolerances are expected due to multi-FMU coupling and cross-component signal routing.
+- **Deterministic signal-propagation** models have algebraically predictable
+  outputs, so the gate runs at tight tolerances.
+- **Simple reference models** show small solver-dependent drift.
+- **Composite models** (dcmotor, embrace) show wider divergence from
+  multi-FMU coupling and cross-component signal routing.
 
 ## Related
 
-- [Test Strategy](../04-verification/co_simulation_test_strategy.md) — comparison policy, fixture classes, and acceptance philosophy
-- [Architecture — Runtime Contract](../02-architecture/architecture.md#5-runtime-contract) — how comparison artifacts connect to simulation artifacts
-- [Comparison Source Code](../../scripts/workflow/comparison.py) — source of truth for metric calculation
-
----
-
-*Maintenance note: if the metric definitions or output format change in
-`scripts/workflow/comparison.py` or `scripts/utils/comparison.py`, update
-this document to match.*
+- `EVAL-001` - test strategy, fixture classes, and acceptance philosophy.
+- `INFO-002` - runtime contract and artifact connection chain.
+- `EVAL-005` - metric schema and gate rules.

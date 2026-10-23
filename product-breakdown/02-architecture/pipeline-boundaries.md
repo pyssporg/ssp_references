@@ -97,8 +97,8 @@ checkouts. The capabilities are nested inside it:
 | `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` | Build/simulation/compare campaign orchestration |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_vv` | Measurement, judgment, evidence, and reporting |
 
-See [`3rd_party/README.md`](../../3rd_party/README.md) for initialization and
-local-patch guidance.
+See [`3rd_party/README.md`](../../3rd_party/README.md) for initialization,
+pinning, and update rules.
 
 `pyssp_standard` is the organization's experimental fork,
 `pyssporg/experimental_pyssp_standard`, not the release line.
@@ -155,7 +155,8 @@ python3 scripts/check_sysml_roundtrip.py \
    a study descriptor. It must not produce a `SystemStructure.ssd` or `.ssp`;
    the build packages it into the model SSP.
 8. **Parameter form is applied at build.** Default is a root external SSV/SSM
-   binding. Other forms use `pyssp_standard` in the fixture build hook.
+   binding. Other forms use a `pyssp_workflow.execute` packaging callable that
+   mutates through `pyssp_standard`.
 
 ## Backward Trace
 

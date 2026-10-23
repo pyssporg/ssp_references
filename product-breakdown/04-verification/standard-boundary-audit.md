@@ -19,12 +19,24 @@ status: current
 - Signal names canonicalize through `pyssp_simulate.canonicalize_signal`, including the two-segment `fmu.h` form.
 - The experiment window comes from the study descriptor; no pipeline stage
   parses LS-REF.
-- Raw SSP packaging uses `pyssp_standard.package_archive`.
-- Comparison alignment, resampling, metric families, global shift search, and local shift primitive live in `pyssp_vv.measure`.
+- Raw SSP packaging uses `pyssp_standard.package_archive`; runtime packaging
+  uses `pyssp_simulate.prepare_runtime_ssp`.
+- Engine options travel as `SimulationSpec` fields (`fixed_step`,
+  `validate_ssd`, `omsimulator_options`); no engine workaround lives in this
+  repository.
+- FMPy applies only the parameter set the SSD declares; an SSV the system
+  definition does not reference is never merged.
+- Study parameter forms are applied by `pyssp_workflow.execute` packaging
+  steps; each one mutates through `pyssp_standard`.
+- Comparison composition lives in `pyssp_workflow.execute.compare_result_csvs`;
+  alignment, resampling, metric families, global shift search, and the local
+  shift primitive live in `pyssp_vv.measure`.
+- Metric-row and summary schema live in `pyssp_vv.evidence`; a figure is data
+  from `pyssp_vv.measure.build_figure_spec` and renders through `render_figure`.
 - Gate judgment lives in `pyssp_vv.judge`; `pass`, `fail`, and `invalid` stay distinct.
 - Model signal invariants live in `workflow/model_policy.py`, not a generic utility.
 - `pyssp_workflow.authoring` returns the `study.json` descriptor path; it does not mirror `pyssp_sysml2.study.StudyArtifacts`.
-- Shared workflow records live in `utils.domain`; no duplicate `SimulationWindow` or `ResultSet`.
+- Shared workflow records live in `utils.domain`; no duplicate `SimulationWindow`.
 
 ## Public API surfaces
 
@@ -33,9 +45,10 @@ status: current
 - `pyssp_simulate`: `SimulationSpec`, `SimulationResult`, `RuntimeSSP`,
   `prepare_runtime_ssp`, result CSV helpers, and the backend registry.
 - `pyssp_vv`: `Trajectory`, `Comparison`, `SignalMetrics`, `Policy`,
-  `Judgment`, `Verdict`, and `EvidenceBundle`.
-- `pyssp_workflow`: `package_scenario`, `read_study_descriptor`, authoring
-  functions, and the optional node layer.
+  `Judgment`, `Verdict`, `EvidenceBundle`, `MetricRow`, `ComparisonSummary`,
+  and `FigureSpec`.
+- `pyssp_workflow`: the `authoring` functions, the `execute` packaging steps
+  and comparison composition, `params` readers, and the optional node layer.
 - `pyssp_sysml2`: the `pyssp` CLI and documented generation functions.
 - `sequence_extensions`: `node`, `execute_flow`, `RunOptions`, and flow
   results.
@@ -49,7 +62,6 @@ deliberate API decision, not an accidental export. See `ADR-011`.
 
 ## Intentional exceptions
 
-- `engine_compat.py` and `_apply_fmpy_mapping` cover upstream FMPy and OMSimulator gaps.
 - `setup._read_root_system_name` stays lenient; the `SSD` facade requires conformant root metadata.
 - `check_sysml_roundtrip.py` stays artifact-only; it does not import `pyssp_standard`.
 - `study.json` is repository policy; SSV and SSM remain the standard interchange.

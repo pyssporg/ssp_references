@@ -23,6 +23,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Generic build, run, compare, and verify behavior belongs to `pyssp_workflow` and capability repos.
 - **PD-006** — Studies Consume Exported SSPs and Are Never Exported · accepted · 2026-10-22 · `PD-006`
   Studies consume exported SSPs with scenario and experiment data and are never exported.
+- **PD-007** — Fixture Suite Preserves Parameter-Application Forms · accepted · 2026-10-23 · `PD-007`
+  Reference fixtures keep the SSP parameter-application forms they exercise; authoring must not flatten them.
 
 ### Architecture
 
@@ -46,12 +48,14 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   `pyssp_workflow` owns generic pipeline behavior; `ssp_references` owns fixtures and policy data.
 - **ADR-009** — `SspModel` and `Study` Marker Specialization · accepted · 2026-10-22 · `ADR-009`
   `SspModel` definitions are exportable; `Study` definitions supply scenario data and are never exported.
-- **ADR-010** — Runtime Scenario and Experiment Application to Exported SSPs · accepted · 2026-10-22 · `ADR-010`
+- **ADR-010** — Runtime Scenario and Experiment Application to Exported SSPs · superseded · 2026-10-22 · `ADR-010`
   Studies apply SSV, SSM, and experiment data to a runtime copy of an exported SSP.
 - **ADR-011** — Library Boundaries Use Standard Artifacts or Public API · accepted · 2026-10-22 · `ADR-011`
   Library borders prefer standard artifacts; non-standard crossings use only documented public API types.
 - **ADR-012** — pyssp_standard Comes From the Organization Experimental Fork · accepted · 2026-10-22 · `ADR-012`
   The pinned `pyssp_standard` checkout is the organization's experimental fork, not the release line.
+- **ADR-013** — SysML Authors Structure and Experiment; pyssp_standard Applies Parameter Form · accepted · 2026-10-23 · `ADR-013`
+  SysML defines wiring and the experiment; the fixture build applies the parameter form with pyssp_standard, including nested boundary wiring.
 
 ### Implementation
 
@@ -71,7 +75,9 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   `signal_step_gain` exports a `System :> SspModel` SSP with parameter interfaces and no study bindings.
 - **DD-008** — Study Scenario Generation and SSM Prefix Stripping · accepted · 2026-10-22 · `DD-008`
   A study generates SSV, SSM, and an experiment descriptor; SSM targets strip the `sut.` prefix.
-- **DD-009** — Runtime Scenario Injection and Registry Build/Case Split · accepted · 2026-10-22 · `DD-009`
+- **DD-009** — Runtime Scenario Injection and Registry Build/Case Split · superseded · 2026-10-22 · `DD-009`
   Runtime scenario injection copies the exported SSP, adds a root `ParameterBinding`, and never mutates the build artifact.
 - **DD-010** — `pyssp_vv` Owns Comparison Measurement and Judgment · accepted · 2026-10-22 · `DD-010`
   Comparison metrics and verdicts come from pyssp_vv; this repo keeps registry and model policy.
+- **DD-011** — Build Packages the Study Scenario into the SSP · accepted · 2026-10-23 · `DD-011`
+  The build emits a runnable SSP per model/study/build with the scenario applied; simulation runs it as-is.

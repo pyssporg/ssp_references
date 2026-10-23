@@ -19,14 +19,19 @@ definitions, fixture notes, and build metadata.
 │   │       └── references/
 │   └── ssp/
 │       └── <model_name>/
+│           ├── architecture/      # authored SysML (migrated fixtures)
 │           ├── build.py
-│           ├── experiments.xml
+│           ├── experiments.xml    # legacy fixtures only
 │           ├── FIXTURE.md
-│           └── ssp/               # only for authored SSP sources such as dcmotor/embrace
+│           └── ssp/               # legacy authored SSP sources
 ├── artifacts/
 │   ├── models/
 │   │   └── <model_name>/
-│   │       └── <experiment>/
+│   │       └── <study_name>/
+│   │           └── <build_name>/
+│   ├── studies/
+│   │   └── <model_name>/
+│   │       └── <study_name>/
 │   ├── comparisons/
 │   ├── simulation_registry.json
 │   └── simulation/
@@ -56,20 +61,21 @@ contract:
 
 - `architecture/*.sysml` is the authored source for migrated fixtures.
 - `part def <Model> :> SspModel` exports one SSP; `part def <Study> :> Study`
-  supplies scenario data and is never exported as an SSP.
-- `build.py` is the source of truth for how that model and its studies get
-  built.
+  supplies scenario data and one experiment (`startTime`, `stopTime`,
+  `stepSize`) and is never exported as an SSP.
+- `build.py` derives the model SSP and the study, then packages the scenario
+  into a runnable SSP. A fixture that exercises a different parameter form
+  applies it with `pyssp_standard` in its build hook.
 - `FIXTURE.md` provides the fixture notes for each model.
-- Running `build.py` writes the exported model under
-  `artifacts/models/<model>/<build>/` and study artifacts under
+- Running `build.py` writes the runnable SSP under
+  `artifacts/models/<model>/<study>/<build>/` and study artifacts under
   `artifacts/studies/<model>/<study>/`.
 - A study artifact directory contains a scenario SSV, an SSM mapping, and
   `study.json`; it contains no SSD or SSP.
-- Simulation and comparison run through the shared entry points in `scripts/`
-  and consume the exported model, study descriptor, and
-  `artifacts/simulation_registry.json`. Each generated
-  `artifacts/simulation/<model>/<case>/setup.json` records the study, scenario
-  paths, explicit backend list, and explicit compare-signal list for that case.
+- Simulation runs the built SSP as-is; there is no runtime scenario injection.
+  Each generated `artifacts/simulation/<model>/<study>/setup.json` records the
+  window, explicit backend list, and explicit compare-signal list for that case.
+  Tolerance is read from the composed FMUs.
   The current backend set is `ssp4sim`, `OMSimulator`, and `FMPy`.
   `pyssp_simulate` is the execution substrate; local shims remain only for
   documented upstream gaps (FMPy SSP-2.0 loading and OMSimulator step mode).
@@ -82,8 +88,8 @@ The canonical artifact contract for the stages and external tools is
 [Pipeline and Tool Boundaries](product-breakdown/02-architecture/pipeline-boundaries.md):
 
 ```text
-Build    -> exported model SSP + study SSV/SSM/study.json
-Simulate -> reads model SSP + study + registry, writes CSV + run manifests
+Build    -> runnable SSP + study SSV/SSM/study.json
+Simulate -> reads runnable SSP + study window + registry, writes CSV + run manifests
 Compare  -> reads run manifests + CSV, writes comparisons
 SysML    -> reads .sysml, invokes external pyssp CLI, writes SSP/study
 ```
@@ -251,15 +257,15 @@ python3 scripts/build_models.py list
 python3 scripts/build_models.py run BouncingBall
 ```
 
-Built artifacts appear under `artifacts/models/BouncingBall/`.
+Built artifacts appear under `artifacts/models/BouncingBall/baseline/`.
 
-To build the SysML-authored pilot model and its study:
+To build a SysML-authored signal fixture and its study:
 
 ```bash
 python3 scripts/build_models.py run signal_step_gain
 ```
 
-This writes `artifacts/models/signal_step_gain/model/` and
+This writes `artifacts/models/signal_step_gain/test_baseline/model/` and
 `artifacts/studies/signal_step_gain/test_baseline/`.
 
 To build every model at once:

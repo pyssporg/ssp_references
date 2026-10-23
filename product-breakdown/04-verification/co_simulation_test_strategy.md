@@ -29,7 +29,7 @@ result trajectory?"
 Every test level should therefore be organized around three steps:
 
 1. Prepare a stable exported `SspModel` and, where needed, a `Study` scenario.
-2. Simulate the exported model with one or more engines under that study.
+2. Simulate the runnable SSP with one or more engines under that study.
 3. Compare the produced result signals against a trusted reference.
 
 ## Primary Oracles
@@ -49,22 +49,22 @@ These oracles serve different purposes:
 
 ## Model and Study Preparation
 
-Migrated fixtures separate the exported model from the study that exercises it:
+Migrated fixtures separate the model from the study that exercises it, and the
+build joins them:
 
-- A `part def ... :> SspModel` is exported once as an SSP. It contains the
-  component wiring and parameter interfaces, but no study-specific parameter
-  values.
+- A `part def ... :> SspModel` is exported per study as an SSP. It contains the
+  component wiring and parameter interfaces.
 - A `part def ... :> Study` supplies a scenario SSV/SSM and one experiment
-  descriptor. It is never exported as an SSP.
-- Simulation applies the study scenario to a runtime copy of the exported SSP.
-  The exported artifact is immutable.
+  descriptor (start, stop, step). It is never exported as an SSP.
+- The build packages the study scenario into the SSP in the fixture's parameter
+  form. Simulation runs the built SSP as-is.
 - Build, study generation, simulation, and comparison are submitted as
   `sequence_extensions` nodes so models and studies can run in parallel.
 
-Pilot status: `signal_step_gain` exports `System :> SspModel` to
-`artifacts/models/signal_step_gain/model/`, generates `test_baseline` under
-`artifacts/studies/signal_step_gain/test_baseline/`, round-trips its SSD, and
-passes the engine-to-engine gate for `ssp4sim`, `OMSimulator`, and `FMPy`.
+Pilot status: the `signal_*` family is migrated to SysML authoring. Each fixture
+exports `System :> SspModel` to `artifacts/models/<model>/<study>/model/`,
+generates its study under `artifacts/studies/<model>/<study>/`, and passes the
+registered engine gate. Parameter forms are preserved per fixture (`PD-007`).
 
 A migrated fixture is verified in four steps:
 
@@ -273,7 +273,7 @@ This repository already supports the core workflow needed for the strategy:
 - Reusable FMU building blocks live under `models/fmu/`.
 - Migrated fixtures author `SspModel` and `Study` definitions under
   `models/ssp/<model>/architecture/`.
-- Exported model SSPs live under `artifacts/models/<model>/<build>/`.
+- Runnable SSPs live under `artifacts/models/<model>/<study>/<build>/`.
 - Study scenario and experiment artifacts live under
   `artifacts/studies/<model>/<study>/`. Studies are not SSPs.
 - Runtime setup, simulation, and comparison outputs live under

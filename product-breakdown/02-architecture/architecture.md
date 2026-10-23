@@ -276,9 +276,11 @@ stage that produced it.
 Located at `artifacts/simulation_registry.json`. This is the top-level study-
 and-backend selection matrix. It lists every model with:
 - The signals to compare during post-processing (`compare_signals`).
-- The exported build name (`build`).
-- One or more named studies/cases, each listing the backends to run, reference
-  baselines, and gate policy.
+- One or more named cases, each naming its study, its `build` name, the
+  backends to run, reference baselines, and gate policy.
+
+The artifact path is `artifacts/models/<model>/<study>/<build>` and the study
+artifacts are at `artifacts/studies/<model>/<study>`.
 
 The registry is the exclusive source of truth for which model/study/backend
 combinations are active. It is not derived from the SSP directory tree or from
@@ -357,11 +359,10 @@ The following architectural violations are not allowed:
    adapters directly or indirectly.
 
 4. **`experiments.xml` is packaging metadata, not the runtime contract.**
-   For migrated studies, the window and tolerance come from the study
-   descriptor and are frozen into `setup.json`. The exported SSP may carry a
-   default `experiments.xml` for standalone use, but runtime dispatch reads
-   `setup.json`, not `experiments.xml`. No pipeline stage depends on LS-REF
-   conventions at runtime.
+   For migrated fixtures, the window and step come from the study descriptor and
+   are frozen into `setup.json`; tolerance comes from the FMUs. Legacy fixtures
+   may still carry `experiments.xml` until migrated. No pipeline stage depends
+   on LS-REF conventions at runtime.
 
 5. **Simulation artifacts must not be stored in model directories.** Results,
    configs, logs, and manifests live under `artifacts/simulation/` and
@@ -385,8 +386,13 @@ The following architectural violations are not allowed:
 
 9. **Studies must not be exported as SSPs.** Only `part def ... :> SspModel`
    definitions are exportable. A `part def ... :> Study` produces scenario
-   SSV/SSM and experiment data, and consumes an exported model. See
-   `ADR-009` and `ADR-010`.
+   SSV/SSM and experiment data, and is packaged into a build SSP. See
+   `ADR-009` and `ADR-013`.
+
+10. **Parameter form is applied where it is known.** Default packaging is a
+    root external SSV/SSM binding. A fixture that exercises another form applies
+    it with `pyssp_standard` in its build hook. The simulate stage does not
+    inject or reshape parameters. See `PD-007` and `ADR-013`.
 
 ---
 

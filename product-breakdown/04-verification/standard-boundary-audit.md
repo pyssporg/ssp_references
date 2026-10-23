@@ -12,11 +12,13 @@ status: current
 ## Current boundary
 
 - Study generation emits standard SSV, SSM, and repo `study.json`.
-- Runtime merges the same SSV/SSM through `pyssp_standard.SSP.add_external_parameterset`.
-- Exported SSP stays read-only.
+- Build packages the same SSV/SSM through
+  `pyssp_standard.SSP.add_external_parameterset`; the build SSP is the engine
+  input and simulation does not mutate it.
 - Result CSV reading and writing use `pyssp_simulate.read_result_csv` and `write_result_csv`.
 - Signal names canonicalize through `pyssp_simulate.canonicalize_signal`, including the two-segment `fmu.h` form.
-- LS-REF experiment windows parse through `pyssp_standard.LSRefExperiments`.
+- LS-REF experiment windows parse through `pyssp_standard.LSRefExperiments`
+  (legacy fixtures only).
 - Raw SSP packaging uses `pyssp_standard.package_archive`.
 - Comparison alignment, resampling, metric families, global shift search, and local shift primitive live in `pyssp_vv.measure`.
 - Gate judgment lives in `pyssp_vv.judge`; `pass`, `fail`, and `invalid` stay distinct.
@@ -32,7 +34,7 @@ status: current
   `prepare_runtime_ssp`, result CSV helpers, and the backend registry.
 - `pyssp_vv`: `Trajectory`, `Comparison`, `SignalMetrics`, `Policy`,
   `Judgment`, `Verdict`, and `EvidenceBundle`.
-- `pyssp_workflow`: `inject_scenario`, `read_study_descriptor`, authoring
+- `pyssp_workflow`: `package_scenario`, `read_study_descriptor`, authoring
   functions, and the optional node layer.
 - `pyssp_sysml2`: the `pyssp` CLI and documented generation functions.
 - `sequence_extensions`: `node`, `execute_flow`, `RunOptions`, and flow

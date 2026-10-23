@@ -15,9 +15,10 @@ simulation or comparison.
 
 The runtime flow is driven by:
 
-1. An exported model SSP under `artifacts/models/<fixture>/<build>/`.
+1. A runnable SSP under `artifacts/models/<fixture>/<study>/<build>/` with the
+   study scenario already packaged.
 2. Study artifacts under `artifacts/studies/<fixture>/<study>/` — scenario SSV,
-   SSM mapping, and study/experiment descriptor.
+   SSM mapping, and study descriptor (window and step).
 3. Study and backend selection from `artifacts/simulation_registry.json`.
 4. Generated `setup.json` files plus the shared simulation and comparison entry
    points under `scripts/` and `pyssp_workflow`.
@@ -29,9 +30,10 @@ For SysML-authored fixtures:
 - the `SspModel` composition is the authored source for the exported SSP;
 - a `Study` composition is the authored source for scenario values and the
   experiment window;
-- `extra/org.fmi-standard.fmi-ls-ref/experiments.xml` in the exported SSP, when
-  present, is a generated default for standalone use, not the study contract;
-- the study descriptor drives the runtime window and tolerance.
+- `extra/org.fmi-standard.fmi-ls-ref/experiments.xml` in the build SSP, when
+  present, is generated metadata for standalone use, not the study contract;
+- the study descriptor drives the runtime window and step; tolerance comes from
+  the FMU model descriptions.
 
 For legacy fixtures, `experiments.xml` may still be authored. Keep it focused on
 packaging the runnable SSP variant and do not put compare-signal selection in

@@ -43,7 +43,8 @@ Required for SysML-authored fixtures.
 Required for SysML-authored fixtures with studies.
 - Study composition names (`part def ... :> Study`).
 - Scenario/parameter-set names applied by each study.
-- Experiment windows and tolerances.
+- Experiment windows (`startTime`, `stopTime`, `stepSize`). Tolerance is an FMU
+  property and is not part of the experiment.
 - Artifact locations under artifacts/studies/<model>/<study>/.
 - Confirmation that studies are not exported as SSPs.
 -->
@@ -107,7 +108,8 @@ Optional. Notes specific to running this fixture:
 
 <!--
 Optional. Notes about how this fixture is packaged:
-- Exported model SSP path and build name.
+- Runnable SSP path: `artifacts/models/<model>/<study>/<build>/`.
+- Parameter-application form applied at build.
 - Generated vs checked-in SSD/SSV/SSM.
 - Study scenario and experiment artifacts.
 - FMU source references.

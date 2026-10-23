@@ -33,9 +33,9 @@ boundaries:
 | Capability ownership | Local pipeline implementations | `pyssp_workflow` composition over `pyssp_standard` / `pyssp_simulate` / `pyssp_vv` / `pyssp_sysml2` |
 
 The Build → Simulate → Compare stage contract is unchanged. Migrated fixtures
-add an exported model SSP plus study artifacts, and the runtime copies the
-model SSP before applying a study scenario. The runtime venv is now Python 3.11.
-See `ADR-005`, `ADR-007`, and `ADR-010`.
+add a model SSP plus study artifacts, and the build packages the scenario into
+the SSP (`DD-011`). The runtime venv is now Python 3.11.
+See `ADR-005`, `ADR-007`, and `ADR-013`.
 
 ---
 

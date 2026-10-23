@@ -3,18 +3,17 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from pyssp_workflow.authoring import run_legacy_fixture
 
-from utils.authoring import run_legacy_fixture  # noqa: E402
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 if __name__ == "__main__":
     raise SystemExit(
         run_legacy_fixture(
             Path(__file__).resolve().parent,
+            repo_root=REPO_ROOT,
             flatten=True,
             strip_resources=("edrive_mass", "emachine_model", "stimuli_model"),
         )

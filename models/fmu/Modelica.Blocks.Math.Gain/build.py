@@ -2,18 +2,15 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
+from pyssp_workflow.authoring import build_fmu_from_modelica
 
 MODEL_DIR = Path(__file__).resolve().parent
-sys.path.insert(0, str(MODEL_DIR.parent))
-
-from _build_openmodelica_fmu import build_openmodelica_fmu
 
 
 def main() -> int:
-    build_openmodelica_fmu(
+    build_fmu_from_modelica(
         source_file=MODEL_DIR / "Modelica.Blocks.Math.Gain.mo",
         class_name="Modelica.Blocks.Math.Gain",
         file_name_prefix="Modelica_Blocks_Math_Gain",

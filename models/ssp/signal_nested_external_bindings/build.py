@@ -9,22 +9,19 @@ exercises).
 
 from __future__ import annotations
 
-import sys
 import tempfile
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-
-from pyssp_standard import SSP, SSM, SSV  # noqa: E402
-
-from utils.authoring import (  # noqa: E402
+from pyssp_standard import SSP, SSM, SSV
+from pyssp_workflow.authoring import run_fixture
+from pyssp_workflow.execute import apply_inline_components
+from pyssp_workflow.params import (
     StudyDescriptor,
-    apply_inline_components,
-    run_fixture,
     scenario_mappings,
     scenario_values,
 )
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 MODEL_NAME = "signal_nested_external_bindings"
 NESTED_SYSTEM = "inner"
@@ -76,5 +73,9 @@ def package(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
 
 if __name__ == "__main__":
     raise SystemExit(
-        run_fixture(Path(__file__).resolve().parent, package=package)
+        run_fixture(
+            Path(__file__).resolve().parent,
+            repo_root=REPO_ROOT,
+            package=package,
+        )
     )

@@ -9,20 +9,14 @@ connections; the package hook applies both binding forms.
 
 from __future__ import annotations
 
-import sys
 import tempfile
 from pathlib import Path
 
+from pyssp_standard import SSP, SSM
+from pyssp_workflow.authoring import run_fixture
+from pyssp_workflow.params import StudyDescriptor, scenario_targets
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-
-from pyssp_standard import SSP, SSM  # noqa: E402
-
-from utils.authoring import (  # noqa: E402
-    StudyDescriptor,
-    run_fixture,
-    scenario_targets,
-)
 
 MODEL_NAME = "signal_nested_parameter_bindings"
 NESTED_SYSTEM = "inner"
@@ -83,5 +77,9 @@ def package(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
 
 if __name__ == "__main__":
     raise SystemExit(
-        run_fixture(Path(__file__).resolve().parent, package=package)
+        run_fixture(
+            Path(__file__).resolve().parent,
+            repo_root=REPO_ROOT,
+            package=package,
+        )
     )

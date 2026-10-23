@@ -8,17 +8,14 @@ attached to the exported SSP.
 
 from __future__ import annotations
 
-import sys
 import tempfile
 from pathlib import Path
 
+from pyfmu_csv.packaging import package_fmu_from_csv
+from pyssp_standard import SSP
+from pyssp_workflow.authoring import run_fixture
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-
-from pyfmu_csv.packaging import package_fmu_from_csv  # noqa: E402
-from pyssp_standard import SSP  # noqa: E402
-
-from utils.authoring import run_fixture  # noqa: E402
 
 SOURCE_CSV = Path(__file__).resolve().parent / "input" / "signals.csv"
 
@@ -34,5 +31,9 @@ def _attach_source_fmu(model_build_dir: Path, descriptor) -> None:
 
 if __name__ == "__main__":
     raise SystemExit(
-        run_fixture(Path(__file__).resolve().parent, package=_attach_source_fmu)
+        run_fixture(
+            Path(__file__).resolve().parent,
+            repo_root=REPO_ROOT,
+            package=_attach_source_fmu,
+        )
     )

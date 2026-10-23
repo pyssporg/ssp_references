@@ -9,18 +9,18 @@ and uses the FMU default ``mu = 1.0``; the fast and slow studies package
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
+from pyssp_workflow.authoring import run_fixture
+from pyssp_workflow.execute import StudyBuild, package_nothing
 
-from utils.authoring import StudyBuild, package_nothing, run_fixture  # noqa: E402
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 if __name__ == "__main__":
     raise SystemExit(
         run_fixture(
             Path(__file__).resolve().parent,
+            repo_root=REPO_ROOT,
             studies=(
                 StudyBuild("baseline", package=package_nothing),
                 "fast",

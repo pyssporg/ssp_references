@@ -40,7 +40,10 @@ depends on. Keeping them visible is deliberate.
 
 `pyssp_sysml2`'s nested `3rd_party/pyssp_standard` submodule follows the
 experimental fork too, so the SysML tool is developed against the same
-refactored API the build stage uses.
+refactored API the build stage uses. The checkout under
+`pyssp_workflow/3rd_party/pyssp_standard` is the only editable copy; the nested
+one is a pinned dependency and stays at the commit `pyssp_sysml2` records. Local
+patches belong in the canonical checkout.
 
 Check before updating or resetting:
 

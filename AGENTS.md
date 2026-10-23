@@ -1,60 +1,99 @@
 # AGENTS
 
-## AGENT/DEVELOPMENT RULES
+## Vision first (required)
 
-1. Don’t assume. Don’t hide confusion. Surface tradeoffs.
+Before you read code, edit files, or plan a change, read the project vision:
 
-2. Minimum code that solves the problem. Nothing speculative
+**`product-breakdown/00-intent/intent.md`**
 
-3. Touch only what you must. Clean up only your own mess.
+It states why this repository exists, what it commits to, and what it refuses to
+become. It is the first document to read, not a reference of last resort.
 
-4. Define success criteria. Loop until verified.
+- Read it in full before making any change to code, tests, docs, or artifacts.
+- Judge every proposed change against it. If a change conflicts with the vision,
+  its commitments, goals, or non-goals, stop and surface the conflict; do not
+  implement it silently.
+- If the work shows the long-term direction is wrong, change the vision
+  deliberately first, then the code. Never let the repository drift away from
+  its stated intent.
 
+## Rules
+
+1. **Don't assume. Surface tradeoffs.** If a contract is ambiguous, stop and say
+   so rather than picking a behaviour silently.
+2. **Minimum code that solves the problem.** Nothing speculative.
+3. **Touch only what you must.** Clean up only your own mess.
+4. **Define success criteria and verify.**
 
 ## Repository Focus
 
 This repository is a curated collection of SSP model fixtures plus the scripts
-used to build them, simulate them, and compare engine outputs.
+that build, simulate, and compare them across engines. Its product is evidence:
+reproducible fixtures and cross-engine comparison results, not new simulation
+capability.
 
-## Code Guidelines
+- `models/ssp/<model>/` holds the authored fixture, `build.py`, and `FIXTURE.md`.
+- `models/fmu/` holds prepared FMU fixtures with their references.
+- `artifacts/` holds generated builds, studies, simulations, and comparisons.
+- `scripts/` holds the shared build, simulate, and compare entry points.
+- `3rd_party/` vendors the pyssp capability checkouts; edits belong in their
+  own repositories.
 
-Keep changes direct and explicit.
+## Hard constraints
 
-- Minimize duplication, but do not introduce abstractions that hide model setup
-  details unnecessarily
-- Treat this as experimental software:
-  interfaces do not need to be stable, and clarity is more important than
-  compatibility shims
-- Avoid if possible shims and thin wrappers unless a substantial upside
+- **Fixtures are reproducible.** Every model carries a documented build contract
+  and explicit provenance so that a rebuild produces the same artifact.
+- **The built artifact is the unit under test.** Simulation runs the built SSP
+  as-is; there is no runtime scenario injection.
+- **Comparison results are the quality gate.** Correctness is judged by
+  trajectories against trusted baselines, not by inspection or manual review.
+- **Standard artifacts first at library borders.** SSP, SSD, SSV, SSM, LS-REF,
+  or result CSV cross first; internal objects never do.
+- **Not a production framework, not a conformance suite.** Do not grow it into
+  either; see the vision's non-goals.
 
-## Environment Guidelines
+## Code guidelines
 
-- Use the repo-local `venv` for Python commands, test runs, and workflow scripts
-  when it exists
-- `requirements.txt` includes local editable and platform-specific dependencies;
-  do not casually rewrite dependency setup unless the task requires it
-- Many workflows assume Linux `x86_64` tooling, `OMSimulator`, and the pinned
-  wheels in `requirements.txt`
+- Keep changes direct and explicit. Minimize duplication, but do not hide model
+  setup behind abstractions.
+- Treat this as experimental software: interfaces need not be stable, and
+  clarity outranks compatibility shims.
+- Avoid shims and thin wrappers unless they buy something substantial.
 
-## Documentation Guidelines
+## Conventions
 
-- Keep docs short, focused, and tied to the actual workflow in this repository
-- Treat `README.md` as the landing page for repository structure and usage
-- Keep model-specific notes in each model's `FIXTURE.md`
-- Use the canonical template at `product-breakdown/03-implementation/FIXTURE-template.md`
-  when creating new FIXTURE.md files; reformat existing files to match when
-  editing them
-- Follow the `product-breakdown` skill for `product-breakdown/`:
-  - current state lives in layer leaves, present tense
-  - dated decisions live in `product-breakdown/archive.zip`, read via
+- `README.md` is the landing page for repository structure and usage.
+- Model notes live in each model's `FIXTURE.md`; new files follow
+  `product-breakdown/03-implementation/FIXTURE-template.md`.
+- `product-breakdown/` follows the product-breakdown skill:
+  - current state lives in layer leaves, in the present tense;
+  - dated decisions live in `product-breakdown/archive.zip`, read with
     `python3 .agents/skills/product-breakdown/scripts/pb archive list` and
-    `... archive read <ID>`
-  - add a decision record with
-    `python3 .agents/skills/product-breakdown/scripts/pb archive add <record>`
-  - never add per-layer `decisions/` folders or hand-maintain decision logs
-  - regenerate `decisions/README.md`, `design-choice-log.md`, and
-    `traceability-map.md` with `pb registers`; never edit them by hand
-  - run `pb check --strict` and `pb node-size --strict` after edits
-- Keep cross-cutting workflow or strategy notes in `product-breakdown/`
-- When docs move or commands change, update references so the documented build
-  and simulation flow stays accurate
+    `... read <ID>`, and added with `... add <record>`;
+  - never add per-layer `decisions/` folders or hand-maintain decision logs;
+  - regenerate `product-breakdown/decisions/README.md`,
+    `product-breakdown/design-choice-log.md`, and
+    `product-breakdown/traceability-map.md` with
+    `python3 .agents/skills/product-breakdown/scripts/pb registers`; never edit
+    them by hand;
+  - run `python3 .agents/skills/product-breakdown/scripts/pb check --strict`
+    and `... node-size --strict` after edits.
+- `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` is the only editable
+  pyssp_standard checkout. The nested
+  `pyssp_sysml2/3rd_party/pyssp_standard` copy is a pinned dependency: do not
+  edit it; local changes belong in the canonical checkout.
+- Keep cross-cutting workflow or strategy notes in `product-breakdown/`.
+- When docs move or commands change, update the references so the documented
+  build and simulation flow stays accurate.
+
+## Environment
+
+- Use the repo-local `venv`: `source venv/bin/activate`, or call
+  `./venv/bin/python` directly.
+- Tests: `python3 -m pytest tests/`.
+- Build: `python3 scripts/build_models.py list` / `run <model>` / `run-all`.
+- Simulate, then compare: `python3 scripts/run_simulations.py`, then
+  `python3 scripts/run_comparisons.py`.
+- `requirements.txt` pins local editable submodules and platform wheels. Do not
+  rewrite the dependency setup unless the task requires it.
+- Many workflows assume Linux `x86_64`, `OMSimulator`, and those pinned wheels.

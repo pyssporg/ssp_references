@@ -1,8 +1,10 @@
 {
   "error": null,
   "gate": {
-    "reasons": [],
-    "status": "pass"
+    "reasons": [
+      "y: degenerate-signal (reference range=0 <= 0)"
+    ],
+    "status": "invalid"
   },
   "metrics": "metrics.csv",
   "request": {
@@ -22,9 +24,11 @@
   "summary": {
     "compared_signal_count": 1,
     "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
     "max_shift_abs_error": 0.0,
     "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 0.0,
+    "min_coverage": 1.0,
     "rmse": 0.0,
     "run_a_label": "ssp4sim",
     "run_b_label": "omsimulator",

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build pyfmu_csv_source_sink and its baseline study.
 
-The SysML authors the composition. The CsvSource FMU is generated from
-``input/signals.csv`` and attached to the built artifact, whose ``source``
-component is exported without an FMU.
+The SysML authors the composition, the ``System`` scenario, and the baseline
+experiment. The CsvSource FMU is generated from ``input/signals.csv`` and
+attached to the exported SSP.
 """
 
 from __future__ import annotations
@@ -17,15 +17,15 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from pyfmu_csv.packaging import package_fmu_from_csv
-from pyssp_standard import LSRefExperiments, SSP
+from pyssp_standard import SSP
 
-from utils.authoring import build_model
+from utils.authoring import build_model, build_study
 from utils.model import ModelMetaData
 
 MODEL_NAME = "pyfmu_csv_source_sink"
 MODEL_COMPOSITION = "System"
+STUDY_COMPOSITION = "baseline"
 SOURCE_CSV = MODEL_DIR / "input" / "signals.csv"
-EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
 
 
 def _attach_source_fmu(model_build_dir: Path) -> None:
@@ -36,23 +36,19 @@ def _attach_source_fmu(model_build_dir: Path) -> None:
             ssp.attach_fmu("source", fmu_path)
 
 
-def _package(model_build_dir: Path) -> None:
-    with SSP(model_build_dir, mode="a") as ssp:
-        with ssp.system_structure() as ssd:
-            ssd.extend_system_parameterset({"sink.k": 1.0})
-        with LSRefExperiments(EXPERIMENTS_PATH, mode="r") as source:
-            with ssp.ls_ref_experiments() as experiments:
-                for experiment in source.xml.experiments:
-                    experiments.add_experiment(experiment)
-
-
 def main() -> int:
     model = ModelMetaData(MODEL_DIR)
     model.reset_build_dir()
 
-    LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
-    model_build_dir = model.paths.build_dir / "baseline"
+    study_dir = REPO_ROOT / "artifacts" / "studies" / MODEL_NAME / STUDY_COMPOSITION
+    model_build_dir = model.paths.build_dir / STUDY_COMPOSITION / "model"
 
+    build_study(
+        MODEL_DIR / "architecture",
+        study_dir,
+        STUDY_COMPOSITION,
+        MODEL_NAME,
+    )
     build_model(
         MODEL_DIR / "architecture",
         model_build_dir,
@@ -60,9 +56,8 @@ def main() -> int:
         REPO_ROOT,
     )
     _attach_source_fmu(model_build_dir)
-    _package(model_build_dir)
 
-    print(f"Built {model.name}")
+    print(f"Built {MODEL_NAME}: {model_build_dir}")
     return 0
 
 

@@ -87,9 +87,11 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ]
+          ],
+          "study": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_delay_detector",
@@ -323,7 +325,8 @@
             "ssp4sim"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "scenario",

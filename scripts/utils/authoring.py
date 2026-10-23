@@ -62,6 +62,8 @@ def build_model(
     model_build_dir: Path,
     composition: str,
     repo_root: Path,
+    *,
+    validate_fmus: bool = True,
 ) -> Path:
     """Export the model SSP and unpack it into *model_build_dir*."""
     reset_dir(model_build_dir)
@@ -72,6 +74,7 @@ def build_model(
             archive,
             composition,
             fmu_root=repo_root,
+            validate_fmus=validate_fmus,
         )
         unpack_archive(
             archive,
@@ -205,6 +208,7 @@ def build_fixture(
     study: str,
     build_name: str = "model",
     package: PackageStep | None = None,
+    validate_fmus: bool = True,
 ) -> Path:
     """Build the study, the exported model SSP, and the packaged runnable SSP."""
     architecture_dir = model_dir / "architecture"
@@ -219,6 +223,7 @@ def build_fixture(
         model_build_dir,
         composition,
         repo_root,
+        validate_fmus=validate_fmus,
     )
 
     descriptor = read_study_descriptor(study_dir / "study.json")

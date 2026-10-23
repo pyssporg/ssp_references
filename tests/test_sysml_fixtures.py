@@ -137,6 +137,13 @@ EXPECTED: dict[str, dict] = {
         "subsystem_boundary": {"inner": [("gain.y", "y")]},
         "form": "external+mapping",
     },
+    "pyfmu_csv_source_sink": {
+        "study": "baseline",
+        "components": ["sink", "source"],
+        "connections": [("source", "y", "sink", "u")],
+        "subsystems": [],
+        "form": "external+mapping",
+    },
 }
 
 

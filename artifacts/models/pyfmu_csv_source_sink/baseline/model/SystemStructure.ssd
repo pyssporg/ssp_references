@@ -1,17 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" name="System" version="1.0">
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" name="System" version="1.0">
   <ssd:System name="System">
     <ssd:ParameterBindings>
-      <ssd:ParameterBinding>
-        <ssd:ParameterValues>
-          <ssv:ParameterSet version="1.0" name="System_parameters">
-            <ssv:Parameters>
-              <ssv:Parameter name="sink.k">
-                <ssv:Real value="1.0" />
-              </ssv:Parameter>
-            </ssv:Parameters>
-          </ssv:ParameterSet>
-        </ssd:ParameterValues>
+      <ssd:ParameterBinding source="resources/parameter_sets/ScenarioSet.ssv">
+        <ssd:ParameterMapping>
+          <ssm:ParameterMapping version="1.0">
+            <ssm:MappingEntry source="k" target="sink.k" />
+          </ssm:ParameterMapping>
+        </ssd:ParameterMapping>
       </ssd:ParameterBinding>
     </ssd:ParameterBindings>
     <ssd:Elements>

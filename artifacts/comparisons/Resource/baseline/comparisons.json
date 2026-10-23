@@ -2,8 +2,10 @@
   "comparisons": [
     {
       "gate": {
-        "reasons": [],
-        "status": "pass"
+        "reasons": [
+          "y: degenerate-signal (reference range=0 <= 0)"
+        ],
+        "status": "invalid"
       },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
@@ -20,9 +22,11 @@
       "summary": {
         "compared_signal_count": 1,
         "max_abs_error": 0.0,
+        "max_rel_error": 0.0,
         "max_shift_abs_error": 0.0,
         "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 0.0,
+        "min_coverage": 1.0,
         "rmse": 0.0,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
@@ -33,8 +37,10 @@
   ],
   "error": null,
   "gate": {
-    "reasons": [],
-    "status": "pass"
+    "reasons": [
+      "y: degenerate-signal (reference range=0 <= 0)"
+    ],
+    "status": "invalid"
   },
   "request": {
     "case": "baseline",
@@ -54,7 +60,7 @@
   "summary": {
     "backend_count": 2,
     "comparison_count": 1,
-    "gate_result": "pass",
+    "gate_result": "invalid",
     "max_abs_error": 0.0,
     "max_rel_error": 0.0,
     "max_shift_abs_error": 0.0,

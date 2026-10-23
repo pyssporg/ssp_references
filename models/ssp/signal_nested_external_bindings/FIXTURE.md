@@ -37,8 +37,9 @@ This fixture is registered for simulation with the following backends:
 ## Structure
 
 - `Step` (inline)
-- `Inner(sine) -> Inner.y`
-- Nested boundary wired by the build hook
+- `Inner`: `sine.y -> y`
+- Root output: `step.y -> y`
+- All wiring, including the boundary connections, is authored in SysML.
 
 ## Strategy Role
 

@@ -124,6 +124,8 @@ EXPECTED: dict[str, dict] = {
         "components": ["step"],
         "connections": [],
         "subsystems": ["inner"],
+        "boundary": [("step.y", "y")],
+        "subsystem_boundary": {"inner": [("sine.y", "y")]},
         "form": "none",
     },
     "signal_nested_parameter_bindings": {

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Build signal_nested_external_bindings and its baseline study.
 
-The SysML authors the nested ``Inner`` system; the package hook wires its
-boundary, applies the step scenario inline, and attaches the nested system's
-scenario as an external SSV+SSM binding (the form this fixture exercises).
+The SysML authors the nested ``Inner`` system and its boundary wiring. The
+package hook applies the step scenario inline and attaches the nested
+system's scenario as an external SSV+SSM binding (the form this fixture
+exercises).
 """
 
 from __future__ import annotations
@@ -17,7 +18,6 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from pyssp_standard import SSP, SSM, SSV  # noqa: E402
-from pyssp_standard.ssd import Connection, Connector  # noqa: E402
 
 from utils.authoring import (  # noqa: E402
     StudyDescriptor,
@@ -31,31 +31,6 @@ MODEL_NAME = "signal_nested_external_bindings"
 MODEL_COMPOSITION = "System"
 STUDY_COMPOSITION = "baseline"
 NESTED_SYSTEM = "inner"
-
-
-def _wire_root_output(model_build_dir: Path) -> None:
-    with SSP(model_build_dir, mode="a") as ssp:
-        with ssp.system_structure() as ssd:
-            root = ssd.xml.system
-            root.connectors.append(
-                Connector(name="y", kind="output", type_name="Real")
-            )
-            root.connections.append(
-                Connection(start_element="step", start_connector="y", end_connector="y")
-            )
-
-
-def _wire_inner_bounds(model_build_dir: Path) -> None:
-    with SSP(model_build_dir, mode="a") as ssp:
-        with ssp.system_structure() as ssd:
-            inner = next(
-                element
-                for element in ssd.xml.system.elements
-                if element.name == NESTED_SYSTEM
-            )
-            inner.connections.append(
-                Connection(start_element="sine", start_connector="y", end_connector="y")
-            )
 
 
 def _nested_external_binding(
@@ -98,8 +73,6 @@ def _nested_external_binding(
 
 
 def package(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
-    _wire_root_output(model_build_dir)
-    _wire_inner_bounds(model_build_dir)
     apply_inline_components(model_build_dir, descriptor, only={"step"})
     _nested_external_binding(model_build_dir, descriptor)
 

@@ -30,6 +30,10 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
 
 - **AD-011** — Adopt the product-breakdown skill state and archive split · accepted · 2026-10-22 · `AD-011`
   Layer leaves hold current state; dated decisions live in the cold archive; registers are generated.
+- **AD-012** — Legacy Model Bodies May Carry SysML-Authored Experiments · accepted · 2026-10-23 · `AD-012`
+  A legacy SSD may stay the model body while its study and experiment are authored in SysML.
+- **AD-013** — SspModel Declares Its Checked-In SSP Source · accepted · 2026-10-23 · `AD-013`
+  An SspModel selects a checked-in SSP body with ssp_meta.source; the study records it as model_source.
 - **ADR-001** — Three-Stage Pipeline Architecture · accepted · 2026-10-22 · `ADR-001`
   The pipeline has three file-based stages: Build, Simulate, Compare.
 - **ADR-002** — Fixture Hierarchy · accepted · 2026-10-22 · `ADR-002`

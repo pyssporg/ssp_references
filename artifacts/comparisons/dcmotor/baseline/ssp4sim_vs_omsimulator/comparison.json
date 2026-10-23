@@ -2,8 +2,8 @@
   "error": null,
   "gate": {
     "reasons": [
-      "SuT_emachine_model.M: max_shift_abs_error=1.80949 exceeds 0.0240676",
-      "SuT_edrive_mass.wB: max_shift_abs_error=286.528 exceeds 0.905744"
+      "SuT_emachine_model.M: criterion-exceeded (1.80949 > 0.0240676 (max_abs_error))",
+      "SuT_edrive_mass.wB: criterion-exceeded (286.528 > 0.905744 (max_abs_error))"
     ],
     "status": "fail"
   },
@@ -25,9 +25,11 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 287.13445537300004,
+    "max_rel_error": 3.1736529611558555,
     "max_shift_abs_error": 286.527563409,
     "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 94.91298994632376,
+    "min_coverage": 1.0,
     "rmse": 101.40378070125487,
     "run_a_label": "ssp4sim",
     "run_b_label": "omsimulator",

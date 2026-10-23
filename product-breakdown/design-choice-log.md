@@ -10,6 +10,8 @@ stream.
 | 2026-10-23 | PD-007 | Fixture Suite Preserves Parameter-Application Forms | product | accepted | `PD-007` |
 | 2026-10-23 | DD-011 | Build Packages the Study Scenario into the SSP | implementation | accepted | `DD-011` |
 | 2026-10-23 | ADR-013 | SysML Authors Structure and Experiment; pyssp_standard Applies Parameter Form | architecture | accepted | `ADR-013` |
+| 2026-10-23 | AD-013 | SspModel Declares Its Checked-In SSP Source | architecture, implementation | accepted | `AD-013` |
+| 2026-10-23 | AD-012 | Legacy Model Bodies May Carry SysML-Authored Experiments | architecture, implementation | accepted | `AD-012` |
 | 2026-10-22 | PD-006 | Studies Consume Exported SSPs and Are Never Exported | product | accepted | `PD-006` |
 | 2026-10-22 | PD-005 | The Reference Repository Owns Fixtures and Policy Data, Not Pipeline Implementations | product | accepted | `PD-005` |
 | 2026-10-22 | PD-004 | SysML `SspModel` Definitions and Parameter Sets Are the Authoring Source | product | accepted | `PD-004` |

@@ -11,11 +11,21 @@ binding. A fixture whose parameter-application form differs passes its own
 
 from __future__ import annotations
 
+import shutil
 import tempfile
 from collections.abc import Callable
 from pathlib import Path
 
-from pyssp_standard import SSP, SSM, SSV, ParameterMappingReference, unpack_archive
+from pyssp_standard import (
+    LS_REF_EXTRA_DIR,
+    LSRefExperiment,
+    ParameterMappingReference,
+    SSM,
+    SSP,
+    SSV,
+    package_archive,
+    unpack_archive,
+)
 from pyssp_workflow.authoring import derive_ssp_from_sysml, derive_study_from_sysml
 from pyssp_workflow.execute import package_scenario
 from pyssp_workflow.params import StudyDescriptor, read_study_descriptor
@@ -216,5 +226,97 @@ def build_fixture(
         package_scenario(model_build_dir, descriptor.ssv_path, descriptor.ssm_path)
     else:
         package(model_build_dir, descriptor)
+
+    return model_build_dir
+
+
+def _strip_legacy_resources(
+    resources_dir: Path, strip_resources: tuple[str, ...] | None
+) -> None:
+    """Strip model-exchange metadata from the legacy resource FMUs."""
+    if strip_resources is None:
+        candidates = sorted(
+            path
+            for path in resources_dir.iterdir()
+            if (path / "modelDescription.xml").is_file()
+        )
+    else:
+        candidates = []
+        for name in strip_resources:
+            path = resources_dir / name
+            if not (path / "modelDescription.xml").is_file():
+                raise FileNotFoundError(f"Missing FMU directory: {path}")
+            candidates.append(path)
+    for path in candidates:
+        strip_model_exchange(path)
+
+
+def build_legacy_fixture(
+    *,
+    model_dir: Path,
+    repo_root: Path,
+    model_name: str,
+    study: str,
+    build_name: str = "model",
+    flatten: bool = False,
+    strip_resources: tuple[str, ...] | None = None,
+) -> Path:
+    """Build a legacy SSP body with an experiment authored in SysML.
+
+    The model's ``ssp_meta.source`` selects the checked-in body; the SysML
+    study supplies only the experiment. The generated LS-REF experiment is
+    packaging metadata derived from ``study.json``.
+    """
+    architecture_dir = model_dir / "architecture"
+    study_dir = repo_root / "artifacts" / "studies" / model_name / study
+    model_build_dir = (
+        repo_root / "artifacts" / "models" / model_name / study / build_name
+    )
+
+    build_study(architecture_dir, study_dir, study, model_name)
+    descriptor = read_study_descriptor(study_dir / "study.json")
+
+    if descriptor.model_source is None:
+        raise ValueError(
+            f"Study '{study}' declares no ssp_meta.source; add it to the "
+            "SspModel composition to select the legacy SSP body"
+        )
+    source_dir = (repo_root / descriptor.model_source).resolve()
+    if not (source_dir / "SystemStructure.ssd").is_file():
+        raise FileNotFoundError(
+            f"SSP source '{descriptor.model_source}' has no SystemStructure.ssd"
+        )
+
+    reset_dir(model_build_dir)
+    with tempfile.TemporaryDirectory(prefix=f"{model_name}_") as temp_dir:
+        ssp_copy = Path(temp_dir) / "ssp"
+        shutil.copytree(source_dir, ssp_copy)
+        (ssp_copy / LS_REF_EXTRA_DIR / "experiments.xml").unlink(missing_ok=True)
+        _strip_legacy_resources(ssp_copy / "resources", strip_resources)
+
+        archive = Path(temp_dir) / "model.ssp"
+        package_archive(ssp_copy, archive, recursive=True)
+
+        with SSP(archive, mode="a") as ssp:
+            with ssp.ls_ref_experiments() as experiments:
+                experiments.add_experiment(
+                    LSRefExperiment(
+                        name=descriptor.study,
+                        target=descriptor.target_ssd,
+                        start_time=descriptor.experiment.start_time,
+                        stop_time=descriptor.experiment.stop_time,
+                        step_size=descriptor.experiment.step_size,
+                    )
+                )
+            if flatten:
+                with ssp.system_structure() as ssd:
+                    ssd.flatten()
+
+        unpack_archive(
+            archive,
+            model_build_dir,
+            recursive_fmus=True,
+            overwrite=True,
+        )
 
     return model_build_dir

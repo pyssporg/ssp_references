@@ -35,7 +35,11 @@ For SysML-authored fixtures:
 - the study descriptor drives the runtime window and step; tolerance comes from
   the FMU model descriptions.
 
-For legacy fixtures, `experiments.xml` may still be authored. Keep it focused on
+A fixture that keeps a legacy SSD body may author only the study in SysML. Its
+`SspModel` composition is a boundary marker, the study applies no scenario, and
+the build generates `experiments.xml` from the descriptor.
+
+For fixtures that still author `experiments.xml` directly, keep it focused on
 packaging the runnable SSP variant and do not put compare-signal selection in
 it.
 

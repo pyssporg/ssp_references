@@ -1,89 +1,32 @@
 #!/usr/bin/env python3
+"""Build the legacy dcmotor SSP body with its SysML-authored experiment."""
 
 from __future__ import annotations
 
-import shutil
 import sys
-import tempfile
 from pathlib import Path
-
 
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
-sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import (
-    FMU,
-    LSRefExperiment,
-    LSRefExperiments,
-    SSD,
-    SSP,
-    package_archive,
-    unpack_archive,
-)
-from utils.model import ModelMetaData
+from utils.authoring import build_legacy_fixture  # noqa: E402
 
-
-def _strip_source_fmus(resources_dir: Path) -> None:
-    for resource_name in ("edrive_mass", "emachine_model", "stimuli_model"):
-        resource_dir = resources_dir / resource_name
-        if not resource_dir.is_dir():
-            raise FileNotFoundError(f"Missing FMU directory: {resource_dir}")
-        with FMU(resource_dir, mode="a") as fmu:
-            with fmu.model_description as model_description:
-                model_description.strip_model_exchange()
-
-
-def create_ssp(
-    model: ModelMetaData,
-    temp_dir: Path,
-    exp: LSRefExperiment,
-    *,
-    flattened: bool = False,
-) -> None:
-    if not model.paths.source_ssp_dir.is_dir():
-        raise FileNotFoundError(f"Local SSP directory not found: {model.paths.source_ssp_dir}")
-
-    ssp_copy = temp_dir / "ssp"
-    shutil.copytree(model.paths.source_ssp_dir, ssp_copy)
-    _strip_source_fmus(ssp_copy / "resources")
-
-    ssp_path = temp_dir / "model.ssp"
-    ssp_path.unlink(missing_ok=True)
-    package_archive(ssp_copy, ssp_path, recursive=True)
-
-    with SSP(ssp_path, mode="a") as ssp:
-        for resource in [*exp.stimuli, *exp.references]:
-            ssp.add_resource(MODEL_DIR / resource.source)
-            if resource.mapping is not None:
-                ssp.add_resource(MODEL_DIR / resource.mapping)
-
-        with ssp.ls_ref_experiments() as experiments:
-            experiments.add_experiment(exp)
-
-        if flattened:
-            with ssp.system_structure() as ssd:
-                ssd.flatten()
-
-    unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
-
-
-EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
+MODEL_NAME = "dcmotor"
+STUDY = "baseline"
+STRIP_RESOURCES = ("edrive_mass", "emachine_model", "stimuli_model")
 
 
 def main() -> int:
-    model = ModelMetaData(MODEL_DIR)
-    model.reset_build_dir()
-
-    LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
-
-    with tempfile.TemporaryDirectory(prefix="dcmotor_") as temp_dir:
-        with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
-            for exp in experiments.xml.experiments:
-                create_ssp(model, Path(temp_dir), exp, flattened=True)
-
-    print(f"Built {model.name}")
+    output = build_legacy_fixture(
+        model_dir=MODEL_DIR,
+        repo_root=REPO_ROOT,
+        model_name=MODEL_NAME,
+        study=STUDY,
+        flatten=True,
+        strip_resources=STRIP_RESOURCES,
+    )
+    print(f"Built {MODEL_NAME}: {output}")
     return 0
 
 

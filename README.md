@@ -63,6 +63,9 @@ contract:
 - `part def <Model> :> SspModel` exports one SSP; `part def <Study> :> Study`
   supplies scenario data and one experiment (`startTime`, `stopTime`,
   `stepSize`) and is never exported as an SSP.
+- A fixture may keep a legacy `ssp/` body and author only the study. Its
+  `SspModel` composition is then a boundary marker that selects the body with
+  `ssp_meta.source`, and is not exported.
 - `build.py` derives the model SSP and the study, then packages the scenario
   into a runnable SSP. A fixture that exercises a different parameter form
   applies it with `pyssp_standard` in its build hook.

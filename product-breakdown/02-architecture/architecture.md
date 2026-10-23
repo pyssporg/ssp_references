@@ -58,7 +58,10 @@ minimum a `build.py` script and a `FIXTURE.md` fixture note. Migrated fixtures
 carry `architecture/*.sysml` with a `part def ... :> SspModel` and, where
 studies are defined, `part def ... :> Study` compositions. Some legacy model
 directories still carry an `experiments.xml` and checked-in or generated
-resource files (FMUs, legacy SSV/SSM) until they are migrated.
+resource files (FMUs, legacy SSV/SSM) until they are migrated. A fixture may
+keep its legacy SSD and resources as the model body and author only the study
+in SysML; the `SspModel` composition is then a boundary marker, selects the
+body with `ssp_meta.source`, and is never exported.
 
 **Output:** Two artifact classes:
 
@@ -67,8 +70,9 @@ resource files (FMUs, legacy SSV/SSM) until they are migrated.
   `SystemStructure.ssd`, `resources/`, and the study scenario already packaged
   in the fixture's parameter-application form;
 - study artifacts at `artifacts/studies/<model_name>/<study_name>/` containing
-  the scenario SSV, the SSM mapping, and the study descriptor. Studies are not
-  SSPs; they are build inputs that supply the window and the scenario.
+  the study descriptor and, when the study applies one, the scenario SSV and
+  SSM mapping. A study may author only an experiment. Studies are not SSPs;
+  they are build inputs that supply the window and, optionally, the scenario.
 
 **Entry point:** `scripts/build_models.py` discovers and dispatches to each
 model's own `build.py`. The model-level build script is the source of truth for

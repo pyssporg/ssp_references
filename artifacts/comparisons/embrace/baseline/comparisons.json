@@ -3,10 +3,13 @@
     {
       "gate": {
         "reasons": [
-          "AdaptionUnit.sWsignals.TLiquid: max_shift_abs_error=32.3447 exceeds 3.18834",
-          "ECS_HW.LHexTout: max_shift_abs_error=17.542 exceeds 3.00057"
+          "AdaptionUnit.sWsignals.Aircraft_State: degenerate-signal (reference range=0 <= 0)",
+          "AdaptionUnit.sWsignals.TLiquid: criterion-exceeded (32.3447 > 3.18834 (max_abs_error))",
+          "Atmos.Pamb: degenerate-signal (reference range=0 <= 0)",
+          "ECS_HW.LHexTout: criterion-exceeded (17.542 > 3.00057 (max_abs_error))",
+          "ECS_SW.TCoolingPack: degenerate-signal (reference range=0 <= 0)"
         ],
-        "status": "fail"
+        "status": "invalid"
       },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
@@ -23,9 +26,11 @@
       "summary": {
         "compared_signal_count": 6,
         "max_abs_error": 313.0,
+        "max_rel_error": 1.0,
         "max_shift_abs_error": 32.344702788000006,
         "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 0.1988214418470743,
+        "min_coverage": 1.0,
         "rmse": 3.987560648637256,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
@@ -37,10 +42,13 @@
   "error": null,
   "gate": {
     "reasons": [
-      "AdaptionUnit.sWsignals.TLiquid: max_shift_abs_error=32.3447 exceeds 3.18834",
-      "ECS_HW.LHexTout: max_shift_abs_error=17.542 exceeds 3.00057"
+      "AdaptionUnit.sWsignals.Aircraft_State: degenerate-signal (reference range=0 <= 0)",
+      "AdaptionUnit.sWsignals.TLiquid: criterion-exceeded (32.3447 > 3.18834 (max_abs_error))",
+      "Atmos.Pamb: degenerate-signal (reference range=0 <= 0)",
+      "ECS_HW.LHexTout: criterion-exceeded (17.542 > 3.00057 (max_abs_error))",
+      "ECS_SW.TCoolingPack: degenerate-signal (reference range=0 <= 0)"
     ],
-    "status": "fail"
+    "status": "invalid"
   },
   "request": {
     "case": "baseline",
@@ -60,9 +68,9 @@
   "summary": {
     "backend_count": 2,
     "comparison_count": 1,
-    "gate_result": "fail",
+    "gate_result": "invalid",
     "max_abs_error": 313.0,
-    "max_rel_error": 0.0,
+    "max_rel_error": 1.0,
     "max_shift_abs_error": 32.344702788000006,
     "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 6

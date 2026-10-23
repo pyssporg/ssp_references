@@ -70,9 +70,11 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ]
+          ],
+          "study": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "Resource",
@@ -303,9 +305,11 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ]
+          ],
+          "study": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "pyfmu_csv_source_sink",

@@ -1,0 +1,14 @@
+{
+  "composition": "DcMotorModel",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "dcmotor",
+  "model_source": "models/ssp/dcmotor/ssp",
+  "study": "baseline",
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

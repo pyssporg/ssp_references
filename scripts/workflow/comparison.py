@@ -1,18 +1,27 @@
+"""Compose engine-to-engine comparisons.
+
+Measurement and the reviewed metric table come from ``pyssp_vv`` and
+``pyssp_workflow.execute``. This module owns the artifact layout, the
+repository gate, and the comparison manifests.
+"""
+
 from __future__ import annotations
 
 from itertools import combinations
 from dataclasses import dataclass
 from pathlib import Path
 
-from utils.comparison import (
-    compare_result_sets,
-    comparison_metric_rows,
-    comparison_summary,
-    write_metrics_csv,
-)
+from pyssp_workflow import execute
+from pyssp_vv.evidence import read_metric_csv
+
 from utils.filesystem import reset_dir
 
-from .gate import GateOutcome, combine_gate_outcomes, evaluate_gate
+from .gate import (
+    SHIFT_TOLERANCE_SAMPLES,
+    GateOutcome,
+    combine_gate_outcomes,
+    evaluate_gate,
+)
 from .io import read_json, relative_path, resolve_path, write_json
 from .model_policy import signal_invariant_rows
 from .simulate import SimulationRun
@@ -97,12 +106,12 @@ class ComparisonRequest:
 
 @dataclass(frozen=True)
 class ComparisonRun:
+    """One measured pair: the upstream record plus the local gate payload."""
+
     request: ComparisonRequest
-    summary: dict[str, float | int | str]
-    metrics_path: Path
-    status: str = "completed"
-    error: str | None = None
+    record: execute.ComparisonRecord
     gate: GateOutcome = GateOutcome(status="not_evaluated")
+    max_signal_invariant_abs_error: float = 0.0
 
     @property
     def manifest_path(self) -> Path:
@@ -112,16 +121,19 @@ class ComparisonRun:
     def run_dir(self) -> Path:
         return self.request.run_dir
 
+    @property
+    def metrics_path(self) -> Path:
+        return self.record.metrics_csv
+
+    @property
+    def summary(self) -> dict[str, float | int | str]:
+        return self.record.summary.to_dict()
+
     def to_dict(self) -> dict[str, object]:
-        run_dir = self.run_dir
-        return {
-            "request": self.request.to_dict(),
-            "summary": self.summary,
-            "metrics": relative_path(run_dir, self.metrics_path),
-            "status": self.status,
-            "error": self.error,
-            "gate": self.gate.to_dict(),
-        }
+        payload = self.record.to_dict(self.manifest_path.parent)
+        payload["request"] = self.request.to_dict()
+        payload["gate"] = self.gate.to_dict()
+        return payload
 
     def write_manifest(self) -> Path:
         write_json(self.manifest_path, self.to_dict())
@@ -130,13 +142,9 @@ class ComparisonRun:
     @classmethod
     def from_manifest(cls, path: Path) -> "ComparisonRun":
         data = read_json(path)
-        request = ComparisonRequest.from_manifest(path)
         return cls(
-            request=request,
-            summary=data["summary"],
-            metrics_path=resolve_path(path.parent, data["metrics"]),
-            status=data.get("status", "completed"),
-            error=data.get("error"),
+            request=ComparisonRequest.from_manifest(path),
+            record=execute.ComparisonRecord.from_dict(data, base_dir=path.parent),
             gate=GateOutcome.from_dict(data.get("gate")),
         )
 
@@ -235,6 +243,7 @@ class ComparisonBatchRun:
             "summary": self.summary,
             "comparisons": [
                 {
+                    **comparison.record.to_dict(run_dir),
                     "runs": [
                         {
                             "backend": run.request.backend,
@@ -243,8 +252,6 @@ class ComparisonBatchRun:
                         for run in comparison.request.runs
                     ],
                     "manifest": relative_path(run_dir, comparison.manifest_path),
-                    "metrics": relative_path(run_dir, comparison.metrics_path),
-                    "summary": comparison.summary,
                     "gate": comparison.gate.to_dict(),
                 }
                 for comparison in self.comparisons
@@ -280,94 +287,82 @@ def _summarize_batch(
     runs: tuple[SimulationRun, ...],
     comparisons: tuple[ComparisonRun, ...],
 ) -> dict[str, float | int | str]:
-    max_abs_error = max(
-        (float(comparison.summary.get("max_abs_error", 0.0)) for comparison in comparisons),
-        default=0.0,
-    )
-    max_shift_abs_error = max(
-        (float(comparison.summary.get("max_shift_abs_error", 0.0)) for comparison in comparisons),
-        default=0.0,
-    )
-    max_rel_error = max(
-        (float(comparison.summary.get("max_rel_error", 0.0)) for comparison in comparisons),
-        default=0.0,
-    )
-    min_compared_signal_count = min(
-        (int(comparison.summary.get("compared_signal_count", 0)) for comparison in comparisons),
-        default=0,
-    )
-    max_signal_invariant_abs_error = max(
-        (
-            float(comparison.summary.get("max_signal_invariant_abs_error", 0.0))
-            for comparison in comparisons
-        ),
-        default=0.0,
-    )
-    gate_result = combine_gate_outcomes(
-        comparison.gate for comparison in comparisons
-    ).status
     return {
         "backend_count": len(runs),
         "comparison_count": len(comparisons),
-        "max_abs_error": max_abs_error,
-        "max_shift_abs_error": max_shift_abs_error,
-        "max_rel_error": max_rel_error,
-        "min_compared_signal_count": min_compared_signal_count,
-        "max_signal_invariant_abs_error": max_signal_invariant_abs_error,
-        "gate_result": gate_result,
+        "max_signal_invariant_abs_error": max(
+            (
+                comparison.max_signal_invariant_abs_error
+                for comparison in comparisons
+            ),
+            default=0.0,
+        ),
+        "gate_result": combine_gate_outcomes(
+            comparison.gate for comparison in comparisons
+        ).status,
     }
 
 
 def compare_runs(request: ComparisonRequest) -> ComparisonRun:
     request.validate()
     reset_dir(request.run_dir)
-    model_name = request.run_a.request.setup.model_name
-    window = request.run_a.request.setup.window
-    root_system_name = request.run_a.request.setup.root_system_name
-    comparison = compare_result_sets(
-        request.run_a.to_result_set(),
-        request.run_b.to_result_set(),
-        window=window,
-        selected_signals=request.run_a.request.setup.compare_signals,
-        root_system_name=root_system_name,
+    setup = request.run_a.request.setup
+    window = setup.window
+    record = execute.compare_result_csvs(
+        execute.ComparisonRequest(
+            reference=execute.ResultRef(
+                result_csv=request.run_a.result_path,
+                label=request.run_a.request.backend,
+            ),
+            candidate=execute.ResultRef(
+                result_csv=request.run_b.result_path,
+                label=request.run_b.request.backend,
+            ),
+            out_dir=request.run_dir,
+            signals=setup.compare_signals,
+            start_time=window.start_time,
+            stop_time=window.stop_time,
+            step_size=window.interval,
+            root_system=setup.root_system_name,
+            reference_prefix="fmu.",
+            result_prefix="fmu.",
+            shift_samples=SHIFT_TOLERANCE_SAMPLES,
+            edge_samples=SHIFT_TOLERANCE_SAMPLES,
+            max_gap_samples=None,
+        )
     )
-    summary = comparison_summary(comparison, window=window)
-    metrics = comparison_metric_rows(comparison)
     invariant_rows = [
         *signal_invariant_rows(
-            request.run_a.to_result_set(),
-            model_name=model_name,
+            execute.ResultRef(
+                result_csv=request.run_a.result_path,
+                label=request.run_a.request.backend,
+            ),
+            model_name=setup.model_name,
             window=window,
-            root_system_name=root_system_name,
+            root_system_name=setup.root_system_name,
         ),
         *signal_invariant_rows(
-            request.run_b.to_result_set(),
-            model_name=model_name,
+            execute.ResultRef(
+                result_csv=request.run_b.result_path,
+                label=request.run_b.request.backend,
+            ),
+            model_name=setup.model_name,
             window=window,
-            root_system_name=root_system_name,
+            root_system_name=setup.root_system_name,
         ),
     ]
-    max_invariant_abs_error = max(
-        (float(row["max_abs_error"]) for row in invariant_rows),
-        default=0.0,
-    )
-    summary.update(
-        {
-            "signal_invariant_count": len(invariant_rows),
-            "max_signal_invariant_abs_error": max_invariant_abs_error,
-        }
-    )
-    gate = evaluate_gate(
-        metrics,
-        gate=request.run_a.request.setup.gate,
-        invariant_rows=invariant_rows,
-    )
-    write_metrics_csv(request.metrics_path, metrics)
     run = ComparisonRun(
         request=request,
-        summary=summary,
-        metrics_path=request.metrics_path,
-        gate=gate,
+        record=record,
+        gate=evaluate_gate(
+            read_metric_csv(record.metrics_csv),
+            gate=setup.gate,
+            invariant_rows=invariant_rows,
+        ),
+        max_signal_invariant_abs_error=max(
+            (float(row["max_abs_error"]) for row in invariant_rows),
+            default=0.0,
+        ),
     )
     run.write_manifest()
     return run

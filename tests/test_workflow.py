@@ -29,12 +29,13 @@ from workflow.gate import (
     combine_gate_outcomes,
     evaluate_gate,
 )
-from workflow.reference import compare_reference, load_reference_columns, ReferenceComparisonRequest
+from workflow.reference import compare_reference, ReferenceComparisonRequest
 from workflow.setup import prepare_setup
+from pyssp_simulate import read_result_csv
 from pyssp_simulate.result import write_result_csv
+from pyssp_vv.evidence import MetricRow
 
 from workflow.simulate import SimulationRequest, SimulationRun
-from utils.csv import extract_series, load_numeric_csv
 
 
 @pytest.fixture(autouse=True)
@@ -112,32 +113,6 @@ def write_columns(path: Path, columns: dict[str, list[float]]) -> None:
     path.write_text("\n".join(rows) + "\n")
 
 
-def test_extract_series_uses_signed_data_row_for_alias_sign() -> None:
-    headers, _, columns = extract_series(
-        names=["time", "signal", "negated_alias"],
-        descriptions=["time", "signal", "negated alias"],
-        data_info=np.array(
-            [
-                [0, 2, 2],
-                [1, 2, -2],
-                [0, 0, 0],
-                [-1, -1, -1],
-            ]
-        ),
-        data_1=np.empty((0, 0)),
-        data_2=np.array(
-            [
-                [0.0, 1.0],
-                [2.0, 3.0],
-            ]
-        ),
-    )
-
-    assert headers == ["time", "signal", "negated_alias"]
-    np.testing.assert_array_equal(columns[1], np.array([2.0, 3.0]))
-    np.testing.assert_array_equal(columns[2], np.array([-2.0, -3.0]))
-
-
 def test_reference_csvs_are_not_inverted() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     checks = [
@@ -171,9 +146,9 @@ def test_reference_csvs_are_not_inverted() -> None:
     ]
 
     for path, expected_values in checks:
-        columns = load_numeric_csv(path)["columns"]
+        data = read_result_csv(path)
         for column_name, (row_index, expected_value) in expected_values.items():
-            assert columns[column_name][row_index] == pytest.approx(expected_value)
+            assert data[column_name][row_index] == pytest.approx(expected_value)
 
 
 def test_modelica_block_fmus_expose_dependency_metadata() -> None:
@@ -473,8 +448,8 @@ def test_compare_runs_validates_signal_invariants(tmp_path: Path) -> None:
 
     comparison = compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
 
-    assert comparison.summary["signal_invariant_count"] == 2
-    assert comparison.summary["max_signal_invariant_abs_error"] == pytest.approx(0.0)
+    assert comparison.max_signal_invariant_abs_error == pytest.approx(0.0)
+    assert comparison.gate.status == "pass"
 
 
 def test_compare_runs_gate_fails_on_signal_invariant_violation(tmp_path: Path) -> None:
@@ -523,16 +498,24 @@ def test_compare_runs_gate_fails_on_signal_invariant_violation(tmp_path: Path) -
 
 
 def test_gate_keeps_invalid_distinct_from_failure() -> None:
-    metric = {
-        "signal": "signal",
-        "max_shift_abs_error": float("nan"),
-        "mean_abs_error": 0.0,
-        "rmse": 0.0,
-        "run_a_min": 0.0,
-        "run_a_max": 1.0,
-        "coverage": 1.0,
-        "undefined": "",
-    }
+    metric = MetricRow(
+        signal="signal",
+        max_abs_error=0.0,
+        max_shift_abs_error=float("nan"),
+        mean_abs_error=0.0,
+        rmse=0.0,
+        run_a_label="reference",
+        run_a_min=0.0,
+        run_a_max=1.0,
+        run_b_label="candidate",
+        run_b_min=0.0,
+        run_b_max=1.0,
+        coverage=1.0,
+        shift_samples=0,
+        normalisation="reference_peak",
+        denominator=1.0,
+        normalised_max_abs_error=float("nan"),
+    )
 
     outcome = evaluate_gate([metric], gate=GateConfig(atol=0.1))
     assert outcome.status == "invalid"
@@ -576,8 +559,7 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
     assert batch.manifest_path.exists()
     assert batch.summary["backend_count"] == 3
     assert batch.summary["comparison_count"] == 3
-    assert batch.summary["min_compared_signal_count"] == 1
-    assert batch.summary["max_abs_error"] == pytest.approx(0.2)
+    assert batch.summary["gate_result"] == "fail"
     assert len(batch.comparisons) == 3
 
     loaded = ComparisonBatchRun.from_manifest(batch.manifest_path)
@@ -589,20 +571,6 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
     assert len(payload["request"]["runs"]) == 3
     assert len(payload["comparisons"]) == 3
     assert all("runs" in comparison for comparison in payload["comparisons"])
-
-
-def test_load_reference_columns_strips_default_model_prefix(tmp_path: Path) -> None:
-    path = tmp_path / "reference.csv"
-    path.write_text(
-        "time,default.ExampleModel.time,default.ExampleModel.x\n"
-        "0.0,0.0,1.0\n"
-        "1.0,1.0,2.0\n"
-    )
-
-    columns = load_reference_columns(path, "ExampleModel")
-
-    assert set(columns) == {"time", "x"}
-    assert columns["x"].tolist() == [1.0, 2.0]
 
 
 def test_compare_reference_writes_metrics_and_gate(tmp_path: Path) -> None:

@@ -10,6 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Iterable, Mapping
 
+from pyssp_vv.evidence import MetricRow
 from pyssp_vv.judge import judge
 from pyssp_vv.policy import (
     ComparisonPolicy,
@@ -19,7 +20,9 @@ from pyssp_vv.policy import (
     Sufficiency,
 )
 
-from utils.comparison import SHIFT_TOLERANCE_SAMPLES
+#: Samples excluded at each series edge (initialization and shutdown
+#: transients) and the largest lag searched by the shift-tolerant error.
+SHIFT_TOLERANCE_SAMPLES = 2
 
 
 @dataclass(frozen=True)
@@ -118,24 +121,19 @@ class _Metric:
     undefined: tuple[str, ...] = ()
 
 
-def _comparison_metric(row: Mapping[str, object]) -> _Metric:
-    undefined = tuple(
-        part for part in str(row.get("undefined", "")).split(";") if part
-    )
+def _comparison_metric(row: MetricRow) -> _Metric:
     return _Metric(
-        signal=str(row["signal"]),
-        coverage=float(row.get("coverage", 1.0)),
+        signal=row.signal,
+        coverage=row.coverage,
         # The gate uses the lag-tolerant error as its acceptance value.
-        max_abs_error=float(row["max_shift_abs_error"]),
-        mean_abs_error=float(row["mean_abs_error"]),
-        rmse=float(row["rmse"]),
-        normalised_max_abs_error=float(
-            row.get("normalised_max_abs_error", float("nan"))
-        ),
-        reference_min=float(row["run_a_min"]),
-        reference_max=float(row["run_a_max"]),
-        shift_samples=int(row.get("shift_samples", 0)),
-        undefined=undefined,
+        max_abs_error=row.max_shift_abs_error,
+        mean_abs_error=row.mean_abs_error,
+        rmse=row.rmse,
+        normalised_max_abs_error=row.normalised_max_abs_error,
+        reference_min=row.run_a_min,
+        reference_max=row.run_a_max,
+        shift_samples=row.shift_samples,
+        undefined=row.undefined,
     )
 
 
@@ -170,7 +168,7 @@ def _reason_text(item, reason) -> str:
 
 
 def evaluate_gate(
-    metrics: Iterable[Mapping[str, object]],
+    metrics: Iterable[MetricRow],
     *,
     gate: GateConfig,
     invariant_rows: Iterable[Mapping[str, object]] = (),

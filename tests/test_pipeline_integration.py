@@ -93,5 +93,4 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
     # Comparison summary structure
     assert batch.summary["backend_count"] == 3
     assert batch.summary["comparison_count"] == 3
-    assert batch.summary["min_compared_signal_count"] == 2
-    assert batch.summary["max_abs_error"] is not None
+    assert batch.summary["gate_result"] in {"pass", "fail"}

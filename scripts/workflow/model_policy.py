@@ -14,8 +14,9 @@ from itertools import product
 import numpy as np
 from pyssp_simulate import read_result_csv
 from pyssp_vv.measure import Grid, resample
+from pyssp_workflow.execute import ResultRef
 
-from utils.domain import ResultSet, SimulationWindow
+from utils.domain import SimulationWindow
 
 
 @dataclass(frozen=True)
@@ -95,7 +96,7 @@ def _select_series(
 
 
 def signal_invariant_rows(
-    run: ResultSet,
+    run: ResultRef,
     *,
     model_name: str,
     window: SimulationWindow,
@@ -106,7 +107,7 @@ def signal_invariant_rows(
     if not invariants:
         return []
 
-    data = read_result_csv(run.path, root_system=root_system_name)
+    data = read_result_csv(run.result_csv, root_system=root_system_name)
     columns = {name: data[name] for name in data.dtype.names or ()}
     run_time = columns.get("time")
     if run_time is None:

@@ -4,32 +4,17 @@ from __future__ import annotations
 
 import argparse
 import os
-from dataclasses import dataclass
 from pathlib import Path
 
 os.environ.setdefault("MPLCONFIGDIR", str(Path("/tmp") / "matplotlib-cache"))
 
-import matplotlib
+from pyssp_simulate import read_result_csv
+from pyssp_vv.measure import Trajectory, build_figure_spec, render_figure
 
-matplotlib.use("Agg")
-
-import matplotlib.pyplot as plt
-
+from utils.config import REPO_ROOT
 from workflow.registry import RegistryReferenceCsv, default_registry_path, load_registry
 from workflow.setup import SimulationSetup
 from workflow.simulate import SimulationRun
-from utils.config import REPO_ROOT
-from utils.csv import load_numeric_csv
-
-LINE_STYLES = ("-", "--", ":", "-.")
-START_MARKERS = ("o", "s", "^", "D", "v", "P", "X")
-
-
-@dataclass(frozen=True)
-class EngineSeries:
-    engine: str
-    time: list[float]
-    values_by_variable: dict[str, list[float]]
 
 
 def parse_args() -> argparse.Namespace:
@@ -83,45 +68,32 @@ def _sanitize_filename(value: str) -> str:
     return result or "variable"
 
 
-def _series_plot_style(index: int) -> tuple[str, str]:
-    return (
-        LINE_STYLES[index % len(LINE_STYLES)],
-        START_MARKERS[index % len(START_MARKERS)],
+def _trajectory(values, *, label: str, source: Path) -> Trajectory:
+    names = values.dtype.names or ()
+    if "time" not in names:
+        raise KeyError(f"Result file does not contain a time column: {source}")
+    return Trajectory(
+        time=values["time"],
+        channels={name: values[name] for name in names if name != "time"},
+        label=label,
     )
 
 
-def _load_engine_series(run: SimulationRun, setup: SimulationSetup) -> EngineSeries:
+def _load_engine_series(run: SimulationRun, setup: SimulationSetup) -> Trajectory:
     result_path = run.result_path
     if not result_path.is_file():
         raise FileNotFoundError(
             f"Missing result file for {setup.model_name}/{setup.case_name}/{run.request.backend}"
         )
 
-    payload = load_numeric_csv(
-        result_path,
-        engine=run.request.backend,
-        root_system_name=setup.root_system_name,
-        prefix="fmu.",
-    )["columns"]
-
-    time_series = payload.get("time")
-    if time_series is None:
-        raise KeyError(f"Result file does not contain a time column: {result_path}")
-
-    values_by_variable: dict[str, list[float]] = {}
-    for signal_name, series in payload.items():
-        if signal_name == "time":
-            continue
-        values_by_variable[signal_name] = series.tolist()
-
-    return EngineSeries(
-        engine=run.request.backend,
-        time=time_series.tolist(),
-        values_by_variable=values_by_variable,
+    return _trajectory(
+        read_result_csv(result_path, setup.root_system_name, prefix="fmu."),
+        label=run.request.backend,
+        source=result_path,
     )
 
 
-def _load_reference_series(reference: RegistryReferenceCsv, setup: SimulationSetup) -> EngineSeries:
+def _load_reference_series(reference: RegistryReferenceCsv, setup: SimulationSetup) -> Trajectory:
     result_path = reference.path
     if not result_path.is_absolute():
         result_path = (REPO_ROOT / result_path).resolve()
@@ -130,63 +102,11 @@ def _load_reference_series(reference: RegistryReferenceCsv, setup: SimulationSet
             f"Missing reference CSV for {setup.model_name}/{setup.case_name}/{reference.label}: {result_path}"
         )
 
-    payload = load_numeric_csv(
-        result_path,
-        prefix=f"default.{setup.model_name}.",
-    )["columns"]
-
-    time_series = payload.get("time")
-    if time_series is None:
-        raise KeyError(f"Reference CSV does not contain a time column: {result_path}")
-
-    values_by_variable: dict[str, list[float]] = {}
-    for signal_name, series in payload.items():
-        if signal_name == "time":
-            continue
-        values_by_variable[signal_name] = series.tolist()
-
-    return EngineSeries(
-        engine=reference.label,
-        time=time_series.tolist(),
-        values_by_variable=values_by_variable,
+    return _trajectory(
+        read_result_csv(result_path, prefix=f"default.{setup.model_name}."),
+        label=reference.label,
+        source=result_path,
     )
-
-
-def _plot_variable(
-    *,
-    output_path: Path,
-    model_name: str,
-    case_name: str,
-    variable: str,
-    series_by_engine: dict[str, EngineSeries],
-    dpi: int,
-) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    fig, ax = plt.subplots(figsize=(14, 6))
-    for index, (engine, series) in enumerate(series_by_engine.items()):
-        line_style, start_marker = _series_plot_style(index)
-        ax.plot(
-            series.time,
-            series.values_by_variable[variable],
-            label=engine,
-            linewidth=1.4,
-            linestyle=line_style,
-            marker=start_marker,
-            markevery=[0],
-            markersize=7,
-            markerfacecolor="white",
-            markeredgewidth=1.3,
-        )
-
-    ax.set_title(f"{model_name}/{case_name} - {variable}")
-    ax.set_xlabel("time")
-    ax.set_ylabel(variable)
-    ax.grid(True, alpha=0.25)
-    ax.legend(loc="best")
-    fig.tight_layout()
-    fig.savefig(output_path, dpi=dpi)
-    plt.close(fig)
 
 
 def main() -> int:
@@ -216,42 +136,38 @@ def main() -> int:
             skipped += 1
             continue
 
-        engine_series: dict[str, EngineSeries] = {}
+        trajectories: dict[str, Trajectory] = {}
         for run in runs:
-            engine_series[run.request.backend] = _load_engine_series(run, setup)
+            trajectories[run.request.backend] = _load_engine_series(run, setup)
         for reference in spec.reference_csvs:
-            engine_series[reference.label] = _load_reference_series(reference, setup)
+            trajectories[reference.label] = _load_reference_series(reference, setup)
 
-        variables = [
-            variable
-            for variable in dict.fromkeys(setup.compare_signals)
-            if any(variable in series.values_by_variable for series in engine_series.values())
+        signals = [
+            signal
+            for signal in dict.fromkeys(setup.compare_signals)
+            if any(signal in trajectory.channels for trajectory in trajectories.values())
         ]
-        if not variables:
+        if not signals:
             skipped += 1
             continue
 
-        for variable in variables:
-            available = {
-                engine: series
-                for engine, series in engine_series.items()
-                if variable in series.values_by_variable
-            }
-            if not available:
-                continue
-
+        for signal in signals:
+            available = [
+                trajectory for trajectory in trajectories.values() if signal in trajectory.channels
+            ]
             output_path = (
                 args.output_dir
                 / _sanitize_filename(setup.model_name)
                 / _sanitize_filename(setup.case_name)
-                / f"{_sanitize_filename(variable)}.png"
+                / f"{_sanitize_filename(signal)}.png"
             )
-            _plot_variable(
-                output_path=output_path,
-                model_name=setup.model_name,
-                case_name=setup.case_name,
-                variable=variable,
-                series_by_engine=available,
+            render_figure(
+                build_figure_spec(
+                    available,
+                    signal=signal,
+                    title=f"{setup.model_name}/{setup.case_name} - {signal}",
+                ),
+                output_path,
                 dpi=args.dpi,
             )
             print(output_path)

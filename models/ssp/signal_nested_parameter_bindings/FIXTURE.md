@@ -36,8 +36,10 @@ This fixture is registered for simulation with the following backends:
 ## Structure
 
 - `Step -> Add.u1`
-- `Inner(sine -> gain) -> Add.u2`
-- Nested boundary wired by the build hook
+- `Inner`: `sine.y -> gain.u`, `gain.y -> y`
+- `Inner.y -> Add.u2`
+- Root output: `Add.y -> y`
+- All wiring, including the boundary connections, is authored in SysML.
 
 ## Strategy Role
 

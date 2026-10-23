@@ -36,8 +36,11 @@ This fixture is registered for simulation with the following backends:
 
 ## Structure
 
-- `Step -> Inner(gain) -> Add.u1`
-- Inner boundary wired by the build hook
+- `Step -> Inner.u`
+- `Inner`: `u -> gain.u`, `gain.y -> v`
+- `Inner.v -> Add.u1`
+- Root output: `Add.y -> y`
+- All wiring, including the boundary connections, is authored in SysML.
 
 ## Strategy Role
 

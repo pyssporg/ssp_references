@@ -96,9 +96,12 @@ package SignalNestedPassThrough {
     in port u : RealSignal;
     out port v : RealSignal;
     part gain : Gain;
+    connect u to gain.u;
+    connect gain.y to v;
   }
 
   part def System :> SspModel {
+    out port y : RealSignal;
     attribute pyssp_default_start_time : Real = 0.0;
     attribute pyssp_default_stop_time : Real = 1.0;
     part step : Step;
@@ -106,6 +109,7 @@ package SignalNestedPassThrough {
     part inner : Inner;
     connect step.y to inner.u;
     connect inner.v to add.u1;
+    connect add.y to y;
   }
 
   part def baseline :> Study {

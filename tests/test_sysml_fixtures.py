@@ -115,6 +115,8 @@ EXPECTED: dict[str, dict] = {
         "components": ["add", "step"],
         "connections": [("inner", "v", "add", "u1"), ("step", "y", "inner", "u")],
         "subsystems": ["inner"],
+        "boundary": [("add.y", "y")],
+        "subsystem_boundary": {"inner": [("u", "gain.u"), ("gain.y", "v")]},
         "form": "none",
     },
     "signal_nested_external_bindings": {
@@ -129,6 +131,8 @@ EXPECTED: dict[str, dict] = {
         "components": ["add", "step"],
         "connections": [("inner", "y", "add", "u2"), ("step", "y", "add", "u1")],
         "subsystems": ["inner"],
+        "boundary": [("add.y", "y")],
+        "subsystem_boundary": {"inner": [("gain.y", "y")]},
         "form": "external+mapping",
     },
 }
@@ -149,7 +153,7 @@ def _subsystems(system) -> list[str]:
 
 
 def _wiring(system) -> list[tuple[str, str, str, str]]:
-    """Connections between two elements (excludes hook-added root outputs)."""
+    """Connections between two elements; boundary ends are excluded."""
     result = []
     for connection in system.findall(f"{SSD}Connections/{SSD}Connection"):
         start_element = connection.get("startElement")
@@ -161,6 +165,27 @@ def _wiring(system) -> list[tuple[str, str, str, str]]:
                     connection.get("startConnector"),
                     end_element,
                     connection.get("endConnector"),
+                )
+            )
+    return sorted(result)
+
+
+def _endpoint(element: str | None, connector: str) -> str:
+    """`part.connector`, or just `connector` for the system boundary."""
+    return connector if element is None else f"{element}.{connector}"
+
+
+def _boundary_wiring(system) -> list[tuple[str, str]]:
+    """Connections with at least one end on the system boundary."""
+    result = []
+    for connection in system.findall(f"{SSD}Connections/{SSD}Connection"):
+        start_element = connection.get("startElement")
+        end_element = connection.get("endElement")
+        if start_element is None or end_element is None:
+            result.append(
+                (
+                    _endpoint(start_element, connection.get("startConnector")),
+                    _endpoint(end_element, connection.get("endConnector")),
                 )
             )
     return sorted(result)
@@ -190,6 +215,11 @@ def test_sysml_wiring(tmp_path: Path, model: str) -> None:
     assert _components(system) == expected["components"]
     assert _subsystems(system) == expected["subsystems"]
     assert _wiring(system) == sorted(expected["connections"])
+    assert _boundary_wiring(system) == sorted(expected.get("boundary", []))
+    for subsystem_name, connections in expected.get("subsystem_boundary", {}).items():
+        subsystem = system.find(f"{SSD}Elements/{SSD}System[@name='{subsystem_name}']")
+        assert subsystem is not None
+        assert _boundary_wiring(subsystem) == sorted(connections)
 
 
 @pytest.mark.parametrize("model", sorted(EXPECTED))

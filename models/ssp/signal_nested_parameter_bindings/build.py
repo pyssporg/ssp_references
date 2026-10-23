@@ -3,8 +3,8 @@
 
 Form under test: nested components carry inline parameter sets while a root
 external SSV+SSM maps into ``add.k1``/``add.k2`` and overrides the nested
-``inner.sine.amplitude``. The package hook wires the nested and root boundaries
-(SysML cannot express boundary connections) and applies both binding forms.
+``inner.sine.amplitude``. The SysML composes the nested boundary and its
+connections; the package hook applies both binding forms.
 """
 
 from __future__ import annotations
@@ -18,7 +18,6 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
 from pyssp_standard import SSP, SSM  # noqa: E402
-from pyssp_standard.ssd import Connection, Connector  # noqa: E402
 
 from utils.authoring import (  # noqa: E402
     StudyDescriptor,
@@ -38,34 +37,6 @@ ROOT_MAPPINGS = (
     ("add_k2", "add.k2"),
     ("inner_sine_amplitude", "inner.sine.amplitude"),
 )
-
-
-def _wire_boundaries(model_build_dir: Path) -> None:
-    with SSP(model_build_dir, mode="a") as ssp:
-        with ssp.system_structure() as ssd:
-            root = ssd.xml.system
-            root.connectors.append(Connector(name="y", kind="output", type_name="Real"))
-            root.connections.append(
-                Connection(start_element="add", start_connector="y", end_connector="y")
-            )
-            inner = next(
-                element
-                for element in root.elements
-                if element.name == NESTED_SYSTEM
-            )
-            inner.connections.extend(
-                [
-                    Connection(
-                        start_element="sine",
-                        start_connector="y",
-                        end_element="gain",
-                        end_connector="u",
-                    ),
-                    Connection(
-                        start_element="gain", start_connector="y", end_connector="y"
-                    ),
-                ]
-            )
 
 
 def _inline_parameters(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
@@ -109,7 +80,6 @@ def _root_external_binding(
 
 
 def package(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
-    _wire_boundaries(model_build_dir)
     _inline_parameters(model_build_dir, descriptor)
     _root_external_binding(model_build_dir, descriptor)
 

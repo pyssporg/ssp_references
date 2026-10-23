@@ -56,32 +56,6 @@ def build_model_task(model: str) -> dict[str, object]:
 
 
 @node(retries=1, retry_delay_seconds=0.5, timeout=1800.0)
-def build_model_only_task(model: str) -> dict[str, object]:
-    return _run(
-        [
-            sys.executable,
-            f"models/ssp/{model}/build.py",
-            "--only",
-            "model",
-        ]
-    )
-
-
-@node(retries=1, retry_delay_seconds=0.5, timeout=1800.0)
-def build_study_task(model: str, study: str) -> dict[str, object]:
-    return _run(
-        [
-            sys.executable,
-            f"models/ssp/{model}/build.py",
-            "--only",
-            "study",
-            "--study",
-            study,
-        ]
-    )
-
-
-@node(retries=1, retry_delay_seconds=0.5, timeout=1800.0)
 def simulate_task(
     model: str,
     case: str,
@@ -154,13 +128,7 @@ def campaign(
     for spec in specs:
         dependencies: tuple[object, ...] = ()
         if build:
-            if spec.study_name is not None:
-                dependencies = (
-                    build_model_only_task.submit(spec.model_name),
-                    build_study_task.submit(spec.model_name, spec.study_name),
-                )
-            else:
-                dependencies = (build_model_task.submit(spec.model_name),)
+            dependencies = (build_model_task.submit(spec.model_name),)
 
         simulations = [
             simulate_task.submit(

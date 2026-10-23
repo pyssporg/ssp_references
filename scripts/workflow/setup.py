@@ -4,21 +4,14 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from pyssp_standard import LSRefExperiments
 from pyssp_workflow.params import read_study_descriptor
 
 from utils.domain import SimulationWindow
 
 from .gate import GateConfig
 from .io import read_json, relative_path, resolve_path, write_json
-from .layout import ArtifactLayout, LS_REF_EXPERIMENTS_RELATIVE
+from .layout import ArtifactLayout
 from .registry import SimulationCaseSpec
-
-
-def _required_float(value: float | None, key: str, path: Path) -> float:
-    if value is None:
-        raise KeyError(f"Missing '{key}' in LS-REF experiment {path}")
-    return float(value)
 
 
 def _read_root_system_name(system_structure_path: Path) -> str:
@@ -36,37 +29,6 @@ def _read_root_system_name(system_structure_path: Path) -> str:
     if not system_name:
         raise ValueError(f"System element in {system_structure_path} is missing a name")
     return str(system_name)
-
-
-def read_experiment_window(ssp_root: Path, case_name: str) -> tuple[SimulationWindow, float, str | None]:
-    experiments_path = ssp_root / LS_REF_EXPERIMENTS_RELATIVE
-    if not experiments_path.is_file():
-        raise FileNotFoundError(f"LS-REF experiments file not found: {experiments_path}")
-
-    with LSRefExperiments(experiments_path, mode="r") as experiments:
-        for experiment in experiments.xml.experiments:
-            if experiment.name != case_name:
-                continue
-
-            return (
-                SimulationWindow(
-                    start_time=_required_float(
-                        experiment.start_time, "startTime", experiments_path
-                    ),
-                    stop_time=_required_float(
-                        experiment.stop_time, "stopTime", experiments_path
-                    ),
-                    interval=_required_float(
-                        experiment.step_size, "stepSize", experiments_path
-                    ),
-                ),
-                _required_float(
-                    experiment.tolerance, "tolerance", experiments_path
-                ),
-                experiment.description,
-            )
-
-    raise ValueError(f"Experiment '{case_name}' not found in {experiments_path}")
 
 
 @dataclass(frozen=True)
@@ -104,56 +66,37 @@ class SimulationSetup:
 
     @classmethod
     def from_spec(cls, spec: SimulationCaseSpec) -> "SimulationSetup":
-        descriptor = (
-            spec.study_root / "study.json"
-            if spec.study_root is not None
-            else None
-        )
-        if descriptor is not None and not descriptor.is_file():
-            raise FileNotFoundError(f"Study descriptor not found: {descriptor}")
-        if descriptor is not None:
-            study = read_study_descriptor(descriptor)
-            layout = ArtifactLayout.from_model_root(
-                spec.model_name,
-                study.study,
-                spec.ssp_root,
-                spec.study_root,
-            )
-            root_system_name = _read_root_system_name(layout.system_structure_path)
-            return cls(
-                layout=layout,
-                window=SimulationWindow(
-                    start_time=study.experiment.start_time,
-                    stop_time=study.experiment.stop_time,
-                    interval=study.experiment.step_size,
-                ),
-                backends=spec.backends,
-                compare_signals=spec.compare_signals,
-                root_system_name=root_system_name,
-                gate=spec.gate,
-                study_name=study.study,
-                study_root=spec.study_root,
-                description=study.description,
-            )
-
-        layout = ArtifactLayout.from_ssp_root(spec.ssp_root)
-        if layout.model_name != spec.model_name or layout.case_name != spec.case_name:
+        if spec.study_root is None:
             raise ValueError(
-                "Registry spec does not match the SSP root layout: "
-                f"{spec.model_name}/{spec.case_name} -> {spec.ssp_root}"
+                f"Case '{spec.model_name}/{spec.case_name}' has no study descriptor; "
+                "the study supplies the experiment window"
             )
+        descriptor = spec.study_root / "study.json"
+        if not descriptor.is_file():
+            raise FileNotFoundError(f"Study descriptor not found: {descriptor}")
 
-        window, tolerance, description = read_experiment_window(spec.ssp_root, spec.case_name)
+        study = read_study_descriptor(descriptor)
+        layout = ArtifactLayout.from_model_root(
+            spec.model_name,
+            study.study,
+            spec.ssp_root,
+            spec.study_root,
+        )
         root_system_name = _read_root_system_name(layout.system_structure_path)
         return cls(
             layout=layout,
-            window=window,
-            tolerance=tolerance,
+            window=SimulationWindow(
+                start_time=study.experiment.start_time,
+                stop_time=study.experiment.stop_time,
+                interval=study.experiment.step_size,
+            ),
             backends=spec.backends,
             compare_signals=spec.compare_signals,
             root_system_name=root_system_name,
-            description=description,
             gate=spec.gate,
+            study_name=study.study,
+            study_root=spec.study_root,
+            description=study.description,
         )
 
     @classmethod
@@ -228,10 +171,6 @@ class SimulationSetup:
         }
         if self.tolerance is not None:
             data["tolerance"] = self.tolerance
-        if self.layout.ls_ref_experiments_path.is_file():
-            data["ls_ref_experiments"] = relative_path(
-                manifest_root, self.layout.ls_ref_experiments_path
-            )
         if self.description is not None:
             data["description"] = self.description
         if self.study_name is not None:

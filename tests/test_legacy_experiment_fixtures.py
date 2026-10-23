@@ -1,10 +1,10 @@
-"""Guards for legacy SSP bodies whose experiments are authored in SysML.
+"""Guards for legacy SSP bodies whose experiment is authored in SysML.
 
 The model hierarchy stays in the checked-in ``ssp/`` directory. The SysML
 composition declares only a boundary ``SspModel`` marker and the study
-experiment. These tests check the descriptor, the generated LS-REF experiment,
-and that the built SSD still comes from the legacy body rather than from the
-boundary marker.
+experiment. These tests check the descriptor and that the built SSD still comes
+from the legacy body rather than from the boundary marker. No LS-REF experiment
+is generated.
 """
 
 from __future__ import annotations
@@ -14,7 +14,6 @@ from pathlib import Path
 from xml.etree import ElementTree as ET
 
 import pytest
-from pyssp_standard import LSRefExperiments
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SSD = "{http://ssp-standard.org/SSP1/SystemStructureDescription}"
@@ -88,33 +87,14 @@ def test_study_descriptor_is_experiment_only(model: str) -> None:
 
 
 @pytest.mark.parametrize("model", sorted(EXPECTED))
-def test_built_experiment_matches_descriptor(model: str) -> None:
-    descriptor = _descriptor(model)
-    experiments_path = (
-        REPO_ROOT
-        / "artifacts"
-        / "models"
-        / model
-        / "baseline"
-        / "model"
-        / "extra"
-        / "org.fmi-standard.fmi-ls-ref"
-        / "experiments.xml"
-    )
-    if not experiments_path.is_file():
-        pytest.skip(f"built experiment missing for {model}; run build_models.py")
+def test_built_body_packages_no_ls_ref_experiment(model: str) -> None:
+    built = REPO_ROOT / "artifacts" / "models" / model / "baseline" / "model"
+    if not built.is_dir():
+        pytest.skip(f"build output missing for {model}; run build_models.py")
 
-    with LSRefExperiments(experiments_path, mode="r") as experiments:
-        stored = list(experiments.xml.experiments)
-
-    assert len(stored) == 1
-    experiment = stored[0]
-    assert experiment.name == descriptor["study"]
-    assert experiment.target == "SystemStructure.ssd"
-    assert experiment.start_time == descriptor["experiment"]["start_time"]
-    assert experiment.stop_time == descriptor["experiment"]["stop_time"]
-    assert experiment.step_size == descriptor["experiment"]["step_size"]
-    assert experiment.tolerance is None
+    assert not (
+        built / "extra" / "org.fmi-standard.fmi-ls-ref" / "experiments.xml"
+    ).exists()
 
 
 @pytest.mark.parametrize("model", sorted(EXPECTED))

@@ -14,7 +14,6 @@
     "max_invariant_abs_error": 1e-08,
     "rtol": 0.01
   },
-  "ls_ref_experiments": "../../../models/dcmotor/baseline/model/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "dcmotor",
   "resources_dir": "../../../models/dcmotor/baseline/model/resources",
   "root_system_name": "DC-Motor",

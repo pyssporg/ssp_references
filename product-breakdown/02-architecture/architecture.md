@@ -56,9 +56,9 @@ runtime-ready exported SSP and the study data that exercises it.
 **Input:** A model directory under `models/ssp/<model_name>/` containing at
 minimum a `build.py` script and a `FIXTURE.md` fixture note. Migrated fixtures
 carry `architecture/*.sysml` with a `part def ... :> SspModel` and, where
-studies are defined, `part def ... :> Study` compositions. Some legacy model
-directories still carry an `experiments.xml` and checked-in or generated
-resource files (FMUs, legacy SSV/SSM) until they are migrated. A fixture may
+studies are defined, `part def ... :> Study` compositions. Some model
+directories still carry checked-in resource files (FMUs, legacy SSV/SSM) as
+their body. A fixture may
 keep its legacy SSD and resources as the model body and author only the study
 in SysML; the `SspModel` composition is then a boundary marker, selects the
 body with `ssp_meta.source`, and is never exported.
@@ -287,8 +287,7 @@ The artifact path is `artifacts/models/<model>/<study>/<build>` and the study
 artifacts are at `artifacts/studies/<model>/<study>`.
 
 The registry is the exclusive source of truth for which model/study/backend
-combinations are active. It is not derived from the SSP directory tree or from
-any `experiments.xml`.
+combinations are active. It is not derived from the SSP directory tree.
 
 ### `setup.json`
 Written by `run_simulations.py` before dispatching any backend. Located at
@@ -302,7 +301,7 @@ Written by `run_simulations.py` before dispatching any backend. Located at
 - The root system name and path to `SystemStructure.ssd`.
 
 The setup manifest is the fixed record of *what was configured*. Later stages
-read it without re-parsing `experiments.xml` or the study descriptor.
+read it without re-parsing the study descriptor.
 
 ### Simulation artifacts
 One directory per backend per study at
@@ -362,11 +361,10 @@ The following architectural violations are not allowed:
    compares existing results only. It must not invoke backend simulation
    adapters directly or indirectly.
 
-4. **`experiments.xml` is packaging metadata, not the runtime contract.**
-   For migrated fixtures, the window and step come from the study descriptor and
-   are frozen into `setup.json`; tolerance comes from the FMUs. Legacy fixtures
-   may still carry `experiments.xml` until migrated. No pipeline stage depends
-   on LS-REF conventions at runtime.
+4. **The study descriptor is the experiment contract.** The window and step
+   come from `study.json` and are frozen into `setup.json`; tolerance comes from
+   the FMUs. No pipeline stage parses LS-REF, and the build writes no
+   `experiments.xml`.
 
 5. **Simulation artifacts must not be stored in model directories.** Results,
    configs, logs, and manifests live under `artifacts/simulation/` and
@@ -379,7 +377,7 @@ The following architectural violations are not allowed:
 
 7. **The simulation registry is the single source of truth for study/backend
    selection.** No pipeline stage derives the run matrix from directory
-   scanning, `experiments.xml` content, or any other source.
+   scanning or any other source.
 
 8. **Library borders exchange standard artifacts first.** The SysML authoring
    path invokes the `pyssp` CLI through `pyssp_workflow.authoring` and exchanges

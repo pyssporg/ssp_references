@@ -1,3 +1,12 @@
+---
+id: IMP-103
+type: imp
+title: Nested scenario override sketch
+summary: Scratch SysML where a study scenario binding should override a nested model scenario.
+date: 2026-10-23
+status: draft
+---
+
 in this case:
 package Scenario {
   part def SspModel;

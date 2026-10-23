@@ -77,7 +77,7 @@ SSP as-is.
   unpacked into `resources/CsvSource/` like the prebuilt FMUs. Engines accept
   it, but the artifact shape is inconsistent; revisit if attached FMUs need the
   same extraction and model-exchange stripping as exported ones.
-- No LS-REF `experiments.xml` is packaged; the study descriptor is the window
+- No `experiments.xml` is packaged; the study descriptor supplies the window
   source.
 - Exported model: `artifacts/models/pyfmu_csv_source_sink/baseline/model/`
 - Study artifacts: `artifacts/studies/pyfmu_csv_source_sink/baseline/`

@@ -19,7 +19,7 @@ written without `ModelExchange` sections so engines must use co-simulation.
 - The SysML `DcMotorModel :> SspModel` composition is a boundary marker only;
   it declares no parts, connectors, or FMU metadata. The hierarchy stays in the
   checked-in SSD and is not exported from SysML.
-- No legacy `experiments.xml` is checked in; the study supplies the experiment.
+- The build writes no `experiments.xml`; the study descriptor supplies the window.
 
 ## Studies
 

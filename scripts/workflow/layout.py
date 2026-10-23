@@ -6,9 +6,6 @@ from pathlib import Path
 from utils.config import REPO_ROOT
 
 
-LS_REF_EXPERIMENTS_RELATIVE = Path("extra") / "org.fmi-standard.fmi-ls-ref" / "experiments.xml"
-
-
 def sanitize_label(label: str) -> str:
     sanitized = []
     for character in label:
@@ -85,10 +82,6 @@ class ArtifactLayout:
     @property
     def system_structure_path(self) -> Path:
         return self.ssp_root / "SystemStructure.ssd"
-
-    @property
-    def ls_ref_experiments_path(self) -> Path:
-        return self.ssp_root / LS_REF_EXPERIMENTS_RELATIVE
 
     @property
     def resources_dir(self) -> Path:

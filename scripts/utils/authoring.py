@@ -18,13 +18,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from pyssp_standard import (
-    LS_REF_EXTRA_DIR,
-    LSRefExperiment,
     ParameterMappingReference,
     SSM,
     SSP,
     SSV,
-    package_archive,
     unpack_archive,
 )
 from pyssp_workflow.authoring import derive_ssp_from_sysml, derive_study_from_sysml
@@ -97,6 +94,10 @@ def build_model(
         )
     _strip_model_exchange(model_build_dir)
     return model_build_dir
+
+
+def package_nothing(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
+    """Leave the exported SSP as-is; the fixture applies no study scenario."""
 
 
 def scenario_values(descriptor: StudyDescriptor) -> dict[str, float]:
@@ -310,11 +311,10 @@ def build_legacy_fixture(
     flatten: bool = False,
     strip_resources: tuple[str, ...] | None = None,
 ) -> Path:
-    """Build a legacy SSP body with an experiment authored in SysML.
+    """Build a checked-in SSP body with the study experiment from SysML.
 
     The model's ``ssp_meta.source`` selects the checked-in body; the SysML
-    study supplies only the experiment. The generated LS-REF experiment is
-    packaging metadata derived from ``study.json``.
+    study supplies only the experiment descriptor.
     """
     architecture_dir = model_dir / "architecture"
     study_dir = repo_root / "artifacts" / "studies" / model_name / study
@@ -337,36 +337,63 @@ def build_legacy_fixture(
         )
 
     reset_dir(model_build_dir)
-    with tempfile.TemporaryDirectory(prefix=f"{model_name}_") as temp_dir:
-        ssp_copy = Path(temp_dir) / "ssp"
-        shutil.copytree(source_dir, ssp_copy)
-        (ssp_copy / LS_REF_EXTRA_DIR / "experiments.xml").unlink(missing_ok=True)
-        _strip_legacy_resources(ssp_copy / "resources", strip_resources)
+    shutil.copytree(source_dir, model_build_dir, dirs_exist_ok=True)
+    _strip_legacy_resources(model_build_dir / "resources", strip_resources)
 
-        archive = Path(temp_dir) / "model.ssp"
-        package_archive(ssp_copy, archive, recursive=True)
-
-        with SSP(archive, mode="a") as ssp:
-            with ssp.ls_ref_experiments() as experiments:
-                experiments.add_experiment(
-                    LSRefExperiment(
-                        name=descriptor.study,
-                        description=descriptor.description,
-                        target=descriptor.target_ssd,
-                        start_time=descriptor.experiment.start_time,
-                        stop_time=descriptor.experiment.stop_time,
-                        step_size=descriptor.experiment.step_size,
-                    )
-                )
-            if flatten:
-                with ssp.system_structure() as ssd:
-                    ssd.flatten()
-
-        unpack_archive(
-            archive,
-            model_build_dir,
-            recursive_fmus=True,
-            overwrite=True,
-        )
+    if flatten:
+        with SSP(model_build_dir, mode="a") as ssp:
+            with ssp.system_structure() as ssd:
+                ssd.flatten()
 
     return model_build_dir
+
+
+def run_fixture(
+    model_dir: Path,
+    *,
+    model_name: str | None = None,
+    composition: str = "System",
+    studies: Sequence[str | StudyBuild] = ("baseline",),
+    package: PackageStep | None = None,
+    validate_fmus: bool = True,
+    build_name: str = "model",
+) -> int:
+    """Build one fixture's studies from its directory and print each output."""
+    name = model_name or model_dir.name
+    entries = tuple(
+        StudyBuild(entry, package) if isinstance(entry, str) else entry
+        for entry in studies
+    )
+    outputs = build_studies(
+        model_dir=model_dir,
+        repo_root=model_dir.parents[2],
+        model_name=name,
+        composition=composition,
+        studies=entries,
+        build_name=build_name,
+        validate_fmus=validate_fmus,
+    )
+    for study, path in outputs.items():
+        print(f"Built {name} {study}: {path}")
+    return 0
+
+
+def run_legacy_fixture(
+    model_dir: Path,
+    *,
+    study: str = "baseline",
+    flatten: bool = False,
+    strip_resources: tuple[str, ...] | None = None,
+) -> int:
+    """Build one checked-in SSP body and print its output."""
+    name = model_dir.name
+    output = build_legacy_fixture(
+        model_dir=model_dir,
+        repo_root=model_dir.parents[2],
+        model_name=name,
+        study=study,
+        flatten=flatten,
+        strip_resources=strip_resources,
+    )
+    print(f"Built {name} {study}: {output}")
+    return 0

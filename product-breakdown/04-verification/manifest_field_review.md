@@ -32,11 +32,10 @@ pb_exempt: true
 | 9 | `compare_signals` | array of string | yes | CLI `--compare-signals` | `["y1", "y2"]` |
 | 10 | `root_system_name` | string | yes | Registry `get_root_system_name()` | `"Simple2R"` |
 | 11 | `system_structure` | string (relative path) | yes | Registry `get_system_structure_path()` | `"model/system_structure.json"` |
-| 12 | `ls_ref_experiments` | string (relative path) | yes | Registry `get_ls_ref_experiments_path()` | `"model/ls_ref_experiments.mat"` |
-| 13 | `resources_dir` | string (relative path) | yes | Registry `get_resources_dir()` | `"resources"` |
-| 14 | `description` | string or null | no | Setup comment or null | `"Step response test case"` or `null` |
+| 12 | `resources_dir` | string (relative path) | yes | Registry `get_resources_dir()` | `"resources"` |
+| 13 | `description` | string or null | no | Study descriptor or null | `"Step response test case"` or `null` |
 
-**Schema size:** 14 fields (1 optional, 13 required)  
+**Schema size:** 13 fields (1 optional, 12 required)  
 **Nesting:** Only `window` contains sub-fields. No other nested objects or arrays of objects.
 
 ### Observations

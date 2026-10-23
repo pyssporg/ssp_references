@@ -95,6 +95,6 @@ The migrated fixtures no longer carry either; the reference SSM files were delet
 ## Excludes
 
 - Study description and multi-study build support; implemented separately.
-- LS-REF packaging policy; see `INFO-005`.
+- LS-REF packaging policy; retired by `AD-014`.
 - Simulation registry technical mechanism; see `DD-005`.
 - Runtime window and tolerance; see `DD-001`.

@@ -94,5 +94,5 @@ A model-owned set fixes the scenario for all studies.
 
 - The `pyfmu_csv_source_sink` migration itself; completed as the first case.
 - The `pyssp_sysml2` dialect implementation; a separate upstream task.
-- LS-REF packaging policy; see `INFO-005`.
+- LS-REF packaging policy; retired by `AD-014`.
 - Build and runtime pipeline; see `INFO-002` and `INFO-008`.

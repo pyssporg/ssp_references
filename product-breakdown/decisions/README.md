@@ -30,10 +30,12 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
 
 - **AD-011** — Adopt the product-breakdown skill state and archive split · accepted · 2026-10-22 · `AD-011`
   Layer leaves hold current state; dated decisions live in the cold archive; registers are generated.
-- **AD-012** — Legacy Model Bodies May Carry SysML-Authored Experiments · accepted · 2026-10-23 · `AD-012`
+- **AD-012** — Legacy Model Bodies May Carry SysML-Authored Experiments · superseded · 2026-10-23 · `AD-012`
   A legacy SSD may stay the model body while its study and experiment are authored in SysML.
 - **AD-013** — SspModel Declares Its Checked-In SSP Source · accepted · 2026-10-23 · `AD-013`
   An SspModel selects a checked-in SSP body with ssp_meta.source; the study records it as model_source.
+- **AD-014** — No LS-REF Artifacts or Parsing · accepted · 2026-10-23 · `AD-014`
+  The study descriptor is the experiment contract; the build writes no experiments.xml and no stage parses LS-REF.
 - **ADR-001** — Three-Stage Pipeline Architecture · accepted · 2026-10-22 · `ADR-001`
   The pipeline has three file-based stages: Build, Simulate, Compare.
 - **ADR-002** — Fixture Hierarchy · accepted · 2026-10-22 · `ADR-002`
@@ -63,6 +65,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
 
 ### Implementation
 
+- **AD-015** — Per-Fixture Build Scripts Are Thin Runners · accepted · 2026-10-23 · `AD-015`
+  build.py declares one fixture's inputs; shared authoring helpers own the build steps.
 - **DD-001** — Simulation Settings Belong to the Runtime Layer · accepted · 2026-10-22 · `DD-001`
   The simulation window and tolerance are frozen into `setup.json`; runtime reads `setup.json`, not `experiments.xml`.
 - **DD-002** — Runtime Artifacts Stay Under `artifacts/` · accepted · 2026-10-22 · `DD-002`

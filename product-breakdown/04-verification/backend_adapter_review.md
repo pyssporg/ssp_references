@@ -24,15 +24,14 @@ The `SimulationSetup.to_dict()` method (in `scripts/workflow/setup.py`) produces
 | `model` | `str` | `layout.model_name` | Yes |
 | `case` | `str` | `layout.case_name` | Yes |
 | `ssp_root` | `path` (relative to manifest) | `layout.ssp_root` | Yes |
-| `window` | `dict` with `start_time`, `stop_time`, `interval` | LS-REF experiments XML | Yes |
-| `tolerance` | `float` | LS-REF experiments XML | Yes |
+| `window` | `dict` with `start_time`, `stop_time`, `interval` | Study descriptor (`study.json`) | Yes |
+| `tolerance` | `float` | Existing `setup.json` only | No |
 | `backends` | `list[str]` | `SimulationCaseSpec.backends` | Yes |
 | `compare_signals` | `list[str]` | `SimulationCaseSpec.compare_signals` | Yes |
 | `root_system_name` | `str` | `SystemStructure.ssd` root `<System>` name | Yes |
 | `system_structure` | `path` (relative to manifest) | `layout.system_structure_path` | Yes |
-| `ls_ref_experiments` | `path` (relative to manifest) | `layout.ls_ref_experiments_path` | Yes |
 | `resources_dir` | `path` (relative to manifest) | `layout.resources_dir` | Yes |
-| `description` | `str` or `null` | LS-REF experiments XML (`description` attribute) | No |
+| `description` | `str` or `null` | Study descriptor | No |
 
 ### Adapter Consumption of Config Fields
 
@@ -100,7 +99,7 @@ The `SimulationSetup.to_dict()` method (in `scripts/workflow/setup.py`) produces
 
 ### Gap 1: OMSimulator Tolerance Not Set
 
-`simulate_omsimulator()` does not call `setTolerance()` on the instantiated model. The tolerance value parsed from LS-REF experiments (`setup.tolerance`) is available but unused.
+`simulate_omsimulator()` does not call `setTolerance()` on the instantiated model. The tolerance value carried in `setup.json` (`setup.tolerance`) is available but unused.
 
 **Impact:** OMSimulator may use its default tolerance (typically `1e-4`), while `ssp4sim` receives the explicit tolerance from the setup. If the fixture expects a different tolerance (e.g., `1e-6`), comparison metrics may show larger discrepancies that are purely due to solver tolerance mismatch.
 

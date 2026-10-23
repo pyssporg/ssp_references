@@ -21,9 +21,8 @@ definitions, fixture notes, and build metadata.
 │       └── <model_name>/
 │           ├── architecture/      # authored SysML (migrated fixtures)
 │           ├── build.py
-│           ├── experiments.xml    # legacy fixtures only
 │           ├── FIXTURE.md
-│           └── ssp/               # legacy authored SSP sources
+│           └── ssp/               # checked-in SSP bodies
 ├── artifacts/
 │   ├── models/
 │   │   └── <model_name>/

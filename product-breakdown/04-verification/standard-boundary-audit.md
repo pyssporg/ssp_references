@@ -17,8 +17,8 @@ status: current
   input and simulation does not mutate it.
 - Result CSV reading and writing use `pyssp_simulate.read_result_csv` and `write_result_csv`.
 - Signal names canonicalize through `pyssp_simulate.canonicalize_signal`, including the two-segment `fmu.h` form.
-- LS-REF experiment windows parse through `pyssp_standard.LSRefExperiments`
-  (legacy fixtures only).
+- The experiment window comes from the study descriptor; no pipeline stage
+  parses LS-REF.
 - Raw SSP packaging uses `pyssp_standard.package_archive`.
 - Comparison alignment, resampling, metric families, global shift search, and local shift primitive live in `pyssp_vv.measure`.
 - Gate judgment lives in `pyssp_vv.judge`; `pass`, `fail`, and `invalid` stay distinct.
@@ -29,7 +29,7 @@ status: current
 ## Public API surfaces
 
 - `pyssp_standard`: `SSP`, `SSD`, `SSV`, `SSM`, `FMU`, `ModelDescription`,
-  LS-REF types, archive helpers, and their documented model aliases.
+  archive helpers, and their documented model aliases.
 - `pyssp_simulate`: `SimulationSpec`, `SimulationResult`, `RuntimeSSP`,
   `prepare_runtime_ssp`, result CSV helpers, and the backend registry.
 - `pyssp_vv`: `Trajectory`, `Comparison`, `SignalMetrics`, `Policy`,

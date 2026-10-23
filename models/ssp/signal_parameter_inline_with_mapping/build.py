@@ -10,29 +10,18 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
-from utils.authoring import build_fixture, package_inline_with_mapping  # noqa: E402
-
-MODEL_NAME = "signal_parameter_inline_with_mapping"
-MODEL_COMPOSITION = "System"
-STUDY_COMPOSITION = "baseline"
-
-
-def main() -> int:
-    output = build_fixture(
-        model_dir=MODEL_DIR,
-        repo_root=REPO_ROOT,
-        model_name=MODEL_NAME,
-        composition=MODEL_COMPOSITION,
-        study=STUDY_COMPOSITION,
-        package=package_inline_with_mapping,
-    )
-    print(f"Built {MODEL_NAME}: {output}")
-    return 0
-
+from utils.authoring import (  # noqa: E402
+    package_inline_with_mapping,
+    run_fixture,
+)
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(
+        run_fixture(
+            Path(__file__).resolve().parent,
+            package=package_inline_with_mapping,
+        )
+    )

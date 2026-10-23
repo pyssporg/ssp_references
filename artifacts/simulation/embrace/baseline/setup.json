@@ -18,7 +18,6 @@
     "max_invariant_abs_error": 1e-08,
     "rtol": 0.01
   },
-  "ls_ref_experiments": "../../../models/embrace/baseline/model/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "embrace",
   "resources_dir": "../../../models/embrace/baseline/model/resources",
   "root_system_name": "root",

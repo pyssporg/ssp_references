@@ -19,7 +19,7 @@ resource-heavy orchestration case.
   it declares no parts, connectors, or FMU metadata. The hierarchy and the
   external SSV/SSM scenario stay in the checked-in SSD and resources, and are
   not exported from SysML.
-- No legacy `experiments.xml` is checked in; the study supplies the experiment.
+- The build writes no `experiments.xml`; the study descriptor supplies the window.
 
 ## Studies
 

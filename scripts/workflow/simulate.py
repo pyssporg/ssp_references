@@ -9,7 +9,6 @@ from pyssp_simulate import (
     simulate,
 )
 
-from utils.domain import ResultSet
 from utils.filesystem import reset_dir
 
 from .io import read_json, relative_path, resolve_path, write_json
@@ -110,13 +109,6 @@ class SimulationRun:
     def write_manifest(self) -> Path:
         write_json(self.manifest_path, self.to_dict())
         return self.manifest_path
-
-    def to_result_set(self) -> ResultSet:
-        return ResultSet(
-            label=self.request.backend,
-            path=self.result_path,
-            engine=self.request.backend,
-        )
 
     @classmethod
     def from_manifest(cls, path: Path) -> "SimulationRun":

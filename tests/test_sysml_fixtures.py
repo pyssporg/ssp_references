@@ -245,6 +245,20 @@ def test_built_scenario_form(model: str) -> None:
     assert _form(system) == expected["form"]
 
 
+def test_pyfmu_csv_source_sink_structure_needs_no_fmu(tmp_path: Path) -> None:
+    """The CSV fixture's SysML defines the full structure without an FMU."""
+    output = tmp_path / "pyfmu_csv_source_sink.ssd"
+    derive_ssd_from_sysml(
+        REPO_ROOT / "models" / "ssp" / "pyfmu_csv_source_sink" / "architecture",
+        output,
+        "System",
+    )
+    system = _root(output)
+    assert _components(system) == ["sink", "source"]
+    assert _subsystems(system) == []
+    assert _wiring(system) == [("source", "y", "sink", "u")]
+
+
 def test_registry_resolves_model_study_build_layout() -> None:
     """Migrated cases resolve to artifacts/models/<model>/<study>/<build>."""
     from workflow.registry import load_registry

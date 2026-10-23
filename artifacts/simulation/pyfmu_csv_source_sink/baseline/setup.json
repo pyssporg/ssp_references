@@ -14,7 +14,7 @@
   "ls_ref_experiments": "../../../models/pyfmu_csv_source_sink/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
   "model": "pyfmu_csv_source_sink",
   "resources_dir": "../../../models/pyfmu_csv_source_sink/baseline/resources",
-  "root_system_name": "system",
+  "root_system_name": "System",
   "ssp_root": "../../../models/pyfmu_csv_source_sink/baseline",
   "system_structure": "../../../models/pyfmu_csv_source_sink/baseline/SystemStructure.ssd",
   "tolerance": 0.0001,

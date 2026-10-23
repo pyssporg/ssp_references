@@ -24,6 +24,7 @@ from utils.filesystem import reset_dir
 from utils.fmu import strip_model_exchange
 
 PackageStep = Callable[[Path, StudyDescriptor], None]
+PopulateStep = Callable[[Path], None]
 
 
 def _strip_model_exchange(model_root: Path) -> None:
@@ -52,7 +53,16 @@ def build_model(
     model_build_dir: Path,
     composition: str,
     repo_root: Path,
+    *,
+    allow_missing_fmus: bool = False,
+    populate: PopulateStep | None = None,
 ) -> Path:
+    """Export the model SSP and unpack it into *model_build_dir*.
+
+    ``allow_missing_fmus`` exports a design structure whose FMUs are not built
+    yet. ``populate`` receives the archive path between export and unpacking so
+    a fixture can attach the missing FMUs before the artifact is written.
+    """
     reset_dir(model_build_dir)
     with tempfile.TemporaryDirectory(prefix=f"{model_build_dir.name}_") as temp_dir:
         archive = Path(temp_dir) / "model.ssp"
@@ -61,7 +71,10 @@ def build_model(
             archive,
             composition,
             fmu_root=repo_root,
+            allow_missing_fmus=allow_missing_fmus,
         )
+        if populate is not None:
+            populate(archive)
         unpack_archive(
             archive,
             model_build_dir,
@@ -194,6 +207,8 @@ def build_fixture(
     study: str,
     build_name: str = "model",
     package: PackageStep | None = None,
+    allow_missing_fmus: bool = False,
+    populate: PopulateStep | None = None,
 ) -> Path:
     """Build the study, the exported model SSP, and the packaged runnable SSP."""
     architecture_dir = model_dir / "architecture"
@@ -203,7 +218,14 @@ def build_fixture(
     )
 
     build_study(architecture_dir, study_dir, study, model_name)
-    build_model(architecture_dir, model_build_dir, composition, repo_root)
+    build_model(
+        architecture_dir,
+        model_build_dir,
+        composition,
+        repo_root,
+        allow_missing_fmus=allow_missing_fmus,
+        populate=populate,
+    )
 
     descriptor = read_study_descriptor(study_dir / "study.json")
     if package is None:

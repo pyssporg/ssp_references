@@ -112,6 +112,7 @@ class ComparisonRun:
     record: execute.ComparisonRecord
     gate: GateOutcome = GateOutcome(status="not_evaluated")
     max_signal_invariant_abs_error: float = 0.0
+    signal_invariant_count: int = 0
 
     @property
     def manifest_path(self) -> Path:
@@ -129,10 +130,18 @@ class ComparisonRun:
     def summary(self) -> dict[str, float | int | str]:
         return self.record.summary.to_dict()
 
+    def summary_with_locals(self) -> dict[str, float | int | str]:
+        """Upstream summary plus the repo's invariant evidence."""
+        summary = self.summary
+        summary["max_signal_invariant_abs_error"] = self.max_signal_invariant_abs_error
+        summary["signal_invariant_count"] = self.signal_invariant_count
+        return summary
+
     def to_dict(self) -> dict[str, object]:
         payload = self.record.to_dict(self.manifest_path.parent)
         payload["request"] = self.request.to_dict()
         payload["gate"] = self.gate.to_dict()
+        payload["summary"] = self.summary_with_locals()
         return payload
 
     def write_manifest(self) -> Path:
@@ -142,10 +151,15 @@ class ComparisonRun:
     @classmethod
     def from_manifest(cls, path: Path) -> "ComparisonRun":
         data = read_json(path)
+        summary = data.get("summary") or {}
         return cls(
             request=ComparisonRequest.from_manifest(path),
             record=execute.ComparisonRecord.from_dict(data, base_dir=path.parent),
             gate=GateOutcome.from_dict(data.get("gate")),
+            max_signal_invariant_abs_error=float(
+                summary.get("max_signal_invariant_abs_error", 0.0)
+            ),
+            signal_invariant_count=int(summary.get("signal_invariant_count", 0)),
         )
 
 
@@ -244,6 +258,7 @@ class ComparisonBatchRun:
             "comparisons": [
                 {
                     **comparison.record.to_dict(run_dir),
+                    "summary": comparison.summary_with_locals(),
                     "runs": [
                         {
                             "backend": run.request.backend,
@@ -290,12 +305,34 @@ def _summarize_batch(
     return {
         "backend_count": len(runs),
         "comparison_count": len(comparisons),
+        "max_abs_error": max(
+            (comparison.summary["max_abs_error"] for comparison in comparisons),
+            default=0.0,
+        ),
+        "max_rel_error": max(
+            (comparison.summary["max_rel_error"] for comparison in comparisons),
+            default=0.0,
+        ),
+        "max_shift_abs_error": max(
+            (
+                comparison.summary["max_shift_abs_error"]
+                for comparison in comparisons
+            ),
+            default=0.0,
+        ),
         "max_signal_invariant_abs_error": max(
             (
                 comparison.max_signal_invariant_abs_error
                 for comparison in comparisons
             ),
             default=0.0,
+        ),
+        "min_compared_signal_count": min(
+            (
+                comparison.summary["compared_signal_count"]
+                for comparison in comparisons
+            ),
+            default=0,
         ),
         "gate_result": combine_gate_outcomes(
             comparison.gate for comparison in comparisons
@@ -363,6 +400,7 @@ def compare_runs(request: ComparisonRequest) -> ComparisonRun:
             (float(row["max_abs_error"]) for row in invariant_rows),
             default=0.0,
         ),
+        signal_invariant_count=len(invariant_rows),
     )
     run.write_manifest()
     return run

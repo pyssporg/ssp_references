@@ -25,6 +25,13 @@ OMS_OPTIONS = (
     "--addParametersToCSV=true",
 )
 
+#: Engines that reject a simulation request without an explicit tolerance.
+#: ssp4sim refuses a configuration lacking ``simulation.tolerance``; it has no
+#: engine default to fall back on. The study descriptor deliberately carries
+#: no tolerance, so the composition layer names the value and records it in
+#: the run manifest. OMSimulator and FMPy keep their own defaults.
+BACKEND_REQUIRED_TOLERANCE = {"ssp4sim": 1e-4}
+
 
 @dataclass(frozen=True)
 class SimulationRequest:
@@ -86,6 +93,7 @@ class SimulationRun:
     runtime_s: float | None = None
     error: str | None = None
     artifacts: tuple[Path, ...] = field(default_factory=tuple)
+    tolerance: float | None = None
 
     @property
     def manifest_path(self) -> Path:
@@ -97,7 +105,7 @@ class SimulationRun:
 
     def to_dict(self) -> dict[str, object]:
         run_dir = self.run_dir
-        return {
+        data: dict[str, object] = {
             "request": self.request.to_dict(),
             "result": relative_path(run_dir, self.result_path),
             "artifacts": [relative_path(run_dir, path) for path in self.artifacts],
@@ -105,6 +113,9 @@ class SimulationRun:
             "runtime_s": self.runtime_s,
             "error": self.error,
         }
+        if self.tolerance is not None:
+            data["tolerance"] = self.tolerance
+        return data
 
     def write_manifest(self) -> Path:
         write_json(self.manifest_path, self.to_dict())
@@ -122,16 +133,20 @@ class SimulationRun:
             runtime_s=data.get("runtime_s"),
             error=data.get("error"),
             artifacts=artifacts,
+            tolerance=data.get("tolerance"),
         )
 
 
 def _simulation_spec(request: SimulationRequest, ssp: Path) -> SimulationSpec:
+    tolerance = request.setup.tolerance
+    if tolerance is None:
+        tolerance = BACKEND_REQUIRED_TOLERANCE.get(request.backend)
     return SimulationSpec(
         ssp=ssp,
         start_time=request.setup.window.start_time,
         stop_time=request.setup.window.stop_time,
         step_size=request.setup.window.interval,
-        tolerance=request.setup.tolerance,
+        tolerance=tolerance,
         result_file=request.result_path,
         working_dir=request.run_dir,
         fixed_step=False,
@@ -148,9 +163,8 @@ def simulate_backend(request: SimulationRequest) -> SimulationRun:
     system definition only.
     """
     reset_dir(request.run_dir)
-    result: SimulationResult = simulate(
-        _simulation_spec(request, request.setup.ssp_root), backend=request.backend
-    )
+    spec = _simulation_spec(request, request.setup.ssp_root)
+    result: SimulationResult = simulate(spec, backend=request.backend)
 
     artifacts = tuple(path for path in result.artifacts if path.is_file())
     run = SimulationRun(
@@ -158,6 +172,7 @@ def simulate_backend(request: SimulationRequest) -> SimulationRun:
         result_path=request.result_path,
         runtime_s=result.runtime_s,
         artifacts=artifacts,
+        tolerance=spec.tolerance,
     )
     run.write_manifest()
     return run

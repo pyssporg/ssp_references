@@ -5,8 +5,9 @@ Two layers are checked:
 - ``test_sysml_wiring`` regenerates each fixture's SSD from its SysML source
   and asserts the composition wiring. This is the SysML -> SSP transformation.
 - ``test_built_scenario_form`` asserts the parameter-application form of the
-  committed build output. The form is applied by the fixture's package step, so
-  this covers the packaging step the SysML dialect cannot express.
+  committed build output. The fixture applies the form in an explicit packaging
+  step after ``build_fixture``, so this covers what the SysML dialect cannot
+  express.
 
 The expected structures are the verified migration targets. Rebuild with
 ``python3 scripts/build_models.py run-all`` after changing a fixture.

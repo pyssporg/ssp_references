@@ -23,7 +23,9 @@ def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
 
 
-def _request(tmp_path: Path, backend: str = "ssp4sim") -> SimulationRequest:
+def _request(
+    tmp_path: Path, backend: str = "ssp4sim", tolerance: float | None = 1e-5
+) -> SimulationRequest:
     ssp_root = tmp_path / "ssp_root"
     ssp_root.mkdir(parents=True, exist_ok=True)
     (ssp_root / "SystemStructure.ssd").write_text("<ssd:SystemStructureDescription />")
@@ -32,7 +34,7 @@ def _request(tmp_path: Path, backend: str = "ssp4sim") -> SimulationRequest:
     setup = SimulationSetup(
         layout=layout,
         window=window,
-        tolerance=1e-5,
+        tolerance=tolerance,
         backends=("ssp4sim",),
         compare_signals=("signal",),
         root_system_name="system",
@@ -59,6 +61,25 @@ def test_simulation_spec_maps_setup(tmp_path: Path) -> None:
     assert spec.fixed_step is False
     assert spec.validate_ssd is False
     assert spec.omsimulator_options == OMS_OPTIONS
+
+
+def test_ssp4sim_gets_the_repo_tolerance_when_the_setup_has_none(tmp_path: Path) -> None:
+    """ssp4sim rejects a request without a tolerance, so composition names one."""
+    from workflow.simulate import BACKEND_REQUIRED_TOLERANCE
+
+    request = _request(tmp_path, backend="ssp4sim", tolerance=None)
+
+    spec = _simulation_spec(request, request.setup.ssp_root)
+
+    assert spec.tolerance == pytest.approx(BACKEND_REQUIRED_TOLERANCE["ssp4sim"])
+
+
+def test_backends_with_engine_defaults_keep_tolerance_none(tmp_path: Path) -> None:
+    request = _request(tmp_path, backend="omsimulator", tolerance=None)
+
+    spec = _simulation_spec(request, request.setup.ssp_root)
+
+    assert spec.tolerance is None
 
 
 def test_simulate_backend_delegates_to_pyssp_simulate(
@@ -88,4 +109,5 @@ def test_simulate_backend_delegates_to_pyssp_simulate(
     assert spec == _simulation_spec(request, request.setup.ssp_root)
     assert run.runtime_s == pytest.approx(1.5)
     assert run.artifacts == (artifact,)
+    assert run.to_dict()["tolerance"] == pytest.approx(1e-5)
     assert run.manifest_path.is_file()

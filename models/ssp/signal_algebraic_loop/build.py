@@ -5,16 +5,16 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pyssp_workflow.authoring import run_fixture
-from pyssp_workflow.execute import package_external_target_named
+from pyssp_workflow.authoring import build_fixture, report_builds
+from pyssp_workflow.packaging import apply_target_named_external
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 if __name__ == "__main__":
-    raise SystemExit(
-        run_fixture(
-            Path(__file__).resolve().parent,
-            repo_root=REPO_ROOT,
-            package=package_external_target_named,
-        )
+    builds = build_fixture(
+        model_dir=Path(__file__).resolve().parent,
+        repo_root=REPO_ROOT,
+        studies=("baseline",),
     )
+    apply_target_named_external(builds["baseline"])
+    raise SystemExit(report_builds(builds))

@@ -2,7 +2,7 @@
 id: INFO-008
 type: info
 title: Build, study, and runtime workflow
-summary: Build packages the study scenario into a runnable SSP; simulate runs the built SSP as-is.
+summary: Build produces the study and model SSP; an explicit packaging step applies the scenario. Simulation runs the built SSP as-is.
 date: 2026-10-23
 status: current
 ---
@@ -11,13 +11,14 @@ status: current
 
 - **Authoring**: `pyssp_workflow.authoring.derive_ssp_from_sysml` and `derive_study_from_sysml` invoke the `pyssp` CLI; no `pyssp_sysml2` import.
 - **Layout**: a runnable SSP lives at `artifacts/models/<model>/<study>/<build>/`; study artifacts at `artifacts/studies/<model>/<study>/`.
-- **Model build**: `build.py` is a thin runner. `pyssp_workflow.authoring.run_fixture` derives the model SSP from `architecture/*.sysml` and unpacks it into the build directory. `run_legacy_fixture` copies a checked-in SSP body instead.
+- **Model build**: `build.py` is a thin runner. `pyssp_workflow.authoring.build_fixture` derives one model SSP per study from `architecture/*.sysml` and returns their records; `report_builds` prints them. `build_legacy_fixture` copies a checked-in SSP body instead. Neither packages the scenario.
 - **Study build**: `pyssp generate study` writes the scenario SSV, the SSM, and `study.json` under `artifacts/studies/<model>/<study>/`; a model may build several studies.
 - **Study descriptor**: `study.json` records model, composition, sut name, target SSD, the authored `Study` description, the experiment window (start, stop, step), and scenario paths. It carries no tolerance.
-- **Scenario packaging**: each fixture passes one `pyssp_workflow.execute` form. Default is `package_scenario`: it copies the study SSV/SSM into the SSP and adds one root `ParameterBinding`. Other forms are `package_nothing`, `package_inline_root`, `package_external_target_named`, and `package_inline_with_mapping`; `apply_inline_components` covers per-component inline sets. Every form mutates through `pyssp_standard` and never rewrites the scenario SSV or SSM.
-- **Tolerance**: the setup manifest carries no solver tolerance; each engine applies its own default. The gate tolerances are not part of the experiment.
-- **Runtime**: `run_simulations.py` runs the built SSP as-is. No scenario injection. `pyssp_simulate.simulate` executes it; the spec carries `fixed_step=False`, `validate_ssd=False`, and the `omsimulator_options` tuple.
+- **Scenario packaging**: a separate explicit step after `build_fixture`; the fixture calls one `pyssp_workflow.packaging` function on the returned record. `apply_external_ssv_ssm` copies the study SSV/SSM into the SSP and adds one root `ParameterBinding`. Other forms are `apply_inline_root`, `apply_target_named_external`, and `apply_inline_with_mapping`; `apply_inline_components` covers per-component inline sets. Every form mutates through `pyssp_standard` and never rewrites the scenario SSV or SSM.
+- **Tolerance**: the study descriptor carries no solver tolerance. Composition names one only where an engine requires it: ssp4sim rejects a request without `simulation.tolerance`, so `scripts/workflow/simulate.py` supplies `BACKEND_REQUIRED_TOLERANCE` and the value is recorded in `simulation.json`. OMSimulator and FMPy apply their own defaults. Gate tolerances are not part of the experiment.
+- **Runtime**: `run_simulations.py` runs the built SSP as-is. No scenario injection. `pyssp_simulate.simulate` executes it with the backend named by the registry — there is no automatic engine fallback; the library default `omsimulator` is used only when no backend is named. The spec carries `fixed_step=False`, `validate_ssd=False`, and the `omsimulator_options` tuple.
 - **Canonicalization**: strip all runtime container names from result signals; `fmu.h` canonicalizes to `h`.
+- **Result layout**: every engine writes the same CSV shape through one writer; `time` comes first, then signal names sorted, so a column present in two engines' results has the same name and the same relative position. Column sets may differ (for example OMSimulator parameter columns).
 - **Comparison**: `pyssp_workflow.execute.compare_result_csvs` composes one pair and writes `metrics.csv`; `pyssp_vv.measure` aligns and measures; `pyssp_vv.evidence` owns the metric-row and summary schema; `pyssp_vv.judge` produces `pass`, `fail`, or `invalid`.
 - **Gate policy**: tolerances, `SHIFT_TOLERANCE_SAMPLES`, and the verdict mapping live in `workflow/gate.py`.
 - **Figures**: `pyssp_vv.measure.build_figure_spec` describes a figure; `render_figure` draws it and imports matplotlib inside the function.

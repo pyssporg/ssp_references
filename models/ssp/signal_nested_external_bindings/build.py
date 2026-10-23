@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build signal_nested_external_bindings and its baseline study.
 
-The SysML authors the nested ``Inner`` system and its boundary wiring. The
-package hook applies the step scenario inline and attaches the nested
+The SysML authors the nested ``Inner`` system and its boundary wiring. A
+post-processing step applies the step scenario inline and attaches the nested
 system's scenario as an external SSV+SSM binding (the form this fixture
 exercises).
 """
@@ -12,14 +12,10 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-from pyssp_standard import SSP, SSM, SSV
-from pyssp_workflow.authoring import run_fixture
-from pyssp_workflow.execute import apply_inline_components
-from pyssp_workflow.params import (
-    StudyDescriptor,
-    scenario_mappings,
-    scenario_values,
-)
+from pyssp_standard import SSM, SSP, SSV
+from pyssp_workflow.authoring import FixtureBuild, build_fixture, report_builds
+from pyssp_workflow.packaging import apply_inline_components
+from pyssp_workflow.params import scenario_mappings, scenario_values
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -27,9 +23,9 @@ MODEL_NAME = "signal_nested_external_bindings"
 NESTED_SYSTEM = "inner"
 
 
-def _nested_external_binding(
-    model_build_dir: Path, descriptor: StudyDescriptor
-) -> None:
+def _nested_external_binding(build: FixtureBuild) -> None:
+    model_build_dir = build.model_dir
+    descriptor = build.descriptor
     prefix = f"{NESTED_SYSTEM}."
     pairs = [
         (source, target)
@@ -66,16 +62,12 @@ def _nested_external_binding(
                 )
 
 
-def package(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
-    apply_inline_components(model_build_dir, descriptor, only={"step"})
-    _nested_external_binding(model_build_dir, descriptor)
-
-
 if __name__ == "__main__":
-    raise SystemExit(
-        run_fixture(
-            Path(__file__).resolve().parent,
-            repo_root=REPO_ROOT,
-            package=package,
-        )
+    builds = build_fixture(
+        model_dir=Path(__file__).resolve().parent,
+        repo_root=REPO_ROOT,
+        studies=("baseline",),
     )
+    apply_inline_components(builds["baseline"], only={"step"})
+    _nested_external_binding(builds["baseline"])
+    raise SystemExit(report_builds(builds))

@@ -109,7 +109,7 @@ Optional. Notes specific to running this fixture:
 <!--
 Optional. Notes about how this fixture is packaged:
 - Runnable SSP path: `artifacts/models/<model>/<study>/<build>/`.
-- Parameter-application form applied at build.
+- Packaging function the fixture calls after `build_fixture`.
 - Generated vs checked-in SSD/SSV/SSM.
 - Study scenario and experiment artifacts.
 - FMU source references.

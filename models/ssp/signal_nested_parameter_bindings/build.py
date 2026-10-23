@@ -4,7 +4,7 @@
 Form under test: nested components carry inline parameter sets while a root
 external SSV+SSM maps into ``add.k1``/``add.k2`` and overrides the nested
 ``inner.sine.amplitude``. The SysML composes the nested boundary and its
-connections; the package hook applies both binding forms.
+connections; post-processing applies both binding forms.
 """
 
 from __future__ import annotations
@@ -12,9 +12,9 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-from pyssp_standard import SSP, SSM
-from pyssp_workflow.authoring import run_fixture
-from pyssp_workflow.params import StudyDescriptor, scenario_targets
+from pyssp_standard import SSM, SSP
+from pyssp_workflow.authoring import FixtureBuild, build_fixture, report_builds
+from pyssp_workflow.params import scenario_targets
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -30,10 +30,14 @@ ROOT_MAPPINGS = (
 )
 
 
-def _inline_parameters(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
+def _inline_parameters(build: FixtureBuild) -> None:
     """Step component inline, inner system-level inline, gain component inline."""
-    targets = scenario_targets(descriptor)
-    step = {name.split(".")[-1]: value for name, value in targets.items() if name.startswith("step.")}
+    targets = scenario_targets(build.descriptor)
+    step = {
+        name.split(".")[-1]: value
+        for name, value in targets.items()
+        if name.startswith("step.")
+    }
     inner_system = {
         name[len(f"{NESTED_SYSTEM}.") :]: value
         for name, value in targets.items()
@@ -44,42 +48,35 @@ def _inline_parameters(model_build_dir: Path, descriptor: StudyDescriptor) -> No
         for name, value in targets.items()
         if name.startswith(f"{NESTED_SYSTEM}.gain.")
     }
-    with SSP(model_build_dir, mode="a") as ssp:
-        with ssp.system_structure() as ssd:
-            root = ssd.xml.system
-            next(e for e in root.elements if e.name == "step").extend_inline_parameterset(step)
-            inner = next(e for e in root.elements if e.name == NESTED_SYSTEM)
-            inner.extend_inline_parameterset(inner_system)
-            next(e for e in inner.elements if e.name == "gain").extend_inline_parameterset(gain)
+    with SSP(build.model_dir, mode="a") as ssp, ssp.system_structure() as ssd:
+        root = ssd.xml.system
+        next(e for e in root.elements if e.name == "step").extend_inline_parameterset(step)
+        inner = next(e for e in root.elements if e.name == NESTED_SYSTEM)
+        inner.extend_inline_parameterset(inner_system)
+        next(e for e in inner.elements if e.name == "gain").extend_inline_parameterset(gain)
 
 
-def _root_external_binding(
-    model_build_dir: Path, descriptor: StudyDescriptor
-) -> None:
+def _root_external_binding(build: FixtureBuild) -> None:
     with tempfile.TemporaryDirectory(prefix=f"{MODEL_NAME}_") as temp_dir:
         ssm_path = Path(temp_dir) / ROOT_MAPPING_NAME
         with SSM(ssm_path, mode="w") as ssm:
             for source, target in ROOT_MAPPINGS:
                 ssm.xml.add_mapping(source, target)
-        with SSP(model_build_dir, mode="a") as ssp:
+        with SSP(build.model_dir, mode="a") as ssp:
             ssp.add_external_parameterset(
-                descriptor.ssv_path,
+                build.descriptor.ssv_path,
                 ssm_path,
                 resource_name=SCENARIO_SSV_NAME,
                 mapping_resource_name=ROOT_MAPPING_NAME,
             )
 
 
-def package(model_build_dir: Path, descriptor: StudyDescriptor) -> None:
-    _inline_parameters(model_build_dir, descriptor)
-    _root_external_binding(model_build_dir, descriptor)
-
-
 if __name__ == "__main__":
-    raise SystemExit(
-        run_fixture(
-            Path(__file__).resolve().parent,
-            repo_root=REPO_ROOT,
-            package=package,
-        )
+    builds = build_fixture(
+        model_dir=Path(__file__).resolve().parent,
+        repo_root=REPO_ROOT,
+        studies=("baseline",),
     )
+    _inline_parameters(builds["baseline"])
+    _root_external_binding(builds["baseline"])
+    raise SystemExit(report_builds(builds))

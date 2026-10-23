@@ -66,11 +66,12 @@ contract:
 - A fixture may keep a legacy `ssp/` body and author only the study. Its
   `SspModel` composition is then a boundary marker that selects the body with
   `ssp_meta.source`, and is not exported.
-- `build.py` derives the model SSP and the study, then packages the scenario
-  into a runnable SSP. `build_studies` builds one runnable SSP per study. Each
-  fixture passes one `pyssp_workflow.execute` packaging form: the default
-  external SSV/SSM form, `package_nothing`, `package_inline_root`,
-  `package_external_target_named`, or `package_inline_with_mapping`.
+- `build.py` calls `pyssp_workflow.authoring.build_fixture(...)`, which builds
+  one study and model SSP per study and returns their records; `report_builds`
+  prints them. The fixture then applies the scenario in an explicit
+  `pyssp_workflow.packaging` call: `apply_external_ssv_ssm` (the default
+  external SSV/SSM form), `apply_inline_root`, `apply_target_named_external`,
+  `apply_inline_with_mapping`, or `apply_inline_components`.
 - `FIXTURE.md` provides the fixture notes for each model.
 - Running `build.py` writes the runnable SSP under
   `artifacts/models/<model>/<study>/<build>/` and study artifacts under

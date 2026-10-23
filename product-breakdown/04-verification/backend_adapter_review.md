@@ -63,8 +63,9 @@ in this repository.
 
 - **ssp4sim:** runs in a child process; keeps unpacked FMU directories in the
   runtime package (`repackage_fmus=False`); writes `config.json` and
-  `ssp4sim.log`; writes `result.csv`; substitutes `1e-4` when tolerance is
-  unset.
+  `ssp4sim.log`; writes `result.csv`. The engine rejects a configuration
+  without `simulation.tolerance`, so composition supplies
+  `BACKEND_REQUIRED_TOLERANCE` and records it in `simulation.json`.
 - **OMSimulator:** runs in-process through the Python bindings; sets start
   time, stop time, and logging interval; sets a fixed step only when
   `fixed_step` is true; sets the tolerance only when the spec carries one;

@@ -1,16 +1,17 @@
 <?xml version='1.0' encoding='utf-8'?>
-<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="model" version="1.0">
-  <ssd:System name="root">
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" name="System" version="1.0">
+  <ssd:System name="System">
     <ssd:ParameterBindings>
-      <ssd:ParameterBinding source="resources/init_values.ssv">
-        <ssd:ParameterMapping source="resources/init_values.ssm" />
-      </ssd:ParameterBinding>
-      <ssd:ParameterBinding source="resources/init_values.ssv">
-        <ssd:ParameterMapping source="resources/init_values.ssm" />
+      <ssd:ParameterBinding source="resources/parameter_sets/ScenarioSet.ssv">
+        <ssd:ParameterMapping>
+          <ssm:ParameterMapping version="1.0">
+            <ssm:MappingEntry source="scenario_input" target="scenario.scenario_input" />
+          </ssm:ParameterMapping>
+        </ssd:ParameterMapping>
       </ssd:ParameterBinding>
     </ssd:ParameterBindings>
     <ssd:Elements>
-      <ssd:Component name="scenario" source="resources/0001_scenario.fmu" type="application/x-fmu-sharedlibrary">
+      <ssd:Component name="scenario" source="resources/Scenario.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
         <ssd:Connectors>
           <ssd:Connector name="Alt" kind="output">
             <ssc:Real />
@@ -34,5 +35,5 @@
       </ssd:Component>
     </ssd:Elements>
   </ssd:System>
-  <ssd:DefaultExperiment startTime="0.0" stopTime="1.0" />
+  <ssd:DefaultExperiment startTime="0.0" stopTime="10.0" />
 </ssd:SystemStructureDescription>

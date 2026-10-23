@@ -331,16 +331,22 @@
     {
       "name": "scenario",
       "compare_signals": [
-        "source.y"
+        "scenario.Alt",
+        "scenario.Mach",
+        "scenario.heat_load",
+        "scenario.Wgt_On_Whl",
+        "scenario.Aircraft_state"
       ],
       "cases": [
         {
           "name": "baseline",
           "backends": [
             "ssp4sim"
-          ]
+          ],
+          "study": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_parameter_inline_with_mapping",

@@ -45,6 +45,12 @@ refactored API the build stage uses. The checkout under
 one is a pinned dependency and stays at the commit `pyssp_sysml2` records. Local
 patches belong in the canonical checkout.
 
+The `scenario` fixture's multi-line `scenario_input` also depends on a
+`pyssp_sysml2` working-tree change: the string adapter decodes `\n`, `\r`, and
+`\t`, and the exporter re-escapes them. Push that upstream and bump the
+`pyssp_sysml2` gitlink in `pyssp_workflow` before recording a new
+`pyssp_workflow` revision here.
+
 Check before updating or resetting:
 
 ```bash

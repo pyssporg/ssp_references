@@ -1,11 +1,11 @@
-"""Guards for the SysML-authored signal fixtures.
+"""Guards for the SysML-authored fixtures.
 
 Two layers are checked:
 
 - ``test_sysml_wiring`` regenerates each fixture's SSD from its SysML source
   and asserts the composition wiring. This is the SysML -> SSP transformation.
 - ``test_built_scenario_form`` asserts the parameter-application form of the
-  committed build output. The form is applied by each fixture's build hook, so
+  committed build output. The form is applied by the fixture's package step, so
   this covers the packaging step the SysML dialect cannot express.
 
 The expected structures are the verified migration targets. Rebuild with
@@ -18,6 +18,7 @@ from pathlib import Path
 
 import pytest
 
+from pyssp_standard import SSV
 from pyssp_workflow.authoring import derive_ssd_from_sysml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -141,6 +142,13 @@ EXPECTED: dict[str, dict] = {
         "study": "baseline",
         "components": ["sink", "source"],
         "connections": [("source", "y", "sink", "u")],
+        "subsystems": [],
+        "form": "external+mapping",
+    },
+    "scenario": {
+        "study": "baseline",
+        "components": ["scenario"],
+        "connections": [],
         "subsystems": [],
         "form": "external+mapping",
     },
@@ -269,6 +277,92 @@ def test_pyfmu_csv_source_sink_structure_needs_no_fmu(tmp_path: Path) -> None:
         for element in system.findall(f"{SSD}Elements/{SSD}Component")
     }
     assert sources == {"sink": "resources/Gain.fmu", "source": ""}
+
+
+SCENARIO_INPUT = (
+    "Alt;L;0,0;300,5000\n"
+    "Mach;L;0,0;300,1.2\n"
+    "heat_load;ZOH;0,50;150,4000\n"
+    "Wgt_On_Whl;ZOH;0,1;150,0\n"
+    "Aircraft_state;ZOH;0,0;150,4"
+)
+
+
+def _ssv_parameters(path: Path) -> list[tuple[str, str, str | None]]:
+    with SSV(path, mode="r") as ssv:
+        return [
+            (parameter.name, parameter.type_name, parameter.attributes.get("value"))
+            for parameter in ssv.xml.parameters
+        ]
+
+
+def test_scenario_preserves_legacy_parameter_set() -> None:
+    """The SysML set reproduces the old SSV member names, types, and values."""
+    ssv = (
+        REPO_ROOT
+        / "artifacts"
+        / "models"
+        / "scenario"
+        / "baseline"
+        / "model"
+        / "resources"
+        / "parameter_sets"
+        / "ScenarioSet.ssv"
+    )
+    if not ssv.is_file():
+        pytest.skip("build output missing for scenario; run build_models.py")
+
+    assert _ssv_parameters(ssv) == [
+        ("scenario_input", "String", SCENARIO_INPUT),
+        ("Alt_start", "Real", "0"),
+        ("Mach_start", "Real", "0"),
+        ("heat_load_start", "Real", "50"),
+        ("Wgt_On_Whl_start", "Real", "1"),
+        ("Aircraft_state_start", "Real", "0"),
+    ]
+
+
+def test_scenario_mapping_keeps_only_the_live_target() -> None:
+    """The model-owned binding maps only the one parameter in this SSP."""
+    ssd = (
+        REPO_ROOT
+        / "artifacts"
+        / "models"
+        / "scenario"
+        / "baseline"
+        / "model"
+        / "SystemStructure.ssd"
+    )
+    if not ssd.is_file():
+        pytest.skip("build output missing for scenario; run build_models.py")
+
+    from pyssp_standard.ssd import SSD as Ssp1SSD
+
+    with Ssp1SSD(ssd, mode="r") as document:
+        [binding] = document.xml.system.parameter_bindings
+        mappings = [
+            (mapping.source, mapping.target)
+            for mapping in binding.parameter_mapping.mapping.mappings
+        ]
+    assert mappings == [("scenario_input", "scenario.scenario_input")]
+
+
+def test_scenario_has_one_root_parameter_binding() -> None:
+    """The built SSP has exactly one root binding, not the old duplicate."""
+    ssd = (
+        REPO_ROOT
+        / "artifacts"
+        / "models"
+        / "scenario"
+        / "baseline"
+        / "model"
+        / "SystemStructure.ssd"
+    )
+    if not ssd.is_file():
+        pytest.skip("build output missing for scenario; run build_models.py")
+
+    system = _root(ssd)
+    assert len(system.findall(f"{SSD}ParameterBindings/{SSD}ParameterBinding")) == 1
 
 
 def test_registry_resolves_model_study_build_layout() -> None:

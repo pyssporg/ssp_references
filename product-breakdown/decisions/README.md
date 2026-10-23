@@ -85,3 +85,5 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Comparison metrics and verdicts come from pyssp_vv; this repo keeps registry and model policy.
 - **DD-011** — Build Packages the Study Scenario into the SSP · accepted · 2026-10-23 · `DD-011`
   The build emits a runnable SSP per model/study/build with the scenario applied; simulation runs it as-is.
+- **DD-012** — Scenario Fixture Is Fully SysML-Authored With Its Legacy SSV · accepted · 2026-10-23 · `DD-012`
+  The scenario model owns the six-member SSV and its live inline mapping; the study is experiment-only.

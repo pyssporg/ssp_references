@@ -288,6 +288,7 @@ def test_simulate_backend_unknown_raises() -> None:
     class _MockRequest:
         def __init__(self, backend: str) -> None:
             self.backend = backend
+            self.setup = SimpleNamespace(ssp_root=Path("/nonexistent"))
 
     request = _MockRequest("nonexistent")
     with pytest.raises(NotImplementedError, match="nonexistent"):

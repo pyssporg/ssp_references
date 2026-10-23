@@ -2,19 +2,30 @@
 
 ## Origin
 
-Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` and
-`models/fmu/Modelica.Blocks.Sources.Sine` fixtures.
-
-The nested system's parameter values are stored in
-`models/ssp/signal_nested_external_bindings/ssp/resources/inner_parameters.ssv`
-with the external mapping in
-`models/ssp/signal_nested_external_bindings/ssp/resources/inner_mapping.ssm`.
+Assembled from shared Modelica FMUs. The model and study are authored in SysML
+at `architecture/signal_nested_external_bindings.sysml`.
 
 ## Overview
 
-`signal_nested_external_bindings` is a nested SSP fixture that combines a root
-Step component with inline parameter binding and a nested system containing a
-Sine component with external SSV+SSM bindings.
+`signal_nested_external_bindings` is a deterministic signal-propagation SSP fixture built from shared
+Modelica FMUs. Parameter form: external SSV+SSM binding on the nested system; step inline.
+
+## Architecture Source
+
+- `architecture/signal_nested_external_bindings.sysml`
+- Exportable composition: `System :> SspModel`
+- Study composition: `baseline :> Study`
+- No legacy SSD, SSV, or SSM is checked into the model directory.
+
+## Studies
+
+- `baseline :> Study`
+- Scenario set: `ScenarioSet`
+- Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`
+- Tolerance is not part of the experiment; it comes from the FMU model
+  descriptions.
+- Artifacts: `artifacts/studies/signal_nested_external_bindings/baseline/`
+- Studies are never exported as SSPs.
 
 ## Backends
 
@@ -23,52 +34,46 @@ This fixture is registered for simulation with the following backends:
 - ssp4sim
 - OMSimulator
 
-## Strategy Role
-
-- Nested composite SSP fixture.
-- Gap coverage for external SSV+SSM bindings inside a nested subsystem.
-- Pattern C (checked-in `SystemStructure.ssd`).
-
 ## Structure
 
-- Root Step: inline component-level parameter binding (height=1.0, offset=0.0,
-  startTime=0.25)
-- Root connector: `y` (output)
-- Inner system `inner`: Sine component with external SSV+SSM binding
-- Inner connector: `y` (output)
-- Connections: `sine.y → inner.y` and `step.y → system.y`
+- `Step` (inline)
+- `Inner(sine) -> Inner.y`
+- Nested boundary wired by the build hook
+
+## Strategy Role
+
+- Composite SSP fixture.
+- Nested external-binding coverage.
 
 ## Intent
 
-- Validate that external SSV and SSM files are correctly resolved when placed
-  inside a nested system-level `<ssd:ParameterBinding>`.
-- Ensure that flat names in the SSV are correctly mapped to hierarchical
-  targets via the SSM inside the nested scope.
+- Validate an external parameter binding placed on a nested system.
 
 ## Expected Behavior
 
-- `step.y` stays at its offset (0.0) until the configured step time (0.25),
-  then jumps by height (1.0) to 1.0.
-- `inner.y` follows the Sine configuration: amplitude=2.0, f=5.0, offset=0.5.
-- Root output `system.y` equals `step.y`.
+- `sine.y = offset + amplitude * sin(2*pi*f*t)`.
 
 ## Main Failures This Catches
 
-- Wrong resolution of nested system external parameter bindings.
-- Flat-to-hierarchical mapping failure inside a nested scope.
-- External SSV/SSM files not being packaged into the SSP.
-- Missing or incorrect resource paths inside a nested system.
+- Nested external binding ignored.
+- Mapping applied at the wrong level.
+
+## Simulation Notes
+
+- The build packages the `ScenarioSet` scenario into the exported SSP in the
+  fixture's parameter form.
+- The runtime runs the built SSP as-is; it does not inject a scenario.
+- Form: external SSV+SSM binding on the nested system; step inline.
 
 ## Packaging Notes
 
-- The root system uses inline ParameterValues for the Step component.
-- The nested system uses external SSV+SSM files checked in under
-  `ssp/resources/`.
-- The FMUs are shared Modelica-generated resources packaged during the build
-  step.
-- The `SystemStructure.ssd` is checked in (Pattern C).
+- Exported model: `artifacts/models/signal_nested_external_bindings/baseline/model/`
+- Study artifacts: `artifacts/studies/signal_nested_external_bindings/baseline/`
+- FMU sources:
+- `models/fmu/Modelica.Blocks.Sources.Step/fmu`
+- `models/fmu/Modelica.Blocks.Sources.Sine/fmu`
+- Build: `python3 scripts/build_models.py run signal_nested_external_bindings`
 
 ## Typical Use
 
-- Integration testing for nested external parameter packaging.
-- Cross-engine comparison of nested system parameter binding resolution.
+- Nested parameter-form regression checks.

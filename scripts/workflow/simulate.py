@@ -16,8 +16,6 @@ from pyssp_simulate import (
     write_result_csv,
 )
 from pyssp_standard import package_archive
-from pyssp_workflow.execute import inject_scenario
-from pyssp_workflow.params import read_study_descriptor
 
 from utils.domain import ResultSet
 from utils.filesystem import reset_dir
@@ -360,15 +358,9 @@ def _simulate_backend(request: SimulationRequest, ssp_root: Path) -> SimulationR
 
 
 def simulate_backend(request: SimulationRequest) -> SimulationRun:
-    setup = getattr(request, "setup", None)
-    if setup is None or setup.descriptor_path is None:
-        return _simulate_backend(request, getattr(setup, "ssp_root", None))
+    """Run one backend against the built SSP.
 
-    study = read_study_descriptor(setup.descriptor_path)
-    with inject_scenario(
-        setup.ssp_root,
-        study.ssv_path,
-        study.ssm_path,
-        target_ssd=study.target_ssd,
-    ) as runtime_root:
-        return _simulate_backend(request, runtime_root)
+    The study scenario is packaged into the SSP at build time, so the built
+    artifact is the complete engine input.
+    """
+    return _simulate_backend(request, request.setup.ssp_root)

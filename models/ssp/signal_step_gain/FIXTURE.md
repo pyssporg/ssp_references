@@ -2,31 +2,42 @@
 
 ## Origin
 
-Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` and
-`models/fmu/Modelica.Blocks.Math.Gain` fixtures. The model and study are
-authored in SysML at `architecture/signal_step_gain.sysml`.
+Assembled from shared Modelica FMUs. The model and study are authored in SysML
+at `architecture/signal_step_gain.sysml`.
 
 ## Overview
 
-Deterministic signal-propagation fixture built from two shared Modelica FMUs
-with external parameter interfaces and one study scenario.
+`signal_step_gain` is a deterministic signal-propagation SSP fixture built from shared
+Modelica FMUs. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
 - `architecture/signal_step_gain.sysml`
 - Exportable composition: `System :> SspModel`
-- Parameter interfaces: `StepParameters` (`height`, `offset`, `startTime`) and
-  `GainParameters` (`k`)
+- Study composition: `test_baseline :> Study`
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
 ## Studies
 
 - `test_baseline :> Study`
-- Applies `ScenarioSet` (`height=2.0`, `offset=1.0`, `startTime=0.25`, `k=3.0`)
-- Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`,
-  `tolerance=0.0001`
+- Scenario set: `ScenarioSet`
+- Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`
+- Tolerance is not part of the experiment; it comes from the FMU model
+  descriptions.
 - Artifacts: `artifacts/studies/signal_step_gain/test_baseline/`
 - Studies are never exported as SSPs.
+
+## Backends
+
+This fixture is registered for simulation with the following backends:
+
+- ssp4sim
+- OMSimulator
+- FMPy
+
+## Structure
+
+- `Step -> Gain`
 
 ## Strategy Role
 
@@ -34,16 +45,9 @@ with external parameter interfaces and one study scenario.
 - Priority 1 propagation test.
 - Minimal reproducer for direct algebraic feedthrough.
 
-## Structure
-
-```text
-Step -> Gain
-```
-
 ## Intent
 
-Validate direct propagation of a stepped signal through a simple algebraic
-transform while exercising SysML model export and runtime study injection.
+- Validate direct propagation of a stepped signal through a simple algebraic transform while exercising SysML model export and scenario packaging.
 
 ## Expected Behavior
 
@@ -55,22 +59,23 @@ transform while exercising SysML model export and runtime study injection.
 - One-step propagation lag.
 - Wrong gain parameter handling.
 - Incorrect connector mapping.
-- Missing runtime scenario injection.
+- Missing packaged scenario.
 
 ## Simulation Notes
 
-- Registered backends: `ssp4sim`, `omsimulator`, `fmpy`.
-- The exported SSP carries parameter connectors and no scenario binding.
-- Runtime copies the exported SSP, adds the study scenario, and leaves the
-  exported artifact unchanged.
+- The build packages the `ScenarioSet` scenario into the exported SSP in the
+  fixture's parameter form.
+- The runtime runs the built SSP as-is; it does not inject a scenario.
+- Form: external SSV + external SSM.
 
 ## Packaging Notes
 
-- Exported model: `artifacts/models/signal_step_gain/model/`
-- Study: `artifacts/studies/signal_step_gain/test_baseline/`
-- FMU sources: `models/fmu/Modelica.Blocks.Sources.Step/fmu` and
-  `models/fmu/Modelica.Blocks.Math.Gain/fmu`
-- Build: `python3 models/ssp/signal_step_gain/build.py`
+- Exported model: `artifacts/models/signal_step_gain/test_baseline/model/`
+- Study artifacts: `artifacts/studies/signal_step_gain/test_baseline/`
+- FMU sources:
+- `models/fmu/Modelica.Blocks.Sources.Step/fmu`
+- `models/fmu/Modelica.Blocks.Math.Gain/fmu`
+- Build: `python3 scripts/build_models.py run signal_step_gain`
 
 ## Typical Use
 

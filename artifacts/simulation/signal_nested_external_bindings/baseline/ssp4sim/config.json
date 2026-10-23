@@ -1,0 +1,47 @@
+{
+  "simulation": {
+    "ssp": "/tmp/pyssp_simulate_ssp_w9a5nnph/ssp",
+    "ssd": "SystemStructure.ssd",
+    "start_time": 0.0,
+    "stop_time": 1.0,
+    "timestep": 0.001,
+    "tolerance": 0.0001,
+    "realtime": false,
+    "working_dir": "/home/eriro/pwa/2_work/ssp_references/artifacts/simulation/signal_nested_external_bindings/baseline/ssp4sim",
+    "executor": {
+      "method": "jacobi",
+      "thread_pool_workers": 5,
+      "forward_derivatives": true,
+      "sub_step": 0.001,
+      "jacobi": {
+        "parallel": true,
+        "method": 1
+      },
+      "seidel": {
+        "parallel": false
+      }
+    },
+    "recording": {
+      "enable": true,
+      "wait_for": true,
+      "interval": 0.001,
+      "result_file": "/home/eriro/pwa/2_work/ssp_references/artifacts/simulation/signal_nested_external_bindings/baseline/ssp4sim/result.csv",
+      "csv": {
+        "enable": true,
+        "file": "/home/eriro/pwa/2_work/ssp_references/artifacts/simulation/signal_nested_external_bindings/baseline/ssp4sim/result.csv",
+        "interval": 0.001
+      },
+      "influx": {
+        "enable": false
+      }
+    },
+    "log": {
+      "file": "/home/eriro/pwa/2_work/ssp_references/artifacts/simulation/signal_nested_external_bindings/baseline/ssp4sim/ssp4sim.log",
+      "level_terminal": "error",
+      "level_file": "info",
+      "level_json": "disable",
+      "level_cutelog": "disable",
+      "fmu": false
+    }
+  }
+}

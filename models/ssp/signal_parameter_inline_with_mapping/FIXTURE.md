@@ -2,17 +2,30 @@
 
 ## Origin
 
-Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` fixture.
-
-The parameter values are defined inline in the generated `SystemStructure.ssd`
-(no external SSV file). The mapping from flat to hierarchical names is stored
-in `models/ssp/signal_parameter_inline_with_mapping/ssp/resources/inline_mapping.ssm`.
+Assembled from shared Modelica FMUs. The model and study are authored in SysML
+at `architecture/signal_parameter_inline_with_mapping.sysml`.
 
 ## Overview
 
-`signal_parameter_inline_with_mapping` is a deterministic signal-propagation SSP
-fixture built from a single Step FMU with an inline system-level parameter set
-and an external parameter mapping file.
+`signal_parameter_inline_with_mapping` is a deterministic signal-propagation SSP fixture built from shared
+Modelica FMUs. Parameter form: inline SSV + external SSM.
+
+## Architecture Source
+
+- `architecture/signal_parameter_inline_with_mapping.sysml`
+- Exportable composition: `System :> SspModel`
+- Study composition: `baseline :> Study`
+- No legacy SSD, SSV, or SSM is checked into the model directory.
+
+## Studies
+
+- `baseline :> Study`
+- Scenario set: `ScenarioSet`
+- Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`
+- Tolerance is not part of the experiment; it comes from the FMU model
+  descriptions.
+- Artifacts: `artifacts/studies/signal_parameter_inline_with_mapping/baseline/`
+- Studies are never exported as SSPs.
 
 ## Backends
 
@@ -23,41 +36,42 @@ This fixture is registered for simulation with the following backends:
 
 ## Structure
 
-- Step (inline SSV + external SSM)
+- `Step` (inline values + external SSM)
 
 ## Strategy Role
 
 - Deterministic signal-propagation fixture.
-- Gap coverage for inline SSV with external SSM (no `source=` on `<ssd:ParameterBinding>`).
-- Pattern A (generated SSD via `build.py`).
+- Coverage for inline SSV with external SSM.
 
 ## Intent
 
-- Validate that an inline parameter set combined with an external parameter
-  mapping is correctly handled by SSP tooling.
-- Ensure that flat inline parameter names are correctly mapped to hierarchical
-  component parameters via the external SSM.
+- Validate that inline parameter values combined with an external mapping resolve to the component parameters.
 
 ## Expected Behavior
 
-- Step output transitions at the configured step time, reaching the configured
-  height, with no one-step lag.
+- Step output transitions at the configured time and height with no one-step lag.
 
 ## Main Failures This Catches
 
-- Inline parameter values being ignored when a mapping is also present.
-- Parameter binding with both inline values and external mapping not supported.
-- Mapping resolution failure for inline parameters.
+- Inline values ignored when a mapping is present.
+- Unsupported inline+mapping combination.
+- Mapping resolution failure.
+
+## Simulation Notes
+
+- The build packages the `ScenarioSet` scenario into the exported SSP in the
+  fixture's parameter form.
+- The runtime runs the built SSP as-is; it does not inject a scenario.
+- Form: inline SSV + external SSM.
 
 ## Packaging Notes
 
-- The parameter values are stored inline in the generated `SystemStructure.ssd`
-  via `extend_system_parameterset()`.
-- The external mapping file `inline_mapping.ssm` is checked in under
-  `ssp/resources/` and added as an SSP resource.
-- No experiments.xml `<Parameters>` element — all binding is in the SSD.
+- Exported model: `artifacts/models/signal_parameter_inline_with_mapping/baseline/model/`
+- Study artifacts: `artifacts/studies/signal_parameter_inline_with_mapping/baseline/`
+- FMU sources:
+- `models/fmu/Modelica.Blocks.Sources.Step/fmu`
+- Build: `python3 scripts/build_models.py run signal_parameter_inline_with_mapping`
 
 ## Typical Use
 
-- Tight-tolerance comparison tests for inline+external parameter binding.
-- Debugging mapping resolution and precedence rules.
+- Parameter-form regression checks.

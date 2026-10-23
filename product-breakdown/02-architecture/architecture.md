@@ -55,42 +55,44 @@ runtime-ready exported SSP and the study data that exercises it.
 
 **Input:** A model directory under `models/ssp/<model_name>/` containing at
 minimum a `build.py` script and a `FIXTURE.md` fixture note. Migrated fixtures
-also carry `architecture/*.sysml` with a `part def ... :> SspModel` and, where
-studies are defined, `part def ... :> Study` compositions. Some model
-directories also carry an `experiments.xml` for standalone LS-REF packaging and
-checked-in or generated resource files (FMUs, legacy SSV/SSM).
+carry `architecture/*.sysml` with a `part def ... :> SspModel` and, where
+studies are defined, `part def ... :> Study` compositions. Some legacy model
+directories still carry an `experiments.xml` and checked-in or generated
+resource files (FMUs, legacy SSV/SSM) until they are migrated.
 
 **Output:** Two artifact classes:
 
-- an exported model SSP root at
-  `artifacts/models/<model_name>/<build_name>/` containing
-  `SystemStructure.ssd`, `resources/`, and an optional default
-  `extra/org.fmi-standard.fmi-ls-ref/experiments.xml`;
+- a runnable build SSP at
+  `artifacts/models/<model_name>/<study_name>/<build_name>/` containing
+  `SystemStructure.ssd`, `resources/`, and the study scenario already packaged
+  in the fixture's parameter-application form;
 - study artifacts at `artifacts/studies/<model_name>/<study_name>/` containing
-  the scenario SSV, the SSM mapping, and the study/experiment descriptor.
-  Studies are not SSPs.
+  the scenario SSV, the SSM mapping, and the study descriptor. Studies are not
+  SSPs; they are build inputs that supply the window and the scenario.
 
 **Entry point:** `scripts/build_models.py` discovers and dispatches to each
 model's own `build.py`. The model-level build script is the source of truth for
 how that particular fixture is exported and which studies it generates.
 Migrated build scripts call `pyssp_workflow.authoring` for SysML derivation and
-keep only fixture-specific packaging locally.
+then apply the fixture's parameter-application form with `pyssp_standard`
+(`ADR-013`, `DD-011`).
 
 **Invariant:** The build stage does not execute simulations, does not write to
 `artifacts/simulation/` or `artifacts/comparisons/`, and does not modify
-`artifacts/simulation_registry.json`.
+`artifacts/simulation_registry.json`. Its build SSP is the complete engine
+input.
 
 ### Stage 2: Simulate
 
 **Purpose:** Run registered studies against one or more simulation backends and
 record raw result trajectories.
 
-**Input:** An exported model SSP root and its study artifacts (from Stage 1)
-plus the simulation registry at `artifacts/simulation_registry.json`, which maps
-each model build to named studies, backends, compare signals, references, and
-gate policy. The study descriptor supplies the simulation window (start time,
-stop time, step size) and tolerance. Runtime scenario data is applied to a copy
-of the exported SSP; the exported SSP is never mutated.
+**Input:** A runnable build SSP and its study descriptor (from Stage 1) plus the
+simulation registry at `artifacts/simulation_registry.json`, which maps each
+model build to named studies, backends, compare signals, references, and gate
+policy. The study descriptor supplies the simulation window (start time, stop
+time, step size). The scenario is already packaged in the SSP, so the simulate
+stage does not inject one. Tolerance is read from the composed FMUs.
 
 **Output:** Per-backend simulation result files (CSV, and optionally `.mat`
 for some backends) under
@@ -99,14 +101,13 @@ produces a `simulation.json` run manifest at the same location.
 
 **Entry point:** `scripts/run_simulations.py` reads the registry, expands the
 model/study/backend matrix, prepares setup manifests, and dispatches through
-`pyssp_workflow` execute nodes. Runtime scenario injection and backend
-execution are `pyssp_workflow` / `pyssp_simulate` responsibilities; local
-compatibility shims exist only for documented upstream gaps (see
-`ADR-005` and `ADR-008`).
+`pyssp_workflow` execute nodes. Engine execution is a `pyssp_simulate`
+responsibility; local compatibility shims exist only for documented upstream
+gaps (see `ADR-005` and `ADR-008`).
 
-**Invariant:** The simulate stage does not rebuild SSPs, does not mutate
-exported model artifacts or model source directories, and does not run
-comparisons.
+**Invariant:** The simulate stage does not rebuild SSPs, does not inject a
+scenario, does not mutate build artifacts or model source directories, and does
+not run comparisons.
 
 ### Stage 3: Compare
 
@@ -228,19 +229,20 @@ artifact:
 ```
   models/ssp/<model>/architecture/*.sysml   (SspModel + Study definitions)
            |
-           |  build_models.py -> build.py -> pyssp_workflow.authoring
+           |  build_models.py -> build.py
+           |  pyssp_workflow.authoring + pyssp_workflow.execute / pyssp_standard
+           |  (SysML -> model SSP; study scenario packaged by the form hook)
            v
-  artifacts/models/<model>/<build>/          (exported model SSP root:
+  artifacts/models/<model>/<study>/<build>/  (runnable SSP:
                                               SystemStructure.ssd, resources/,
-                                              optional default experiments.xml)
+                                              packaged scenario)
   artifacts/studies/<model>/<study>/         (SSV, SSM, study descriptor)
            |
-           |  simulation_registry.json maps build -> studies -> backends
+           |  simulation_registry.json maps model -> study -> build -> backends
            v
   artifacts/simulation/<model>/<study>/setup.json   (study setup manifest)
            |
-           |  run_simulations.py copies the SSP, injects the study scenario,
-           |  and dispatches per backend
+           |  run_simulations.py runs the built SSP as-is per backend
            v
   artifacts/simulation/<model>/<study>/<backend>/
       - config.json
@@ -285,11 +287,10 @@ any `experiments.xml`.
 ### `setup.json`
 Written by `run_simulations.py` before dispatching any backend. Located at
 `artifacts/simulation/<model>/<study>/setup.json`. It records:
-- The exported SSP root path and build name.
-- The study name and study artifact directory.
-- The scenario SSV/SSM paths.
-- The simulation window (start time, stop time, interval) and tolerance from
-  the study descriptor.
+- The runnable SSP path, study, and build name.
+- The study artifact directory.
+- The simulation window (start time, stop time, interval) from the study
+  descriptor. Tolerance is read from the composed FMUs, not the descriptor.
 - The explicit backend list and compare-signal list for this model/study.
 - The gate policy (`atol`, `rtol`, invariant tolerance) frozen from the registry.
 - The root system name and path to `SystemStructure.ssd`.

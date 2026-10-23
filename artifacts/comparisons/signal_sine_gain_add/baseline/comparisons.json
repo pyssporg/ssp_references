@@ -20,9 +20,11 @@
       "summary": {
         "compared_signal_count": 4,
         "max_abs_error": 0.018850000000000033,
+        "max_rel_error": 0.006283209763541329,
         "max_shift_abs_error": 5.9582080000009086e-05,
         "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 2.5233393646537364e-05,
+        "min_coverage": 1.0,
         "rmse": 0.0004094919695525056,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
@@ -56,7 +58,7 @@
     "comparison_count": 1,
     "gate_result": "pass",
     "max_abs_error": 0.018850000000000033,
-    "max_rel_error": 0.0,
+    "max_rel_error": 0.006283209763541329,
     "max_shift_abs_error": 5.9582080000009086e-05,
     "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 4

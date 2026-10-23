@@ -19,3 +19,7 @@ artifacts/runs/
 opencode.json
 
 .agents/
+
+.vscode/
+
+.ruff_cache/

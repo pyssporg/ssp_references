@@ -1,0 +1,16 @@
+{
+  "artifacts": [
+    "config.json",
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "baseline",
+    "model": "signal_nested_external_bindings",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.10928026703186333,
+  "status": "completed"
+}

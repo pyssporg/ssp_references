@@ -209,6 +209,7 @@ class SimulationRegistry:
                         / "artifacts"
                         / "models"
                         / model.name
+                        / study_name
                         / build_name
                     )
                     study_root = (

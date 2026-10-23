@@ -2,18 +2,30 @@
 
 ## Origin
 
-Assembled from the shared `models/fmu/Modelica.Blocks.Sources.Step` and
-`models/fmu/Modelica.Blocks.Math.Add` fixtures.
-
-The parameter values are stored in
-`models/ssp/signal_step_add/ssp/resources/signal_step_add_parameters.ssv` with
-the external mapping in
-`models/ssp/signal_step_add/ssp/resources/signal_step_add_mapping.ssm`.
+Assembled from shared Modelica FMUs. The model and study are authored in SysML
+at `architecture/signal_step_add.sysml`.
 
 ## Overview
 
-`signal_step_add` is a deterministic signal-propagation SSP fixture built from
-shared Modelica FMUs with an external system-level parameter set and mapping.
+`signal_step_add` is a deterministic signal-propagation SSP fixture built from shared
+Modelica FMUs. Parameter form: external SSV + external SSM (disambiguated members).
+
+## Architecture Source
+
+- `architecture/signal_step_add.sysml`
+- Exportable composition: `System :> SspModel`
+- Study composition: `baseline :> Study`
+- No legacy SSD, SSV, or SSM is checked into the model directory.
+
+## Studies
+
+- `baseline :> Study`
+- Scenario set: `ScenarioSet`
+- Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`
+- Tolerance is not part of the experiment; it comes from the FMU model
+  descriptions.
+- Artifacts: `artifacts/studies/signal_step_add/baseline/`
+- Studies are never exported as SSPs.
 
 ## Backends
 
@@ -21,11 +33,11 @@ This fixture is registered for simulation with the following backends:
 
 - ssp4sim
 - OMSimulator
-- FMPy
 
 ## Structure
 
-- `Step + Step -> Add`
+- `Step_a -> Add.u1`
+- `Step_b -> Add.u2`
 
 ## Strategy Role
 
@@ -45,7 +57,23 @@ This fixture is registered for simulation with the following backends:
 
 - Incorrect handling of multiple incoming signals.
 - Wrong input ordering or connector binding.
-- Missed update on one input during a communication step.
+- Missed update on one input during a step.
+
+## Simulation Notes
+
+- The build packages the `ScenarioSet` scenario into the exported SSP in the
+  fixture's parameter form.
+- The runtime runs the built SSP as-is; it does not inject a scenario.
+- Form: external SSV + external SSM (disambiguated members).
+
+## Packaging Notes
+
+- Exported model: `artifacts/models/signal_step_add/baseline/model/`
+- Study artifacts: `artifacts/studies/signal_step_add/baseline/`
+- FMU sources:
+- `models/fmu/Modelica.Blocks.Sources.Step/fmu`
+- `models/fmu/Modelica.Blocks.Math.Add/fmu`
+- Build: `python3 scripts/build_models.py run signal_step_add`
 
 ## Typical Use
 

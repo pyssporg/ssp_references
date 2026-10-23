@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssm:ParameterMapping xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" version="1.0">
+  <ssm:MappingEntry source="step_height" target="step.height" />
+  <ssm:MappingEntry source="step_offset" target="step.offset" />
+  <ssm:MappingEntry source="step_startTime" target="step.startTime" />
+</ssm:ParameterMapping>

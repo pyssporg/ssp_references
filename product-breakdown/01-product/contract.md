@@ -10,7 +10,11 @@ status: current
 # Model export, study, and comparison contract
 
 - **Exportable model**: each `SspModel` definition exports to one SSP.
-- **Study**: each `Study` definition supplies scenario data and one experiment.
+- **Study**: each `Study` definition supplies scenario data and one experiment
+  (`startTime`, `stopTime`, `stepSize`). Tolerance is an FMU property, not an
+  experiment field.
+- **Parameter form**: the suite preserves the parameter-application forms it
+  exercises. Authoring must not flatten them.
 - **Study export**: studies are never exported as SSPs.
 - **Backends**: ssp4sim, OMSimulator, and FMPy are supported.
 - **Comparison**: comparison is pairwise engine-to-engine; no engine is golden.

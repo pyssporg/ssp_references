@@ -73,7 +73,7 @@ def read_experiment_window(ssp_root: Path, case_name: str) -> tuple[SimulationWi
 class SimulationSetup:
     layout: ArtifactLayout
     window: SimulationWindow
-    tolerance: float
+    tolerance: float | None = None
     backends: tuple[str, ...] = field(default_factory=tuple)
     compare_signals: tuple[str, ...] = field(default_factory=tuple)
     root_system_name: str = ""
@@ -81,9 +81,6 @@ class SimulationSetup:
     gate: GateConfig = field(default_factory=GateConfig)
     study_name: str | None = None
     study_root: Path | None = None
-    scenario_ssv: Path | None = None
-    scenario_ssm: Path | None = None
-    descriptor_path: Path | None = None
 
     def __post_init__(self) -> None:
         normalized_backends = tuple(str(backend).lower() for backend in self.backends)
@@ -103,7 +100,7 @@ class SimulationSetup:
 
     @property
     def is_study(self) -> bool:
-        return self.descriptor_path is not None
+        return self.study_root is not None
 
     @classmethod
     def from_spec(cls, spec: SimulationCaseSpec) -> "SimulationSetup":
@@ -130,16 +127,12 @@ class SimulationSetup:
                     stop_time=study.experiment.stop_time,
                     interval=study.experiment.step_size,
                 ),
-                tolerance=study.experiment.tolerance,
                 backends=spec.backends,
                 compare_signals=spec.compare_signals,
                 root_system_name=root_system_name,
                 gate=spec.gate,
                 study_name=study.study,
                 study_root=spec.study_root,
-                scenario_ssv=study.ssv_path,
-                scenario_ssm=study.ssm_path,
-                descriptor_path=descriptor,
             )
 
         layout = ArtifactLayout.from_ssp_root(spec.ssp_root)
@@ -185,15 +178,10 @@ class SimulationSetup:
         if not isinstance(compare_signals, list):
             raise TypeError("Simulation setup compare_signals must be a list of signal names")
         root_system_name = str(data.get("root_system_name") or _read_root_system_name(layout.system_structure_path))
-        descriptor = (
-            resolve_path(manifest_root, data["study_descriptor"])
-            if data.get("study_descriptor")
-            else None
-        )
         return cls(
             layout=layout,
             window=window,
-            tolerance=float(data["tolerance"]),
+            tolerance=data.get("tolerance"),
             backends=tuple(str(backend).lower() for backend in backends),
             compare_signals=tuple(str(signal).strip() for signal in compare_signals if str(signal).strip()),
             root_system_name=root_system_name,
@@ -201,17 +189,6 @@ class SimulationSetup:
             gate=GateConfig.from_dict(data.get("gate")),
             study_name=data.get("study"),
             study_root=study_root,
-            scenario_ssv=(
-                resolve_path(manifest_root, data["scenario_ssv"])
-                if data.get("scenario_ssv")
-                else None
-            ),
-            scenario_ssm=(
-                resolve_path(manifest_root, data["scenario_ssm"])
-                if data.get("scenario_ssm")
-                else None
-            ),
-            descriptor_path=descriptor,
         )
 
     @property
@@ -241,7 +218,6 @@ class SimulationSetup:
                 "stop_time": self.window.stop_time,
                 "interval": self.window.interval,
             },
-            "tolerance": self.tolerance,
             "backends": list(self.backends),
             "compare_signals": list(self.compare_signals),
             "root_system_name": self.root_system_name,
@@ -249,6 +225,8 @@ class SimulationSetup:
             "system_structure": relative_path(manifest_root, self.layout.system_structure_path),
             "resources_dir": relative_path(manifest_root, self.layout.resources_dir),
         }
+        if self.tolerance is not None:
+            data["tolerance"] = self.tolerance
         if self.layout.ls_ref_experiments_path.is_file():
             data["ls_ref_experiments"] = relative_path(
                 manifest_root, self.layout.ls_ref_experiments_path
@@ -259,12 +237,6 @@ class SimulationSetup:
             data["study"] = self.study_name
         if self.study_root is not None:
             data["study_root"] = relative_path(manifest_root, self.study_root)
-        if self.descriptor_path is not None:
-            data["study_descriptor"] = relative_path(manifest_root, self.descriptor_path)
-        if self.scenario_ssv is not None:
-            data["scenario_ssv"] = relative_path(manifest_root, self.scenario_ssv)
-        if self.scenario_ssm is not None:
-            data["scenario_ssm"] = relative_path(manifest_root, self.scenario_ssm)
         return data
 
     def write_manifest(self) -> Path:

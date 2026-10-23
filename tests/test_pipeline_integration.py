@@ -29,12 +29,20 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
 
     # === Stage 1: Build — copy real SSP artifacts into isolated repo ===
     repo = Path(__file__).resolve().parents[1]
-    real_ssp_root = repo / "artifacts" / "models" / "signal_step_gain" / "model"
+    real_ssp_root = (
+        repo / "artifacts" / "models" / "signal_step_gain" / "test_baseline" / "model"
+    )
     real_study_root = (
         repo / "artifacts" / "studies" / "signal_step_gain" / "test_baseline"
     )
     isolated_ssp_root = (
-        tmp_path / "repo" / "artifacts" / "models" / "signal_step_gain" / "model"
+        tmp_path
+        / "repo"
+        / "artifacts"
+        / "models"
+        / "signal_step_gain"
+        / "test_baseline"
+        / "model"
     )
     isolated_study_root = (
         tmp_path / "repo" / "artifacts" / "studies" / "signal_step_gain" / "test_baseline"

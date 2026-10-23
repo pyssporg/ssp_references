@@ -1,112 +1,36 @@
 #!/usr/bin/env python3
+"""Build the exported signal_sine_gain_add model and its baseline study.
+
+Parameter form: one inline root parameter set keyed by the mapped target names
+(no external SSV/SSM in the exported model).
+"""
 
 from __future__ import annotations
 
 import sys
-import tempfile
 from pathlib import Path
-
 
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
-sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import LSRefExperiments, SSP, unpack_archive, LSRefExperiment
-from pyssp_standard.ssd import Connection, DefaultExperiment
-from utils.fmu import strip_model_exchange
-from utils.model import ModelMetaData
+from utils.authoring import build_fixture, package_inline_root  # noqa: E402
 
-
-def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
-    ssp_path = temp_dir / "model.ssp"
-    ssp_path.unlink(missing_ok=True)
-
-    with SSP(ssp_path, mode="w") as ssp:
-        with ssp.system_structure() as ssd:
-            ssd.xml.default_experiment = DefaultExperiment(start_time=0.0, stop_time=1.0)
-
-        copied_resource_name = ssp.add_fmu(
-            "sine",
-            model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Sine"),
-            resource_name="Sine.fmu",
-            implementation="CoSimulation",
-        )
-        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
-        copied_resource_name = ssp.add_fmu(
-            "step",
-            model.paths.shared_fmu_dir("Modelica.Blocks.Sources.Step"),
-            resource_name="Step.fmu",
-            implementation="CoSimulation",
-        )
-        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
-        copied_resource_name = ssp.add_fmu(
-            "gain",
-            model.paths.shared_fmu_dir("Modelica.Blocks.Math.Gain"),
-            resource_name="Gain.fmu",
-            implementation="CoSimulation",
-        )
-        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
-        copied_resource_name = ssp.add_fmu(
-            "add",
-            model.paths.shared_fmu_dir("Modelica.Blocks.Math.Add"),
-            resource_name="Add.fmu",
-            implementation="CoSimulation",
-        )
-        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
-
-        with ssp.system_structure() as ssd:
-            system = ssd.xml.system
-            ssd.extend_system_parameterset(
-                {
-                    "sine.amplitude": 1.0,
-                    "sine.f": 1.0,
-                    "sine.offset": 0.0,
-                    "sine.phase": 0.0,
-                    "sine.startTime": 0.0,
-                    "step.height": 2.0,
-                    "step.offset": 0.0,
-                    "step.startTime": 0.5,
-                    "gain.k": 3.0,
-                    "add.k1": 1.0,
-                    "add.k2": 1.0,
-                }
-            )
-
-            system.connections.extend(
-                [
-                    Connection(start_element="sine", start_connector="y", end_element="gain", end_connector="u"),
-                    Connection(start_element="gain", start_connector="y", end_element="add", end_connector="u1"),
-                    Connection(start_element="step", start_connector="y", end_element="add", end_connector="u2"),
-                ]
-            )
-
-        for resource in [*exp.stimuli, *exp.references]:
-            ssp.add_resource(MODEL_DIR / resource.source)
-            if resource.mapping is not None:
-                ssp.add_resource(MODEL_DIR / resource.mapping)
-
-        with ssp.ls_ref_experiments() as experiments:
-            experiments.add_experiment(exp)
-
-    unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
-
-
-EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
+MODEL_NAME = "signal_sine_gain_add"
+MODEL_COMPOSITION = "System"
+STUDY_COMPOSITION = "baseline"
 
 
 def main() -> int:
-    model = ModelMetaData(MODEL_DIR)
-    model.reset_build_dir()
-
-    LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
-
-    with tempfile.TemporaryDirectory(prefix="signal_sine_gain_add_") as temp_dir:
-        with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
-            for exp in experiments.xml.experiments:
-                create_ssp(model, Path(temp_dir), exp)
-
-    print(f"Built {model.name}")
+    output = build_fixture(
+        model_dir=MODEL_DIR,
+        repo_root=REPO_ROOT,
+        model_name=MODEL_NAME,
+        composition=MODEL_COMPOSITION,
+        study=STUDY_COMPOSITION,
+        package=package_inline_root,
+    )
+    print(f"Built {MODEL_NAME}: {output}")
     return 0
 
 

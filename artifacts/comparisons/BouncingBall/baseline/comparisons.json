@@ -3,8 +3,8 @@
     {
       "gate": {
         "reasons": [
-          "h: max_shift_abs_error=43.0127 exceeds 0.011",
-          "v: max_shift_abs_error=29.3908 exceeds 0.0453412"
+          "h: criterion-exceeded (43.0127 > 0.011 (max_abs_error))",
+          "v: criterion-exceeded (29.3908 > 0.0453412 (max_abs_error))"
         ],
         "status": "fail"
       },
@@ -23,9 +23,11 @@
       "summary": {
         "compared_signal_count": 2,
         "max_abs_error": 43.130285,
+        "max_rel_error": 43.130285,
         "max_shift_abs_error": 43.0126631,
         "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 14.148158112915695,
+        "min_coverage": 1.0,
         "rmse": 17.981234448431195,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
@@ -37,8 +39,8 @@
   "error": null,
   "gate": {
     "reasons": [
-      "h: max_shift_abs_error=43.0127 exceeds 0.011",
-      "v: max_shift_abs_error=29.3908 exceeds 0.0453412"
+      "h: criterion-exceeded (43.0127 > 0.011 (max_abs_error))",
+      "v: criterion-exceeded (29.3908 > 0.0453412 (max_abs_error))"
     ],
     "status": "fail"
   },
@@ -62,7 +64,7 @@
     "comparison_count": 1,
     "gate_result": "fail",
     "max_abs_error": 43.130285,
-    "max_rel_error": 0.0,
+    "max_rel_error": 43.130285,
     "max_shift_abs_error": 43.0126631,
     "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 2

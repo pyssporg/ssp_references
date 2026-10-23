@@ -1,6 +1,6 @@
 {
   "simulation": {
-    "ssp": "/tmp/pyssp_simulate_ssp_mrs0dd9z/ssp",
+    "ssp": "/tmp/pyssp_simulate_ssp_uu5bb9xo/ssp",
     "ssd": "SystemStructure.ssd",
     "start_time": 0.0,
     "stop_time": 1.0,

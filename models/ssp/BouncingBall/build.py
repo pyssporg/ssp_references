@@ -1,60 +1,46 @@
 #!/usr/bin/env python3
+"""Build the exported BouncingBall model and its baseline study.
+
+The SysML authors the single ``BouncingBall`` component with its ``h`` and
+``v`` outputs and the ``g``/``e`` parameter connectors. The fixture applies no
+scenario, so the build packages none.
+"""
 
 from __future__ import annotations
 
 import sys
-import tempfile
 from pathlib import Path
-
 
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
-sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import LSRefExperiments, SSP, unpack_archive, LSRefExperiment
-from utils.fmu import strip_model_exchange
-from utils.model import ModelMetaData
+from utils.authoring import build_fixture  # noqa: E402
 
-
-def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
-    ssp_path = temp_dir / "model.ssp"
-    ssp_path.unlink(missing_ok=True)
-
-    with SSP(ssp_path, mode="a") as ssp:
-        copied_resource_name = ssp.add_fmu(
-            "fmu",
-            model.paths.shared_fmu_dir("BouncingBall"),
-            resource_name="BouncingBall.fmu",
-            implementation="CoSimulation",
-        )
-        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
-        for resource in [*exp.stimuli, *exp.references]:
-            ssp.add_resource(MODEL_DIR / resource.source)
-            if resource.mapping is not None:
-                ssp.add_resource(MODEL_DIR / resource.mapping)
-
-        with ssp.ls_ref_experiments() as experiments:
-            experiments.add_experiment(exp)
-
-    unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
+MODEL_NAME = "BouncingBall"
+MODEL_COMPOSITION = "System"
+STUDY_COMPOSITION = "baseline"
 
 
-EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
+def package_nothing(model_build_dir: Path, descriptor) -> None:
+    """Leave the exported SSP as-is; this fixture applies no scenario."""
 
 
 def main() -> int:
-    model = ModelMetaData(MODEL_DIR)
-    model.reset_build_dir()
-
-    LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
-
-    with tempfile.TemporaryDirectory(prefix="bouncingball_") as temp_dir:
-        with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
-            for exp in experiments.xml.experiments:
-                create_ssp(model, Path(temp_dir), exp)
-
-    print(f"Built {model.name}")
+    output = build_fixture(
+        model_dir=MODEL_DIR,
+        repo_root=REPO_ROOT,
+        model_name=MODEL_NAME,
+        composition=MODEL_COMPOSITION,
+        study=STUDY_COMPOSITION,
+        package=package_nothing,
+        # The shared BouncingBall FMU declares both ModelExchange and
+        # CoSimulation; the pyssp_standard FMI2 reader keeps only the first
+        # interface, so it reports ModelExchange and rejects the CoSimulation
+        # component.
+        validate_fmus=False,
+    )
+    print(f"Built {MODEL_NAME}: {output}")
     return 0
 
 

@@ -260,7 +260,7 @@ python3 scripts/build_models.py list
 python3 scripts/build_models.py run BouncingBall
 ```
 
-Built artifacts appear under `artifacts/models/BouncingBall/baseline/`.
+Built artifacts appear under `artifacts/models/BouncingBall/baseline/model/`.
 
 To build a SysML-authored signal fixture and its study:
 

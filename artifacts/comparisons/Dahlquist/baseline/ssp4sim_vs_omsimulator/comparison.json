@@ -22,9 +22,11 @@
   "summary": {
     "compared_signal_count": 1,
     "max_abs_error": 4.956763320000088e-07,
+    "max_rel_error": 4.956763320000088e-07,
     "max_shift_abs_error": 4.956763320000088e-07,
     "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 2.314395260451371e-07,
+    "min_coverage": 1.0,
     "rmse": 2.858668909331289e-07,
     "run_a_label": "ssp4sim",
     "run_b_label": "omsimulator",

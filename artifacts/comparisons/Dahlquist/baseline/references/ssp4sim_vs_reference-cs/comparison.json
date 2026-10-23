@@ -16,8 +16,10 @@
   "summary": {
     "compared_signal_count": 1,
     "max_abs_error": 4.956763389349995e-07,
+    "max_rel_error": 4.956763389349995e-07,
     "max_shift_abs_error": 4.956763389349995e-07,
     "mean_abs_error": 2.3143954419434305e-07,
+    "min_coverage": 1.0,
     "rmse": 2.8586690103660605e-07,
     "run_a_label": "reference-cs",
     "run_b_label": "ssp4sim",

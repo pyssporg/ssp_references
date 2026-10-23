@@ -13,6 +13,7 @@
             "ssp4sim",
             "omsimulator"
           ],
+          "study": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -25,7 +26,8 @@
             }
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "Dahlquist",
@@ -40,6 +42,7 @@
             "omsimulator",
             "fmpy"
           ],
+          "study": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -52,7 +55,8 @@
             }
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "embrace",
@@ -255,9 +259,11 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ]
+          ],
+          "study": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "VanDerPol",
@@ -273,6 +279,7 @@
             "omsimulator",
             "fmpy"
           ],
+          "study": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -291,9 +298,11 @@
             "ssp4sim",
             "omsimulator",
             "fmpy"
-          ]
+          ],
+          "study": "fast"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "dcmotor",

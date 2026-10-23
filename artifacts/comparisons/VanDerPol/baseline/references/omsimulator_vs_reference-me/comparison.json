@@ -16,8 +16,10 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 0.6810235953136887,
+    "max_rel_error": 0.2542616450448732,
     "max_shift_abs_error": 0.6718064423679588,
     "mean_abs_error": 0.09894552614191922,
+    "min_coverage": 1.0,
     "rmse": 0.14566474029251675,
     "run_a_label": "reference-me",
     "run_b_label": "omsimulator",

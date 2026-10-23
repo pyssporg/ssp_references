@@ -16,8 +16,10 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 0.6764171342516041,
+    "max_rel_error": 0.2525418127577976,
     "max_shift_abs_error": 0.6671915716854027,
     "mean_abs_error": 0.0975938639377158,
+    "min_coverage": 1.0,
     "rmse": 0.14418842096858528,
     "run_a_label": "reference-me",
     "run_b_label": "fmpy",

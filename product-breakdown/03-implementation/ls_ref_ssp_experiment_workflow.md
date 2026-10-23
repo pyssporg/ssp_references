@@ -48,7 +48,7 @@ When a fixture does use LS-REF `experiments.xml`:
 - place it under `extra/org.fmi-standard.fmi-ls-ref/experiments.xml` if that is
   how the builder packages the SSP;
 - keep execution settings and compare-signal selection out of the XML;
-- keep `build.py` close to the VanDerPol pattern: validate, build, package,
+- keep `build.py` close to the `scenario` pattern: validate, build, package,
   stop.
 
 Most fixtures in this repository do not rely on LS-REF at runtime. For the

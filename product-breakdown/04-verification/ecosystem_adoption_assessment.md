@@ -68,7 +68,7 @@ results (raw engine output, default gate `atol=1e-3`, `rtol=1e-2`):
 | Dahlquist, Resource, Stair, VanDerPol baseline | pass | agreement within 5e-7 (shift-tolerant) |
 | signal_algebraic_loop, signal_fanout_gain, signal_sine_gain_add, signal_step_add, signal_step_gain, signal_step_product | pass | timing skew removed by shift tolerance |
 | BouncingBall | fail | OMSimulator misses bounce events (`h`/`v` diverge) |
-| VanDerPol fast | fail | FMPy differs from ssp4sim/OMSimulator by ~0.37 |
+| VanDerPol fast | pass | all registered backends agree within the gate tolerance |
 | dcmotor, embrace | fail | composite engines diverge by 32–287 |
 | signal_delay_detector, signal_nested_algebraic_loop | fail | initialization/iteration difference up to 1.0 |
 

@@ -22,9 +22,11 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 0.04877703603768424,
+    "max_rel_error": 0.01811500946014669,
     "max_shift_abs_error": 4.999823555174032e-07,
     "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 0.0014089742192347956,
+    "min_coverage": 1.0,
     "rmse": 0.005513153868647072,
     "run_a_label": "ssp4sim",
     "run_b_label": "fmpy",

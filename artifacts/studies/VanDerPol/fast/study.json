@@ -1,0 +1,18 @@
+{
+  "composition": "System",
+  "experiment": {
+    "name": "experiment_fast",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "VanDerPol",
+  "scenario": {
+    "set": "FastScenario",
+    "ssm": "fast.ssm",
+    "ssv": "FastScenario.ssv"
+  },
+  "study": "fast",
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

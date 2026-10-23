@@ -22,9 +22,11 @@
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 0.0487773252215884,
+    "max_rel_error": 0.01811511705398729,
     "max_shift_abs_error": 4.998668146072305e-12,
     "max_signal_invariant_abs_error": 0.0,
     "mean_abs_error": 0.001408750008492738,
+    "min_coverage": 1.0,
     "rmse": 0.005513151968469761,
     "run_a_label": "omsimulator",
     "run_b_label": "fmpy",

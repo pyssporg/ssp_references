@@ -26,9 +26,9 @@ status: current
   repository.
 - FMPy applies only the parameter set the SSD declares; an SSV the system
   definition does not reference is never merged.
-- Study parameter forms are applied by `pyssp_workflow.execute` packaging
-  steps; each one mutates through `pyssp_standard`.
-- Comparison composition lives in `pyssp_workflow.execute.compare_result_csvs`;
+- Study parameter forms are applied by `pyssp_workflow.binding.apply_bindings`;
+  each one mutates through `pyssp_standard`.
+- Comparison composition lives in `pyssp_workflow.compare.compare_csvs`;
   alignment, resampling, metric families, global shift search, and the local
   shift primitive live in `pyssp_vv.measure`.
 - Metric-row and summary schema live in `pyssp_vv.evidence`; a figure is data
@@ -47,8 +47,9 @@ status: current
 - `pyssp_vv`: `Trajectory`, `Comparison`, `SignalMetrics`, `Policy`,
   `Judgment`, `Verdict`, `EvidenceBundle`, `MetricRow`, `ComparisonSummary`,
   and `FigureSpec`.
-- `pyssp_workflow`: the `authoring` functions, the `execute` packaging steps
-  and comparison composition, `params` readers, and the optional node layer.
+- `pyssp_workflow`: the `authoring` functions, `binding.apply_bindings`,
+  `compare.compare_csvs`, the `study` scenario readers, the `fixture` path
+  helpers, and the optional node layer.
 - `pyssp_sysml2`: the `pyssp` CLI and documented generation functions.
 - `sequence_extensions`: `node`, `execute_flow`, `RunOptions`, and flow
   results.

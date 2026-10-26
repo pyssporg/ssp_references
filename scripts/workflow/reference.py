@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from pyssp_workflow import execute
+from pyssp_workflow import compare
 from pyssp_vv.evidence import read_metric_csv
 
 from .gate import SHIFT_TOLERANCE_SAMPLES, GateOutcome, evaluate_gate
@@ -84,7 +84,7 @@ class ReferenceComparisonRun:
     """One reference comparison: the upstream record plus the local gate."""
 
     request: ReferenceComparisonRequest
-    record: execute.ComparisonRecord
+    record: compare.ComparisonRecord
     gate: GateOutcome = GateOutcome(status="not_evaluated")
 
     @property
@@ -114,7 +114,7 @@ class ReferenceComparisonRun:
         data = read_json(path)
         return cls(
             request=ReferenceComparisonRequest.from_manifest(path),
-            record=execute.ComparisonRecord.from_dict(data, base_dir=path.parent),
+            record=compare.ComparisonRecord.from_dict(data, base_dir=path.parent),
             gate=GateOutcome.from_dict(data.get("gate")),
         )
 
@@ -122,13 +122,13 @@ class ReferenceComparisonRun:
 def compare_reference(request: ReferenceComparisonRequest) -> ReferenceComparisonRun:
     setup = request.run.request.setup
     window = setup.window
-    record = execute.compare_result_csvs(
-        execute.ComparisonRequest(
-            reference=execute.ResultRef(
+    record = compare.compare_csvs(
+        compare.ComparisonRequest(
+            reference=compare.ResultRef(
                 result_csv=request.reference_path,
                 label=request.reference.label,
             ),
-            candidate=execute.ResultRef(
+            candidate=compare.ResultRef(
                 result_csv=request.run.result_path,
                 label=request.run.request.backend,
             ),
@@ -146,7 +146,7 @@ def compare_reference(request: ReferenceComparisonRequest) -> ReferenceCompariso
         )
     )
     invariant_rows = signal_invariant_rows(
-        execute.ResultRef(
+        compare.ResultRef(
             result_csv=request.run.result_path,
             label=request.run.request.backend,
         ),

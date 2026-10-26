@@ -13,9 +13,10 @@ import tempfile
 from pathlib import Path
 
 from pyssp_standard import SSM, SSP, SSV
-from pyssp_workflow.authoring import FixtureBuild, build_fixture, report_builds
-from pyssp_workflow.packaging import apply_inline_components
-from pyssp_workflow.params import scenario_mappings, scenario_values
+from pyssp_workflow.authoring import build_fixture, report_builds
+from pyssp_workflow.binding import InlineComponents, apply_bindings
+from pyssp_workflow.fixture import BuiltFixture
+from pyssp_workflow.study import read_scenario
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -23,16 +24,16 @@ MODEL_NAME = "signal_nested_external_bindings"
 NESTED_SYSTEM = "inner"
 
 
-def _nested_external_binding(build: FixtureBuild) -> None:
+def _nested_external_binding(build: BuiltFixture) -> None:
     model_build_dir = build.model_dir
-    descriptor = build.descriptor
+    scenario = read_scenario(build.descriptor)
     prefix = f"{NESTED_SYSTEM}."
     pairs = [
         (source, target)
-        for source, target in scenario_mappings(descriptor)
+        for source, target in scenario.mappings
         if target.startswith(prefix)
     ]
-    values = scenario_values(descriptor)
+    values = scenario.values
     ssv_name = f"{NESTED_SYSTEM}_parameters.ssv"
     ssm_name = f"{NESTED_SYSTEM}_mapping.ssm"
 
@@ -68,6 +69,9 @@ if __name__ == "__main__":
         repo_root=REPO_ROOT,
         studies=("baseline",),
     )
-    apply_inline_components(builds["baseline"], only={"step"})
+    apply_bindings(
+        builds["baseline"],
+        InlineComponents(only=frozenset({"step"})),
+    )
     _nested_external_binding(builds["baseline"])
     raise SystemExit(report_builds(builds))

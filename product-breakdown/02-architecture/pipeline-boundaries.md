@@ -90,7 +90,7 @@ checkouts. The capabilities are nested inside it:
 
 | Submodule | Used by |
 | --- | --- |
-| `3rd_party/pyssp_workflow` | Composition layer: authoring, build, execute, measure/judge nodes, development tree |
+| `3rd_party/pyssp_workflow` | Composition layer: authoring, study, fixture, binding, compare, nodes, development tree |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` | Build and SSP XML inspection |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_simulate` | Simulate |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2` | Authoring (CLI) and SysML round-trip checker |
@@ -155,8 +155,8 @@ python3 scripts/check_sysml_roundtrip.py \
    a study descriptor. It must not produce a `SystemStructure.ssd` or `.ssp`;
    the build packages it into the model SSP.
 8. **Parameter form is applied at build.** Default is a root external SSV/SSM
-   binding. Other forms use a `pyssp_workflow.execute` packaging callable that
-   mutates through `pyssp_standard`.
+   binding. Other forms pass a `pyssp_workflow.binding` record to
+   `apply_bindings`, which mutates through `pyssp_standard`.
 
 ## Backward Trace
 

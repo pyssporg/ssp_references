@@ -13,14 +13,15 @@ from pathlib import Path
 
 from pyfmu_csv.packaging import package_fmu_from_csv
 from pyssp_standard import SSP
-from pyssp_workflow.authoring import FixtureBuild, build_fixture, report_builds
+from pyssp_workflow.authoring import build_fixture, report_builds
+from pyssp_workflow.fixture import BuiltFixture
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 SOURCE_CSV = Path(__file__).resolve().parent / "input" / "signals.csv"
 
 
-def _attach_source_fmu(build: FixtureBuild) -> None:
+def _attach_source_fmu(build: BuiltFixture) -> None:
     """Attach the CsvSource FMU generated from ``input/signals.csv``."""
     with tempfile.TemporaryDirectory(prefix="pyfmu_csv_source_sink_") as temp_dir:
         fmu_path = Path(temp_dir) / "CsvSource.fmu"

@@ -1,7 +1,7 @@
 """Compose engine-to-engine comparisons.
 
 Measurement and the reviewed metric table come from ``pyssp_vv`` and
-``pyssp_workflow.execute``. This module owns the artifact layout, the
+``pyssp_workflow.compare``. This module owns the artifact layout, the
 repository gate, and the comparison manifests.
 """
 
@@ -11,7 +11,7 @@ from itertools import combinations
 from dataclasses import dataclass
 from pathlib import Path
 
-from pyssp_workflow import execute
+from pyssp_workflow import compare
 from pyssp_vv.evidence import read_metric_csv
 
 from utils.filesystem import reset_dir
@@ -109,7 +109,7 @@ class ComparisonRun:
     """One measured pair: the upstream record plus the local gate payload."""
 
     request: ComparisonRequest
-    record: execute.ComparisonRecord
+    record: compare.ComparisonRecord
     gate: GateOutcome = GateOutcome(status="not_evaluated")
     max_signal_invariant_abs_error: float = 0.0
     signal_invariant_count: int = 0
@@ -154,7 +154,7 @@ class ComparisonRun:
         summary = data.get("summary") or {}
         return cls(
             request=ComparisonRequest.from_manifest(path),
-            record=execute.ComparisonRecord.from_dict(data, base_dir=path.parent),
+            record=compare.ComparisonRecord.from_dict(data, base_dir=path.parent),
             gate=GateOutcome.from_dict(data.get("gate")),
             max_signal_invariant_abs_error=float(
                 summary.get("max_signal_invariant_abs_error", 0.0)
@@ -345,13 +345,13 @@ def compare_runs(request: ComparisonRequest) -> ComparisonRun:
     reset_dir(request.run_dir)
     setup = request.run_a.request.setup
     window = setup.window
-    record = execute.compare_result_csvs(
-        execute.ComparisonRequest(
-            reference=execute.ResultRef(
+    record = compare.compare_csvs(
+        compare.ComparisonRequest(
+            reference=compare.ResultRef(
                 result_csv=request.run_a.result_path,
                 label=request.run_a.request.backend,
             ),
-            candidate=execute.ResultRef(
+            candidate=compare.ResultRef(
                 result_csv=request.run_b.result_path,
                 label=request.run_b.request.backend,
             ),
@@ -370,7 +370,7 @@ def compare_runs(request: ComparisonRequest) -> ComparisonRun:
     )
     invariant_rows = [
         *signal_invariant_rows(
-            execute.ResultRef(
+            compare.ResultRef(
                 result_csv=request.run_a.result_path,
                 label=request.run_a.request.backend,
             ),
@@ -379,7 +379,7 @@ def compare_runs(request: ComparisonRequest) -> ComparisonRun:
             root_system_name=setup.root_system_name,
         ),
         *signal_invariant_rows(
-            execute.ResultRef(
+            compare.ResultRef(
                 result_csv=request.run_b.result_path,
                 label=request.run_b.request.backend,
             ),

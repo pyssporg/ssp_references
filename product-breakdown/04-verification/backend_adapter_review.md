@@ -55,7 +55,7 @@ in this repository.
 - **Loading:** `pyssp_simulate.read_result_csv`.
 - **Column naming:** `canonicalize_signal` strips runtime container names, so
   `fmu.h` becomes `h`; `time` stays unchanged.
-- **Comparison:** `pyssp_workflow.execute.compare_result_csvs` loads two result
+- **Comparison:** `pyssp_workflow.compare.compare_csvs` loads two result
   CSVs and measures through `pyssp_vv.measure`; the metric-row schema is
   `pyssp_vv.evidence`. Gate policy stays local in `scripts/workflow/gate.py`.
 
@@ -94,7 +94,7 @@ in this repository.
 - **Simulation spec:** `scripts/workflow/simulate.py`, `_simulation_spec()`.
 - **Engine execution:** `pyssp_simulate.simulate` and its internal backends.
 - **Result CSV:** `pyssp_simulate.read_result_csv`, `canonicalize_signal`.
-- **Comparison composition:** `pyssp_workflow.execute.compare_result_csvs`.
+- **Comparison composition:** `pyssp_workflow.compare.compare_csvs`.
 - **Measurement:** `pyssp_vv.measure`.
 - **Gate:** `scripts/workflow/gate.py`.
 

@@ -67,11 +67,13 @@ contract:
   `SspModel` composition is then a boundary marker that selects the body with
   `ssp_meta.source`, and is not exported.
 - `build.py` calls `pyssp_workflow.authoring.build_fixture(...)`, which builds
-  one study and model SSP per study and returns their records; `report_builds`
-  prints them. The fixture then applies the scenario in an explicit
-  `pyssp_workflow.packaging` call: `apply_external_ssv_ssm` (the default
-  external SSV/SSM form), `apply_inline_root`, `apply_target_named_external`,
-  `apply_inline_with_mapping`, or `apply_inline_components`.
+  one study and model SSP per study and returns
+  `pyssp_workflow.fixture.BuiltFixture` records; `report_builds` prints them.
+  The fixture then applies the scenario in an explicit
+  `pyssp_workflow.binding.apply_bindings(build, <Record>)` call, using one
+  binding record: `ExternalStudy` (the default external SSV/SSM form),
+  `InlineRoot`, `TargetNamedExternal`, `InlineWithMapping`, or
+  `InlineComponents`.
 - `FIXTURE.md` provides the fixture notes for each model.
 - Running `build.py` writes the runnable SSP under
   `artifacts/models/<model>/<study>/<build>/` and study artifacts under
@@ -189,10 +191,18 @@ simulation and comparison logic has a single home.
 python3 scripts/run_campaign.py --model BouncingBall --model Dahlquist
 python3 scripts/run_campaign.py --model BouncingBall --fail-on-gate
 python3 scripts/run_campaign.py --model signal_step_gain --fail-on-gate
+python3 scripts/run_campaign.py --model BouncingBall --max-workers 8
 ```
 
 The campaign runs in the same Python 3.11+ environment as the core pipeline.
 Run logs are written to `artifacts/runs/<run_id>.jsonl`.
+
+Builds are deduplicated per model: one build node is submitted once and reused
+by all cases of that model. One prepare node per case runs
+`run_simulations.py --prepare-only`, which writes `setup.json` exactly once; the
+per-backend simulation nodes run with `--skip-setup-manifest` and do not rewrite
+it. The default worker count is `min(16, CPU count)`; `--max-workers N` overrides
+it, and the effective count is printed and recorded in the run summary.
 
 The registry maps each model to one or more cases, and each model also carries
 the explicit compare-signal list used for engine-to-engine comparisons. That

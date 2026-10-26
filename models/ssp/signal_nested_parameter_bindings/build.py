@@ -13,8 +13,9 @@ import tempfile
 from pathlib import Path
 
 from pyssp_standard import SSM, SSP
-from pyssp_workflow.authoring import FixtureBuild, build_fixture, report_builds
-from pyssp_workflow.params import scenario_targets
+from pyssp_workflow.authoring import build_fixture, report_builds
+from pyssp_workflow.fixture import BuiltFixture
+from pyssp_workflow.study import read_scenario, scenario_targets
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -30,9 +31,9 @@ ROOT_MAPPINGS = (
 )
 
 
-def _inline_parameters(build: FixtureBuild) -> None:
+def _inline_parameters(build: BuiltFixture) -> None:
     """Step component inline, inner system-level inline, gain component inline."""
-    targets = scenario_targets(build.descriptor)
+    targets = scenario_targets(read_scenario(build.descriptor))
     step = {
         name.split(".")[-1]: value
         for name, value in targets.items()
@@ -56,7 +57,7 @@ def _inline_parameters(build: FixtureBuild) -> None:
         next(e for e in inner.elements if e.name == "gain").extend_inline_parameterset(gain)
 
 
-def _root_external_binding(build: FixtureBuild) -> None:
+def _root_external_binding(build: BuiltFixture) -> None:
     with tempfile.TemporaryDirectory(prefix=f"{MODEL_NAME}_") as temp_dir:
         ssm_path = Path(temp_dir) / ROOT_MAPPING_NAME
         with SSM(ssm_path, mode="w") as ssm:

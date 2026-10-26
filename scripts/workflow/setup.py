@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from pyssp_workflow.params import read_study_descriptor
+from pyssp_workflow.study import read_study_descriptor
 
 from utils.domain import SimulationWindow
 

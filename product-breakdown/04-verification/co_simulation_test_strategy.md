@@ -287,7 +287,7 @@ This repository already supports the core workflow needed for the strategy:
   the explicit backend list, selected compare signals, scenario paths, and
   experiment window for that setup.
 - Simulation is driven by `scripts/run_simulations.py` and the target
-  `pyssp_workflow` execute nodes.
+  `pyssp_workflow` nodes.
 - Comparison is driven by `scripts/run_comparisons.py`; measurement and
   judgment come from `pyssp_vv`.
 

@@ -6,7 +6,7 @@ import argparse
 from pathlib import Path
 
 from workflow.registry import default_registry_path, load_registry
-from workflow.setup import prepare_setup
+from workflow.setup import SimulationSetup, prepare_setup
 from workflow.simulate import SimulationRequest, simulate_backend
 
 
@@ -36,6 +36,17 @@ def parse_args() -> argparse.Namespace:
         action="append",
         help="Limit execution to the named backend. Repeat to select multiple backends.",
     )
+    manifest = parser.add_mutually_exclusive_group()
+    manifest.add_argument(
+        "--prepare-only",
+        action="store_true",
+        help="Prepare each selected setup, write its setup manifest, and exit.",
+    )
+    manifest.add_argument(
+        "--skip-setup-manifest",
+        action="store_true",
+        help="Reuse the existing setup manifest instead of writing it.",
+    )
     return parser.parse_args()
 
 
@@ -56,8 +67,22 @@ def main() -> int:
         raise ValueError("No simulation cases matched the selected registry filters")
 
     for spec, backends in selected:
-        setup = prepare_setup(spec)
-        setup.write_manifest()
+        if args.skip_setup_manifest:
+            manifest_path = spec.layout.setup_manifest_path
+            if not manifest_path.is_file():
+                raise FileNotFoundError(
+                    f"Setup manifest not found: {manifest_path}; "
+                    "run without --skip-setup-manifest first"
+                )
+            setup = SimulationSetup.from_manifest(manifest_path)
+        else:
+            setup = prepare_setup(spec)
+            setup.write_manifest()
+
+        if args.prepare_only:
+            print(setup.manifest_path)
+            continue
+
         for backend in backends:
             request = SimulationRequest(setup=setup, backend=backend)
             run = simulate_backend(request)

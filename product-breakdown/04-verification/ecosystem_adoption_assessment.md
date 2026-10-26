@@ -167,6 +167,32 @@ CLI-free embedding.
    direct argument (the campaign runner does this).
 4. A thread pool cannot contain a native engine abort. The campaign runner
    shells out to `run_simulations.py`, so the abort stays in the child process.
+5. Retry/error policy is exception-based: a node body that returns a nonzero
+   subprocess exit as a value never triggers retries and does not stop
+   dependents. The campaign's `_run` helper returns a result dict, so this is the
+   live behavior.
+6. Node timeout abandons the attempt and cancels the future, but cannot
+   interrupt a body blocked in `subprocess.run`; no process-group kill or
+   external-engine cancellation exists.
+7. Failure handling is not fail-fast: on a run error the pool cancels pending
+   nodes but waits for already-running nodes, so a long child process delays the
+   failure return.
+8. The library's worker sizing is one fixed global bound (default 16) with no
+   machine-derived default, no per-node resource class, priority, or affinity;
+   all nodes share one FIFO pool. The campaign now derives
+   `min(16, CPU count)` and accepts `--max-workers`, but the library itself
+   offers no resource-aware scheduling.
+9. The resolved `RunOptions` are not recorded in `run_start`; the audit log
+   records node args/kwargs. The campaign passes `workers` as a campaign
+   argument so it appears there, but pool sizing is otherwise invisible after
+   the fact.
+
+**Tradeoff:** `ProcessGraphPool` is not a fix for this pattern. It requires
+picklable payloads and forbids submit/return-future inside workers, while the
+thread pool is the correct fit for nodes that shell out to subprocesses.
+
+These items are recorded for a later `sequence_extensions` review; no fix is in
+scope now.
 
 ---
 
@@ -228,7 +254,7 @@ python3 scripts/check_sysml_roundtrip.py \
 | No explicit comparison window | pyssp_simulate | Patched in 0.1.1 |
 | SSD → SysML → SSD loses metadata | pyssp_sysml2 | Patched in 0.1.1 |
 | No `SspModel`/`Study` role markers or study generation | pyssp_sysml2 | Implemented in pilot (ADR-009) |
-| Scenario packaging in the build | pyssp_workflow | Implemented: `pyssp_workflow.execute` packaging forms (`DD-011`) |
+| Scenario packaging in the build | pyssp_workflow | Implemented: `pyssp_workflow.binding` packaging forms (`DD-011`) |
 | Comparison and gate ownership | this repo → pyssp_vv | Migrated to `pyssp_vv.measure` and `pyssp_vv.judge` (DD-010) |
 | `pyssp_standard` version skew / LS-REF split | pyssp_sysml2 / pyssp_standard | Resolved by artifact boundary: pyssp_sysml2 targets the refactored API; checker invokes `pyssp` via CLI |
 | PyPI name collision | sequence_extensions | Patched: publishes as `sequence-extensions-flow` |

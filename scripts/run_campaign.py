@@ -11,6 +11,7 @@ Requires Python 3.11+ (``sequence_extensions`` requirement).
 from __future__ import annotations
 
 import argparse
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -21,11 +22,20 @@ if sys.version_info < (3, 11):
         "use scripts/run_simulations.py and scripts/run_comparisons.py instead."
     )
 
-from sequence_extensions.flow import RunOptions, execute_flow, gather, node
-
+from sequence_extensions.flow import (
+    DEFAULT_MAX_WORKERS,
+    RunOptions,
+    execute_flow,
+    gather,
+    node,
+)
 from workflow.registry import default_registry_path, load_registry
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def default_max_workers() -> int:
+    return max(1, min(DEFAULT_MAX_WORKERS, os.cpu_count() or 1))
 
 
 def _run(command: list[str]) -> dict[str, object]:
@@ -55,6 +65,25 @@ def build_model_task(model: str) -> dict[str, object]:
     )
 
 
+@node(retries=1, retry_delay_seconds=0.5, timeout=600.0)
+def prepare_case_task(
+    model: str,
+    case: str,
+    *dependencies: object,
+) -> dict[str, object]:
+    return _run(
+        [
+            sys.executable,
+            "scripts/run_simulations.py",
+            "--model",
+            model,
+            "--case",
+            case,
+            "--prepare-only",
+        ]
+    )
+
+
 @node(retries=1, retry_delay_seconds=0.5, timeout=1800.0)
 def simulate_task(
     model: str,
@@ -72,6 +101,7 @@ def simulate_task(
             case,
             "--backend",
             backend,
+            "--skip-setup-manifest",
         ]
     )
 
@@ -107,6 +137,7 @@ def summarize_campaign(payload: dict[str, object]) -> dict[str, object]:
             for result in results
             if int(result["returncode"]) != 0
         ],
+        "workers": payload["workers"],
     }
 
 
@@ -118,24 +149,33 @@ def campaign(
     fail_on_gate: bool = False,
     build: bool = True,
     registry_path: Path | None = None,
+    workers: int | None = None,
 ) -> dict[str, object]:
     registry = load_registry(registry_path or default_registry_path())
     specs = registry.expand(model_names=models or None, case_names=cases or None)
     if not specs:
         raise ValueError("No simulation cases matched the selected registry filters")
 
+    builds: dict[str, object] = {}
     comparisons = []
     for spec in specs:
         dependencies: tuple[object, ...] = ()
         if build:
-            dependencies = (build_model_task.submit(spec.model_name),)
+            if spec.model_name not in builds:
+                builds[spec.model_name] = build_model_task.submit(spec.model_name)
+            dependencies = (builds[spec.model_name],)
 
+        prepare = prepare_case_task.submit(
+            spec.model_name,
+            spec.case_name,
+            *dependencies,
+        )
         simulations = [
             simulate_task.submit(
                 spec.model_name,
                 spec.case_name,
                 backend,
-                *dependencies,
+                prepare,
             )
             for backend in spec.backends
         ]
@@ -148,7 +188,9 @@ def campaign(
             )
         )
 
-    return summarize_campaign.submit(gather({"comparisons": comparisons}))
+    return summarize_campaign.submit(
+        gather({"comparisons": comparisons, "workers": workers})
+    )
 
 
 def parse_args() -> argparse.Namespace:
@@ -161,19 +203,37 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Use existing model and study artifacts instead of building them.",
     )
-    return parser.parse_args()
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=None,
+        help=(
+            "Maximum concurrent nodes "
+            f"(default: min({DEFAULT_MAX_WORKERS}, CPU count))."
+        ),
+    )
+    args = parser.parse_args()
+    if args.max_workers is not None and args.max_workers < 1:
+        parser.error("--max-workers must be at least 1")
+    if args.max_workers is None:
+        args.max_workers = default_max_workers()
+    return args
 
 
 def main() -> int:
     args = parse_args()
+    workers = args.max_workers
+    print(f"workers: {workers}")
     run = execute_flow(
         campaign,
         tuple(args.models),
         tuple(args.cases),
         fail_on_gate=args.fail_on_gate,
         build=not args.no_build,
+        workers=workers,
         options=RunOptions(
             name="ssp-campaign",
+            max_workers=workers,
             log=str(REPO_ROOT / "artifacts" / "runs"),
             summary=True,
         ),

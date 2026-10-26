@@ -19,7 +19,7 @@ pb_exempt: true
 ## 1. Metrics Inventory
 
 Measurement is produced by `pyssp_vv.measure.metric_rows` and composed per pair
-by `pyssp_workflow.execute.compare_result_csvs`. The reviewed column schema
+by `pyssp_workflow.compare.compare_csvs`. The reviewed column schema
 lives in `pyssp_vv.evidence.METRIC_COLUMNS`; `MetricRow` keeps it verbatim.
 
 ### 1.1 Per-Signal Rows (`metrics.csv`)
@@ -117,7 +117,7 @@ Reasons are recorded as `signal: code (detail)` strings.
 - **Metrics producer:** `pyssp_vv.measure.metric_rows`.
 - **Schema:** `pyssp_vv.evidence.METRIC_COLUMNS`, `MetricRow`,
   `ComparisonSummary`.
-- **Composition:** `pyssp_workflow.execute.compare_result_csvs`.
+- **Composition:** `pyssp_workflow.compare.compare_csvs`.
 - **Gate:** `scripts/workflow/gate.py`, `evaluate_gate()` and
   `combine_gate_outcomes()`.
 - **Policy inputs:** registry `gate` entry, `workflow/model_policy.py` signal

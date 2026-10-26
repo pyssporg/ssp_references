@@ -14,7 +14,7 @@ from itertools import product
 import numpy as np
 from pyssp_simulate import read_result_csv
 from pyssp_vv.measure import Grid, resample
-from pyssp_workflow.execute import ResultRef
+from pyssp_workflow.compare import ResultRef
 
 from utils.domain import SimulationWindow
 

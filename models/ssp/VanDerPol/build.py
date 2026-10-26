@@ -12,7 +12,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from pyssp_workflow.authoring import build_fixture, report_builds
-from pyssp_workflow.packaging import apply_external_ssv_ssm
+from pyssp_workflow.binding import ExternalStudy, apply_bindings
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -26,6 +26,6 @@ if __name__ == "__main__":
         # interface, so it reports ModelExchange and rejects CoSimulation.
         validate_fmus=False,
     )
-    apply_external_ssv_ssm(builds["fast"])
-    apply_external_ssv_ssm(builds["slow"])
+    apply_bindings(builds["fast"], ExternalStudy())
+    apply_bindings(builds["slow"], ExternalStudy())
     raise SystemExit(report_builds(builds))

@@ -155,8 +155,8 @@ python3 scripts/check_sysml_roundtrip.py \
    a study descriptor. It must not produce a `SystemStructure.ssd` or `.ssp`;
    the build packages it into the model SSP.
 8. **Parameter form is applied at build.** Default is a root external SSV/SSM
-   binding. Other forms pass a `pyssp_workflow.binding` record to
-   `apply_bindings`, which mutates through `pyssp_standard`.
+   binding. Other forms pass different `pyssp_workflow.binding.bind` options,
+   which mutate through `pyssp_standard`.
 
 ## Backward Trace
 

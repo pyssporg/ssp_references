@@ -70,10 +70,12 @@ contract:
   one study and model SSP per study and returns
   `pyssp_workflow.fixture.BuiltFixture` records; `report_builds` prints them.
   The fixture then applies the scenario in an explicit
-  `pyssp_workflow.binding.apply_bindings(build, <Record>)` call, using one
-  binding record: `ExternalStudy` (the default external SSV/SSM form),
-  `InlineRoot`, `TargetNamedExternal`, `InlineWithMapping`, or
-  `InlineComponents`.
+  `pyssp_workflow.binding.bind(build, ssv, *, mode=..., ssm=..., mapping=...,
+  components=...)` call, which returns a `BindingResult`. `mode` is `external`
+  (default) or `inline`; `mapping` is `attach` (default, keeps SSV member
+  names) or `flatten` (resolves to target names through the optional `ssm`);
+  `components` selects per-component inline sets. `set_name` overrides the
+  parameter set name.
 - `FIXTURE.md` provides the fixture notes for each model.
 - Running `build.py` writes the runnable SSP under
   `artifacts/models/<model>/<study>/<build>/` and study artifacts under

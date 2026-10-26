@@ -2,7 +2,7 @@
 """Build signal_nested_external_bindings and its baseline study.
 
 The SysML authors the nested ``Inner`` system and its boundary wiring. A
-post-processing step applies the step scenario inline and attaches the nested
+post-processing step binds the step scenario inline and attaches the nested
 system's scenario as an external SSV+SSM binding (the form this fixture
 exercises).
 """
@@ -14,7 +14,7 @@ from pathlib import Path
 
 from pyssp_standard import SSM, SSP, SSV
 from pyssp_workflow.authoring import build_fixture, report_builds
-from pyssp_workflow.binding import InlineComponents, apply_bindings
+from pyssp_workflow.binding import bind
 from pyssp_workflow.fixture import BuiltFixture
 from pyssp_workflow.study import read_scenario
 
@@ -69,9 +69,14 @@ if __name__ == "__main__":
         repo_root=REPO_ROOT,
         studies=("baseline",),
     )
-    apply_bindings(
+    scenario = read_scenario(builds["baseline"].descriptor)
+    bind(
         builds["baseline"],
-        InlineComponents(only=frozenset({"step"})),
+        scenario.ssv_path,
+        ssm=scenario.ssm_path,
+        mode="inline",
+        mapping="flatten",
+        components=frozenset({"step"}),
     )
     _nested_external_binding(builds["baseline"])
     raise SystemExit(report_builds(builds))

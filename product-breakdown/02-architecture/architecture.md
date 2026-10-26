@@ -247,7 +247,7 @@ artifact:
            |
            |  build_models.py -> build.py
            |  pyssp_workflow.authoring + pyssp_workflow.binding / pyssp_standard
-           |  (SysML -> model SSP; study scenario packaged by apply_bindings)
+           |  (SysML -> model SSP; study scenario packaged by binding.bind)
            v
   artifacts/models/<model>/<study>/<build>/  (runnable SSP:
                                               SystemStructure.ssd, resources/,
@@ -406,8 +406,8 @@ The following architectural violations are not allowed:
 
 10. **Parameter form is applied where it is known.** Default packaging is a
     root external SSV/SSM binding. A fixture that exercises another form passes
-    the matching `pyssp_workflow.binding` record to `apply_bindings`, which
-    mutates through `pyssp_standard`. The simulate stage does not inject or
+    the matching `pyssp_workflow.binding.bind` options, which mutate through
+    `pyssp_standard`. The simulate stage does not inject or
     reshape parameters. See `PD-007` and `ADR-013`.
 
 ---

@@ -2,7 +2,7 @@
 
 - **Current state**: layer leaves carry `id`, `type`, `title`, `summary`, `date`, and `status` front-matter.
 - **Citations**: cite another node by ID in backticks, never by a markdown path.
-- **Decision records**: live in `docs/archive/archive.zip`, read with `pb archive read <ID>`.
+- **Decision records**: live in `docs/archive/archive.zip`, read with `pb archive --root docs/breakdown read <ID>`.
 - **Generated registers**: `docs/archive/README.md`, `docs/archive/design-choice-log.md`, and `docs/archive/traceability-map.md` are generated; never edit them by hand.
 
 ## Leaf ID Prefixes
@@ -45,6 +45,6 @@ DD-009-runtime-scenario-injection.md
 
 ## Adding a Leaf
 
-1. Run `pb new <layer-dir> "<Title>" --summary "<one-line>" --type <type>`.
+1. Run `pb new --root docs/breakdown <layer-dir> "<Title>" --summary "<one-line>" --type <type>`.
 2. Keep one current-state fact per line, present tense.
 3. Cite other nodes by ID, not by path.

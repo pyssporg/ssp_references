@@ -11,7 +11,7 @@ Canonical current state for the SSP reference fixture repository: why it exists,
 - `04-verification/` - how claims are checked.
 - `05-operation/` - how authors run, maintain, and release.
 - `06-evolution/` - candidates for controlled change.
-- the decision archive (`../archive/archive.zip`) - flat, dated history, read via `pb archive`, never browsed.
+- the decision archive (`../archive/archive.zip`) - flat, dated history, read via `pb archive --root docs/breakdown`, never browsed.
 
 ## Boundary Rule
 
@@ -21,6 +21,6 @@ Information flows downward only: Intent, Product, Architecture, Implementation, 
 
 ## Excludes
 
-- Dated rationale in layer leaves: use `pb archive`.
+- Dated rationale in layer leaves: use `pb archive --root docs/breakdown`.
 - Implementation detail in high layers: route to the owning layer.
-- Hand-maintained decision logs or traceability maps: regenerate with `pb registers`.
+- Hand-maintained decision logs or traceability maps: regenerate with `pb registers --root docs/breakdown`.

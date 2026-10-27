@@ -338,7 +338,7 @@ def test_scenario_mapping_keeps_only_the_live_target() -> None:
     if not ssd.is_file():
         pytest.skip("build output missing for scenario; run build_models.py")
 
-    from pyssp_standard.ssd import SSD as Ssp1SSD
+    from pyssp_standard import SSD as Ssp1SSD
 
     with Ssp1SSD(ssd, mode="r") as document:
         [binding] = document.xml.system.parameter_bindings

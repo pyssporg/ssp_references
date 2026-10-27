@@ -14,8 +14,8 @@ pb_exempt: true
 **Layer:** system-architecture
 
 This document is the canonical definition of the artifact-level contract
-between the repository's pipeline stages and external tools. The
-[System Architecture](architecture.md) describes the complete architecture;
+between the repository's pipeline stages and external tools. The system
+architecture leaf `INFO-002` describes the complete architecture;
 this file is the single reference for what each boundary reads and writes,
 and for which artifacts are allowed to cross a tool boundary.
 

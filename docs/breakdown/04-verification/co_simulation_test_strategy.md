@@ -298,7 +298,7 @@ pass/fail/invalid criteria.
 
 ## Coverage Taxonomy Reference
 
-The [System Simulation Use-Case Coverage Analysis](../06-evolution/use_case_coverage_analysis.md)
+The System Simulation Use-Case Coverage Analysis `EVAL-008`
 defines the canonical coverage taxonomy (UC-1 through UC-16) for this fixture
 suite. Every test level defined in this strategy should be traceable to one or
 more use-cases in that taxonomy.

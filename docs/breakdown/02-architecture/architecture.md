@@ -13,11 +13,11 @@ pb_exempt: true
 This document describes the stable guarantees, component boundaries, and
 interface contracts of the `ssp_references` repository. It sits at the
 **System Architecture** layer in the documentation chain, between
-[00-intent/intent.md](../00-intent/intent.md) (Intent and Product Commitments) and any future
+the intent leaf `INFO-001` (Intent and Product Commitments) and any future
 Technical Decisions records.
 
 The canonical artifact-level contract for the pipeline and external tools is
-[Pipeline and Tool Boundaries](pipeline-boundaries.md). This document describes
+`INFO-003`. This document describes
 the full architecture; that file is the single reference for what each
 boundary reads and writes.
 
@@ -229,7 +229,7 @@ independent artifact-only adapter over SSD files. Neither path imports
 own versions, as long as the exchanged artifacts remain standard-conformant.
 
 The exact boundary contract, artifact classes, and tool-environment rules are
-maintained in [Pipeline and Tool Boundaries](pipeline-boundaries.md).
+maintained in `INFO-003`.
 
 No tool may add compatibility behavior to a producer's Python model merely to
 satisfy a consumer. Adapt the consumer or the artifact boundary instead. See
@@ -415,7 +415,7 @@ The following architectural violations are not allowed:
 ## Document Purpose
 
 This architecture document satisfies the Build → Simulate → Compare pipeline
-commitment stated in [00-intent/intent.md](../00-intent/intent.md) by defining the stable
+commitment stated in `INFO-001` by defining the stable
 boundaries, interface contracts, and forbidden shortcuts that preserve that
 pipeline across changes. Future technical decisions (ADRs) and implementation
 work should reference this document as the source of architectural constraints.

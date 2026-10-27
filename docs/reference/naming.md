@@ -1,13 +1,3 @@
----
-id: INFO-007
-type: info
-title: Naming Conventions
-summary: Stable ID prefixes, archive record names, and citation rules.
-date: 2026-10-22
-status: current
-pb_exempt: true
----
-
 # Naming Conventions
 
 - **Current state**: layer leaves carry `id`, `type`, `title`, `summary`, `date`, and `status` front-matter.

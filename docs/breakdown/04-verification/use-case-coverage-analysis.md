@@ -67,7 +67,7 @@ The coverage matrix should be reviewed and updated each improvement cycle:
 
 ## Traceability
 
-- **Source:** IMP-011 candidate (`product-breakdown/06-evolution/backlog/complete/IMP-011.md`)
+- **Source:** IMP-011 candidate (`docs/breakdown/06-evolution/implemented/IMP-011.md`)
 - **Product:** PD-002 (fixture hierarchy) — the taxonomy maps directly to fixture classes
 - **Architecture:** ADR-001 (pipeline), ADR-002 (fixture hierarchy), ADR-003 (registry), ADR-004 (coverage taxonomy)
 - **Verification:** `co_simulation_test_strategy.md` references this taxonomy as the primary coverage lens

@@ -18,5 +18,6 @@ How claims about models, studies, and backends are checked.
 - **EVAL-005** [Comparison Metrics Gate Review](comparison_metrics_gate_review.md) — Metric schema from pyssp_vv.evidence and the gate rules implemented in the local workflow.
 - **EVAL-006** [Manifest Field Review](manifest_field_review.md) — Review of setup and run manifest fields.
 - **EVAL-007** [Simulation Registry Coverage Review](simulation_registry_coverage_review.md) — Audit of active model, study, and backend combinations.
+- **EVAL-008** [System Simulation Use-Case Coverage Analysis](use-case-coverage-analysis.md) — Coverage analysis of simulation use cases.
 - **EVAL-009** [Standard-artifact boundary audit](standard-boundary-audit.md) — SSP, SSV, SSM, and SSD pass through pyssp_standard; comparison passes through pyssp_vv; non-standard crossings use public API only.
 <!-- pb:index:end -->

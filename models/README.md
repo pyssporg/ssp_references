@@ -7,7 +7,7 @@ and which backends support it.
 ## SSP Fixtures
 
 The 21 SSP fixtures are organized into four architectural classes per the
-[fixture hierarchy](../product-breakdown/02-architecture/architecture.md#2-fixture-hierarchy).
+[fixture hierarchy](../docs/breakdown/02-architecture/architecture.md#2-fixture-hierarchy).
 
 ### Simple Reference Models
 
@@ -79,7 +79,7 @@ hierarchy and are referenced by SSP fixtures during the build stage.
 
 ## Test Level Definitions
 
-Per the [test strategy](../product-breakdown/04-verification/co_simulation_test_strategy.md):
+Per the [test strategy](../docs/breakdown/04-verification/co_simulation_test_strategy.md):
 
 | Level | Purpose | Passing Criteria |
 |-------|---------|-----------------|

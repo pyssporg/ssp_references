@@ -12,8 +12,8 @@ pb_exempt: true
 
 - **Current state**: layer leaves carry `id`, `type`, `title`, `summary`, `date`, and `status` front-matter.
 - **Citations**: cite another node by ID in backticks, never by a markdown path.
-- **Decision records**: live in `product-breakdown/archive.zip`, read with `pb archive read <ID>`.
-- **Generated registers**: `decisions/README.md`, `design-choice-log.md`, and `traceability-map.md` are generated; never edit them by hand.
+- **Decision records**: live in `docs/archive/archive.zip`, read with `pb archive read <ID>`.
+- **Generated registers**: `docs/archive/README.md`, `docs/archive/design-choice-log.md`, and `docs/archive/traceability-map.md` are generated; never edit them by hand.
 
 ## Leaf ID Prefixes
 
@@ -49,7 +49,7 @@ DD-009-runtime-scenario-injection.md
 ## Adding a Record
 
 1. Write the record with the skill template.
-2. Run `pb archive add <record>`.
+2. Run `pb archive --root docs/breakdown add <record>`.
 3. The command validates, stores the record, and deletes the loose file.
 4. Update the owning layer leaf in the same change so its `state:` target holds the current fact.
 

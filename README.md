@@ -41,14 +41,17 @@ definitions, fixture notes, and build metadata.
 │   ├── workflow/
 │   └── utils/
 ├── 3rd_party/                # git submodule: pyssp_workflow, which owns the capability checkouts
-├── product-breakdown/
-│   ├── 00-intent/              # north star intent and commitments
-│   ├── 01-product/              # product decisions
-│   ├── 02-architecture/         # system architecture and ADRs
-│   ├── 03-implementation/       # build/simulation workflow notes
-│   ├── 04-verification/         # test strategy and verification
-│   ├── 05-operation/            # operational guidance
-│   └── 06-evolution/            # backlog and roadmap
+├── docs/
+│   ├── breakdown/            # current state, seven layers
+│   │   ├── 00-intent/          # north star intent and commitments
+│   │   ├── 01-product/         # product decisions
+│   │   ├── 02-architecture/    # system architecture and ADRs
+│   │   ├── 03-implementation/  # build/simulation workflow notes
+│   │   ├── 04-verification/    # test strategy and verification
+│   │   ├── 05-operation/       # operational guidance
+│   │   └── 06-evolution/       # improvement candidates
+│   ├── archive/              # decision archive and generated registers
+│   └── reference/            # naming rules and reference examples
 └── requirements.txt
 ```
 
@@ -106,7 +109,7 @@ bodies. Generic build, simulate, compare, and figure code lives in the
 vendored pyssp packages.
 
 The canonical artifact contract for the stages and external tools is
-[Pipeline and Tool Boundaries](product-breakdown/02-architecture/pipeline-boundaries.md):
+[Pipeline and Tool Boundaries](docs/breakdown/02-architecture/pipeline-boundaries.md):
 
 ```text
 Build    -> runnable SSP + study SSV/SSM/study.json
@@ -250,7 +253,7 @@ The pyssp and sequence submodules are editable checkouts. See
 [`3rd_party/README.md`](3rd_party/README.md) for initialization, pinning, and
 update rules.
 
-See [the ecosystem assessment](product-breakdown/04-verification/ecosystem_adoption_assessment.md)
+See [the ecosystem assessment](docs/breakdown/04-verification/ecosystem_adoption_assessment.md)
 for the evaluated versions and remaining gaps.
 
 ## Quick Start

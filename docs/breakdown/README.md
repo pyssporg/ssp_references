@@ -11,11 +11,11 @@ Canonical current state for the SSP reference fixture repository: why it exists,
 - `04-verification/` - how claims are checked.
 - `05-operation/` - how authors run, maintain, and release.
 - `06-evolution/` - candidates for controlled change.
-- decision archive (`archive.zip`) - dated history, read via `pb archive`, never browsed.
+- the decision archive (`../archive/archive.zip`) - flat, dated history, read via `pb archive`, never browsed.
 
 ## Boundary Rule
 
-Current state lives in layer leaves. History lives in `archive.zip`. Registers are generated (`decisions/README.md`, `design-choice-log.md`, `traceability-map.md`).
+Current state lives in layer leaves. History lives in `../archive/archive.zip`. Registers are generated (`../archive/README.md`, `../archive/design-choice-log.md`, `../archive/traceability-map.md`) with `pb registers --root docs/breakdown`; never edit them by hand.
 
 Information flows downward only: Intent, Product, Architecture, Implementation, Verification, Operation. Evolution holds candidates, never current state.
 

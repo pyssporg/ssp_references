@@ -131,7 +131,7 @@ carried as `pyssp_*` control attributes and skipped by the SSV/FMI generators.
 The same fixture now round-trips structurally: connector kinds, parameter
 values/source, `implementation="CoSimulation"`, and `DefaultExperiment`
 (`0.0..1.0`) survive. The generated architecture is preserved at
-[`examples/signal_step_gain.architecture.sysml`](examples/signal_step_gain.architecture.sysml)
+[`signal_step_gain.architecture.sysml`](../../reference/examples/signal_step_gain.architecture.sysml)
 as an evaluation artifact, not a build input.
 
 **Interface gap closed:** `pyssp_sysml2` now targets the refactored

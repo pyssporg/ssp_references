@@ -4,7 +4,7 @@
 
 Before you read code, edit files, or plan a change, read the project vision:
 
-**`product-breakdown/00-intent/intent.md`**
+**`docs/breakdown/00-intent/intent.md`**
 
 It states why this repository exists, what it commits to, and what it refuses to
 become. It is the first document to read, not a reference of last resort.
@@ -64,25 +64,27 @@ capability.
 
 - `README.md` is the landing page for repository structure and usage.
 - Model notes live in each model's `FIXTURE.md`; new files follow
-  `product-breakdown/03-implementation/FIXTURE-template.md`.
-- `product-breakdown/` follows the product-breakdown skill:
+  `docs/breakdown/03-implementation/FIXTURE-template.md`.
+- `docs/breakdown/` follows the product-breakdown skill. Set
+  `PB=<skills-dir>/product-breakdown/scripts/pb` and pass `--root docs/breakdown`
+  to every command:
   - current state lives in layer leaves, in the present tense;
-  - dated decisions live in `product-breakdown/archive.zip`, read with
-    `python3 .agents/skills/product-breakdown/scripts/pb archive list` and
+  - dated decisions live in `docs/archive/archive.zip`, read with
+    `python3 $PB archive --root docs/breakdown list` and
     `... read <ID>`, and added with `... add <record>`;
   - never add per-layer `decisions/` folders or hand-maintain decision logs;
-  - regenerate `product-breakdown/decisions/README.md`,
-    `product-breakdown/design-choice-log.md`, and
-    `product-breakdown/traceability-map.md` with
-    `python3 .agents/skills/product-breakdown/scripts/pb registers`; never edit
+  - regenerate `docs/archive/README.md`,
+    `docs/archive/design-choice-log.md`, and
+    `docs/archive/traceability-map.md` with
+    `python3 $PB registers --root docs/breakdown`; never edit
     them by hand;
-  - run `python3 .agents/skills/product-breakdown/scripts/pb check --strict`
-    and `... node-size --strict` after edits.
+  - run `python3 $PB check --strict --root docs/breakdown`
+    and `... node-size --strict --root docs/breakdown` after edits.
 - `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` is the only editable
   pyssp_standard checkout. The nested
   `pyssp_sysml2/3rd_party/pyssp_standard` copy is a pinned dependency: do not
   edit it; local changes belong in the canonical checkout.
-- Keep cross-cutting workflow or strategy notes in `product-breakdown/`.
+- Keep cross-cutting workflow or strategy notes in `docs/breakdown/`.
 - When docs move or commands change, update the references so the documented
   build and simulation flow stays accurate.
 

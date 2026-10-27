@@ -138,9 +138,9 @@ All 12 models that were already in the registry have valid SSP roots on disk (Sy
 | Add FMPy to Backend Key in README | models/README.md | Done |
 | Update backend columns in README | models/README.md | Done |
 | Add Backends section to FIXTURE.md (15 files) | models/ssp/*/FIXTURE.md | Done |
-| Create coverage review document | product-breakdown/04-verification/simulation_registry_coverage_review.md | Done |
-| Move backlog item to complete | product-breakdown/06-evolution/backlog/ | Done |
-| Update review-plan.md | product-breakdown/06-evolution/backlog/complete/review-plan.md | Done |
+| Create coverage review document | docs/breakdown/04-verification/simulation_registry_coverage_review.md | Done |
+| Move backlog item to complete | docs/breakdown/06-evolution/implemented/IMP-CAND-G-registry-coverage-review.md | Done |
+| Update review-plan.md | review plan (retired; recorded by IMP-005) | Done |
 
 ## Traceability
 

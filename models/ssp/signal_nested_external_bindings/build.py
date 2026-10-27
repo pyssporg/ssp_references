@@ -54,7 +54,7 @@ def _nested_external_binding(build: BuiltFixture) -> None:
             with ssp.system_structure() as ssd:
                 system = next(
                     element
-                    for element in ssd.xml.system.elements
+                    for element in ssd.system.elements
                     if element.name == NESTED_SYSTEM
                 )
                 system.add_external_parameterset(

@@ -50,7 +50,7 @@ def _inline_parameters(build: BuiltFixture) -> None:
         if name.startswith(f"{NESTED_SYSTEM}.gain.")
     }
     with SSP(build.model_dir, mode="a") as ssp, ssp.system_structure() as ssd:
-        root = ssd.xml.system
+        root = ssd.system
         next(e for e in root.elements if e.name == "step").extend_inline_parameterset(step)
         inner = next(e for e in root.elements if e.name == NESTED_SYSTEM)
         inner.extend_inline_parameterset(inner_system)

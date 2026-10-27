@@ -28,13 +28,13 @@
               <ssv:ParameterSet version="1.0" name="step_parameters">
                 <ssv:Parameters>
                   <ssv:Parameter name="height">
-                    <ssv:Real value="1.0" />
+                    <ssv:Real value="1" />
                   </ssv:Parameter>
                   <ssv:Parameter name="offset">
-                    <ssv:Real value="0.0" />
+                    <ssv:Real value="0" />
                   </ssv:Parameter>
                   <ssv:Parameter name="startTime">
-                    <ssv:Real value="0.0" />
+                    <ssv:Real value="0" />
                   </ssv:Parameter>
                 </ssv:Parameters>
               </ssv:ParameterSet>
@@ -66,10 +66,10 @@
               <ssv:ParameterSet version="1.0" name="add_parameters">
                 <ssv:Parameters>
                   <ssv:Parameter name="k1">
-                    <ssv:Real value="1.0" />
+                    <ssv:Real value="1" />
                   </ssv:Parameter>
                   <ssv:Parameter name="k2">
-                    <ssv:Real value="1.0" />
+                    <ssv:Real value="1" />
                   </ssv:Parameter>
                 </ssv:Parameters>
               </ssv:ParameterSet>
@@ -105,7 +105,7 @@
                   <ssv:ParameterSet version="1.0" name="gain_parameters">
                     <ssv:Parameters>
                       <ssv:Parameter name="k">
-                        <ssv:Real value="1.0" />
+                        <ssv:Real value="1" />
                       </ssv:Parameter>
                     </ssv:Parameters>
                   </ssv:ParameterSet>

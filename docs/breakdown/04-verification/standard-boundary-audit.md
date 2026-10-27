@@ -13,7 +13,7 @@ status: current
 
 - Study generation emits standard SSV, SSM, and repo `study.json`.
 - Build packages the same SSV/SSM through
-  `pyssp_standard.SSP.add_external_parameterset`; the build SSP is the engine
+  `pyssp_standard.SSP.bind_parameters`; the build SSP is the engine
   input and simulation does not mutate it.
 - Result CSV reading and writing use `pyssp_simulate.read_result_csv` and `write_result_csv`.
 - Signal names canonicalize through `pyssp_simulate.canonicalize_signal`, including the two-segment `fmu.h` form.

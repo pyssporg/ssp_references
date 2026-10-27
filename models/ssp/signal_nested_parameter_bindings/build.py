@@ -64,11 +64,10 @@ def _root_external_binding(build: BuiltFixture) -> None:
             for source, target in ROOT_MAPPINGS:
                 ssm.xml.add_mapping(source, target)
         with SSP(build.model_dir, mode="a") as ssp:
-            ssp.add_external_parameterset(
+            ssp.bind_parameters(
                 build.descriptor.ssv_path,
-                ssm_path,
-                resource_name=SCENARIO_SSV_NAME,
-                mapping_resource_name=ROOT_MAPPING_NAME,
+                mapping=ssm_path,
+                name=SCENARIO_SSV_NAME,
             )
 
 

@@ -49,18 +49,11 @@ def _nested_external_binding(build: BuiltFixture) -> None:
                 ssm.xml.add_mapping(source, target[len(prefix) :])
 
         with SSP(model_build_dir, mode="a") as ssp:
-            ssp.add_resource(ssv_path)
-            ssp.add_resource(ssm_path)
-            with ssp.system_structure() as ssd:
-                system = next(
-                    element
-                    for element in ssd.system.elements
-                    if element.name == NESTED_SYSTEM
-                )
-                system.add_external_parameterset(
-                    source=f"resources/{ssv_name}",
-                    mapping_source=f"resources/{ssm_name}",
-                )
+            ssp.bind_parameters(
+                ssv_path,
+                mapping=ssm_path,
+                target=NESTED_SYSTEM,
+            )
 
 
 if __name__ == "__main__":

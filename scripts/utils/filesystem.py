@@ -18,18 +18,3 @@ def ensure_parent(path: Path) -> None:
 def reset_dir(path: Path) -> None:
     remove_path(path)
     path.mkdir(parents=True, exist_ok=True)
-
-
-def copy_tree(source: Path, target: Path) -> None:
-    if not source.is_dir():
-        raise FileNotFoundError(f"Source directory not found: {source}")
-    remove_path(target)
-    ensure_parent(target)
-    shutil.copytree(source, target)
-
-
-def copy_file(source: Path, target: Path) -> None:
-    if not source.is_file():
-        raise FileNotFoundError(f"Source file not found: {source}")
-    ensure_parent(target)
-    shutil.copy2(source, target)

@@ -35,7 +35,7 @@ status: current
   from `pyssp_vv.measure.build_figure_spec` and renders through `render_figure`.
 - Gate judgment lives in `pyssp_vv.judge`; `pass`, `fail`, and `invalid` stay distinct.
 - Model signal invariants live in `workflow/model_policy.py`, not a generic utility.
-- `pyssp_workflow.authoring` returns the `study.json` descriptor path; it does not mirror `pyssp_sysml2.study.StudyArtifacts`.
+- `pyssp_workflow.authoring` returns the `study.json` descriptor path; it does not mirror `pyssp_sysml2.artifacts.study.StudyArtifacts`.
 - Shared workflow records live in `utils.domain`; no duplicate `SimulationWindow`.
 
 ## Public API surfaces

@@ -9,7 +9,8 @@ status: current
 
 # Fixture layer implementation record
 
-Implementation of the fixtures and gates specified in EVAL-011. Two clean runs
+Implementation of the fixtures and gates specified in EVAL-011. The two layout
+gates from EVAL-013 are included in these totals. Two clean runs
 per suite with distinct `--basetemp` and `-p no:cacheprovider` produced
 identical outcomes.
 
@@ -59,9 +60,9 @@ Counts after the change, two clean runs, identical:
 |---|---|---|
 | root | 87 (+12 artifact skips possible) | 104, 1 skipped |
 | pyssp_workflow | 71 | 74 |
-| pyssp_standard | 457 | 467 |
+| pyssp_standard | 457 | 473 |
 | pyssp_simulate | 140 | 148 (147 pass, 1 cosim skip) |
-| pyssp_sysml2 | 241 | 252 |
+| pyssp_sysml2 | 241 | 258 |
 | pyssp_vv | 119 | 122 |
 | sequence_extensions | 428 | 434 |
 

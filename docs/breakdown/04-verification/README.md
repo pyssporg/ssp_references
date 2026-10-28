@@ -21,4 +21,6 @@ How claims about models, studies, and backends are checked.
 - **EVAL-008** [System Simulation Use-Case Coverage Analysis](use-case-coverage-analysis.md) — Coverage analysis of simulation use cases.
 - **EVAL-009** [Standard-artifact boundary audit](standard-boundary-audit.md) — SSP, SSV, SSM, and SSD pass through pyssp_standard; comparison passes through pyssp_vv; non-standard crossings use public API only.
 - **EVAL-010** [pyssp project verification plan](pyssp_project_verification_plan.md) — Audit of the six vendored pyssp_* and sequence_extensions test suites, the level ladder each one was missing, and the restructuring that closed the contract, determinism, and failure-path gaps.
+- **EVAL-011** [Test suite restructuring and fixture credibility](test-suite-restructuring.md) — Critical audit of the six vendored pyssp_* and sequence_extensions suites plus the root contract suite, focused on the file-fixture layer, and the restructuring that makes every fixture traceable, layout-checked, and write-protected.
+- **EVAL-012** [Fixture layer implementation record](fixture-layer-implementation.md) — What the fixture restructuring built in each suite, the counts after the change, the defect injected to prove each gate red, and the gaps that remain.
 <!-- pb:index:end -->

@@ -433,7 +433,7 @@ def test_vanderpol_study_description_reaches_setup(
     descriptor_path = REPO_ROOT / "artifacts" / "studies" / "VanDerPol" / study / "study.json"
     setup_path = REPO_ROOT / "artifacts" / "simulation" / "VanDerPol" / study / "setup.json"
     if not descriptor_path.is_file():
-        pytest.skip(f"study descriptor missing for VanDerPol/{study}")
+        pytest.skip(f"study descriptor missing for VanDerPol/{study}; run build_models.py")
 
     descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
     assert expected in descriptor["description"]

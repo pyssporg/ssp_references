@@ -113,6 +113,7 @@ def write_columns(path: Path, columns: dict[str, list[float]]) -> None:
     path.write_text("\n".join(rows) + "\n")
 
 
+@pytest.mark.level_integration
 def test_reference_csvs_are_not_inverted() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     checks = [

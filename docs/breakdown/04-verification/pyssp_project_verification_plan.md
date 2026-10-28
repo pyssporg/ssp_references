@@ -17,13 +17,13 @@ x86_64, root `venv` (Python 3.11.14, pytest 9.1.1).
 
 | Project | Path | Tests | Runtime |
 |---|---|---|---|
-| pyssp_standard (canonical) | `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` | 457 | 5.5 s |
-| pyssp_simulate | same tree | 140 (139 pass, 1 cosim skip) | 10.3 s |
-| pyssp_sysml2 | same tree | 230 | 31 s |
-| pyssp_workflow | `3rd_party/pyssp_workflow` | 71 | 4.2 s |
-| pyssp_vv | same tree | 119 | 2.1 s |
-| sequence_extensions | same tree | 428 | 10.4 s |
-| cross-project contracts | `tests/test_cross_project_contracts.py` | 6 | 0.3 s |
+| pyssp_standard (canonical) | `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` | 467 | 5.6 s |
+| pyssp_simulate | same tree | 148 (147 pass, 1 cosim skip) | 10.0 s |
+| pyssp_sysml2 | same tree | 248 | 32 s |
+| pyssp_workflow | `3rd_party/pyssp_workflow` | 74 | 4.2 s |
+| pyssp_vv | same tree | 122 | 2.2 s |
+| sequence_extensions | same tree | 434 | 14.0 s |
+| root suite | `tests/` | 104 (1 strict-mode skip) | 101 s |
 
 Excluded: the pinned `pyssp_sysml2/3rd_party/pyssp_standard` copy (not
 editable), the root suite's engine-free integration tests (see EVAL-001,
@@ -37,6 +37,7 @@ evidence→verdict, sysml2→standard, nodes→flow. Integration is restored in
 pyssp_simulate and now covers failure paths as well as happy paths. Acceptance
 is still the weakest level: byte determinism is tested, runtime budgets are not.
 
+Fixture layout, provenance, and the write guards are owned by EVAL-011.
 Remaining highest-risk gap: **real-engine composition**. The seams pinned by the
 root suite stop at the simulated boundary; no test loads a runtime SSP through a
 real engine from the cross-project suite, and `cosim` has never executed.

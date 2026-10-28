@@ -7,20 +7,19 @@
  * Standard anchor: SysML v2 section 7.6.7 (variation, variant; metamodel
  * VariantMembership).
  *
- * Expected SSP/FMI mapping: the usage-level and definition-level forms must
- * produce the same artifact, because SSP has no place to record where the
- * choice was declared. Exactly one variant becomes one <Part> of
- * SystemStructure.ssd, named after the variation usage ("source") or after the
- * selected variant, and typed by the selected FMU. The implementer must fix
- * which of the two names becomes the SSD part name, since the comparison gate
- * and the SSM mappings refer to it.
+ * Expected SSP/FMI mapping: the usage-level and definition-level forms produce
+ * the same artifact, because SSP has no place to record where the choice was
+ * declared. Exactly one variant becomes one <Part> of SystemStructure.ssd,
+ * named after the variation usage ("source"), and typed by the selected FMU.
+ * The name stays "source" in every selection, so the comparison gate and the
+ * SSM mappings refer to it unchanged; only the component source differs.
  *
- * Pinned toolchain (sysmlpy 0.96.4): this file parses with no errors, but the
- * parsed model has no variation flag and no variant members. The variation is
- * flattened into an ordinary part usage named "source" typed by SignalSource;
- * the two variant usages disappear. Generation succeeds: the SSD carries a
- * component "source" with an empty source attribute and the SignalSource
- * connector, so the artifact silently declares an implementation-less part.
+ * Pinned toolchain (sysmlpy 0.96.4): the parsed model has no variation flag
+ * and no variant members, so the adapter recovers both from the raw parse
+ * tree. Selecting "source=stepSource" or "source=sineSource" retypes the usage
+ * on a copy and generation writes component "source" with resources/Step.fmu
+ * or resources/Sine.fmu; without a selection the build is rejected as
+ * unselected.
  */
 package UsageLevelVariation {
   part def SspModel;

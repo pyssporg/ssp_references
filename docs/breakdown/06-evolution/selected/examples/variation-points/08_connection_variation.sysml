@@ -39,32 +39,29 @@
  * DefinitionBody. Connect and binding usages are the section 7.12 subject in
  * the specification.
  *
- * Expected SSP/FMI mapping: one selection yields one SSP. The direct selection
- * flattens to two <Part> entries (source, gain) and two <ssd:Connection>
- * entries: source.y to gain.u and gain.y to the system output. The filtered
- * selection flattens to three <Part> entries (source, firstStage, gain) and
- * three connections: source.y to firstStage.u, firstStage.y to gain.u, and
- * gain.y to the system output. The parameter connects inside each variant do
- * not become SSD connections; they become parameter bindings, one SSM mapping
- * per stage. The two artifacts therefore differ in element count and in
- * connector names, not merely in a type or a value, so a comparison case built
- * for one selection cannot be reused for the other without regenerating the
- * SSD. The "parameters" port of the path fans out to both gain stages in the
- * filtered selection, so a build tool has to emit two mappings from the same
- * SSV set; the current adapter has no rule for that fan-out, because it never
- * sees more than the unchanged variation usage.
+ * Expected SSP/FMI mapping: one selection yields one SSP. The selected body
+ * becomes an anonymous definition for the "path" usage, so "path" is emitted
+ * as an <ssd:System>, not as a flattened part list. The direct selection gives
+ * a path subsystem with one <Part> (gain) and two <ssd:Connection> entries:
+ * u to gain.u and gain.y to y. The filtered selection gives a path subsystem
+ * with two <Part> entries (firstStage, gain) and three connections: u to
+ * firstStage.u, firstStage.y to gain.u, and gain.y to y. The outer composition
+ * is identical in both: source.y to path.u and path.y to the system output.
+ * The two artifacts therefore differ inside one subsystem, in element count and
+ * connector names, not merely in a type or a value; a comparison case built for
+ * one selection cannot be reused for the other without regenerating the SSD.
+ * The parameter connects inside each variant are captured on the variant body
+ * but are not emitted as SSD connections: SSP applies parameters with binds and
+ * an SSM, and this file applies no set inside the variant, so no mapping is
+ * generated for them.
  *
- * Pinned toolchain (sysmlpy 0.96.4): this file parses with no errors. The
- * parsed model retains PathChoice as an ordinary part definition with its three
- * ports and nothing else: both variant usages, and therefore their nested
- * parts, their connects and any binds inside them, are dropped. Generation of
- * System therefore succeeds and writes a two-component SSD (source, path) with
- * one signal connection source.y to path.u, one boundary connection path.y to
- * the system output, and the parameter connector of the path port. Path is
- * exported as an implementation-less leaf, because its definition has no
- * subparts left. The generated SSD is the variant-less one: a copy of this file
- * with both variant blocks removed produces the same 1866 bytes, with identical
- * md5 (4f93d2e59bfd6bd5d1ba437ecc7a6e7c).
+ * Pinned toolchain (sysmlpy 0.96.4): this file parses with no errors but the
+ * parsed model drops both variant usages, including their nested parts and
+ * connects. The adapter recovers each variant body from the raw parse tree.
+ * Selecting "path=directPath" or "path=filteredPath" retypes the path usage to
+ * a synthesized definition (PathChoice__directPath or PathChoice__filteredPath)
+ * that carries PathChoice's ports, and generation writes the subsystems above.
+ * Without a selection the build is rejected as unselected.
  */
 package ConnectionVariation {
   part def SspModel;

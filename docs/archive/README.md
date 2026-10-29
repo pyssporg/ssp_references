@@ -93,3 +93,5 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   The scenario model owns the six-member SSV and its live inline mapping; the study is experiment-only.
 - **DD-013** — Generic Engine, Build, Comparison, and Figure Code Lives in the pyssp Dependencies · accepted · 2026-10-23 · `DD-013`
   Engine, packaging, comparison, figure, and authoring code lives upstream; this repository keeps layout, registry, gate, and fixtures.
+- **DD-014** — Registry Lists Only Backends That Run the Case · accepted · 2026-10-29 · `DD-014`
+  A case's backends name the engines that can simulate it; an engine that cannot run the case is not listed.

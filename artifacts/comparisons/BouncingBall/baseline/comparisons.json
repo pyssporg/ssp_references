@@ -1,6 +1,7 @@
 {
   "comparisons": [
     {
+      "candidate_label": "omsimulator",
       "gate": {
         "reasons": [
           "h: criterion-exceeded (43.0127 > 0.011 (max_abs_error))",
@@ -10,6 +11,7 @@
       },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "reference_label": "ssp4sim",
       "runs": [
         {
           "backend": "ssp4sim",

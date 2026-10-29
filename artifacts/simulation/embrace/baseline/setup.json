@@ -1,4 +1,6 @@
 {
+  "analysis": "baseline",
+  "analysis_root": "../../../analyses/embrace/baseline",
   "backends": [
     "ssp4sim",
     "omsimulator"
@@ -22,8 +24,6 @@
   "resources_dir": "../../../models/embrace/baseline/model/resources",
   "root_system_name": "root",
   "ssp_root": "../../../models/embrace/baseline/model",
-  "study": "baseline",
-  "study_root": "../../../studies/embrace/baseline",
   "system_structure": "../../../models/embrace/baseline/model/SystemStructure.ssd",
   "window": {
     "interval": 0.01,

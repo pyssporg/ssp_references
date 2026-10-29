@@ -1,4 +1,6 @@
 {
+  "analysis": "baseline",
+  "analysis_root": "../../../analyses/BouncingBall/baseline",
   "backends": [
     "ssp4sim",
     "omsimulator"
@@ -18,8 +20,6 @@
   "resources_dir": "../../../models/BouncingBall/baseline/model/resources",
   "root_system_name": "System",
   "ssp_root": "../../../models/BouncingBall/baseline/model",
-  "study": "baseline",
-  "study_root": "../../../studies/BouncingBall/baseline",
   "system_structure": "../../../models/BouncingBall/baseline/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,

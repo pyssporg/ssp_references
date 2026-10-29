@@ -1,6 +1,6 @@
 package SignalNestedAlgebraicLoop {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -107,7 +107,7 @@ package SignalNestedAlgebraicLoop {
     connect add_inner.y to gain_inner.u;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Nested systems closing an algebraic loop around add and gain. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

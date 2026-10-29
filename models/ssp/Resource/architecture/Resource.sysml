@@ -1,6 +1,6 @@
 package Resource {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def IntegerSignal {
     attribute pyssp_flat_connector : Boolean = true;
@@ -40,7 +40,7 @@ package Resource {
     part fmu : Resource;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Constant integer output loaded from the FMU's bundled resource file. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;

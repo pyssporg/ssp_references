@@ -33,7 +33,7 @@ pb_exempt: true
 | 10 | `root_system_name` | string | yes | Registry `get_root_system_name()` | `"Simple2R"` |
 | 11 | `system_structure` | string (relative path) | yes | Registry `get_system_structure_path()` | `"model/system_structure.json"` |
 | 12 | `resources_dir` | string (relative path) | yes | Registry `get_resources_dir()` | `"resources"` |
-| 13 | `description` | string or null | no | Study descriptor or null | `"Step response test case"` or `null` |
+| 13 | `description` | string or null | no | Analysis descriptor or null | `"Step response test case"` or `null` |
 
 **Schema size:** 13 fields (1 optional, 12 required)  
 **Nesting:** Only `window` contains sub-fields. No other nested objects or arrays of objects.

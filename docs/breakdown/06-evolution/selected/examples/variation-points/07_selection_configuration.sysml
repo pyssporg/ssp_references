@@ -59,7 +59,7 @@
  */
 package SelectionConfiguration {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -222,8 +222,8 @@ package SelectionConfiguration {
     }
   }
 
-  part def test_selected :> Study {
-    doc /* The study does not choose; the build tool reads the record. */
+  part def test_selected :> Analysis {
+    doc /* The analysis does not choose; the build tool reads the record. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }

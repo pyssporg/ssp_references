@@ -47,7 +47,7 @@ package ParameterPortDemo {
     bind parameters.waypointX_km  = nominal.waypointX_km;
   }
 
-  part def StudyComposition {
+  part def AnalysisComposition {
     part autopilot : AutopilotModule;
     attribute aggressive : AggressiveSet;
     bind autopilot.parameters.waypointCount = aggressive.waypointCount;

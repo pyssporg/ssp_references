@@ -1,12 +1,14 @@
 {
   "comparisons": [
     {
+      "candidate_label": "omsimulator",
       "gate": {
         "reasons": [],
         "status": "pass"
       },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "reference_label": "ssp4sim",
       "runs": [
         {
           "backend": "ssp4sim",
@@ -33,12 +35,14 @@
       }
     },
     {
+      "candidate_label": "fmpy",
       "gate": {
         "reasons": [],
         "status": "pass"
       },
       "manifest": "ssp4sim_vs_fmpy/comparison.json",
       "metrics": "ssp4sim_vs_fmpy/metrics.csv",
+      "reference_label": "ssp4sim",
       "runs": [
         {
           "backend": "ssp4sim",
@@ -65,12 +69,14 @@
       }
     },
     {
+      "candidate_label": "fmpy",
       "gate": {
         "reasons": [],
         "status": "pass"
       },
       "manifest": "omsimulator_vs_fmpy/comparison.json",
       "metrics": "omsimulator_vs_fmpy/metrics.csv",
+      "reference_label": "omsimulator",
       "runs": [
         {
           "backend": "omsimulator",

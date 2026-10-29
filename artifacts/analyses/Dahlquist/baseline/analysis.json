@@ -1,0 +1,14 @@
+{
+  "analysis": "baseline",
+  "composition": "System",
+  "description": "Dahlquist test equation over the baseline window; no scenario.",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 10.0
+  },
+  "model": "Dahlquist",
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

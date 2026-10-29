@@ -1,6 +1,6 @@
 package Scenario {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -65,7 +65,7 @@ package Scenario {
     bind scenario.parameters.scenario_input = scenario_set.scenario_input;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Model-owned scenario set driving the scenario FMU outputs. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;

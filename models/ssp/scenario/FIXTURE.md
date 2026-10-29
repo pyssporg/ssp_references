@@ -19,11 +19,11 @@ records.
 
 - `architecture/scenario.sysml`
 - Exportable composition: `System :> SspModel`
-- Study composition: `baseline :> Study`
+- Analysis composition: `baseline :> Analysis`
 - Parameter interface: `ScenarioParameters :> ParameterInterface` with
   `scenario_input : String`.
 - Model-owned parameter set: `ScenarioSet :> ParameterSet` is applied inside
-  `System`. The study is experiment-only.
+  `System`. The analysis is experiment-only.
 - No checked-in SSD, SSV, or SSM remains; the build generates them.
 - `ScenarioSet` keeps the legacy SSV members `Alt_start`, `Mach_start`,
   `heat_load_start`, `Wgt_On_Whl_start`, and `Aircraft_state_start` so the
@@ -31,15 +31,15 @@ records.
   `scenario_input` is bound; the other members have no target in this SSP and
   are ignored.
 
-## Studies
+## Analyses
 
-- `baseline :> Study`
+- `baseline :> Analysis`
 - Scenario set: none; the model-owned `ScenarioSet` is already applied.
 - Experiment: `startTime=0.0`, `stopTime=10.0`, `stepSize=0.001`
 - Tolerance is not part of the experiment; it comes from the FMU model
   description.
-- Artifacts: `artifacts/studies/scenario/baseline/`
-- Studies are never exported as SSPs.
+- Artifacts: `artifacts/analyses/scenario/baseline/`
+- Analyses are never exported as SSPs.
 
 ## Structure
 
@@ -60,7 +60,7 @@ records.
 
 ## Expected Behavior
 
-- `scenario_input` is applied from the study SSV.
+- `scenario_input` is applied from the analysis SSV.
 - `Alt` and `Mach` ramp from their start values; `heat_load`,
   `Wgt_On_Whl`, and `Aircraft_state` follow the scenario definition.
 - The previous build produced 10 001 samples over `0.0..10.0`; the migrated
@@ -81,7 +81,7 @@ records.
 ## Packaging Notes
 
 - Exported model: `artifacts/models/scenario/baseline/model/`
-- Study artifacts: `artifacts/studies/scenario/baseline/`
+- Analysis artifacts: `artifacts/analyses/scenario/baseline/`
 - FMU source: `models/fmu/scenario/fmu`
 - Parameter form: one model-owned SSV
   (`resources/parameter_sets/ScenarioSet.ssv`) with an inline
@@ -92,7 +92,7 @@ records.
   components do not exist in this SSP, so the entries were inert and are not
   reproduced. Multi-target mapping coverage lives in
   `signal_nested_external_bindings`.
-- The build packages no study scenario; the model SSP already carries it.
+- The build packages no analysis scenario; the model SSP already carries it.
 - The build fixes a duplicate root binding that the old `build.py` produced.
 - Build: `python3 scripts/build_models.py run scenario`
 

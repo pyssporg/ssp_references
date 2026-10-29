@@ -11,13 +11,13 @@ status: current
 
 ## Current boundary
 
-- Study generation emits standard SSV, SSM, and repo `study.json`.
+- Analysis generation emits standard SSV, SSM, and repo `analysis.json`.
 - Build packages the same SSV/SSM through
   `pyssp_standard.SSP.bind_parameters`; the build SSP is the engine
   input and simulation does not mutate it.
 - Result CSV reading and writing use `pyssp_simulate.read_result_csv` and `write_result_csv`.
 - Signal names canonicalize through `pyssp_simulate.canonicalize_signal`, including the two-segment `fmu.h` form.
-- The experiment window comes from the study descriptor; no pipeline stage
+- The experiment window comes from the analysis descriptor; no pipeline stage
   parses LS-REF.
 - Raw SSP packaging uses `pyssp_standard.package_archive`; runtime packaging
   uses `pyssp_simulate.prepare_runtime_ssp`.
@@ -26,7 +26,7 @@ status: current
   repository.
 - FMPy applies only the parameter set the SSD declares; an SSV the system
   definition does not reference is never merged.
-- Study parameter forms are applied by `pyssp_workflow.binding.bind`; each
+- Analysis parameter forms are applied by `pyssp_workflow.binding.bind`; each
   call mutates through `pyssp_standard`.
 - Comparison composition lives in `pyssp_workflow.compare.compare_csvs`;
   alignment, resampling, metric families, global shift search, and the local
@@ -35,7 +35,7 @@ status: current
   from `pyssp_vv.measure.build_figure_spec` and renders through `render_figure`.
 - Gate judgment lives in `pyssp_vv.judge`; `pass`, `fail`, and `invalid` stay distinct.
 - Model signal invariants live in `workflow/model_policy.py`, not a generic utility.
-- `pyssp_workflow.authoring` returns the `study.json` descriptor path; it does not mirror `pyssp_sysml2.artifacts.study.StudyArtifacts`.
+- `pyssp_workflow.authoring` returns the `analysis.json` descriptor path; it does not mirror `pyssp_sysml2.artifacts.analysis.AnalysisArtifacts`.
 - Shared workflow records live in `utils.domain`; no duplicate `SimulationWindow`.
 
 ## Public API surfaces
@@ -48,7 +48,7 @@ status: current
   `Judgment`, `Verdict`, `EvidenceBundle`, `MetricRow`, `ComparisonSummary`,
   and `FigureSpec`.
 - `pyssp_workflow`: the `authoring` functions, `binding.bind`,
-  `compare.compare_csvs`, the `study` scenario readers, the `fixture` path
+  `compare.compare_csvs`, the `analysis` scenario readers, the `fixture` path
   helpers, and the optional node layer.
 - `pyssp_sysml2`: the `pyssp` CLI and documented generation functions.
 - `sequence_extensions`: `node`, `execute_flow`, `RunOptions`, and flow
@@ -65,5 +65,5 @@ deliberate API decision, not an accidental export. See `ADR-011`.
 
 - `setup._read_root_system_name` stays lenient; the `SSD` facade requires conformant root metadata.
 - `check_sysml_roundtrip.py` stays artifact-only; it does not import `pyssp_standard`.
-- `study.json` is repository policy; SSV and SSM remain the standard interchange.
+- `analysis.json` is repository policy; SSV and SSM remain the standard interchange.
 - Gate policy applies the `pyssp_vv.measure.local_shift_error` primitive with the repository's first/last two sample exclusion.

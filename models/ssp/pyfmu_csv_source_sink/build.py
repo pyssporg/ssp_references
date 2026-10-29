@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build pyfmu_csv_source_sink and its baseline study.
+"""Build pyfmu_csv_source_sink and its baseline analysis.
 
 The SysML authors the composition, the ``System`` scenario, and the baseline
 experiment. The CsvSource FMU is generated from ``input/signals.csv`` and
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     builds = build_fixture(
         model_dir=Path(__file__).resolve().parent,
         repo_root=REPO_ROOT,
-        studies=("baseline",),
+        analyses=("baseline",),
     )
     _attach_source_fmu(builds["baseline"])
     raise SystemExit(report_builds(builds))

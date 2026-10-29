@@ -29,11 +29,11 @@ boundaries:
 | Comparison gate | Metrics only, invariant violations raised | `pyssp_vv.measure` metrics and `pyssp_vv.judge` verdicts |
 | Reference baselines | Plot input only | `scripts/workflow/reference.py` compares runs to reference CSVs through `pyssp_vv` |
 | Campaign orchestration | Sequential CLI loops | `scripts/run_campaign.py` via `sequence_extensions` (Python 3.11+) |
-| SysML v2 authoring | Round-trip checker only | `pyssp_workflow.authoring` → `pyssp` CLI for `SspModel` export and `Study` scenario generation |
+| SysML v2 authoring | Round-trip checker only | `pyssp_workflow.authoring` → `pyssp` CLI for `SspModel` export and `Analysis` scenario generation |
 | Capability ownership | Local pipeline implementations | `pyssp_workflow` composition over `pyssp_standard` / `pyssp_simulate` / `pyssp_vv` / `pyssp_sysml2` |
 
 The Build → Simulate → Compare stage contract is unchanged. Migrated fixtures
-add a model SSP plus study artifacts, and the build packages the scenario into
+add a model SSP plus analysis artifacts, and the build packages the scenario into
 the SSP (`DD-011`). The runtime venv is now Python 3.11.
 See `ADR-005`, `ADR-007`, and `ADR-013`.
 
@@ -115,9 +115,9 @@ module APIs both work.
 
 **Direction:** SysML is now an authoring source, not only a round-trip checker.
 `part def ... :> SspModel` definitions are exported as SSPs;
-`part def ... :> Study` definitions generate scenario SSV/SSM and experiment
+`part def ... :> Analysis` definitions generate scenario SSV/SSM and experiment
 descriptors but are never exported as SSPs. Part-def specialization must be
-recorded for the role markers. Studies compose the model with `part sut : Model`;
+recorded for the role markers. Analyses compose the model with `part sut : Model`;
 structural inheritance of parts/connections is not supported and is not
 required.
 
@@ -146,10 +146,10 @@ with its own library versions (ADR-006).
 **Remaining limitations:**
 
 - Nested SSD systems are still unsupported by the SysML sync path.
-- Part-def structural inheritance is not modeled; `SspModel`/`Study` roles use
-  marker specialization and studies compose the model with `part sut`.
-- One study declares one experiment initially. Multiple experiments per study
-  require a registry/layout distinction between study/build and case/experiment.
+- Part-def structural inheritance is not modeled; `SspModel`/`Analysis` roles use
+  marker specialization and analyses compose the model with `part sut`.
+- One analysis declares one experiment initially. Multiple experiments per analysis
+  require a registry/layout distinction between analysis/build and case/experiment.
 
 ### `sequence_extensions`
 
@@ -226,12 +226,12 @@ pyssp generate ssp \
   --output artifacts/models/signal_step_gain/model/model.ssp \
   --fmu-root .
 
-# Study scenario + experiment data (no SSP)
-pyssp generate study \
+# Analysis scenario + experiment data (no SSP)
+pyssp generate analysis \
   --architecture models/ssp/signal_step_gain/architecture \
   --composition test_baseline \
   --model signal_step_gain \
-  --output-dir artifacts/studies/signal_step_gain/test_baseline
+  --output-dir artifacts/analyses/signal_step_gain/test_baseline
 
 # Structural round-trip check
 python3 scripts/check_sysml_roundtrip.py \
@@ -253,7 +253,7 @@ python3 scripts/check_sysml_roundtrip.py \
 | No reference-CSV comparison | pyssp_simulate | Patched in 0.1.1 |
 | No explicit comparison window | pyssp_simulate | Patched in 0.1.1 |
 | SSD → SysML → SSD loses metadata | pyssp_sysml2 | Patched in 0.1.1 |
-| No `SspModel`/`Study` role markers or study generation | pyssp_sysml2 | Implemented in pilot (ADR-009) |
+| No `SspModel`/`Analysis` role markers or analysis generation | pyssp_sysml2 | Implemented in pilot (ADR-009) |
 | Scenario packaging in the build | pyssp_workflow | Implemented: `pyssp_workflow.binding` packaging forms (`DD-011`) |
 | Comparison and gate ownership | this repo → pyssp_vv | Migrated to `pyssp_vv.measure` and `pyssp_vv.judge` (DD-010) |
 | `pyssp_standard` version skew / LS-REF split | pyssp_sysml2 / pyssp_standard | Resolved by artifact boundary: pyssp_sysml2 targets the refactored API; checker invokes `pyssp` via CLI |
@@ -268,8 +268,8 @@ python3 scripts/check_sysml_roundtrip.py \
   records `gate.status` and reasons in its manifest. `invalid` means the
   comparison was not fit to judge; campaign exit codes do not collapse it into
   `fail`.
-- **Model and study evidence are separate.** The exported SSP checksum is part
-  of provenance; the study scenario and experiment descriptor are run inputs.
+- **Model and analysis evidence are separate.** The exported SSP checksum is part
+  of provenance; the analysis scenario and experiment descriptor are run inputs.
   Neither is rewritten by simulation.
 - **Timing skew is handled explicitly.** The gate uses a ±2-sample
   shift-tolerant maximum error; raw pointwise `max_abs_error` remains in the

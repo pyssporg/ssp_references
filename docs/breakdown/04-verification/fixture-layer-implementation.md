@@ -77,7 +77,7 @@ Each gate was observed failing under its own defect, then reverted.
 | level table | remove one file from `FILE_LEVELS` | `test files missing from FILE_LEVELS: [...]` |
 | golden validation | change `version="1.0"` to `"9.0"` in a committed golden | byte mismatch, and the committed copy rejected by XSD |
 | CI refusal | `CI=1 UPDATE_GOLDENS=1` | `Failed: refusing to update goldens in CI`, no write |
-| artifact corpus | `CI=1` with `artifacts/studies/VanDerPol/baseline` renamed | missing path plus the `build_models.py` remedy |
+| artifact corpus | `CI=1` with `artifacts/analyses/VanDerPol/baseline` renamed | missing path plus the `build_models.py` remedy |
 | twin drift | append a byte to a canonical twin; rename the SSD model | byte test red; semantic test red |
 
 ## Remaining gaps

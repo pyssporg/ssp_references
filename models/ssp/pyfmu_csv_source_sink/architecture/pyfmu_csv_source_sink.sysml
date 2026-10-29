@@ -1,6 +1,6 @@
 package PyfmuCsvSourceSink {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
   attribute def ParameterSet;
@@ -71,7 +71,7 @@ package PyfmuCsvSourceSink {
     bind sink.parameters.k = scenario.k;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* CSV source driving a gain sink; the System owns the scenario. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;

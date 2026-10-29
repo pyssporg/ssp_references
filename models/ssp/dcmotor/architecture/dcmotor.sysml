@@ -1,6 +1,6 @@
 package DcMotor {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   attribute def Experiment {
     attribute startTime : Real;
@@ -26,7 +26,7 @@ package DcMotor {
     attribute ssp_meta : LegacySsp;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Legacy dcmotor SSP body over the baseline experiment window. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : DcMotorModel;

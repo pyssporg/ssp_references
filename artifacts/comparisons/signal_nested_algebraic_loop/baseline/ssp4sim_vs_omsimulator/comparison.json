@@ -1,5 +1,5 @@
 {
-  "error": null,
+  "candidate_label": "omsimulator",
   "gate": {
     "reasons": [
       "add_outer.y: criterion-exceeded (0.993725 > 0.0309554 (max_abs_error))",
@@ -10,6 +10,7 @@
     "status": "fail"
   },
   "metrics": "metrics.csv",
+  "reference_label": "ssp4sim",
   "request": {
     "case": "baseline",
     "runs": [
@@ -23,7 +24,6 @@
       }
     ]
   },
-  "status": "completed",
   "summary": {
     "compared_signal_count": 5,
     "max_abs_error": 2.00628318531,

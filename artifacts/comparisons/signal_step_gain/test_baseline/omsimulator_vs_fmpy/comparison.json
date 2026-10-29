@@ -1,10 +1,11 @@
 {
-  "error": null,
+  "candidate_label": "fmpy",
   "gate": {
     "reasons": [],
     "status": "pass"
   },
   "metrics": "metrics.csv",
+  "reference_label": "omsimulator",
   "request": {
     "case": "test_baseline",
     "runs": [
@@ -18,7 +19,6 @@
       }
     ]
   },
-  "status": "completed",
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 6.0,

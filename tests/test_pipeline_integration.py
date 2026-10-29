@@ -32,8 +32,8 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
     real_ssp_root = (
         repo / "artifacts" / "models" / "signal_step_gain" / "test_baseline" / "model"
     )
-    real_study_root = (
-        repo / "artifacts" / "studies" / "signal_step_gain" / "test_baseline"
+    real_analysis_root = (
+        repo / "artifacts" / "analyses" / "signal_step_gain" / "test_baseline"
     )
     isolated_ssp_root = (
         tmp_path
@@ -44,11 +44,11 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
         / "test_baseline"
         / "model"
     )
-    isolated_study_root = (
-        tmp_path / "repo" / "artifacts" / "studies" / "signal_step_gain" / "test_baseline"
+    isolated_analysis_root = (
+        tmp_path / "repo" / "artifacts" / "analyses" / "signal_step_gain" / "test_baseline"
     )
     shutil.copytree(real_ssp_root, isolated_ssp_root)
-    shutil.copytree(real_study_root, isolated_study_root)
+    shutil.copytree(real_analysis_root, isolated_analysis_root)
 
     # Load real registry
     real_registry_path = (

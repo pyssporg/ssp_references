@@ -1,6 +1,6 @@
 package SignalNestedParameterBindings {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -133,7 +133,7 @@ package SignalNestedParameterBindings {
     connect add.y to y;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Nested inline parameter sets plus a root external mapping. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

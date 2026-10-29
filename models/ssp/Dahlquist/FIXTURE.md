@@ -3,7 +3,7 @@
 ## Origin
 
 Packaged from the shared `models/fmu/Dahlquist` reference FMU fixture and its
-CSV baselines. The model and study are authored in SysML at
+CSV baselines. The model and analysis are authored in SysML at
 `architecture/Dahlquist.sysml`.
 
 ## Overview
@@ -15,20 +15,20 @@ wraps the Dahlquist test equation as a single FMI reference FMU.
 
 - `architecture/Dahlquist.sysml`
 - Exportable composition: `System :> SspModel`
-- Study composition: `baseline :> Study`
-- Parameter interface: `DahlquistParameters` exposes `k`. The study applies no
+- Analysis composition: `baseline :> Analysis`
+- Parameter interface: `DahlquistParameters` exposes `k`. The analysis applies no
   scenario, so the FMU default (`k = 1.0`) applies.
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
-## Studies
+## Analyses
 
-- `baseline :> Study`
+- `baseline :> Analysis`
 - Scenario set: none; the build packages no scenario.
 - Experiment: `startTime=0.0`, `stopTime=10.0`, `stepSize=0.001`
 - Tolerance is not part of the experiment; it comes from the FMU model
   descriptions.
-- Artifacts: `artifacts/studies/Dahlquist/baseline/`
-- Studies are never exported as SSPs.
+- Artifacts: `artifacts/analyses/Dahlquist/baseline/`
+- Analyses are never exported as SSPs.
 
 ## Backends
 
@@ -73,7 +73,7 @@ This fixture is registered for simulation with the following backends:
 ## Packaging Notes
 
 - Exported model: `artifacts/models/Dahlquist/baseline/model/`
-- Study artifacts: `artifacts/studies/Dahlquist/baseline/`
+- Analysis artifacts: `artifacts/analyses/Dahlquist/baseline/`
 - FMU source: `models/fmu/Dahlquist/fmu`
 - The build skips FMU validation: the shared FMU declares both `ModelExchange`
   and `CoSimulation`, while the FMI 2 reader keeps only the first interface and

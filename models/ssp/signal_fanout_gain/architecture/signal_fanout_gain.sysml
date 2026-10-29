@@ -1,6 +1,6 @@
 package SignalFanoutGain {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -79,7 +79,7 @@ package SignalFanoutGain {
     connect step.y to gain_b.u;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Step fanned out to two gains with fixed coefficients. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

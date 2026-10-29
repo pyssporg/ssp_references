@@ -94,8 +94,8 @@ Per the [test strategy](../docs/breakdown/04-verification/co_simulation_test_str
 Build-level, as used for the variation fixtures, means the generated SSD element
 tree and packaged resources match the selected variant; it is asserted by
 `tests/test_variation_cases.py` and is not a simulation level. The registered
-simulation comparisons are `variation_source_swap` (both studies) and
-`variation_attribute_set` (both studies); `variation_body_gain` and
+simulation comparisons are `variation_source_swap` (both analyses) and
+`variation_attribute_set` (both analyses); `variation_body_gain` and
 `variation_nested` are build-level only.
 
 ## Backend Key

@@ -20,14 +20,14 @@ manifest, and `pyssp_simulate`.
 manifest. It records:
 
 - `model`, `case`, and `ssp_root` from the artifact layout.
-- `window` with `start_time`, `stop_time`, and `interval` from `study.json`.
+- `window` with `start_time`, `stop_time`, and `interval` from `analysis.json`.
 - `backends` and `compare_signals` from the registry case.
 - `root_system_name` from the root `<System>` in `SystemStructure.ssd`.
 - `gate` with `atol`, `rtol`, and `max_invariant_abs_error` from the registry.
 - `system_structure` and `resources_dir`, relative to the manifest.
 - `tolerance` only when the manifest was loaded with one; a fresh setup carries
   none.
-- `description`, `study`, and `study_root` when the registry case supplies them.
+- `description`, `analysis`, and `analysis_root` when the registry case supplies them.
 
 ## Adapter Consumption of Config Fields
 
@@ -101,7 +101,7 @@ in this repository.
 ### Backward Trace
 
 - **Architecture context:** `INFO-002` (stage contracts), `INFO-003` (boundary contract).
-- **Implementation context:** `INFO-008` (build, study, and runtime workflow).
+- **Implementation context:** `INFO-008` (build, analysis, and runtime workflow).
 - **Review origin:** `IMP-CAND-H`.
 - **Verification layer:** `04-verification/README.md`.
 

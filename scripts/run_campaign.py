@@ -201,7 +201,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--no-build",
         action="store_true",
-        help="Use existing model and study artifacts instead of building them.",
+        help="Use existing model and analysis artifacts instead of building them.",
     )
     parser.add_argument(
         "--max-workers",

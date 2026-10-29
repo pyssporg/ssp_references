@@ -1,6 +1,6 @@
 package SignalStepGain {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -78,7 +78,7 @@ package SignalStepGain {
     connect step.y to gain.u;
   }
 
-  part def test_baseline :> Study {
+  part def test_baseline :> Analysis {
     doc /* Step through a fixed gain over the test window. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

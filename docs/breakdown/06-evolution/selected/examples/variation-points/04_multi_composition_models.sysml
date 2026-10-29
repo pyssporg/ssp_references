@@ -2,7 +2,7 @@
  *
  * Pattern: the alternative "N models = N compositions" route. Every
  * alternative is a sibling part definition specialising SspModel, with its own
- * studies; nothing in the file marks a choice, so nothing can be flattened and
+ * analyses; nothing in the file marks a choice, so nothing can be flattened and
  * nothing needs selection. This is the layout the current build already
  * supports and the baseline the variation work is measured against.
  * Standard anchor: none. No element of SysML v2 section 7.6.7 appears here;
@@ -22,7 +22,7 @@
  */
 package MultiCompositionModels {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -146,7 +146,7 @@ package MultiCompositionModels {
     connect step.y to gain.u;
   }
 
-  part def test_step_gain_baseline :> Study {
+  part def test_step_gain_baseline :> Analysis {
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : BaselineScenario;
     part sut : step_gain_baseline;
@@ -157,7 +157,7 @@ package MultiCompositionModels {
     bind sut.gain.parameters.k = scenario.k;
   }
 
-  part def test_sine_gain_baseline :> Study {
+  part def test_sine_gain_baseline :> Analysis {
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : SineScenario;
     part sut : sine_gain_baseline;
@@ -167,7 +167,7 @@ package MultiCompositionModels {
     bind sut.gain.parameters.k = scenario.k;
   }
 
-  part def test_step_gain_high :> Study {
+  part def test_step_gain_high :> Analysis {
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : HighGainScenario;
     part sut : step_gain_high;

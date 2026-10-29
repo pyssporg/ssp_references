@@ -1,5 +1,5 @@
 {
-  "error": null,
+  "candidate_label": "omsimulator",
   "gate": {
     "reasons": [
       "h: criterion-exceeded (43.0127 > 0.011 (max_abs_error))",
@@ -8,6 +8,7 @@
     "status": "fail"
   },
   "metrics": "metrics.csv",
+  "reference_label": "reference-cs",
   "request": {
     "backend": "omsimulator",
     "reference": "reference-cs",
@@ -15,7 +16,6 @@
     "reference_path": "/home/eriro/pwa/2_work/ssp_references/models/ssp/BouncingBall/references/BouncingBall-cs.csv",
     "run_manifest": "../../../../../simulation/BouncingBall/baseline/omsimulator/simulation.json"
   },
-  "status": "completed",
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 43.130285,

@@ -1,5 +1,7 @@
 {
-  "artifacts": [],
+  "artifacts": [
+    "result.csv"
+  ],
   "error": null,
   "request": {
     "backend": "omsimulator",
@@ -8,6 +10,6 @@
     "setup_manifest": "../setup.json"
   },
   "result": "result.csv",
-  "runtime_s": 0.003976586041972041,
+  "runtime_s": 0.005092475796118379,
   "status": "completed"
 }

@@ -23,7 +23,7 @@ status: current
 `pyssp_vv` and `sequence_extensions` already use one subpackage per concern
 (`policy`/`measure`/`judge`/`evidence`; `ext`/`graph`/`flow`/`flow_runner`).
 `pyssp_simulate` and `pyssp_workflow` already split their backends and
-`authoring`/`study`/`nodes`; a further split moves no concept.
+`authoring`/`analysis`/`nodes`; a further split moves no concept.
 
 ## pyssp_sysml2
 
@@ -37,7 +37,7 @@ src/pyssp_sysml2/
 ├── model/       model.py loader.py exporter.py      (was sysml_model/)
 ├── parameters/  dialect.py synthesis.py variation.py
 ├── metadata/    fmu_metadata.py ssp_metadata.py roles.py
-├── artifacts/   ssd.py ssv.py ssm.py ssp.py fmi.py study.py
+├── artifacts/   ssd.py ssv.py ssm.py ssp.py fmi.py analysis.py
 └── sysml/       generate.py (was sysml.py) sync.py
 ```
 
@@ -45,7 +45,7 @@ src/pyssp_sysml2/
 `artifacts` is SSP/FMI generation, `parameters` is the dialect and variation
 resolution, `metadata` is typed metadata and role markers, `core` is constants
 and helpers. `__init__` exports the same nine generators; the CLI entry point is
-unchanged. Moved paths: `.ssd`/`.ssv`/`.ssm`/`.ssp`/`.fmi`/`.study` →
+unchanged. Moved paths: `.ssd`/`.ssv`/`.ssm`/`.ssp`/`.fmi`/`.analysis` →
 `.artifacts.*`, `.sysml` → `.sysml.generate`, `.sync` → `.sysml.sync`,
 `.sysml_model` → `.model`; README, examples, tests, and seven docs pages moved
 with them.

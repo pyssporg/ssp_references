@@ -16,4 +16,4 @@ if __name__ == "__main__":
         flatten=True,
         strip_resources=("edrive_mass", "emachine_model", "stimuli_model"),
     )
-    raise SystemExit(report_builds({build.study: build}))
+    raise SystemExit(report_builds({build.analysis: build}))

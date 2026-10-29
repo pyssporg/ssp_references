@@ -1,6 +1,7 @@
 {
   "comparisons": [
     {
+      "candidate_label": "omsimulator",
       "gate": {
         "reasons": [
           "y: degenerate-signal (reference range=0 <= 0)"
@@ -9,6 +10,7 @@
       },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "reference_label": "ssp4sim",
       "runs": [
         {
           "backend": "ssp4sim",

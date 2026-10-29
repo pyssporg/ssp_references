@@ -1,6 +1,6 @@
 package Dahlquist {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -47,7 +47,7 @@ package Dahlquist {
     part fmu : Dahlquist;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Dahlquist test equation over the baseline window; no scenario. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;

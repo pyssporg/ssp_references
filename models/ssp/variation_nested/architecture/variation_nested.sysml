@@ -1,6 +1,6 @@
 package VariationNested {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -150,7 +150,7 @@ package VariationNested {
 
   }
 
-  part def direct :> Study {
+  part def direct :> Analysis {
     doc /* Outer variation selecting the single-gain path. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
@@ -161,7 +161,7 @@ package VariationNested {
     bind sut.path.gain.parameters.k = scenario.gainK;
   }
 
-  part def nested_gain :> Study {
+  part def nested_gain :> Analysis {
     doc /* Nested path with a Gain stage. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the exported Stair model and its baseline study.
+"""Build the exported Stair model and its baseline analysis.
 
 The SysML authors the single ``Stair`` component with its integer ``counter``
 output. The fixture exposes no tunable parameters, so the build applies no
@@ -18,7 +18,7 @@ if __name__ == "__main__":
     builds = build_fixture(
         model_dir=Path(__file__).resolve().parent,
         repo_root=REPO_ROOT,
-        studies=("baseline",),
+        analyses=("baseline",),
         # The shared Stair FMU declares both ModelExchange and CoSimulation;
         # the pyssp_standard FMI2 reader keeps only the first interface, so
         # it reports ModelExchange and rejects the CoSimulation component.

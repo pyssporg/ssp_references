@@ -26,11 +26,11 @@ definitions, fixture notes, and build metadata.
 ├── artifacts/
 │   ├── models/
 │   │   └── <model_name>/
-│   │       └── <study_name>/
+│   │       └── <analysis_name>/
 │   │           └── <build_name>/
-│   ├── studies/
+│   ├── analyses/
 │   │   └── <model_name>/
-│   │       └── <study_name>/
+│   │       └── <analysis_name>/
 │   ├── comparisons/
 │   ├── simulation_registry.json
 │   └── simulation/
@@ -62,15 +62,15 @@ Each model directory under `models/ssp/<model_name>/` follows the same basic
 contract:
 
 - `architecture/*.sysml` is the authored source for migrated fixtures.
-- `part def <Model> :> SspModel` exports one SSP; `part def <Study> :> Study`
+- `part def <Model> :> SspModel` exports one SSP; `part def <Analysis> :> Analysis`
   supplies scenario data, a description, and one experiment (`startTime`,
   `stopTime`, `stepSize`) and is never exported as an SSP. A model may author
-  several studies; each is built and registered as its own case.
-- A fixture may keep a legacy `ssp/` body and author only the study. Its
+  several analyses; each is built and registered as its own case.
+- A fixture may keep a legacy `ssp/` body and author only the analysis. Its
   `SspModel` composition is then a boundary marker that selects the body with
   `ssp_meta.source`, and is not exported.
 - `build.py` calls `pyssp_workflow.authoring.build_fixture(...)`, which builds
-  one study and model SSP per study and returns
+  one analysis and one model SSP per analysis and returns
   `pyssp_workflow.fixture.BuiltFixture` records; `report_builds` prints them.
   The fixture then applies the scenario in an explicit
   `pyssp_workflow.binding.bind(build, ssv, *, mode=..., ssm=..., mapping=...,
@@ -81,13 +81,13 @@ contract:
   parameter set name.
 - `FIXTURE.md` provides the fixture notes for each model.
 - Running `build.py` writes the runnable SSP under
-  `artifacts/models/<model>/<study>/<build>/` and study artifacts under
-  `artifacts/studies/<model>/<study>/`.
-- A study artifact directory contains a scenario SSV, an SSM mapping, and
-  `study.json` with the experiment window and the authored description; it
+  `artifacts/models/<model>/<analysis>/<build>/` and analysis artifacts under
+  `artifacts/analyses/<model>/<analysis>/`.
+- An analysis artifact directory contains a scenario SSV, an SSM mapping, and
+  `analysis.json` with the experiment window and the authored description; it
   contains no SSD or SSP.
 - Simulation runs the built SSP as-is; there is no runtime scenario injection.
-  Each generated `artifacts/simulation/<model>/<study>/setup.json` records the
+  Each generated `artifacts/simulation/<model>/<analysis>/setup.json` records the
   window, explicit backend list, and explicit compare-signal list for that case.
   The setup manifest carries no solver tolerance; each engine applies its own
   default, and the gate compares with the registry's `atol` and `rtol`.
@@ -112,10 +112,10 @@ The canonical artifact contract for the stages and external tools is
 [Pipeline and Tool Boundaries](docs/breakdown/02-architecture/pipeline-boundaries.md):
 
 ```text
-Build    -> runnable SSP + study SSV/SSM/study.json
-Simulate -> reads runnable SSP + study window + registry, writes CSV + run manifests
+Build    -> runnable SSP + analysis SSV/SSM/analysis.json
+Simulate -> reads runnable SSP + analysis window + registry, writes CSV + run manifests
 Compare  -> reads run manifests + CSV, writes comparisons
-SysML    -> reads .sysml, invokes external pyssp CLI, writes SSP/study
+SysML    -> reads .sysml, invokes external pyssp CLI, writes SSP/analysis
 ```
 
 The build workflow discovers models from `models/*/*/build.py`:
@@ -295,14 +295,14 @@ python3 scripts/build_models.py run BouncingBall
 
 Built artifacts appear under `artifacts/models/BouncingBall/baseline/model/`.
 
-To build a SysML-authored signal fixture and its study:
+To build a SysML-authored signal fixture and its analysis:
 
 ```bash
 python3 scripts/build_models.py run signal_step_gain
 ```
 
 This writes `artifacts/models/signal_step_gain/test_baseline/model/` and
-`artifacts/studies/signal_step_gain/test_baseline/`.
+`artifacts/analyses/signal_step_gain/test_baseline/`.
 
 To build every model at once:
 ```bash

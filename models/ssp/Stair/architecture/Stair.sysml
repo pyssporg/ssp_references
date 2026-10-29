@@ -1,6 +1,6 @@
 package Stair {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def IntegerSignal {
     attribute pyssp_flat_connector : Boolean = true;
@@ -40,7 +40,7 @@ package Stair {
     part fmu : Stair;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Integer counter driven by time events over the baseline window. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;

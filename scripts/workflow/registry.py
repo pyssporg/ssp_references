@@ -43,7 +43,7 @@ class RegistryReferenceCsv:
 class RegistryCase:
     name: str
     backends: tuple[str, ...]
-    study: str | None = None
+    analysis: str | None = None
     reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
     gate: GateConfig = field(default_factory=GateConfig)
 
@@ -55,11 +55,11 @@ class RegistryCase:
         normalized_backends = tuple(str(backend).lower() for backend in backends)
         if not normalized_backends:
             raise ValueError("Registry case backends must not be empty")
-        study = data.get("study")
+        analysis = data.get("analysis")
         return cls(
             name=str(data["name"]),
             backends=normalized_backends,
-            study=str(study) if study is not None else None,
+            analysis=str(analysis) if analysis is not None else None,
             reference_csvs=tuple(
                 RegistryReferenceCsv.from_dict(reference)
                 for reference in data.get("reference_csvs", [])
@@ -72,8 +72,8 @@ class RegistryCase:
             "name": self.name,
             "backends": list(self.backends),
         }
-        if self.study is not None:
-            data["study"] = self.study
+        if self.analysis is not None:
+            data["analysis"] = self.analysis
         if self.reference_csvs:
             data["reference_csvs"] = [reference.to_dict() for reference in self.reference_csvs]
         if self.gate != GateConfig():
@@ -129,21 +129,21 @@ class SimulationCaseSpec:
     reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
     gate: GateConfig = field(default_factory=GateConfig)
     build_name: str | None = None
-    study_name: str | None = None
-    study_root: Path | None = None
+    analysis_name: str | None = None
+    analysis_root: Path | None = None
 
     @property
-    def is_study_case(self) -> bool:
-        return self.study_root is not None and self.study_name is not None
+    def is_analysis_case(self) -> bool:
+        return self.analysis_root is not None and self.analysis_name is not None
 
     @property
     def layout(self) -> ArtifactLayout:
-        if self.is_study_case:
+        if self.is_analysis_case:
             return ArtifactLayout.from_model_root(
                 self.model_name,
-                self.study_name,
+                self.analysis_name,
                 self.ssp_root,
-                self.study_root,
+                self.analysis_root,
             )
         return ArtifactLayout.from_ssp_root(self.ssp_root)
 
@@ -201,31 +201,31 @@ class SimulationRegistry:
                 if not selected_backends:
                     continue
 
-                if model.build is not None or case.study is not None:
+                if model.build is not None or case.analysis is not None:
                     build_name = model.build or "model"
-                    study_name = case.study or case.name
+                    analysis_name = case.analysis or case.name
                     ssp_root = (
                         REPO_ROOT
                         / "artifacts"
                         / "models"
                         / model.name
-                        / study_name
+                        / analysis_name
                         / build_name
                     )
-                    study_root = (
+                    analysis_root = (
                         REPO_ROOT
                         / "artifacts"
-                        / "studies"
+                        / "analyses"
                         / model.name
-                        / study_name
+                        / analysis_name
                     )
                 else:
                     build_name = None
-                    study_name = None
+                    analysis_name = None
                     ssp_root = (
                         REPO_ROOT / "artifacts" / "models" / model.name / case.name
                     )
-                    study_root = None
+                    analysis_root = None
 
                 specs.append(
                     SimulationCaseSpec(
@@ -237,8 +237,8 @@ class SimulationRegistry:
                         reference_csvs=case.reference_csvs,
                         gate=case.gate,
                         build_name=build_name,
-                        study_name=study_name,
-                        study_root=study_root,
+                        analysis_name=analysis_name,
+                        analysis_root=analysis_root,
                     )
                 )
         return specs

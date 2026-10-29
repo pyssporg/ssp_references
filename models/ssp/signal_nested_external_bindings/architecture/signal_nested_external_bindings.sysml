@@ -1,6 +1,6 @@
 package SignalNestedExternalBindings {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -88,7 +88,7 @@ package SignalNestedExternalBindings {
     connect step.y to y;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Nested system boundary wired through an external binding. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

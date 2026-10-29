@@ -25,7 +25,7 @@
         <ssd:ParameterBindings>
           <ssd:ParameterBinding>
             <ssd:ParameterValues>
-              <ssv:ParameterSet version="1.0" name="step_parameters">
+              <ssv:ParameterSet version="1.0" name="parameters">
                 <ssv:Parameters>
                   <ssv:Parameter name="height">
                     <ssv:Real value="1" />

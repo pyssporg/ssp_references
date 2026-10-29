@@ -1,6 +1,6 @@
 package BouncingBall {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -49,7 +49,7 @@ package BouncingBall {
     part fmu : BouncingBall;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Event-driven bouncing ball over the baseline window; no scenario. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;

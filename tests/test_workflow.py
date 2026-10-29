@@ -47,13 +47,13 @@ def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
 
 
-STUDY_NAME = "baseline"
+ANALYSIS_NAME = "baseline"
 
 
 def make_ssp_root(
     tmp_path: Path, model_name: str = "ExampleModel"
 ) -> tuple[Path, Path]:
-    ssp_root = tmp_path / "artifacts" / "models" / model_name / STUDY_NAME / "model"
+    ssp_root = tmp_path / "artifacts" / "models" / model_name / ANALYSIS_NAME / "model"
     (ssp_root / "resources").mkdir(parents=True)
     (ssp_root / "SystemStructure.ssd").write_text(
         """<?xml version="1.0" encoding="UTF-8"?>
@@ -62,17 +62,17 @@ def make_ssp_root(
 </ssd:SystemStructure>
 """
     )
-    study_root = tmp_path / "artifacts" / "studies" / model_name / STUDY_NAME
-    study_root.mkdir(parents=True)
-    (study_root / "study.json").write_text(
+    analysis_root = tmp_path / "artifacts" / "analyses" / model_name / ANALYSIS_NAME
+    analysis_root.mkdir(parents=True)
+    (analysis_root / "analysis.json").write_text(
         json.dumps(
             {
                 "model": model_name,
                 "composition": "SystemStructure.ssd",
                 "sut": "system",
-                "study": STUDY_NAME,
+                "analysis": ANALYSIS_NAME,
                 "experiment": {
-                    "name": STUDY_NAME,
+                    "name": ANALYSIS_NAME,
                     "start_time": 0.0,
                     "stop_time": 1.0,
                     "step_size": 1.0,
@@ -81,7 +81,7 @@ def make_ssp_root(
             }
         )
     )
-    return ssp_root, study_root
+    return ssp_root, analysis_root
 
 
 def write_series(path: Path, signal_values: list[float]) -> None:
@@ -209,7 +209,7 @@ def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:
     assert loaded == registry
 
 
-def test_registry_roundtrip_supports_model_build_and_study() -> None:
+def test_registry_roundtrip_supports_model_build_and_analysis() -> None:
     registry = SimulationRegistry(
         models=(
             RegistryModel(
@@ -219,7 +219,7 @@ def test_registry_roundtrip_supports_model_build_and_study() -> None:
                 cases=(
                     RegistryCase(
                         name="baseline",
-                        study="test_baseline",
+                        analysis="test_baseline",
                         backends=("ssp4sim",),
                     ),
                 ),
@@ -230,7 +230,7 @@ def test_registry_roundtrip_supports_model_build_and_study() -> None:
     loaded = SimulationRegistry.from_dict(registry.to_dict())
     assert loaded == registry
     assert loaded.models[0].build == "model"
-    assert loaded.models[0].cases[0].study == "test_baseline"
+    assert loaded.models[0].cases[0].analysis == "test_baseline"
 
 
 def test_registry_roundtrip_supports_reference_csvs() -> None:
@@ -267,15 +267,15 @@ def test_registry_roundtrip_supports_reference_csvs() -> None:
 
 
 def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
-    ssp_root, study_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
-        study_name=STUDY_NAME,
-        study_root=study_root,
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
 
     setup = prepare_setup(spec)
@@ -300,7 +300,7 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
     assert loaded.window == setup.window
 
 
-def test_prepare_setup_rejects_spec_without_study(tmp_path: Path) -> None:
+def test_prepare_setup_rejects_spec_without_analysis(tmp_path: Path) -> None:
     ssp_root, _ = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
@@ -310,20 +310,20 @@ def test_prepare_setup_rejects_spec_without_study(tmp_path: Path) -> None:
         compare_signals=("signal",),
     )
 
-    with pytest.raises(ValueError, match="no study descriptor"):
+    with pytest.raises(ValueError, match="no analysis descriptor"):
         prepare_setup(spec)
 
 
 def test_simulation_run_manifest_roundtrip(tmp_path: Path) -> None:
-    ssp_root, study_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
-        study_name=STUDY_NAME,
-        study_root=study_root,
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -348,15 +348,15 @@ def test_simulation_run_manifest_roundtrip(tmp_path: Path) -> None:
 
 
 def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
-    ssp_root, study_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
-        study_name=STUDY_NAME,
-        study_root=study_root,
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -389,15 +389,15 @@ def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
 
 
 def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
-    ssp_root, study_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
         compare_signals=("step.y",),
-        study_name=STUDY_NAME,
-        study_root=study_root,
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -420,15 +420,15 @@ def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
 
 
 def test_compare_runs_validates_signal_invariants(tmp_path: Path) -> None:
-    ssp_root, study_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
+    ssp_root, analysis_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
     spec = SimulationCaseSpec(
         model_name="signal_step_gain",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
         compare_signals=("step.y", "gain.y"),
-        study_name=STUDY_NAME,
-        study_root=study_root,
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -454,15 +454,15 @@ def test_compare_runs_validates_signal_invariants(tmp_path: Path) -> None:
 
 
 def test_compare_runs_gate_fails_on_signal_invariant_violation(tmp_path: Path) -> None:
-    ssp_root, study_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
+    ssp_root, analysis_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
     spec = SimulationCaseSpec(
         model_name="signal_step_gain",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
         compare_signals=("step.y", "gain.y"),
-        study_name=STUDY_NAME,
-        study_root=study_root,
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -529,15 +529,15 @@ def test_gate_keeps_invalid_distinct_from_failure() -> None:
 
 
 def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) -> None:
-    ssp_root, study_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
-        study_name=STUDY_NAME,
-        study_root=study_root,
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -575,7 +575,7 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
 
 
 def test_compare_reference_writes_metrics_and_gate(tmp_path: Path) -> None:
-    ssp_root, study_root = make_ssp_root(tmp_path, model_name="ExampleModel")
+    ssp_root, analysis_root = make_ssp_root(tmp_path, model_name="ExampleModel")
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
@@ -583,8 +583,8 @@ def test_compare_reference_writes_metrics_and_gate(tmp_path: Path) -> None:
         backends=("ssp4sim",),
         compare_signals=("x",),
         gate=GateConfig(atol=0.1),
-        study_name=STUDY_NAME,
-        study_root=study_root,
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()

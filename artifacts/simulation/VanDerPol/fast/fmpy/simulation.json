@@ -1,5 +1,7 @@
 {
-  "artifacts": [],
+  "artifacts": [
+    "result.csv"
+  ],
   "error": null,
   "request": {
     "backend": "fmpy",
@@ -8,6 +10,6 @@
     "setup_manifest": "../setup.json"
   },
   "result": "result.csv",
-  "runtime_s": 0.013899523997679353,
+  "runtime_s": 0.012958896113559604,
   "status": "completed"
 }

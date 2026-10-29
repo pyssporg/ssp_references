@@ -41,9 +41,9 @@ The migrated fixtures no longer carry either; the reference SSM files were delet
 - **A. Registry-owned reference metadata**: extend `reference_csvs` with optional `signals` and `mapping`.
   - Keeps references and signal selection in the verification policy layer.
   - Compare stage selects signals per reference.
-  - No Study or SysML change.
+  - No Analysis or SysML change.
   - Smallest blast radius.
-- **B. Study-owned reference metadata**: author references in the Study and emit them into `study.json`.
+- **B. Analysis-owned reference metadata**: author references in the Analysis and emit them into `analysis.json`.
   - Couples the build input to the comparison stage.
   - Breaks the current split between build and verification policy.
   - Needs a SysML dialect extension for reference elements.
@@ -71,7 +71,7 @@ The migrated fixtures no longer carry either; the reference SSM files were delet
 ## Expected Benefit
 
 - Compare specific signals or parameter columns against a specific reference.
-- Keep one case per study without splitting it for signal selection.
+- Keep one case per analysis without splitting it for signal selection.
 - Restore the mapping capability lost with the LS-REF files.
 
 ## Risk And Blast Radius
@@ -79,7 +79,7 @@ The migrated fixtures no longer carry either; the reference SSM files were delet
 - **Repo**: `scripts/workflow/registry.py`, `scripts/workflow/reference.py`, `scripts/workflow/setup.py`, tests.
 - **Artifact**: registry JSON gains optional fields; comparison manifests record the selected signals.
 - **Policy**: per-reference gates may need their own tolerance policy.
-- **Boundary**: do not move reference data into the Study or SysML.
+- **Boundary**: do not move reference data into the Analysis or SysML.
 
 ## Open Questions
 
@@ -94,7 +94,7 @@ The migrated fixtures no longer carry either; the reference SSM files were delet
 
 ## Excludes
 
-- Study description and multi-study build support; implemented separately.
+- Analysis description and multi-analysis build support; implemented separately.
 - LS-REF packaging policy; retired by `AD-014`.
 - Simulation registry technical mechanism; see `DD-005`.
 - Runtime window and tolerance; see `DD-001`.

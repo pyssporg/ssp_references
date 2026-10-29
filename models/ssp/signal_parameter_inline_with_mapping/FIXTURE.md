@@ -2,7 +2,7 @@
 
 ## Origin
 
-Assembled from shared Modelica FMUs. The model and study are authored in SysML
+Assembled from shared Modelica FMUs. The model and analysis are authored in SysML
 at `architecture/signal_parameter_inline_with_mapping.sysml`.
 
 ## Overview
@@ -14,25 +14,28 @@ Modelica FMUs. Parameter form: inline SSV + external SSM.
 
 - `architecture/signal_parameter_inline_with_mapping.sysml`
 - Exportable composition: `System :> SspModel`
-- Study composition: `baseline :> Study`
+- Analysis composition: `baseline :> Analysis`
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
-## Studies
+## Analyses
 
-- `baseline :> Study`
+- `baseline :> Analysis`
 - Scenario set: `ScenarioSet`
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`
 - Tolerance is not part of the experiment; it comes from the FMU model
   descriptions.
-- Artifacts: `artifacts/studies/signal_parameter_inline_with_mapping/baseline/`
-- Studies are never exported as SSPs.
+- Artifacts: `artifacts/analyses/signal_parameter_inline_with_mapping/baseline/`
+- Analyses are never exported as SSPs.
 
 ## Backends
 
 This fixture is registered for simulation with the following backends:
 
 - ssp4sim
-- OMSimulator
+
+OMSimulator is not registered for this fixture: its parameter parser fails on
+inline `ParameterValues` combined with a `ParameterMapping` (DD-014). ssp4sim
+applies both correctly.
 
 ## Structure
 
@@ -67,7 +70,7 @@ This fixture is registered for simulation with the following backends:
 ## Packaging Notes
 
 - Exported model: `artifacts/models/signal_parameter_inline_with_mapping/baseline/model/`
-- Study artifacts: `artifacts/studies/signal_parameter_inline_with_mapping/baseline/`
+- Analysis artifacts: `artifacts/analyses/signal_parameter_inline_with_mapping/baseline/`
 - FMU sources:
 - `models/fmu/Modelica.Blocks.Sources.Step/fmu`
 - Build: `python3 scripts/build_models.py run signal_parameter_inline_with_mapping`

@@ -1,4 +1,6 @@
 {
+  "analysis": "baseline",
+  "analysis_root": "../../../analyses/signal_nested_algebraic_loop/baseline",
   "backends": [
     "ssp4sim",
     "omsimulator"
@@ -21,8 +23,6 @@
   "resources_dir": "../../../models/signal_nested_algebraic_loop/baseline/model/resources",
   "root_system_name": "System",
   "ssp_root": "../../../models/signal_nested_algebraic_loop/baseline/model",
-  "study": "baseline",
-  "study_root": "../../../studies/signal_nested_algebraic_loop/baseline",
   "system_structure": "../../../models/signal_nested_algebraic_loop/baseline/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,

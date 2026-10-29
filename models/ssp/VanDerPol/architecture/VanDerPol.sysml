@@ -1,6 +1,6 @@
 package VanDerPol {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -70,13 +70,13 @@ package VanDerPol {
     part fmu : VanDerPol;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Baseline configuration with mu set to 1.0. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
   }
 
-  part def fast :> Study {
+  part def fast :> Analysis {
     doc /* Variant configuration with mu set to 2.0. */
     attribute experiment_fast : FastExperiment;
     attribute scenario : FastScenario;
@@ -85,7 +85,7 @@ package VanDerPol {
     bind sut.fmu.parameters.mu = scenario.mu;
   }
 
-  part def slow :> Study {
+  part def slow :> Analysis {
     doc /* Variant configuration with mu set to 0.5. */
     attribute experiment_slow : SlowExperiment;
     attribute scenario : SlowScenario;

@@ -1,10 +1,11 @@
 {
-  "error": null,
+  "candidate_label": "omsimulator",
   "gate": {
     "reasons": [],
     "status": "pass"
   },
   "metrics": "metrics.csv",
+  "reference_label": "ssp4sim",
   "request": {
     "case": "baseline",
     "runs": [
@@ -18,7 +19,6 @@
       }
     ]
   },
-  "status": "completed",
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 4.999800000682342e-07,

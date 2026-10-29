@@ -90,7 +90,7 @@ Reasons are recorded as `signal: code (detail)` strings.
 ## 3. Threshold Guidance
 
 - Trajectory thresholds come from the registry `gate` entry per case, never
-  from the study descriptor.
+  from the analysis descriptor.
 - Fixture classes differ: deterministic signal-propagation fixtures tolerate
   the least deviation, composite fixtures the most.
 - Model signal invariants use the separate, tighter

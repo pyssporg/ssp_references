@@ -1,0 +1,15 @@
+{
+  "analysis": "baseline",
+  "composition": "EmbraceModel",
+  "description": "Legacy embrace SSP body over the baseline experiment window.",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.01,
+    "stop_time": 10.0
+  },
+  "model": "embrace",
+  "model_source": "models/ssp/embrace/ssp",
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

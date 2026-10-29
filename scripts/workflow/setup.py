@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
-from pyssp_workflow.study import read_study_descriptor
+from pyssp_workflow.analysis import read_analysis_descriptor
 
 from utils.domain import SimulationWindow
 
@@ -41,8 +41,8 @@ class SimulationSetup:
     root_system_name: str = ""
     description: str | None = None
     gate: GateConfig = field(default_factory=GateConfig)
-    study_name: str | None = None
-    study_root: Path | None = None
+    analysis_name: str | None = None
+    analysis_root: Path | None = None
 
     def __post_init__(self) -> None:
         normalized_backends = tuple(str(backend).lower() for backend in self.backends)
@@ -61,58 +61,58 @@ class SimulationSetup:
         object.__setattr__(self, "root_system_name", root_system_name)
 
     @property
-    def is_study(self) -> bool:
-        return self.study_root is not None
+    def is_analysis(self) -> bool:
+        return self.analysis_root is not None
 
     @classmethod
     def from_spec(cls, spec: SimulationCaseSpec) -> "SimulationSetup":
-        if spec.study_root is None:
+        if spec.analysis_root is None:
             raise ValueError(
-                f"Case '{spec.model_name}/{spec.case_name}' has no study descriptor; "
-                "the study supplies the experiment window"
+                f"Case '{spec.model_name}/{spec.case_name}' has no analysis descriptor; "
+                "the analysis supplies the experiment window"
             )
-        descriptor = spec.study_root / "study.json"
+        descriptor = spec.analysis_root / "analysis.json"
         if not descriptor.is_file():
-            raise FileNotFoundError(f"Study descriptor not found: {descriptor}")
+            raise FileNotFoundError(f"Analysis descriptor not found: {descriptor}")
 
-        study = read_study_descriptor(descriptor)
+        analysis = read_analysis_descriptor(descriptor)
         layout = ArtifactLayout.from_model_root(
             spec.model_name,
-            study.study,
+            analysis.analysis,
             spec.ssp_root,
-            spec.study_root,
+            spec.analysis_root,
         )
         root_system_name = _read_root_system_name(layout.system_structure_path)
         return cls(
             layout=layout,
             window=SimulationWindow(
-                start_time=study.experiment.start_time,
-                stop_time=study.experiment.stop_time,
-                interval=study.experiment.step_size,
+                start_time=analysis.experiment.start_time,
+                stop_time=analysis.experiment.stop_time,
+                interval=analysis.experiment.step_size,
             ),
             backends=spec.backends,
             compare_signals=spec.compare_signals,
             root_system_name=root_system_name,
             gate=spec.gate,
-            study_name=study.study,
-            study_root=spec.study_root,
-            description=study.description,
+            analysis_name=analysis.analysis,
+            analysis_root=spec.analysis_root,
+            description=analysis.description,
         )
 
     @classmethod
     def from_manifest(cls, path: Path) -> "SimulationSetup":
         data = read_json(path)
         manifest_root = path.parent
-        study_root = (
-            resolve_path(manifest_root, data["study_root"]).resolve()
-            if data.get("study_root")
+        analysis_root = (
+            resolve_path(manifest_root, data["analysis_root"]).resolve()
+            if data.get("analysis_root")
             else None
         )
         layout = ArtifactLayout(
             model_name=data["model"],
             case_name=data["case"],
             ssp_root=resolve_path(manifest_root, data["ssp_root"]).resolve(),
-            study_root=study_root,
+            analysis_root=analysis_root,
         )
         window = SimulationWindow(**data["window"])
         backends = data["backends"]
@@ -131,8 +131,8 @@ class SimulationSetup:
             root_system_name=root_system_name,
             description=data.get("description"),
             gate=GateConfig.from_dict(data.get("gate")),
-            study_name=data.get("study"),
-            study_root=study_root,
+            analysis_name=data.get("analysis"),
+            analysis_root=analysis_root,
         )
 
     @property
@@ -173,10 +173,10 @@ class SimulationSetup:
             data["tolerance"] = self.tolerance
         if self.description is not None:
             data["description"] = self.description
-        if self.study_name is not None:
-            data["study"] = self.study_name
-        if self.study_root is not None:
-            data["study_root"] = relative_path(manifest_root, self.study_root)
+        if self.analysis_name is not None:
+            data["analysis"] = self.analysis_name
+        if self.analysis_root is not None:
+            data["analysis_root"] = relative_path(manifest_root, self.analysis_root)
         return data
 
     def write_manifest(self) -> Path:

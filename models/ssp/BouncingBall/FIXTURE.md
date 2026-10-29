@@ -3,7 +3,7 @@
 ## Origin
 
 Packaged from the shared `models/fmu/BouncingBall` reference FMU fixture and its
-CSV baselines. The model and study are authored in SysML at
+CSV baselines. The model and analysis are authored in SysML at
 `architecture/BouncingBall.sysml`.
 
 ## Overview
@@ -16,20 +16,20 @@ dynamics.
 
 - `architecture/BouncingBall.sysml`
 - Exportable composition: `System :> SspModel`
-- Study composition: `baseline :> Study`
-- Parameter interface: `BouncingBallParameters` exposes `g` and `e`. The study
+- Analysis composition: `baseline :> Analysis`
+- Parameter interface: `BouncingBallParameters` exposes `g` and `e`. The analysis
   applies no scenario, so the FMU defaults (`g = -9.81`, `e = 0.7`) apply.
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
-## Studies
+## Analyses
 
-- `baseline :> Study`
+- `baseline :> Analysis`
 - Scenario set: none; the build packages no scenario.
 - Experiment: `startTime=0.0`, `stopTime=3.0`, `stepSize=0.001`
 - Tolerance is not part of the experiment; it comes from the FMU model
   descriptions.
-- Artifacts: `artifacts/studies/BouncingBall/baseline/`
-- Studies are never exported as SSPs.
+- Artifacts: `artifacts/analyses/BouncingBall/baseline/`
+- Analyses are never exported as SSPs.
 
 ## Backends
 
@@ -74,7 +74,7 @@ This fixture is registered for simulation with the following backends:
 ## Packaging Notes
 
 - Exported model: `artifacts/models/BouncingBall/baseline/model/`
-- Study artifacts: `artifacts/studies/BouncingBall/baseline/`
+- Analysis artifacts: `artifacts/analyses/BouncingBall/baseline/`
 - FMU source: `models/fmu/BouncingBall/fmu`
 - The build skips FMU validation: the shared FMU declares both `ModelExchange`
   and `CoSimulation`, while the FMI 2 reader keeps only the first interface and

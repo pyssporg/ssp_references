@@ -1,4 +1,6 @@
 {
+  "analysis": "fast",
+  "analysis_root": "../../../analyses/VanDerPol/fast",
   "backends": [
     "ssp4sim",
     "omsimulator",
@@ -19,8 +21,6 @@
   "resources_dir": "../../../models/VanDerPol/fast/model/resources",
   "root_system_name": "System",
   "ssp_root": "../../../models/VanDerPol/fast/model",
-  "study": "fast",
-  "study_root": "../../../studies/VanDerPol/fast",
   "system_structure": "../../../models/VanDerPol/fast/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,

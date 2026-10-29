@@ -1,4 +1,6 @@
 {
+  "analysis": "nominal_k3",
+  "analysis_root": "../../../analyses/variation_attribute_set/nominal_k3",
   "backends": [
     "ssp4sim",
     "omsimulator"
@@ -18,8 +20,6 @@
   "resources_dir": "../../../models/variation_attribute_set/nominal_k3/model/resources",
   "root_system_name": "System",
   "ssp_root": "../../../models/variation_attribute_set/nominal_k3/model",
-  "study": "nominal_k3",
-  "study_root": "../../../studies/variation_attribute_set/nominal_k3",
   "system_structure": "../../../models/variation_attribute_set/nominal_k3/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,

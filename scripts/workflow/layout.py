@@ -22,7 +22,7 @@ class ArtifactLayout:
     model_name: str
     case_name: str
     ssp_root: Path
-    study_root: Path | None = None
+    analysis_root: Path | None = None
 
     @classmethod
     def from_ssp_root(cls, ssp_root: Path) -> "ArtifactLayout":
@@ -41,7 +41,7 @@ class ArtifactLayout:
         model_name: str,
         case_name: str,
         ssp_root: Path,
-        study_root: Path | None = None,
+        analysis_root: Path | None = None,
     ) -> "ArtifactLayout":
         resolved_root = ssp_root.resolve()
         if not resolved_root.exists():
@@ -50,7 +50,7 @@ class ArtifactLayout:
             model_name=model_name,
             case_name=case_name,
             ssp_root=resolved_root,
-            study_root=study_root.resolve() if study_root is not None else None,
+            analysis_root=analysis_root.resolve() if analysis_root is not None else None,
         )
 
     @property
@@ -88,10 +88,10 @@ class ArtifactLayout:
         return self.ssp_root / "resources"
 
     @property
-    def study_descriptor_path(self) -> Path | None:
-        if self.study_root is None:
+    def analysis_descriptor_path(self) -> Path | None:
+        if self.analysis_root is None:
             return None
-        return self.study_root / "study.json"
+        return self.analysis_root / "analysis.json"
 
     def simulation_run_dir(self, backend: str) -> Path:
         return self.simulation_case_root / sanitize_label(backend)

@@ -27,7 +27,7 @@ OMS_OPTIONS = (
 
 #: Engines that reject a simulation request without an explicit tolerance.
 #: ssp4sim refuses a configuration lacking ``simulation.tolerance``; it has no
-#: engine default to fall back on. The study descriptor deliberately carries
+#: engine default to fall back on. The analysis descriptor deliberately carries
 #: no tolerance, so the composition layer names the value and records it in
 #: the run manifest. OMSimulator and FMPy keep their own defaults.
 BACKEND_REQUIRED_TOLERANCE = {"ssp4sim": 1e-4}
@@ -158,7 +158,7 @@ def _simulation_spec(request: SimulationRequest, ssp: Path) -> SimulationSpec:
 def simulate_backend(request: SimulationRequest) -> SimulationRun:
     """Run one backend against the built SSP.
 
-    The study scenario is packaged into the SSP at build time, so the built
+    The analysis scenario is packaged into the SSP at build time, so the built
     artifact is the complete engine input; parameters are applied from the
     system definition only.
     """

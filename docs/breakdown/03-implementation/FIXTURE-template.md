@@ -37,16 +37,16 @@ Required for SysML-authored fixtures.
 - Whether any legacy SSD/SSV/SSM remains checked in (and why).
 -->
 
-## Studies
+## Analyses
 
 <!--
-Required for SysML-authored fixtures with studies.
-- Study composition names (`part def ... :> Study`).
-- Scenario/parameter-set names applied by each study.
+Required for SysML-authored fixtures with analyses.
+- Analysis composition names (`part def ... :> Analysis`).
+- Scenario/parameter-set names applied by each analysis.
 - Experiment windows (`startTime`, `stopTime`, `stepSize`). Tolerance is an FMU
   property and is not part of the experiment.
-- Artifact locations under artifacts/studies/<model>/<study>/.
-- Confirmation that studies are not exported as SSPs.
+- Artifact locations under artifacts/analyses/<model>/<analysis>/.
+- Confirmation that analyses are not exported as SSPs.
 -->
 
 ## Strategy Role
@@ -108,10 +108,10 @@ Optional. Notes specific to running this fixture:
 
 <!--
 Optional. Notes about how this fixture is packaged:
-- Runnable SSP path: `artifacts/models/<model>/<study>/<build>/`.
+- Runnable SSP path: `artifacts/models/<model>/<analysis>/<build>/`.
 - Packaging function the fixture calls after `build_fixture`.
 - Generated vs checked-in SSD/SSV/SSM.
-- Study scenario and experiment artifacts.
+- Analysis scenario and experiment artifacts.
 - FMU source references.
 - Special build steps or resource handling.
 -->

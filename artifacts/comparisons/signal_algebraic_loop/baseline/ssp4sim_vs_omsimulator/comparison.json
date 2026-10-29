@@ -1,10 +1,11 @@
 {
-  "error": null,
+  "candidate_label": "omsimulator",
   "gate": {
     "reasons": [],
     "status": "pass"
   },
   "metrics": "metrics.csv",
+  "reference_label": "ssp4sim",
   "request": {
     "case": "baseline",
     "runs": [
@@ -18,16 +19,15 @@
       }
     ]
   },
-  "status": "completed",
   "summary": {
     "compared_signal_count": 3,
     "max_abs_error": 0.05020199999999902,
     "max_rel_error": 0.0376747964876607,
     "max_shift_abs_error": 0.0125646293856,
     "max_signal_invariant_abs_error": 0.0,
-    "mean_abs_error": 0.013265596460853615,
+    "mean_abs_error": 0.013265596460853617,
     "min_coverage": 1.0,
-    "rmse": 0.014876900103235715,
+    "rmse": 0.014876900103235717,
     "run_a_label": "ssp4sim",
     "run_b_label": "omsimulator",
     "signal_invariant_count": 0,

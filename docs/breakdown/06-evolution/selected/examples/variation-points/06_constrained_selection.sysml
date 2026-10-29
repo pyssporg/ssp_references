@@ -6,7 +6,7 @@
  * another; "selecting the sine source excludes the high-gain scenario" is an
  * exclusion from one variant on a variant of a different point. Both are
  * ordinary SysML constraint definitions with an assertion on the composition
- * or on the study, not a new keyword: SysML v2 section 7.6.1 says constraints
+ * or on the analysis, not a new keyword: SysML v2 section 7.6.1 says constraints
  * "can be used to constrain the available choices for a given variant" and the
  * specification's own variability example (Annex A.12) draws exactly this as a
  * named "assert constraint" over operator expressions.
@@ -52,7 +52,7 @@
  */
 package ConstrainedSelection {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -221,8 +221,8 @@ package ConstrainedSelection {
     assert requiresSingleStage;
   }
 
-  part def test_selected :> Study {
-    doc /* One study per selection; the scenario point lives here. */
+  part def test_selected :> Analysis {
+    doc /* One analysis per selection; the scenario point lives here. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioChoice;
     part sut : System;
@@ -230,7 +230,7 @@ package ConstrainedSelection {
     bind sut.gain.parameters.k = scenario.k;
 
     /* Same reuse shape across the composition boundary: the scenario point
-     * lives on the study, so the exclusion has to be asserted here. */
+     * lives on the analysis, so the exclusion has to be asserted here. */
     constraint excludesHighGain : SineExcludesHighGain {
       in chosenSource = sut.source;
       in chosenScenario = scenario;

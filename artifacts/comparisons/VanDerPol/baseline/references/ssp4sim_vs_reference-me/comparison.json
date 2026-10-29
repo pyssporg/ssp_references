@@ -1,10 +1,11 @@
 {
-  "error": null,
+  "candidate_label": "ssp4sim",
   "gate": {
     "reasons": [],
     "status": "not_evaluated"
   },
   "metrics": "metrics.csv",
+  "reference_label": "reference-me",
   "request": {
     "backend": "ssp4sim",
     "reference": "reference-me",
@@ -12,7 +13,6 @@
     "reference_path": "/home/eriro/pwa/2_work/ssp_references/models/ssp/VanDerPol/references/VanDerPol-me.csv",
     "run_manifest": "../../../../../simulation/VanDerPol/baseline/ssp4sim/simulation.json"
   },
-  "status": "completed",
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 0.6810239260436888,

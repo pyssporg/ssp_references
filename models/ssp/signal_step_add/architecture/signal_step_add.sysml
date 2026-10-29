@@ -1,6 +1,6 @@
 package SignalStepAdd {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -84,7 +84,7 @@ package SignalStepAdd {
     connect step_b.y to add.u2;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Two steps added at the root. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

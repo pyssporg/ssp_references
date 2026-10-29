@@ -50,33 +50,33 @@ inter-process calls, or hidden state.
 
 ### Stage 1: Build
 
-**Purpose:** Transform authored model and study definitions into a reproducible,
-runtime-ready exported SSP and the study data that exercises it.
+**Purpose:** Transform authored model and analysis definitions into a reproducible,
+runtime-ready exported SSP and the analysis data that exercises it.
 
 **Input:** A model directory under `models/ssp/<model_name>/` containing at
 minimum a `build.py` script and a `FIXTURE.md` fixture note. Migrated fixtures
 carry `architecture/*.sysml` with a `part def ... :> SspModel` and, where
-studies are defined, `part def ... :> Study` compositions. Some model
+analyses are defined, `part def ... :> Analysis` compositions. Some model
 directories still carry checked-in resource files (FMUs, legacy SSV/SSM) as
 their body. A fixture may
-keep its legacy SSD and resources as the model body and author only the study
+keep its legacy SSD and resources as the model body and author only the analysis
 in SysML; the `SspModel` composition is then a boundary marker, selects the
 body with `ssp_meta.source`, and is never exported.
 
 **Output:** Two artifact classes:
 
 - a runnable build SSP at
-  `artifacts/models/<model_name>/<study_name>/<build_name>/` containing
-  `SystemStructure.ssd`, `resources/`, and the study scenario already packaged
+  `artifacts/models/<model_name>/<analysis_name>/<build_name>/` containing
+  `SystemStructure.ssd`, `resources/`, and the analysis scenario already packaged
   in the fixture's parameter-application form;
-- study artifacts at `artifacts/studies/<model_name>/<study_name>/` containing
-  the study descriptor and, when the study applies one, the scenario SSV and
-  SSM mapping. A study may author only an experiment. Studies are not SSPs;
+- analysis artifacts at `artifacts/analyses/<model_name>/<analysis_name>/` containing
+  the analysis descriptor and, when the analysis applies one, the scenario SSV and
+  SSM mapping. An analysis may author only an experiment. Analyses are not SSPs;
   they are build inputs that supply the window and, optionally, the scenario.
 
 **Entry point:** `scripts/build_models.py` discovers and dispatches to each
 model's own `build.py`. The model-level build script is the source of truth for
-how that particular fixture is exported and which studies it generates.
+how that particular fixture is exported and which analyses it generates.
 Migrated build scripts call `pyssp_workflow.authoring` for SysML derivation and
 then apply the fixture's parameter-application form with `pyssp_standard`
 (`ADR-013`, `DD-011`).
@@ -88,24 +88,24 @@ input.
 
 ### Stage 2: Simulate
 
-**Purpose:** Run registered studies against one or more simulation backends and
+**Purpose:** Run registered analyses against one or more simulation backends and
 record raw result trajectories.
 
-**Input:** A runnable build SSP and its study descriptor (from Stage 1) plus the
+**Input:** A runnable build SSP and its analysis descriptor (from Stage 1) plus the
 simulation registry at `artifacts/simulation_registry.json`, which maps each
-model build to named studies, backends, compare signals, references, and gate
-policy. The study descriptor supplies the simulation window (start time, stop
+model build to named analyses, backends, compare signals, references, and gate
+policy. The analysis descriptor supplies the simulation window (start time, stop
 time, step size). The scenario is already packaged in the SSP, so the simulate
 stage does not inject one. The setup manifest records no solver tolerance; each
 engine applies its own default.
 
 **Output:** Per-backend simulation result files (CSV, and optionally `.mat`
 for some backends) under
-`artifacts/simulation/<model_name>/<study_name>/<backend>/`. Each run also
+`artifacts/simulation/<model_name>/<analysis_name>/<backend>/`. Each run also
 produces a `simulation.json` run manifest at the same location.
 
 **Entry point:** `scripts/run_simulations.py` reads the registry, expands the
-model/study/backend matrix, prepares setup manifests, and calls
+model/analysis/backend matrix, prepares setup manifests, and calls
 `workflow.simulate.simulate_backend` per backend. Engine execution is a
 `pyssp_simulate` responsibility: the local wrapper builds a `SimulationSpec`
 and records the run manifest. This repository owns no engine workaround; the
@@ -127,11 +127,11 @@ engine-to-engine — at least two distinct backend runs are required.
 
 **Output:** Per-pairwise-comparison metrics CSV files and comparison manifests
 under
-`artifacts/comparisons/<model_name>/<study_name>/<backend_a>_vs_<backend_b>/`.
+`artifacts/comparisons/<model_name>/<analysis_name>/<backend_a>_vs_<backend_b>/`.
 Reference comparisons are written under
-`artifacts/comparisons/<model_name>/<study_name>/references/<backend>_vs_<reference_label>/`.
+`artifacts/comparisons/<model_name>/<analysis_name>/references/<backend>_vs_<reference_label>/`.
 A batch-level comparison manifest is also written at
-`artifacts/comparisons/<model_name>/<study_name>/comparisons.json`. Every
+`artifacts/comparisons/<model_name>/<analysis_name>/comparisons.json`. Every
 comparison manifest records a `gate` verdict and its reasons. The gate records
 `pass`, `fail`, or `invalid`; `invalid` means the comparison was not fit to
 judge.
@@ -203,10 +203,10 @@ forbidden from doing.
 
 | Entry Point | Owns | Forbidden From |
 |---|---|---|
-| `build_models.py` | Model discovery and dispatch to per-model `build.py`; exports `SspModel` SSPs and generates study artifacts | Running simulations, writing to `artifacts/simulation/` or `artifacts/comparisons/`, modifying the simulation registry |
-| `run_simulations.py` | Registry expansion, study setup, backend dispatch, result recording | Rebuilding SSPs, mutating exported model artifacts, running comparisons |
+| `build_models.py` | Model discovery and dispatch to per-model `build.py`; exports `SspModel` SSPs and generates analysis artifacts | Running simulations, writing to `artifacts/simulation/` or `artifacts/comparisons/`, modifying the simulation registry |
+| `run_simulations.py` | Registry expansion, analysis setup, backend dispatch, result recording | Rebuilding SSPs, mutating exported model artifacts, running comparisons |
 | `run_comparisons.py` | Pairwise engine-to-engine comparison, reference comparison, verdict recording | Re-running simulations, modifying model sources, rebuilding SSPs |
-| `run_campaign.py` | Submitting build, study, simulate, and compare nodes through `sequence_extensions` | Implementing domain logic; bypassing the stage entry points |
+| `run_campaign.py` | Submitting build, analysis, simulate, and compare nodes through `sequence_extensions` | Implementing domain logic; bypassing the stage entry points |
 
 These boundaries ensure that each stage can be invoked, debugged, and tested
 independently. A build script failure does not corrupt simulation results; a
@@ -243,24 +243,24 @@ The following text diagram shows the path from model source to comparison
 artifact:
 
 ```
-  models/ssp/<model>/architecture/*.sysml   (SspModel + Study definitions)
+  models/ssp/<model>/architecture/*.sysml   (SspModel + Analysis definitions)
            |
            |  build_models.py -> build.py
            |  pyssp_workflow.authoring + pyssp_workflow.binding / pyssp_standard
-           |  (SysML -> model SSP; study scenario packaged by binding.bind)
+           |  (SysML -> model SSP; analysis scenario packaged by binding.bind)
            v
-  artifacts/models/<model>/<study>/<build>/  (runnable SSP:
-                                              SystemStructure.ssd, resources/,
-                                              packaged scenario)
-  artifacts/studies/<model>/<study>/         (SSV, SSM, study descriptor)
+  artifacts/models/<model>/<analysis>/<build>/  (runnable SSP:
+                                                 SystemStructure.ssd, resources/,
+                                                 packaged scenario)
+  artifacts/analyses/<model>/<analysis>/         (SSV, SSM, analysis descriptor)
            |
-           |  simulation_registry.json maps model -> study -> build -> backends
+           |  simulation_registry.json maps model -> analysis -> build -> backends
            v
-  artifacts/simulation/<model>/<study>/setup.json   (study setup manifest)
+  artifacts/simulation/<model>/<analysis>/setup.json   (analysis setup manifest)
            |
            |  run_simulations.py runs the built SSP as-is per backend
            v
-  artifacts/simulation/<model>/<study>/<backend>/
+  artifacts/simulation/<model>/<analysis>/<backend>/
       - config.json
       - result.csv (or result.mat + unpacked CSV)
       - simulation.json (run manifest)
@@ -269,12 +269,12 @@ artifact:
            |  run_comparisons.py loads run manifests,
            |  compares backend pairs pairwise
            v
-  artifacts/comparisons/<model>/<study>/<backend_a>_vs_<backend_b>/
+  artifacts/comparisons/<model>/<analysis>/<backend_a>_vs_<backend_b>/
       - comparison.json (pairwise comparison manifest)
       - metrics.csv (per-signal metrics)
            |
            v
-  artifacts/comparisons/<model>/<study>/comparisons.json (batch summary)
+  artifacts/comparisons/<model>/<analysis>/comparisons.json (batch summary)
 ```
 
 The flow is strictly left-to-right and top-to-bottom. No stage writes to a
@@ -289,36 +289,36 @@ JSON file that records the state, configuration, and provenance of the pipeline
 stage that produced it.
 
 ### `simulation_registry.json`
-Located at `artifacts/simulation_registry.json`. This is the top-level study-
+Located at `artifacts/simulation_registry.json`. This is the top-level analysis-
 and-backend selection matrix. It lists every model with:
 - The signals to compare during post-processing (`compare_signals`).
-- One or more named cases, each naming its study, its `build` name, the
+- One or more named cases, each naming its analysis, its `build` name, the
   backends to run, reference baselines, and gate policy.
 
-The artifact path is `artifacts/models/<model>/<study>/<build>` and the study
-artifacts are at `artifacts/studies/<model>/<study>`.
+The artifact path is `artifacts/models/<model>/<analysis>/<build>` and the analysis
+artifacts are at `artifacts/analyses/<model>/<analysis>`.
 
-The registry is the exclusive source of truth for which model/study/backend
+The registry is the exclusive source of truth for which model/analysis/backend
 combinations are active. It is not derived from the SSP directory tree.
 
 ### `setup.json`
 Written by `run_simulations.py` before dispatching any backend. Located at
-`artifacts/simulation/<model>/<study>/setup.json`. It records:
-- The runnable SSP path, study, and build name.
-- The study artifact directory.
-- The simulation window (start time, stop time, interval) from the study
+`artifacts/simulation/<model>/<analysis>/setup.json`. It records:
+- The runnable SSP path, analysis, and build name.
+- The analysis artifact directory.
+- The simulation window (start time, stop time, interval) from the analysis
   descriptor. The manifest carries no solver tolerance; each engine applies its
   own default.
-- The explicit backend list and compare-signal list for this model/study.
+- The explicit backend list and compare-signal list for this model/analysis.
 - The gate policy (`atol`, `rtol`, invariant tolerance) frozen from the registry.
 - The root system name and path to `SystemStructure.ssd`.
 
 The setup manifest is the fixed record of *what was configured*. Later stages
-read it without re-parsing the study descriptor.
+read it without re-parsing the analysis descriptor.
 
 ### Simulation artifacts
-One directory per backend per study at
-`artifacts/simulation/<model>/<study>/<backend>/`. Each directory contains:
+One directory per backend per analysis at
+`artifacts/simulation/<model>/<analysis>/<backend>/`. Each directory contains:
 - `simulation.json` — the run manifest recording backend name, result path,
   status, runtime, and error information.
 - `result.csv` — the raw simulation trajectory.
@@ -329,13 +329,13 @@ One directory per backend per study at
 
 ### Comparison artifacts
 Written by `run_comparisons.py`. Pairwise directories at
-`artifacts/comparisons/<model>/<study>/<backend_a>_vs_<backend_b>/` containing:
+`artifacts/comparisons/<model>/<analysis>/<backend_a>_vs_<backend_b>/` containing:
 - `comparison.json` — the pairwise comparison manifest.
 - `metrics.csv` — per-signal comparison metrics.
 
 A batch summary is written at
-`artifacts/comparisons/<model>/<study>/comparisons.json`. Reference comparisons
-live under `artifacts/comparisons/<model>/<study>/references/` and use the same
+`artifacts/comparisons/<model>/<analysis>/comparisons.json`. Reference comparisons
+live under `artifacts/comparisons/<model>/<analysis>/references/` and use the same
 manifest and metrics shape.
 
 ### Connection chain
@@ -343,17 +343,17 @@ manifest and metrics shape.
 ```
   simulation_registry.json
        |
-       |  (expands into individual model/study/backend specs)
+       |  (expands into individual model/analysis/backend specs)
        v
-  artifacts/simulation/<model>/<study>/setup.json
+  artifacts/simulation/<model>/<analysis>/setup.json
        |
        |  (consumed by backend adapters to produce runs)
        v
-  artifacts/simulation/<model>/<study>/<backend>/simulation.json
+  artifacts/simulation/<model>/<analysis>/<backend>/simulation.json
        |
        |  (loaded by comparison entry point)
        v
-  artifacts/comparisons/<model>/<study>/comparisons.json
+  artifacts/comparisons/<model>/<analysis>/comparisons.json
 ```
 
 ---
@@ -363,7 +363,7 @@ manifest and metrics shape.
 The following architectural violations are not allowed:
 
 1. **Build scripts must not run simulations.** The build stage produces
-   exported model SSPs and study data only. Any simulation logic in a model's
+   exported model SSPs and analysis data only. Any simulation logic in a model's
    `build.py` breaks the pipeline's independent-invocability invariant.
 
 2. **Simulation scripts must not modify model sources.** `run_simulations.py`
@@ -374,8 +374,8 @@ The following architectural violations are not allowed:
    compares existing results only. It must not invoke backend simulation
    adapters directly or indirectly.
 
-4. **The study descriptor is the experiment contract.** The window and step
-   come from `study.json` and are frozen into `setup.json`; the gate
+4. **The analysis descriptor is the experiment contract.** The window and step
+   come from `analysis.json` and are frozen into `setup.json`; the gate
    tolerances come from the registry. No pipeline stage parses LS-REF, and the
    build writes no `experiments.xml`.
 
@@ -388,7 +388,7 @@ The following architectural violations are not allowed:
    reference any simulation backend. Backend selection and configuration belong
    to the simulation stage (`run_simulations.py` and the adapter modules).
 
-7. **The simulation registry is the single source of truth for study/backend
+7. **The simulation registry is the single source of truth for analysis/backend
    selection.** No pipeline stage derives the run matrix from directory
    scanning or any other source.
 
@@ -399,8 +399,8 @@ The following architectural violations are not allowed:
    model objects and compatibility shims do not. See `ADR-006`, `ADR-007`, and
    `ADR-011`.
 
-9. **Studies must not be exported as SSPs.** Only `part def ... :> SspModel`
-   definitions are exportable. A `part def ... :> Study` produces scenario
+9. **Analyses must not be exported as SSPs.** Only `part def ... :> SspModel`
+   definitions are exportable. A `part def ... :> Analysis` produces scenario
    SSV/SSM and experiment data, and is packaged into a build SSP. See
    `ADR-009` and `ADR-013`.
 

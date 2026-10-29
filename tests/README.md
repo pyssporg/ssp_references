@@ -30,14 +30,14 @@ marker.
 ## Corpus gate and strict mode
 
 `tests/test_artifact_corpus.py` always checks the tracked corpus:
-`artifacts/simulation_registry.json` parses, the first case names a study, and
+`artifacts/simulation_registry.json` parses, the first case names an analysis, and
 every reference CSV named by the registry or by a model's `build.py` exists and
 parses. It asserts nothing about generated output in normal mode.
 
 Set `SSP_REQUIRE_ARTIFACTS=1` (or `CI`) to also demand the generated corpus for
-every registry case: `artifacts/models/<model>/<study>/model/SystemStructure.ssd`,
-`artifacts/studies/<model>/<study>/study.json`, and
-`artifacts/simulation/<model>/<study>/setup.json`. A missing build fails with
+every registry case: `artifacts/models/<model>/<analysis>/model/SystemStructure.ssd`,
+`artifacts/analyses/<model>/<analysis>/analysis.json`, and
+`artifacts/simulation/<model>/<analysis>/setup.json`. A missing build fails with
 the missing paths and the command that regenerates them:
 
 ```bash

@@ -19,11 +19,11 @@ diagnose mismatches between simulation backends.
 After running the full pipeline, comparison artifacts appear under:
 
 ```
-artifacts/comparisons/<model>/<study>/<backend_a>_vs_<backend_b>/
+artifacts/comparisons/<model>/<analysis>/<backend_a>_vs_<backend_b>/
 ├── comparison.json        # pairwise comparison manifest
 └── metrics.csv            # per-signal comparison metrics
 
-artifacts/comparisons/<model>/<study>/comparisons.json   # batch summary
+artifacts/comparisons/<model>/<analysis>/comparisons.json   # batch summary
 ```
 
 ## `metrics.csv` Schema

@@ -3,7 +3,7 @@
 ## Origin
 
 Packaged from the shared `models/fmu/Stair` reference FMU fixture and its CSV
-baselines. The model and study are authored in SysML at
+baselines. The model and analysis are authored in SysML at
 `architecture/Stair.sysml`.
 
 ## Overview
@@ -15,19 +15,19 @@ behavior. It wraps the single FMI reference FMU with an integer counter output.
 
 - `architecture/Stair.sysml`
 - Exportable composition: `System :> SspModel`
-- Study composition: `baseline :> Study`
+- Analysis composition: `baseline :> Analysis`
 - No parameter interfaces or parameter sets; the FMU has no tunable variables.
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
-## Studies
+## Analyses
 
-- `baseline :> Study`
+- `baseline :> Analysis`
 - Scenario set: none; the build packages no scenario.
 - Experiment: `startTime=0.0`, `stopTime=9.0`, `stepSize=0.2`
 - Tolerance is not part of the experiment; it comes from the FMU model
   descriptions.
-- Artifacts: `artifacts/studies/Stair/baseline/`
-- Studies are never exported as SSPs.
+- Artifacts: `artifacts/analyses/Stair/baseline/`
+- Analyses are never exported as SSPs.
 
 ## Backends
 
@@ -69,7 +69,7 @@ This fixture is registered for simulation with the following backends:
 ## Packaging Notes
 
 - Exported model: `artifacts/models/Stair/baseline/model/`
-- Study artifacts: `artifacts/studies/Stair/baseline/`
+- Analysis artifacts: `artifacts/analyses/Stair/baseline/`
 - FMU source: `models/fmu/Stair/fmu`
 - The build skips FMU validation: the shared FMU declares both `ModelExchange`
   and `CoSimulation`, while the FMI 2 reader keeps only the first interface and

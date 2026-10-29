@@ -1,6 +1,6 @@
 package VariationAttributeSet {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -89,7 +89,7 @@ package VariationAttributeSet {
     connect step.y to gain.u;
   }
 
-  part def nominal_k3 :> Study {
+  part def nominal_k3 :> Analysis {
     doc /* Attribute variation selecting the k=3.0 parameter set. */
     attribute experiment_baseline : BaselineExperiment;
     attribute nominal_scenario : ScenarioChoice;
@@ -101,7 +101,7 @@ package VariationAttributeSet {
     bind sut.gain.parameters.k = nominal_scenario.k;
   }
 
-  part def boosted_k9 :> Study {
+  part def boosted_k9 :> Analysis {
     doc /* Attribute variation selecting the k=9.0 parameter set. */
     attribute experiment_baseline : BaselineExperiment;
     attribute boosted_scenario : ScenarioChoice;

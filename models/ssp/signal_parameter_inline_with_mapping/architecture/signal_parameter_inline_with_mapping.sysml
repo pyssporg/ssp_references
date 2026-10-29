@@ -1,6 +1,6 @@
 package SignalParameterInlineWithMapping {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -57,7 +57,7 @@ package SignalParameterInlineWithMapping {
     part step : Step;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Inline step parameters with an external mapping resource. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

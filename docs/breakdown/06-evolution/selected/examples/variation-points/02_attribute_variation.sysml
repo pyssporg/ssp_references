@@ -2,7 +2,7 @@
  *
  * Pattern: the composition does not change; the variation point selects among
  * alternative attribute definitions, each of which fixes a full parameter set
- * (the same attributes with different values). The Study binds the selected
+ * (the same attributes with different values). The Analysis binds the selected
  * set into the FMU parameter ports, so the choice is a value choice, not a
  * topology choice.
  * Standard anchor: SysML v2 section 7.6.7 (variation, variant; metamodel
@@ -18,7 +18,7 @@
  * Pinned toolchain (sysmlpy 0.96.4): this file parses with no errors, but the
  * parsed model has no variation flag and no variant members. ScenarioChoice is
  * an empty attribute definition, the three candidate sets are collected like
- * any other attribute definition, and the Study's "scenario" attribute is
+ * any other attribute definition, and the "scenario" attribute of the Analysis is
  * typed by ScenarioChoice, which carries none of the bound attributes. A build
  * therefore cannot tell which set -- if any -- was selected.
  *
@@ -29,7 +29,7 @@
  */
 package AttributeVariation {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -127,7 +127,7 @@ package AttributeVariation {
     connect step.y to gain.u;
   }
 
-  part def test_selected_scenario :> Study {
+  part def test_selected_scenario :> Analysis {
     doc /* Parameter variation over one fixed structure. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioChoice;

@@ -5,19 +5,19 @@
       <ssv:Real value="0.5" />
     </ssv:Parameter>
     <ssv:Parameter name="sine.amplitude">
-      <ssv:Real value="1.0" />
+      <ssv:Real value="1" />
     </ssv:Parameter>
     <ssv:Parameter name="sine.f">
-      <ssv:Real value="2.0" />
+      <ssv:Real value="2" />
     </ssv:Parameter>
     <ssv:Parameter name="sine.offset">
-      <ssv:Real value="0.0" />
+      <ssv:Real value="0" />
     </ssv:Parameter>
     <ssv:Parameter name="sine.phase">
-      <ssv:Real value="0.0" />
+      <ssv:Real value="0" />
     </ssv:Parameter>
     <ssv:Parameter name="sine.startTime">
-      <ssv:Real value="0.0" />
+      <ssv:Real value="0" />
     </ssv:Parameter>
   </ssv:Parameters>
 </ssv:ParameterSet>

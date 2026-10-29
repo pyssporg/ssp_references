@@ -141,7 +141,7 @@ Detail:
 - `sequence_extensions` gained settle/crash/cancellation coverage, an
   in-flight concurrency oracle, an independent e2e oracle, and no tracked
   scratch.
-- `pyssp_workflow` fixed the composition argument it passed to `build_study`,
+- `pyssp_workflow` fixed the composition argument it passed to `build_analysis`,
   and now checks relative and dynamic imports.
 
 ## Remaining gaps

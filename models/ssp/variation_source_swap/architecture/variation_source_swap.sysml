@@ -1,6 +1,6 @@
 package VariationSourceSwap {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -88,7 +88,7 @@ package VariationSourceSwap {
 
   }
 
-  part def step :> Study {
+  part def step :> Analysis {
     doc /* Source variation selecting the Step FMU. */
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
@@ -99,7 +99,7 @@ package VariationSourceSwap {
     bind sut.source.parameters.startTime = scenario.startTime;
   }
 
-  part def sine :> Study {
+  part def sine :> Analysis {
     doc /* Source variation selecting the Sine FMU. */
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;

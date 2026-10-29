@@ -13,7 +13,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "baseline",
+          "analysis": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -42,7 +42,7 @@
             "omsimulator",
             "fmpy"
           ],
-          "study": "baseline",
+          "analysis": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -75,7 +75,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "baseline"
+          "analysis": "baseline"
         }
       ],
       "build": "model"
@@ -92,7 +92,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "baseline"
+          "analysis": "baseline"
         }
       ],
       "build": "model"
@@ -224,7 +224,7 @@
             "omsimulator",
             "fmpy"
           ],
-          "study": "test_baseline"
+          "analysis": "test_baseline"
         }
       ],
       "build": "model"
@@ -260,7 +260,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "baseline"
+          "analysis": "baseline"
         }
       ],
       "build": "model"
@@ -279,7 +279,7 @@
             "omsimulator",
             "fmpy"
           ],
-          "study": "baseline",
+          "analysis": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -299,7 +299,7 @@
             "omsimulator",
             "fmpy"
           ],
-          "study": "fast"
+          "analysis": "fast"
         },
         {
           "name": "slow",
@@ -308,7 +308,7 @@
             "omsimulator",
             "fmpy"
           ],
-          "study": "slow"
+          "analysis": "slow"
         }
       ],
       "build": "model"
@@ -326,7 +326,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "baseline"
+          "analysis": "baseline"
         }
       ],
       "build": "model"
@@ -361,7 +361,7 @@
           "backends": [
             "ssp4sim"
           ],
-          "study": "baseline"
+          "analysis": "baseline"
         }
       ],
       "build": "model"
@@ -375,8 +375,7 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator"
+            "ssp4sim"
           ]
         }
       ],
@@ -392,8 +391,7 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator"
+            "ssp4sim"
           ]
         }
       ],
@@ -409,8 +407,7 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator"
+            "ssp4sim"
           ]
         }
       ],
@@ -428,7 +425,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "step"
+          "analysis": "step"
         },
         {
           "name": "sine",
@@ -436,7 +433,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "sine"
+          "analysis": "sine"
         }
       ],
       "build": "model"
@@ -454,7 +451,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "nominal_k3"
+          "analysis": "nominal_k3"
         },
         {
           "name": "boosted_k9",
@@ -462,7 +459,7 @@
             "ssp4sim",
             "omsimulator"
           ],
-          "study": "boosted_k9"
+          "analysis": "boosted_k9"
         }
       ],
       "build": "model"

@@ -1,0 +1,19 @@
+{
+  "analysis": "boosted_k9",
+  "composition": "System",
+  "description": "Attribute variation selecting the k=9.0 parameter set.",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "variation_attribute_set",
+  "scenario": {
+    "set": "BoostedK9",
+    "ssm": "boosted_k9.ssm",
+    "ssv": "BoostedK9.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

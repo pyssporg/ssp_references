@@ -1,6 +1,6 @@
 package SignalAlgebraicLoop {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -101,7 +101,7 @@ package SignalAlgebraicLoop {
     connect add.y to gain.u;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Sine through gain, with the algebraic loop closed by add. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

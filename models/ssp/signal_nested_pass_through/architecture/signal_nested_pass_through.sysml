@@ -1,6 +1,6 @@
 package SignalNestedPassThrough {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -108,7 +108,7 @@ package SignalNestedPassThrough {
     connect add.y to y;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Nested pass-through system feeding the add block. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

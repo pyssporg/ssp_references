@@ -2,7 +2,7 @@
  *
  * Pattern: one composition carries three variation points at the same time.
  * "source" selects the signal source, "gain" selects the gain topology, and
- * "scenario" on the study selects a parameter set. Each point is declared the
+ * "scenario" on the analysis selects a parameter set. Each point is declared the
  * same way examples 01 and 02 declare theirs: a variation definition whose
  * variant members name the alternatives. Nothing else in the file is new.
  * Standard anchor: SysML v2 section 7.6.7 (Variations and Variants; metamodel
@@ -30,7 +30,7 @@
  * outside the artifact, because SSP has no variant field.
  *
  * Note on the parameter binding: only the gain parameter port is bound in the
- * study. The source variants expose different parameter ports (StepParameters
+ * analysis. The source variants expose different parameter ports (StepParameters
  * against SineParameters), so no single binding resolves before a source
  * variant is chosen. That is a real limitation of the current dialect, not a
  * simplification of the example.
@@ -48,7 +48,7 @@
  */
 package MultipleVariationPoints {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -196,8 +196,8 @@ package MultipleVariationPoints {
     connect source.y to gain.u;
   }
 
-  part def test_selected :> Study {
-    doc /* One study per selection; the selection itself is not recorded here. */
+  part def test_selected :> Analysis {
+    doc /* One analysis per selection; the selection itself is not recorded here. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioChoice;
     part sut : System;

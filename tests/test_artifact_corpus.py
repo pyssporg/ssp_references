@@ -28,8 +28,8 @@ def _strict() -> bool:
     return os.environ.get("SSP_REQUIRE_ARTIFACTS") == "1" or "CI" in os.environ
 
 
-def _study_name(case: dict) -> str:
-    return case.get("study") or case["name"]
+def _analysis_name(case: dict) -> str:
+    return case.get("analysis") or case["name"]
 
 
 def _registry() -> dict:
@@ -61,17 +61,17 @@ def _build_py_csv_paths() -> list[Path]:
     return paths
 
 
-def test_registry_parses_and_the_first_case_names_a_study() -> None:
+def test_registry_parses_and_the_first_case_names_an_analysis() -> None:
     data = _registry()
 
     assert data["models"], "registry lists no models"
     first_case = data["models"][0]["cases"][0]
-    assert first_case.get("study"), f"first registry case has no study: {first_case}"
+    assert first_case.get("analysis"), f"first registry case has no analysis: {first_case}"
 
-    # Every case still resolves to a study directory (explicit or by name).
+    # Every case still resolves to an analysis directory (explicit or by name).
     for model in data["models"]:
         for case in model["cases"]:
-            assert _study_name(case)
+            assert _analysis_name(case)
 
 
 def test_reference_csvs_and_build_inputs_exist_and_parse() -> None:
@@ -105,21 +105,21 @@ def test_generated_corpus_exists_in_strict_mode() -> None:
     for model in data["models"]:
         model_name = model["name"]
         for case in model["cases"]:
-            study = _study_name(case)
+            analysis = _analysis_name(case)
             expected.extend(
                 [
                     (
                         REPO_ROOT
-                        / "artifacts" / "models" / model_name / study / "model"
+                        / "artifacts" / "models" / model_name / analysis / "model"
                         / "SystemStructure.ssd",
                         f"python3 scripts/build_models.py run {model_name}",
                     ),
                     (
-                        REPO_ROOT / "artifacts" / "studies" / model_name / study / "study.json",
+                        REPO_ROOT / "artifacts" / "analyses" / model_name / analysis / "analysis.json",
                         f"python3 scripts/build_models.py run {model_name}",
                     ),
                     (
-                        REPO_ROOT / "artifacts" / "simulation" / model_name / study / "setup.json",
+                        REPO_ROOT / "artifacts" / "simulation" / model_name / analysis / "setup.json",
                         "python3 scripts/run_simulations.py",
                     ),
                 ]

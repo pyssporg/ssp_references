@@ -1,6 +1,6 @@
 package SignalSineGainAdd {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -124,7 +124,7 @@ package SignalSineGainAdd {
     connect step.y to add.u2;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Sine through a gain plus a step, added at the root. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

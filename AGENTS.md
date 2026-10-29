@@ -34,7 +34,7 @@ capability.
 
 - `models/ssp/<model>/` holds the authored fixture, `build.py`, and `FIXTURE.md`.
 - `models/fmu/` holds prepared FMU fixtures with their references.
-- `artifacts/` holds generated builds, studies, simulations, and comparisons.
+- `artifacts/` holds generated builds, analyses, simulations, and comparisons.
 - `scripts/` holds the shared build, simulate, and compare entry points.
 - `3rd_party/` vendors the pyssp capability checkouts; edits belong in their
   own repositories.

@@ -2,7 +2,7 @@
 
 ## Origin
 
-Assembled from shared Modelica FMUs. The model and study are authored in SysML
+Assembled from shared Modelica FMUs. The model and analysis are authored in SysML
 at `architecture/signal_step_add.sysml`.
 
 ## Overview
@@ -14,18 +14,18 @@ Modelica FMUs. Parameter form: external SSV + external SSM (disambiguated member
 
 - `architecture/signal_step_add.sysml`
 - Exportable composition: `System :> SspModel`
-- Study composition: `baseline :> Study`
+- Analysis composition: `baseline :> Analysis`
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
-## Studies
+## Analyses
 
-- `baseline :> Study`
+- `baseline :> Analysis`
 - Scenario set: `ScenarioSet`
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`
 - Tolerance is not part of the experiment; it comes from the FMU model
   descriptions.
-- Artifacts: `artifacts/studies/signal_step_add/baseline/`
-- Studies are never exported as SSPs.
+- Artifacts: `artifacts/analyses/signal_step_add/baseline/`
+- Analyses are never exported as SSPs.
 
 ## Backends
 
@@ -69,7 +69,7 @@ This fixture is registered for simulation with the following backends:
 ## Packaging Notes
 
 - Exported model: `artifacts/models/signal_step_add/baseline/model/`
-- Study artifacts: `artifacts/studies/signal_step_add/baseline/`
+- Analysis artifacts: `artifacts/analyses/signal_step_add/baseline/`
 - FMU sources:
 - `models/fmu/Modelica.Blocks.Sources.Step/fmu`
 - `models/fmu/Modelica.Blocks.Math.Add/fmu`

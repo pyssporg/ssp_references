@@ -6,7 +6,7 @@ Authored in this repository at `architecture/variation_source_swap.sysml`, adapt
 
 ## Overview
 
-One definition-level variation point, `SourceChoice`, offers two source FMUs as variant parts. `System.source : SourceChoice` is the only part, and `System` has no root output port. Each study declares its own `ScenarioSet` and binds it through the variation-resolved usage `sut.source.parameters.*`, so the build packages an external SSV plus an external SSM. The same composition therefore produces one SSP per selection: the component name `source` and the connector layout stay fixed, while the packaged FMU, the packaged scenario, and `extra/org.pyssp/selection.json` change. Parameter form: external SSV + external SSM.
+One definition-level variation point, `SourceChoice`, offers two source FMUs as variant parts. `System.source : SourceChoice` is the only part, and `System` has no root output port. Each analysis declares its own `ScenarioSet` and binds it through the variation-resolved usage `sut.source.parameters.*`, so the build packages an external SSV plus an external SSM. The same composition therefore produces one SSP per selection: the component name `source` and the connector layout stay fixed, while the packaged FMU, the packaged scenario, and `extra/org.pyssp/selection.json` change. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -14,18 +14,18 @@ One definition-level variation point, `SourceChoice`, offers two source FMUs as 
 - Exportable composition: `System :> SspModel`
 - Variation point: `variation part def SourceChoice` with `variant part step : Step` and `variant part sine : Sine`
 - `Step` and `Sine` expose `y` plus their FMU parameter connectors; `System` exposes no `y` port.
-- `ScenarioSet` (height, offset, startTime, amplitude, f) is declared on each study; `bind` connects it to the selected source's parameter port.
-- Study compositions: `step :> Study`, `sine :> Study`
+- `ScenarioSet` (height, offset, startTime, amplitude, f) is declared on each analysis; `bind` connects it to the selected source's parameter port.
+- Analysis compositions: `step :> Analysis`, `sine :> Analysis`
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
-## Studies
+## Analyses
 
-- `step :> Study` selects `sut.source=step` (model `source=step`) and binds `sut.source.parameters.height/offset/startTime`; its packaged SSM targets `source.height`.
-- `sine :> Study` selects `sut.source=sine` (model `source=sine`) and binds `sut.source.parameters.amplitude/f/offset/startTime`; its packaged SSM targets `source.amplitude`.
-- Selection is applied at build time through `build_fixture(selections={study: {"study": {...}, "model": {...}}})`; study keys are rooted at the Study, model keys at `System`.
+- `step :> Analysis` selects `sut.source=step` (model `source=step`) and binds `sut.source.parameters.height/offset/startTime`; its packaged SSM targets `source.height`.
+- `sine :> Analysis` selects `sut.source=sine` (model `source=sine`) and binds `sut.source.parameters.amplitude/f/offset/startTime`; its packaged SSM targets `source.amplitude`.
+- Selection is applied at build time through `build_fixture(selections={analysis: {"analysis": {...}, "model": {...}}})`; analysis keys are rooted at the `Analysis`, model keys at `System`.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
-- Each study directory carries `ScenarioSet.ssv` and `<study>.ssm`; the build binds them into the exported SSP after `build_fixture`.
-- Artifacts: `artifacts/studies/variation_source_swap/<study>/`; studies are never exported as SSPs.
+- Each analysis directory carries `ScenarioSet.ssv` and `<analysis>.ssm`; the build binds them into the exported SSP after `build_fixture`.
+- Artifacts: `artifacts/analyses/variation_source_swap/<analysis>/`; analyses are never exported as SSPs.
 - Registry: both `step` and `sine` are registered on ssp4sim and OMSimulator, comparing `source.y`; both comparisons pass their gate.
 
 ## Strategy Role
@@ -53,13 +53,13 @@ One definition-level variation point, `SourceChoice`, offers two source FMUs as 
 
 ## Simulation Notes
 
-- Both studies run the built SSP as-is; the scenario is packaged, not injected.
+- Both analyses run the built SSP as-is; the scenario is packaged, not injected.
 - The registered gate passes for both cases: `source.y` has a shift-tolerant max error of 0 for `step` and ~5e-7 for `sine`.
 
 ## Packaging Notes
 
-- Exported model: `artifacts/models/variation_source_swap/<study>/model/`
-- Study artifacts: `artifacts/studies/variation_source_swap/<study>/`
-- Packaged scenario: `resources/ScenarioSet.ssv` with `resources/<study>.ssm` (external SSV + external SSM)
+- Exported model: `artifacts/models/variation_source_swap/<analysis>/model/`
+- Analysis artifacts: `artifacts/analyses/variation_source_swap/<analysis>/`
+- Packaged scenario: `resources/ScenarioSet.ssv` with `resources/<analysis>.ssm` (external SSV + external SSM)
 - FMU sources: `models/fmu/Modelica.Blocks.Sources.Step/fmu`, `models/fmu/Modelica.Blocks.Sources.Sine/fmu`
 - Build: `python3 scripts/build_models.py run variation_source_swap`

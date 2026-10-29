@@ -1,4 +1,6 @@
 {
+  "analysis": "boosted_k9",
+  "analysis_root": "../../../analyses/variation_attribute_set/boosted_k9",
   "backends": [
     "ssp4sim",
     "omsimulator"
@@ -18,8 +20,6 @@
   "resources_dir": "../../../models/variation_attribute_set/boosted_k9/model/resources",
   "root_system_name": "System",
   "ssp_root": "../../../models/variation_attribute_set/boosted_k9/model",
-  "study": "boosted_k9",
-  "study_root": "../../../studies/variation_attribute_set/boosted_k9",
   "system_structure": "../../../models/variation_attribute_set/boosted_k9/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,

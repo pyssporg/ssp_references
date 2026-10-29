@@ -1,4 +1,6 @@
 {
+  "analysis": "step",
+  "analysis_root": "../../../analyses/variation_source_swap/step",
   "backends": [
     "ssp4sim",
     "omsimulator"
@@ -17,8 +19,6 @@
   "resources_dir": "../../../models/variation_source_swap/step/model/resources",
   "root_system_name": "System",
   "ssp_root": "../../../models/variation_source_swap/step/model",
-  "study": "step",
-  "study_root": "../../../studies/variation_source_swap/step",
   "system_structure": "../../../models/variation_source_swap/step/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,

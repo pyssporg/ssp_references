@@ -14,4 +14,4 @@ if __name__ == "__main__":
         Path(__file__).resolve().parent,
         repo_root=REPO_ROOT,
     )
-    raise SystemExit(report_builds({build.study: build}))
+    raise SystemExit(report_builds({build.analysis: build}))

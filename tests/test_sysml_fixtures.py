@@ -28,24 +28,24 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 SSD = "{http://ssp-standard.org/SSP1/SystemStructureDescription}"
 
 
-# model -> study, expected components, two-element connections, subsystems, form
+# model -> analysis, expected components, two-element connections, subsystems, form
 EXPECTED: dict[str, dict] = {
     "signal_fanout_gain": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["gain_a", "gain_b", "step"],
         "connections": [("step", "y", "gain_a", "u"), ("step", "y", "gain_b", "u")],
         "subsystems": [],
         "form": "external-target-named",
     },
     "signal_step_gain": {
-        "study": "test_baseline",
+        "analysis": "test_baseline",
         "components": ["gain", "step"],
         "connections": [("step", "y", "gain", "u")],
         "subsystems": [],
         "form": "external+mapping",
     },
     "signal_algebraic_loop": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["add", "gain", "sine"],
         "connections": [
             ("add", "y", "gain", "u"),
@@ -56,7 +56,7 @@ EXPECTED: dict[str, dict] = {
         "form": "external-target-named",
     },
     "signal_delay_detector": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["add", "gain_a", "gain_b", "step"],
         "connections": [
             ("gain_a", "y", "gain_b", "u"),
@@ -68,7 +68,7 @@ EXPECTED: dict[str, dict] = {
         "form": "external-target-named",
     },
     "signal_nested_algebraic_loop": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["add_inner", "add_outer", "gain_inner", "gain_outer", "sine"],
         "connections": [
             ("add_inner", "y", "add_outer", "u2"),
@@ -82,21 +82,21 @@ EXPECTED: dict[str, dict] = {
         "form": "external-target-named",
     },
     "signal_step_product": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["product", "sine", "step"],
         "connections": [("sine", "y", "product", "u2"), ("step", "y", "product", "u1")],
         "subsystems": [],
         "form": "external+mapping",
     },
     "signal_step_add": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["add", "step_a", "step_b"],
         "connections": [("step_a", "y", "add", "u1"), ("step_b", "y", "add", "u2")],
         "subsystems": [],
         "form": "external+mapping",
     },
     "signal_sine_gain_add": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["add", "gain", "sine", "step"],
         "connections": [
             ("gain", "y", "add", "u1"),
@@ -107,14 +107,14 @@ EXPECTED: dict[str, dict] = {
         "form": "inline",
     },
     "signal_parameter_inline_with_mapping": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["step"],
         "connections": [],
         "subsystems": [],
         "form": "inline+mapping",
     },
     "signal_nested_pass_through": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["add", "step"],
         "connections": [("inner", "v", "add", "u1"), ("step", "y", "inner", "u")],
         "subsystems": ["inner"],
@@ -123,7 +123,7 @@ EXPECTED: dict[str, dict] = {
         "form": "none",
     },
     "signal_nested_external_bindings": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["step"],
         "connections": [],
         "subsystems": ["inner"],
@@ -132,7 +132,7 @@ EXPECTED: dict[str, dict] = {
         "form": "none",
     },
     "signal_nested_parameter_bindings": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["add", "step"],
         "connections": [("inner", "y", "add", "u2"), ("step", "y", "add", "u1")],
         "subsystems": ["inner"],
@@ -141,14 +141,14 @@ EXPECTED: dict[str, dict] = {
         "form": "external+mapping",
     },
     "pyfmu_csv_source_sink": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["sink", "source"],
         "connections": [("source", "y", "sink", "u")],
         "subsystems": [],
         "form": "external+mapping",
     },
     "scenario": {
-        "study": "baseline",
+        "analysis": "baseline",
         "components": ["scenario"],
         "connections": [],
         "subsystems": [],
@@ -250,7 +250,7 @@ def test_built_scenario_form(model: str) -> None:
         / "artifacts"
         / "models"
         / model
-        / expected["study"]
+        / expected["analysis"]
         / "model"
         / "SystemStructure.ssd"
     )
@@ -367,8 +367,8 @@ def test_scenario_has_one_root_parameter_binding() -> None:
     assert len(system.findall(f"{SSD}ParameterBindings/{SSD}ParameterBinding")) == 1
 
 
-def test_registry_resolves_model_study_build_layout() -> None:
-    """Migrated cases resolve to artifacts/models/<model>/<study>/<build>."""
+def test_registry_resolves_model_analysis_build_layout() -> None:
+    """Migrated cases resolve to artifacts/models/<model>/<analysis>/<build>."""
     from workflow.registry import load_registry
 
     registry = load_registry(REPO_ROOT / "artifacts" / "simulation_registry.json")
@@ -380,65 +380,65 @@ def test_registry_resolves_model_study_build_layout() -> None:
             continue
         assert models[model].build == "model"
         spec = registry.expand(model_names=[model])[0]
-        assert spec.ssp_root == root / model / expected["study"] / "model"
-        assert spec.study_root == (
-            REPO_ROOT / "artifacts" / "studies" / model / expected["study"]
+        assert spec.ssp_root == root / model / expected["analysis"] / "model"
+        assert spec.analysis_root == (
+            REPO_ROOT / "artifacts" / "analyses" / model / expected["analysis"]
         )
 
 
 @pytest.mark.parametrize("model", sorted(EXPECTED))
-def test_study_descriptor_has_step_and_no_tolerance(model: str) -> None:
-    """Study descriptors carry the window and step, never a tolerance."""
+def test_analysis_descriptor_has_step_and_no_tolerance(model: str) -> None:
+    """Analysis descriptors carry the window and step, never a tolerance."""
     import json
 
     descriptor = (
         REPO_ROOT
         / "artifacts"
-        / "studies"
+        / "analyses"
         / model
-        / EXPECTED[model]["study"]
-        / "study.json"
+        / EXPECTED[model]["analysis"]
+        / "analysis.json"
     )
     if not descriptor.is_file():
-        pytest.skip(f"study descriptor missing for {model}; run build_models.py")
+        pytest.skip(f"analysis descriptor missing for {model}; run build_models.py")
     experiment = json.loads(descriptor.read_text(encoding="utf-8"))["experiment"]
     assert "step_size" in experiment
     assert "tolerance" not in experiment
 
 
-def test_vanderpol_registers_three_studies() -> None:
-    """VanDerPol exercises one exported model with three registered studies."""
+def test_vanderpol_registers_three_analyses() -> None:
+    """VanDerPol exercises one exported model with three registered analyses."""
     from workflow.registry import load_registry
 
     registry = load_registry(REPO_ROOT / "artifacts" / "simulation_registry.json")
     specs = registry.expand(model_names=["VanDerPol"])
 
     assert [spec.case_name for spec in specs] == ["baseline", "fast", "slow"]
-    assert [spec.study_name for spec in specs] == ["baseline", "fast", "slow"]
+    assert [spec.analysis_name for spec in specs] == ["baseline", "fast", "slow"]
     assert all(spec.ssp_root.name == "model" for spec in specs)
 
 
 @pytest.mark.parametrize(
-    ("study", "expected"),
+    ("analysis", "expected"),
     [
         ("baseline", "mu set to 1.0"),
         ("fast", "mu set to 2.0"),
         ("slow", "mu set to 0.5"),
     ],
 )
-def test_vanderpol_study_description_reaches_setup(
-    study: str, expected: str
+def test_vanderpol_analysis_description_reaches_setup(
+    analysis: str, expected: str
 ) -> None:
-    """The Study doc reaches the descriptor and the frozen setup manifest."""
-    descriptor_path = REPO_ROOT / "artifacts" / "studies" / "VanDerPol" / study / "study.json"
-    setup_path = REPO_ROOT / "artifacts" / "simulation" / "VanDerPol" / study / "setup.json"
+    """The Analysis doc reaches the descriptor and the frozen setup manifest."""
+    descriptor_path = REPO_ROOT / "artifacts" / "analyses" / "VanDerPol" / analysis / "analysis.json"
+    setup_path = REPO_ROOT / "artifacts" / "simulation" / "VanDerPol" / analysis / "setup.json"
     if not descriptor_path.is_file():
-        pytest.skip(f"study descriptor missing for VanDerPol/{study}; run build_models.py")
+        pytest.skip(f"analysis descriptor missing for VanDerPol/{analysis}; run build_models.py")
 
     descriptor = json.loads(descriptor_path.read_text(encoding="utf-8"))
     assert expected in descriptor["description"]
     if not setup_path.is_file():
-        pytest.skip(f"setup manifest missing for VanDerPol/{study}; run simulations")
+        pytest.skip(f"setup manifest missing for VanDerPol/{analysis}; run simulations")
 
     setup = json.loads(setup_path.read_text(encoding="utf-8"))
     assert setup["description"] == descriptor["description"]

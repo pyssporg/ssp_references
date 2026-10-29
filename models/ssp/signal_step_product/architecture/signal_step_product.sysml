@@ -1,6 +1,6 @@
 package SignalStepProduct {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -97,7 +97,7 @@ package SignalStepProduct {
     connect sine.y to product.u2;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Step multiplied by a sine at the root. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

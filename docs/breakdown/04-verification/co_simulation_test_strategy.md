@@ -2,7 +2,7 @@
 id: EVAL-001
 type: eval
 title: Co-Simulation Engine Test Strategy
-summary: Prepare an exported model and study, simulate every registered backend, compare results.
+summary: Prepare an exported model and analysis, simulate every registered backend, compare results.
 date: 2026-10-22
 status: current
 pb_exempt: true
@@ -28,8 +28,8 @@ result trajectory?"
 
 Every test level should therefore be organized around three steps:
 
-1. Prepare a stable exported `SspModel` and, where needed, a `Study` scenario.
-2. Simulate the runnable SSP with one or more engines under that study.
+1. Prepare a stable exported `SspModel` and, where needed, an `Analysis` scenario.
+2. Simulate the runnable SSP with one or more engines under that analysis.
 3. Compare the produced result signals against a trusted reference.
 
 ## Primary Oracles
@@ -47,32 +47,32 @@ These oracles serve different purposes:
 - Cross-engine comparison validates compatibility with established tooling.
 - Regression baselines detect unintended changes between engine versions.
 
-## Model and Study Preparation
+## Model and Analysis Preparation
 
-Migrated fixtures separate the model from the study that exercises it, and the
+Migrated fixtures separate the model from the analysis that exercises it, and the
 build joins them:
 
-- A `part def ... :> SspModel` is exported per study as an SSP. It contains the
+- A `part def ... :> SspModel` is exported per analysis as an SSP. It contains the
   component wiring and parameter interfaces.
-- A `part def ... :> Study` supplies a scenario SSV/SSM and one experiment
+- A `part def ... :> Analysis` supplies a scenario SSV/SSM and one experiment
   descriptor (start, stop, step). It is never exported as an SSP.
-- The build packages the study scenario into the SSP in the fixture's parameter
+- The build packages the analysis scenario into the SSP in the fixture's parameter
   form. Simulation runs the built SSP as-is.
-- Build, study generation, simulation, and comparison are submitted as
-  `sequence_extensions` nodes so models and studies can run in parallel.
+- Build, analysis generation, simulation, and comparison are submitted as
+  `sequence_extensions` nodes so models and analyses can run in parallel.
 
 Pilot status: the `signal_*` family is migrated to SysML authoring. Each fixture
-exports `System :> SspModel` to `artifacts/models/<model>/<study>/model/`,
-generates its study under `artifacts/studies/<model>/<study>/`, and passes the
+exports `System :> SspModel` to `artifacts/models/<model>/<analysis>/model/`,
+generates its analysis under `artifacts/analyses/<model>/<analysis>/`, and passes the
 registered engine gate. Parameter forms are preserved per fixture (`PD-007`).
 
 A migrated fixture is verified in four steps:
 
 1. The `SspModel` builds and its SSD round-trips through
    `check_sysml_roundtrip.py --strict`.
-2. The `Study` generates scenario values and mappings with targets relative to
+2. The `Analysis` generates scenario values and mappings with targets relative to
    the exported SSP root.
-3. All registered backends simulate the same exported SSP with the study
+3. All registered backends simulate the same exported SSP with the analysis
    scenario and agree within the gate.
 4. The `pyssp_vv` verdict distinguishes `pass`, `fail`, and `invalid`.
 
@@ -271,19 +271,19 @@ This repository already supports the core workflow needed for the strategy:
 
 - SSP fixtures live under `models/ssp/`.
 - Reusable FMU building blocks live under `models/fmu/`.
-- Migrated fixtures author `SspModel` and `Study` definitions under
+- Migrated fixtures author `SspModel` and `Analysis` definitions under
   `models/ssp/<model>/architecture/`.
-- Runnable SSPs live under `artifacts/models/<model>/<study>/<build>/`.
-- Study scenario and experiment artifacts live under
-  `artifacts/studies/<model>/<study>/`. Studies are not SSPs.
+- Runnable SSPs live under `artifacts/models/<model>/<analysis>/<build>/`.
+- Analysis scenario and experiment artifacts live under
+  `artifacts/analyses/<model>/<analysis>/`. Analyses are not SSPs.
 - Runtime setup, simulation, and comparison outputs live under
-  `artifacts/simulation/<model>/<study>/` and
-  `artifacts/comparisons/<model>/<study>/`.
-- `artifacts/simulation_registry.json` maps model builds to one or more studies,
-  records the backends for each study explicitly, and stores the selected
+  `artifacts/simulation/<model>/<analysis>/` and
+  `artifacts/comparisons/<model>/<analysis>/`.
+- `artifacts/simulation_registry.json` maps model builds to one or more analyses,
+  records the backends for each analysis explicitly, and stores the selected
   compare signals for each model. The current backend set is `ssp4sim`,
   `OMSimulator`, and `FMPy`.
-- Each generated `artifacts/simulation/<model>/<study>/setup.json` also stores
+- Each generated `artifacts/simulation/<model>/<analysis>/setup.json` also stores
   the explicit backend list, selected compare signals, scenario paths, and
   experiment window for that setup.
 - Simulation is driven by `scripts/run_simulations.py` and the target

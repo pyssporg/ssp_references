@@ -1,6 +1,6 @@
 package VariationBodyGain {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -112,7 +112,7 @@ package VariationBodyGain {
 
   }
 
-  part def one_stage :> Study {
+  part def one_stage :> Analysis {
     doc /* Body variation selecting the single-gain path. */
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
@@ -125,7 +125,7 @@ package VariationBodyGain {
     bind sut.path.gain.parameters.k = scenario.k;
   }
 
-  part def two_stages :> Study {
+  part def two_stages :> Analysis {
     doc /* Body variation selecting the product-then-gain path. */
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;

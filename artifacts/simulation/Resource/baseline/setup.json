@@ -1,4 +1,6 @@
 {
+  "analysis": "baseline",
+  "analysis_root": "../../../analyses/Resource/baseline",
   "backends": [
     "ssp4sim",
     "omsimulator"
@@ -17,8 +19,6 @@
   "resources_dir": "../../../models/Resource/baseline/model/resources",
   "root_system_name": "System",
   "ssp_root": "../../../models/Resource/baseline/model",
-  "study": "baseline",
-  "study_root": "../../../studies/Resource/baseline",
   "system_structure": "../../../models/Resource/baseline/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,

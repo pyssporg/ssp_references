@@ -2,7 +2,7 @@
  *
  * Pattern: the composition is written once, with two components and one signal
  * connection, and no variation point inside it. The variation sits on the
- * study, where a parameter set is applied: the baseline, the late step and the
+ * analysis, where a parameter set is applied: the baseline, the late step and the
  * high gain alternatives carry the same attribute names with different values.
  * Every selection therefore produces the same part and connector structure and
  * differs only in the values bound to the same parameter ports.
@@ -20,7 +20,7 @@
  * composition never changes, which is the property this example is about.
  *
  * Standard anchor: SysML v2 section 7.6.7 (variation, variant; metamodel
- * VariantMembership) for the point on the study. The body form is confirmed by
+ * VariantMembership) for the point on the analysis. The body form is confirmed by
  * the grammar: VariantUsageMember is "variant" followed by VariantUsageElement,
  * whose PartUsage alternative reaches Usage -> UsageCompletion -> UsageBody ->
  * DefinitionBody; the usage declaration is optional, so "variant part name
@@ -46,7 +46,7 @@
  * over one structure, never a structural one.
  *
  * Pinned toolchain (sysmlpy 0.96.4): this file parses with no errors. The
- * parsed model keeps System exactly as written and keeps the study, but the
+ * parsed model keeps System exactly as written and keeps the analysis, but the
  * variation usage "parameters" survives with no variant members: the three
  * variant usages, their parameter set attributes and all their binds are
  * dropped. The variation usage itself survives as an ordinary part usage named
@@ -60,7 +60,7 @@
  */
 package ParameterBindingVariation {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -157,8 +157,8 @@ package ParameterBindingVariation {
    * values, so the variation usage has no interface of its own. */
   part def ParameterBinding;
 
-  part def test_selected :> Study {
-    doc /* One study per selection; the topology is the same composition. */
+  part def test_selected :> Analysis {
+    doc /* One analysis per selection; the topology is the same composition. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : System;
 

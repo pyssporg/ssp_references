@@ -1,6 +1,6 @@
 package Embrace {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   attribute def Experiment {
     attribute startTime : Real;
@@ -26,7 +26,7 @@ package Embrace {
     attribute ssp_meta : LegacySsp;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Legacy embrace SSP body over the baseline experiment window. */
     attribute experiment_baseline : BaselineExperiment;
     part sut : EmbraceModel;

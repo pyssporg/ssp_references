@@ -1,5 +1,5 @@
 {
-  "error": null,
+  "candidate_label": "omsimulator",
   "gate": {
     "reasons": [
       "SuT_emachine_model.M: criterion-exceeded (1.80949 > 0.0240676 (max_abs_error))",
@@ -8,6 +8,7 @@
     "status": "fail"
   },
   "metrics": "metrics.csv",
+  "reference_label": "ssp4sim",
   "request": {
     "case": "baseline",
     "runs": [
@@ -21,7 +22,6 @@
       }
     ]
   },
-  "status": "completed",
   "summary": {
     "compared_signal_count": 2,
     "max_abs_error": 287.13445537300004,

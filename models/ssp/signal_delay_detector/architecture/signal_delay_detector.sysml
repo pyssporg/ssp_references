@@ -1,6 +1,6 @@
 package SignalDelayDetector {
   part def SspModel;
-  part def Study;
+  part def Analysis;
 
   port def ParameterInterface;
 
@@ -102,7 +102,7 @@ package SignalDelayDetector {
     connect step.y to add.u2;
   }
 
-  part def baseline :> Study {
+  part def baseline :> Analysis {
     doc /* Step routed through two gains and add, with a delayed detection path. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

@@ -2,7 +2,7 @@
 id: EVAL-007
 type: eval
 title: Simulation Registry Coverage Review
-summary: Audit of active model, study, and backend combinations.
+summary: Audit of active model, analysis, and backend combinations.
 date: 2026-10-22
 status: current
 pb_exempt: true
@@ -61,7 +61,7 @@ pb_exempt: true
 
 **5. VanDerPol**
 - **Test level:** Smoke
-- **Backend rationale:** Three backends provide broad coverage for continuous nonlinear dynamics. Three cases (`baseline`, `fast`, `slow`) exercise different parameter regimes (mu = 1.0, mu = 2.0, mu = 0.5) to validate solver adaptability across engines and the multi-study build.
+- **Backend rationale:** Three backends provide broad coverage for continuous nonlinear dynamics. Three cases (`baseline`, `fast`, `slow`) exercise different parameter regimes (mu = 1.0, mu = 2.0, mu = 0.5) to validate solver adaptability across engines and the multi-analysis build.
 - **Registry verification:** Present with `baseline`, `fast`, and `slow` cases, backends `ssp4sim`, `omsimulator`, `fmpy`.
 
 ### Deterministic Signal-Propagation Fixtures

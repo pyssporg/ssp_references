@@ -25,8 +25,8 @@ Worked SysML shapes for each route, parsed with the pinned toolchain: `examples/
 - **Probe**: a `variation part` block loads with no errors; the part survives as an ordinary usage carrying only name, type, and doc.
 - **Generator scope**: the adapter reads no usage prefix; `build_ssd` takes no selection argument; `--composition` is the only selector.
 - **Unused enumerator**: `exportable_part_definitions` lists exportable compositions and has no caller.
-- **Build scope**: `build_fixture` passes one fixed composition to every study; only VanDerPol emits several, differing by the `mu` binding.
-- **Registry addressing**: a case maps to a study name and build name; no variant identifier exists.
+- **Build scope**: `build_fixture` passes one fixed composition to every analysis; only VanDerPol emits several, differing by the `mu` binding.
+- **Registry addressing**: a case maps to an analysis name and build name; no variant identifier exists.
 - **SSP packaging**: SSP 2.0 permits extra root SSD entries beside `SystemStructure.ssd`; the writer emits exactly one.
 
 ## Current Pain Or Risk

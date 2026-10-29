@@ -1,0 +1,36 @@
+{
+  "candidate_label": "omsimulator",
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
+  "metrics": "metrics.csv",
+  "reference_label": "ssp4sim",
+  "request": {
+    "case": "step",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/variation_source_swap/step/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/variation_source_swap/step/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "summary": {
+    "compared_signal_count": 1,
+    "max_abs_error": 0.0,
+    "max_rel_error": 0.0,
+    "max_shift_abs_error": 0.0,
+    "max_signal_invariant_abs_error": 0.0,
+    "mean_abs_error": 0.0,
+    "min_coverage": 1.0,
+    "rmse": 0.0,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "omsimulator",
+    "signal_invariant_count": 0,
+    "time_points": 1001
+  }
+}

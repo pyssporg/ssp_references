@@ -8,6 +8,11 @@
     "stop_time": 1.0
   },
   "model": "variation_attribute_set",
+  "scenario": {
+    "set": "NominalK3",
+    "ssm": "nominal_k3.ssm",
+    "ssv": "NominalK3.ssv"
+  },
   "study": "nominal_k3",
   "sut": "sut",
   "target_ssd": "SystemStructure.ssd"

@@ -8,6 +8,11 @@
     "stop_time": 1.0
   },
   "model": "variation_attribute_set",
+  "scenario": {
+    "set": "BoostedK9",
+    "ssm": "boosted_k9.ssm",
+    "ssv": "BoostedK9.ssv"
+  },
   "study": "boosted_k9",
   "sut": "sut",
   "target_ssd": "SystemStructure.ssd"

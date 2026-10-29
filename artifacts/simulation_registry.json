@@ -423,12 +423,46 @@
       ],
       "cases": [
         {
+          "name": "step",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "study": "step"
+        },
+        {
           "name": "sine",
           "backends": [
             "ssp4sim",
             "omsimulator"
           ],
           "study": "sine"
+        }
+      ],
+      "build": "model"
+    },
+    {
+      "name": "variation_attribute_set",
+      "compare_signals": [
+        "step.y",
+        "gain.y"
+      ],
+      "cases": [
+        {
+          "name": "nominal_k3",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "study": "nominal_k3"
+        },
+        {
+          "name": "boosted_k9",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "study": "boosted_k9"
         }
       ],
       "build": "model"

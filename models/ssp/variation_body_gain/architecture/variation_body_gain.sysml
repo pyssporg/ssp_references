@@ -4,8 +4,9 @@ package VariationBodyGain {
 
   port def ParameterInterface;
 
-  port def StepParameters :> ParameterInterface {
-    attribute height : Real;
+  port def SineParameters :> ParameterInterface {
+    attribute amplitude : Real;
+    attribute f : Real;
     attribute offset : Real;
     attribute startTime : Real;
   }
@@ -21,6 +22,13 @@ package VariationBodyGain {
 
   attribute def ParameterSet;
 
+  attribute def ScenarioSet :> ParameterSet {
+    attribute amplitude = 1.0;
+    attribute f = 1.0;
+    attribute offset = 0.0;
+    attribute startTime = 0.5;
+    attribute k = 3.0;
+  }
 
   attribute def Experiment {
     attribute startTime : Real;
@@ -56,6 +64,7 @@ package VariationBodyGain {
 
   part def Sine {
     attribute fmu_meta : SineFmu;
+    in port parameters : SineParameters;
     out port y : RealSignal;
   }
 
@@ -106,12 +115,26 @@ package VariationBodyGain {
   part def one_stage :> Study {
     doc /* Body variation selecting the single-gain path. */
     attribute experiment : BaselineExperiment;
+    attribute scenario : ScenarioSet;
     part sut : System;
+
+    bind sut.source.parameters.amplitude = scenario.amplitude;
+    bind sut.source.parameters.f = scenario.f;
+    bind sut.source.parameters.offset = scenario.offset;
+    bind sut.source.parameters.startTime = scenario.startTime;
+    bind sut.path.gain.parameters.k = scenario.k;
   }
 
   part def two_stages :> Study {
     doc /* Body variation selecting the product-then-gain path. */
     attribute experiment : BaselineExperiment;
+    attribute scenario : ScenarioSet;
     part sut : System;
+
+    bind sut.source.parameters.amplitude = scenario.amplitude;
+    bind sut.source.parameters.f = scenario.f;
+    bind sut.source.parameters.offset = scenario.offset;
+    bind sut.source.parameters.startTime = scenario.startTime;
+    bind sut.path.gain.parameters.k = scenario.k;
   }
 }

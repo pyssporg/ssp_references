@@ -8,6 +8,11 @@
     "stop_time": 1.0
   },
   "model": "variation_body_gain",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "two_stages.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
   "study": "two_stages",
   "sut": "sut",
   "target_ssd": "SystemStructure.ssd"

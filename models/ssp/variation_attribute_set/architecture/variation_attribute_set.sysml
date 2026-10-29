@@ -84,26 +84,32 @@ package VariationAttributeSet {
   part def System :> SspModel {
     attribute pyssp_default_start_time : Real = 0.0;
     attribute pyssp_default_stop_time : Real = 1.0;
-    attribute scenario : ScenarioChoice;
     part step : Step;
     part gain : Gain;
     connect step.y to gain.u;
-
-    bind step.parameters.height = scenario.height;
-    bind step.parameters.offset = scenario.offset;
-    bind step.parameters.startTime = scenario.startTime;
-    bind gain.parameters.k = scenario.k;
   }
 
   part def nominal_k3 :> Study {
     doc /* Attribute variation selecting the k=3.0 parameter set. */
     attribute experiment_baseline : BaselineExperiment;
+    attribute nominal_scenario : ScenarioChoice;
     part sut : System;
+
+    bind sut.step.parameters.height = nominal_scenario.height;
+    bind sut.step.parameters.offset = nominal_scenario.offset;
+    bind sut.step.parameters.startTime = nominal_scenario.startTime;
+    bind sut.gain.parameters.k = nominal_scenario.k;
   }
 
   part def boosted_k9 :> Study {
     doc /* Attribute variation selecting the k=9.0 parameter set. */
     attribute experiment_baseline : BaselineExperiment;
+    attribute boosted_scenario : ScenarioChoice;
     part sut : System;
+
+    bind sut.step.parameters.height = boosted_scenario.height;
+    bind sut.step.parameters.offset = boosted_scenario.offset;
+    bind sut.step.parameters.startTime = boosted_scenario.startTime;
+    bind sut.gain.parameters.k = boosted_scenario.k;
   }
 }

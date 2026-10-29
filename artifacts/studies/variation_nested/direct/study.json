@@ -8,6 +8,11 @@
     "stop_time": 1.0
   },
   "model": "variation_nested",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "direct.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
   "study": "direct",
   "sut": "sut",
   "target_ssd": "SystemStructure.ssd"

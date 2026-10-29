@@ -10,6 +10,13 @@ package VariationNested {
     attribute startTime : Real;
   }
 
+  port def SineParameters :> ParameterInterface {
+    attribute amplitude : Real;
+    attribute f : Real;
+    attribute offset : Real;
+    attribute startTime : Real;
+  }
+
   port def GainParameters :> ParameterInterface {
     attribute k : Real;
   }
@@ -21,6 +28,13 @@ package VariationNested {
 
   attribute def ParameterSet;
 
+
+  attribute def ScenarioSet :> ParameterSet {
+    attribute offset = 0.0;
+    attribute startTime = 0.5;
+    attribute gainK = 3.0;
+    attribute stageK = 5.0;
+  }
 
   attribute def Experiment {
     attribute startTime : Real;
@@ -56,6 +70,7 @@ package VariationNested {
 
   part def Sine {
     attribute fmu_meta : SineFmu;
+    in port parameters : SineParameters;
     out port y : RealSignal;
   }
 
@@ -138,13 +153,24 @@ package VariationNested {
   part def direct :> Study {
     doc /* Outer variation selecting the single-gain path. */
     attribute experiment_baseline : BaselineExperiment;
+    attribute scenario : ScenarioSet;
     part sut : System;
+
+    bind sut.source.parameters.offset = scenario.offset;
+    bind sut.source.parameters.startTime = scenario.startTime;
+    bind sut.path.gain.parameters.k = scenario.gainK;
   }
 
   part def nested_gain :> Study {
     doc /* Nested path with a Gain stage. */
     attribute experiment_baseline : BaselineExperiment;
+    attribute scenario : ScenarioSet;
     part sut : System;
+
+    bind sut.source.parameters.offset = scenario.offset;
+    bind sut.source.parameters.startTime = scenario.startTime;
+    bind sut.path.output_gain.parameters.k = scenario.gainK;
+    bind sut.path.inner_stage.gain.parameters.k = scenario.stageK;
   }
 
 }

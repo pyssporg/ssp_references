@@ -26,6 +26,14 @@ package VariationSourceSwap {
   attribute def ParameterSet;
 
 
+  attribute def ScenarioSet :> ParameterSet {
+    attribute height = 2.0;
+    attribute offset = 0.0;
+    attribute startTime = 0.5;
+    attribute amplitude = 2.0;
+    attribute f = 1.0;
+  }
+
   attribute def Experiment {
     attribute startTime : Real;
     attribute stopTime : Real;
@@ -83,12 +91,23 @@ package VariationSourceSwap {
   part def step :> Study {
     doc /* Source variation selecting the Step FMU. */
     attribute experiment : BaselineExperiment;
+    attribute scenario : ScenarioSet;
     part sut : System;
+
+    bind sut.source.parameters.height = scenario.height;
+    bind sut.source.parameters.offset = scenario.offset;
+    bind sut.source.parameters.startTime = scenario.startTime;
   }
 
   part def sine :> Study {
     doc /* Source variation selecting the Sine FMU. */
     attribute experiment : BaselineExperiment;
+    attribute scenario : ScenarioSet;
     part sut : System;
+
+    bind sut.source.parameters.amplitude = scenario.amplitude;
+    bind sut.source.parameters.f = scenario.f;
+    bind sut.source.parameters.offset = scenario.offset;
+    bind sut.source.parameters.startTime = scenario.startTime;
   }
 }

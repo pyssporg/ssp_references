@@ -1,0 +1,17 @@
+{
+  "artifacts": [
+    "config.json",
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "boosted_k9",
+    "model": "variation_attribute_set",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.10535463318228722,
+  "status": "completed",
+  "tolerance": 0.0001
+}

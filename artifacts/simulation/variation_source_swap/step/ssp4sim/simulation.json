@@ -1,0 +1,17 @@
+{
+  "artifacts": [
+    "config.json",
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "step",
+    "model": "variation_source_swap",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.10669626598246396,
+  "status": "completed",
+  "tolerance": 0.0001
+}

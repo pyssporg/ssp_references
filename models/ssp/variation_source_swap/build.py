@@ -1,16 +1,13 @@
 #!/usr/bin/env python3
-"""Build variation_source_swap with one study per source selection.
-
-The single variation point ``System.source`` chooses between the Step and Sine
-FMUs; each study selects one variant at build time. Study selections are rooted
-at the Study composition, model selections at ``System``.
-"""
+"""Build variation_source_swap; each study selects its variants and packages its scenario SSP."""
 
 from __future__ import annotations
 
 from pathlib import Path
 
 from pyssp_workflow.authoring import build_fixture, report_builds
+from pyssp_workflow.binding import bind
+from pyssp_workflow.study import read_scenario
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -26,4 +23,7 @@ if __name__ == "__main__":
         studies=("step", "sine"),
         selections=SELECTIONS,
     )
+    for built in builds.values():
+        scenario = read_scenario(built.descriptor)
+        bind(built, scenario.ssv_path, ssm=scenario.ssm_path)
     raise SystemExit(report_builds(builds))

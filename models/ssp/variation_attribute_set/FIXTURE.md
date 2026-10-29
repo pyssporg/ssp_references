@@ -6,7 +6,7 @@ Authored in this repository at `architecture/variation_attribute_set.sysml`, ada
 
 ## Overview
 
-One attribute variation point, `ScenarioChoice`, over two complete parameter sets that differ only in `k`: `NominalK3` (`k=3`) and `BoostedK9` (`k=9`). The variation usage `scenario` sits in `System` and binds `step.height`, `step.offset`, `step.startTime`, and `gain.k`. Selection changes parameter values, not topology: the exported SSD is identical except for the parameter-set name. There is no structural variation in this fixture.
+One attribute variation point, `ScenarioChoice`, over two complete parameter sets that differ only in `k`: `NominalK3` (`k=3`) and `BoostedK9` (`k=9`). Selection changes parameter values, not topology. Each study declares its own attribute usage typed by `ScenarioChoice` and binds it to the fixed `step`/`gain` parameters, so the build packages an external SSV plus an external SSM; the two studies are the only difference in the deployed topology. There is no structural variation in this fixture. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -14,26 +14,27 @@ One attribute variation point, `ScenarioChoice`, over two complete parameter set
 - Exportable composition: `System :> SspModel`
 - Variation point: `variation attribute def ScenarioChoice` with `variant attribute nominalK3 : NominalK3` and `variant attribute boostedK9 : BoostedK9`
 - Both sets fix `height=2.0`, `offset=1.0`, `startTime=0.25`; only `k` differs (3.0 vs 9.0).
-- The usage `attribute scenario : ScenarioChoice` is declared in `System`; four `bind` statements connect it to the step and gain parameter ports.
+- Each study declares its own usage: `nominal_scenario : ScenarioChoice` in `nominal_k3`, `boosted_scenario : ScenarioChoice` in `boosted_k9`, each with four `bind` statements to the step and gain parameter ports.
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
 ## Studies
 
-- `nominal_k3 :> Study` selects `sut.scenario=nominalK3`; the model build selects `scenario=nominalK3`.
-- `boosted_k9 :> Study` selects `sut.scenario=boostedK9`; the model build selects `scenario=boostedK9`.
+- `nominal_k3 :> Study` selects `sut.nominal_scenario=nominalK3`; the model build selects both `nominal_scenario=nominalK3` and `boosted_scenario=boostedK9`, so every study usage in the export resolves.
+- `boosted_k9 :> Study` selects `sut.boosted_scenario=boostedK9`; the same model selection resolves both usages.
+- Binds target `sut.step.parameters.height/offset/startTime` and `sut.gain.parameters.k`; the packaged SSM targets `step.height`, `step.offset`, `step.startTime`, and `gain.k`.
 - Selection is applied at build time through `build_fixture(selections={study: {"study": {...}, "model": {...}}})`; study keys are rooted at the Study, model keys at `System`.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
-- The model SSP packages `resources/parameter_sets/NominalK3.ssv` or `BoostedK9.ssv` and references it from the SSD through an inline `ParameterMapping`. The SSD differs only in the set name, which `tests/test_variation_cases.py` asserts.
-- The study directory holds only `study.json`: the binds live on `System`, so no study-level SSV or SSM is generated.
+- Each study directory carries its own SSV/SSM (`NominalK3.ssv`/`nominal_k3.ssm` or `BoostedK9.ssv`/`boosted_k9.ssm`); the build binds them into the exported SSP after `build_fixture`.
+- The exported SSD is identical across the two studies apart from the binding: the packaged SSV selects `k=3.0` vs `k=9.0`.
 - Artifacts: `artifacts/studies/variation_attribute_set/<study>/`; studies are never exported as SSPs.
-- Registry: not registered; there is no simulation or comparison evidence.
+- Registry: both `nominal_k3` and `boosted_k9` are registered on ssp4sim and OMSimulator, comparing `step.y` and `gain.y`; both comparisons pass their gate.
 
 ## Strategy Role
 
 - Isolates attribute variation from structural variation.
-- Build-level contract test: the SSD must stay identical across selections except for the set name, while the packaged parameter values move from 3 to 9.
-- Catches selection leaking into topology, wrong parameter-set resolution, and a missing `extra/org.pyssp/selection.json` record.
-- No simulation gate exists for either study.
+- Build-level contract test: the SSD must stay identical across selections except for the binding, while the packaged parameter values move from 3 to 9.
+- Catches selection leaking into topology, wrong parameter-set resolution, a scenario packaged as an inline mapping, and a missing `extra/org.pyssp/selection.json` record.
+- Both cases are registered in the cross-engine comparison gate; both comparisons currently pass.
 
 ## Structure
 
@@ -42,24 +43,23 @@ One attribute variation point, `ScenarioChoice`, over two complete parameter set
 
 ## Intent
 
-- Prove that selecting a parameter variant changes only the parameter set, never the element tree or connections.
+- Prove that selecting a parameter variant changes the packaged parameter set and its external SSV/SSM mapping, never the element tree or connections.
 
 ## Expected Behavior
 
 - Both sets fix `height=2.0`, `offset=1.0`, `startTime=0.25`, so `gain.y = k * (1 + 2*[t >= 0.25])`.
 - `nominal_k3`: `gain.y = 3` before 0.25 and `9` from 0.25.
 - `boosted_k9`: `gain.y = 9` before 0.25 and `27` from 0.25.
-- These are algebraic expectations only; no registry gate confirms them.
 
 ## Simulation Notes
 
-- Not registered. The parameter set is packaged in the model SSP, not in the study; a runner that expects a study-level SSV/SSM finds none.
-- OMSimulator cannot import the inline `ParameterMapping`; the fixture is ssp4sim-only if it is run. Do not read the FMU defaults as the intended values, and do not claim a passing result without a registry case.
+- Both cases run the built SSP as-is; the scenario is packaged, not injected.
+- The registered gate passes for both cases on the shift-tolerant metric (0 for `step.y` and `gain.y`). The raw `gain.y` max abs error equals `k` (3 on nominal, 9 on boosted) and comes from ssp4sim's zero first sample; it is a lag, not a k misapplication, and the gate accepts it.
 
 ## Packaging Notes
 
 - Exported model: `artifacts/models/variation_attribute_set/<study>/model/`
 - Study artifacts: `artifacts/studies/variation_attribute_set/<study>/`
 - Packaged FMUs: `resources/Step`, `resources/Gain`
-- Packaged parameter sets: `resources/parameter_sets/NominalK3.ssv`, `resources/parameter_sets/BoostedK9.ssv`
+- Packaged parameter sets: `resources/NominalK3.ssv` or `resources/BoostedK9.ssv`, with `resources/<study>.ssm` (external SSV + external SSM)
 - Build: `python3 scripts/build_models.py run variation_attribute_set`

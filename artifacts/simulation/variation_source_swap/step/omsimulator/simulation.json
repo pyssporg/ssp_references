@@ -1,0 +1,15 @@
+{
+  "artifacts": [
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "step",
+    "model": "variation_source_swap",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.0047822820488363504,
+  "status": "completed"
+}

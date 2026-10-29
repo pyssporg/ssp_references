@@ -2,7 +2,8 @@
 """Build variation_body_gain with one study per path body.
 
 The single variation point ``System.path`` chooses between a body with one Gain
-and a body with a Product feeding a Gain; each study selects one variant.
+and a body with a Product feeding a Gain; each study selects one variant. Each
+study packages its own scenario SSV and SSM into the exported SSP.
 """
 
 from __future__ import annotations
@@ -10,6 +11,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from pyssp_workflow.authoring import build_fixture, report_builds
+from pyssp_workflow.binding import bind
+from pyssp_workflow.study import read_scenario
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -28,4 +31,7 @@ if __name__ == "__main__":
         studies=("one_stage", "two_stages"),
         selections=SELECTIONS,
     )
+    for built in builds.values():
+        scenario = read_scenario(built.descriptor)
+        bind(built, scenario.ssv_path, ssm=scenario.ssm_path)
     raise SystemExit(report_builds(builds))

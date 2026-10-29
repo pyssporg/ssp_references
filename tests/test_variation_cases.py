@@ -24,6 +24,13 @@ SSD = "{http://ssp-standard.org/SSP1/SystemStructureDescription}"
 
 # model, study, selection (model-rooted), root components, subsystems,
 # nested components per subsystem, packaged FMU for the varied part.
+# The SSP export resolves every attribute point in the package, so both
+# studies' usages must resolve even when one case is under test.
+ATTRIBUTE_SELECTION = {
+    "nominal_scenario": "nominalK3",
+    "boosted_scenario": "boostedK9",
+}
+
 CASES: dict[tuple[str, str], dict] = {
     ("variation_source_swap", "step"): {
         "select": {"source": "step"},
@@ -54,14 +61,14 @@ CASES: dict[tuple[str, str], dict] = {
         "fmu": "resources/Product.fmu",
     },
     ("variation_attribute_set", "nominal_k3"): {
-        "select": {"scenario": "nominalK3"},
+        "select": ATTRIBUTE_SELECTION,
         "components": ["gain", "step"],
         "subsystems": [],
         "nested": {},
         "fmu": "resources/Gain.fmu",
     },
     ("variation_attribute_set", "boosted_k9"): {
-        "select": {"scenario": "boostedK9"},
+        "select": ATTRIBUTE_SELECTION,
         "components": ["gain", "step"],
         "subsystems": [],
         "nested": {},
@@ -136,25 +143,35 @@ def test_selection_produces_its_element_tree(tmp_path: Path, key: tuple[str, str
         assert _nested_component_names(_nested(system, dotted)) == expected
 
 
-def test_attribute_variation_leaves_the_structure_untouched(tmp_path: Path) -> None:
-    """Parameter variation changes the SSV, never the SSD."""
-    architecture = (
-        REPO_ROOT / "models" / "ssp" / "variation_attribute_set" / "architecture"
-    )
-    nominal = tmp_path / "nominal.ssd"
-    boosted = tmp_path / "boosted.ssd"
-    derive_ssd_from_sysml(
-        architecture, nominal, "System", selections={"scenario": "nominalK3"}
-    )
-    derive_ssd_from_sysml(
-        architecture, boosted, "System", selections={"scenario": "boostedK9"}
-    )
-    nominal_text = nominal.read_text()
-    boosted_text = boosted.read_text()
-    assert "NominalK3" in nominal_text and "BoostedK9" in boosted_text
-    assert nominal_text.replace("NominalK3", "SET") == boosted_text.replace(
-        "BoostedK9", "SET"
-    )
+def test_attribute_variation_keeps_the_structure_and_changes_the_values() -> None:
+    """Parameter variation changes the packaged values, never the element tree."""
+    base = REPO_ROOT / "artifacts" / "models" / "variation_attribute_set"
+    studies = {"nominal_k3": 3.0, "boosted_k9": 9.0}
+    ssds = {study: base / study / "model" / "SystemStructure.ssd" for study in studies}
+    if not all(path.is_file() for path in ssds.values()):
+        pytest.skip("build output missing; run build_models.py")
+
+    def without_bindings(path: Path) -> bytes:
+        root = ET.parse(path).getroot()
+        for parent in root.iter():
+            for child in list(parent):
+                if child.tag.endswith("ParameterBindings"):
+                    parent.remove(child)
+        return ET.tostring(root)
+
+    assert without_bindings(ssds["nominal_k3"]) == without_bindings(ssds["boosted_k9"])
+
+    for study, expected in studies.items():
+        ssd = ET.parse(ssds[study]).getroot()
+        binding = ssd.find(f".//{SSD}ParameterBindings/{SSD}ParameterBinding")
+        assert binding is not None
+        ssv = ET.parse(ssds[study].parent / binding.get("source")).getroot()
+        values = {
+            parameter.get("name"): parameter.find("{http://ssp-standard.org/SSP1/SystemStructureParameterValues}Real").get("value")
+            for parameter in ssv.iter()
+            if parameter.tag.endswith("Parameter")
+        }
+        assert float(values["k"]) == expected, values
 
 
 @pytest.mark.parametrize("study", ["step", "sine"])
@@ -174,3 +191,49 @@ def test_built_ssp_records_the_selection(study: str) -> None:
     if not selection.is_file():
         pytest.skip(f"build output missing for {study}; run build_models.py")
     assert json.loads(selection.read_text())["selections"] == {"source": study}
+
+
+# (model, study) -> the mapping target that only exists after the selection is
+# resolved. A scenario bound through a variation-resolved usage must reach the
+# SSP as an external SSV + SSM pair; an inline mapping is not readable by every
+# engine and an absent binding leaves the FMU on its defaults.
+PACKAGED: dict[tuple[str, str], str] = {
+    ("variation_source_swap", "step"): "source.height",
+    ("variation_source_swap", "sine"): "source.amplitude",
+    ("variation_attribute_set", "nominal_k3"): "gain.k",
+    ("variation_attribute_set", "boosted_k9"): "gain.k",
+    ("variation_body_gain", "one_stage"): "path.gain.k",
+    ("variation_body_gain", "two_stages"): "path.gain.k",
+    ("variation_nested", "direct"): "path.gain.k",
+    ("variation_nested", "nested_gain"): "path.inner_stage.gain.k",
+}
+
+
+@pytest.mark.parametrize("key", sorted(PACKAGED))
+def test_built_ssp_packages_the_selected_scenario(key: tuple[str, str]) -> None:
+    """The built SSP binds the study scenario to a variation-resolved target."""
+    model, study = key
+    ssd_path = (
+        REPO_ROOT / "artifacts" / "models" / model / study / "model" / "SystemStructure.ssd"
+    )
+    if not ssd_path.is_file():
+        pytest.skip(f"build output missing for {model}/{study}; run build_models.py")
+
+    binding = ET.parse(ssd_path).getroot().find(
+        f".//{SSD}ParameterBindings/{SSD}ParameterBinding"
+    )
+    assert binding is not None, "the SSP has no parameter binding"
+    assert binding.get("source"), "the SSV is not packaged as an external resource"
+
+    mapping = binding.find(f"{SSD}ParameterMapping")
+    assert mapping is not None and mapping.get("source"), (
+        "the SSM must be an external resource, not an inline mapping"
+    )
+    ssm_path = ssd_path.parent / mapping.get("source")
+    assert ssm_path.is_file(), f"packaged SSM missing: {ssm_path}"
+    targets = {
+        entry.get("target")
+        for entry in ET.parse(ssm_path).getroot()
+        if entry.get("target")
+    }
+    assert PACKAGED[key] in targets, f"{PACKAGED[key]} not mapped; got {sorted(targets)}"

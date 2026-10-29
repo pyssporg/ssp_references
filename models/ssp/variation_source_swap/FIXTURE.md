@@ -6,7 +6,7 @@ Authored in this repository at `architecture/variation_source_swap.sysml`, adapt
 
 ## Overview
 
-One definition-level variation point, `SourceChoice`, offers two source FMUs as variant parts. `System.source : SourceChoice` is the only part; `System` has no root output port and no parameter bindings. Each study selects one variant at build time, so the same composition produces one SSP per selection: the component name `source` and the connector layout stay fixed, while the packaged FMU and `extra/org.pyssp/selection.json` change. No scenario set is applied, so both studies use the FMU defaults.
+One definition-level variation point, `SourceChoice`, offers two source FMUs as variant parts. `System.source : SourceChoice` is the only part, and `System` has no root output port. Each study declares its own `ScenarioSet` and binds it through the variation-resolved usage `sut.source.parameters.*`, so the build packages an external SSV plus an external SSM. The same composition therefore produces one SSP per selection: the component name `source` and the connector layout stay fixed, while the packaged FMU, the packaged scenario, and `extra/org.pyssp/selection.json` change. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -14,25 +14,26 @@ One definition-level variation point, `SourceChoice`, offers two source FMUs as 
 - Exportable composition: `System :> SspModel`
 - Variation point: `variation part def SourceChoice` with `variant part step : Step` and `variant part sine : Sine`
 - `Step` and `Sine` expose `y` plus their FMU parameter connectors; `System` exposes no `y` port.
+- `ScenarioSet` (height, offset, startTime, amplitude, f) is declared on each study; `bind` connects it to the selected source's parameter port.
 - Study compositions: `step :> Study`, `sine :> Study`
 - No legacy SSD, SSV, or SSM is checked into the model directory.
 
 ## Studies
 
-- `step :> Study` selects `sut.source=step`; the model build selects `source=step`.
-- `sine :> Study` selects `sut.source=sine`; the model build selects `source=sine`.
+- `step :> Study` selects `sut.source=step` (model `source=step`) and binds `sut.source.parameters.height/offset/startTime`; its packaged SSM targets `source.height`.
+- `sine :> Study` selects `sut.source=sine` (model `source=sine`) and binds `sut.source.parameters.amplitude/f/offset/startTime`; its packaged SSM targets `source.amplitude`.
 - Selection is applied at build time through `build_fixture(selections={study: {"study": {...}, "model": {...}}})`; study keys are rooted at the Study, model keys at `System`.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
-- No SSV or SSM is generated; each study directory holds only `study.json`.
+- Each study directory carries `ScenarioSet.ssv` and `<study>.ssm`; the build binds them into the exported SSP after `build_fixture`.
 - Artifacts: `artifacts/studies/variation_source_swap/<study>/`; studies are never exported as SSPs.
-- Registry: only `sine` is registered (compare `source.y` on ssp4sim and OMSimulator). `step` is built but not registered because Step's defaults (`height=1`, `offset=0`, `startTime=0`) make its output constant, so its comparison gate would be degenerate.
+- Registry: both `step` and `sine` are registered on ssp4sim and OMSimulator, comparing `source.y`; both comparisons pass their gate.
 
 ## Strategy Role
 
-- Structural variation fixture: the selection retypes one part usage and swaps the packaged FMU.
-- Build-level contract test: `tests/test_variation_cases.py` asserts the element tree and packaged FMU per selection.
-- Catches a dropped selection, an unselected point that silently builds, a stale SSD, and a missing selection record.
-- The registered `sine` case is the variation-point entry in the cross-engine comparison gate; that comparison currently passes.
+- Structural variation fixture: the selection retypes one part usage, swaps the packaged FMU, and resolves which scenario member the SSM targets.
+- Build-level contract test: `tests/test_variation_cases.py` asserts the element tree, the packaged FMU, the external SSV+SSM, and the variation-resolved mapping target per selection.
+- Catches a dropped selection, an unselected point that silently builds, a stale SSD, a missing selection record, and a scenario packaged as an inline mapping.
+- Both cases are registered in the cross-engine comparison gate; both comparisons currently pass.
 
 ## Structure
 
@@ -42,22 +43,23 @@ One definition-level variation point, `SourceChoice`, offers two source FMUs as 
 
 ## Intent
 
-- Prove that a definition-level part variation changes the packaged FMU, the SSD component type, and `extra/org.pyssp/selection.json` while the component name and connector layout stay fixed.
+- Prove that a definition-level part variation changes the packaged FMU, the SSD component type, and `extra/org.pyssp/selection.json` while the component name, the connector layout, and the variation-resolved scenario mapping stay fixed.
 
 ## Expected Behavior
 
-- `step`: `source.y = 1` for `t > 0` (Step defaults are constant).
-- `sine`: `source.y = sin(2*pi*t)` with Sine defaults (`amplitude=1`, `f=1`, `offset=0`, `phase=0`).
+- `step`: `source.y = offset + height*[t >= startTime]` with the packaged set (`height=2`, `offset=0`, `startTime=0.5`).
+- `sine`: `source.y = offset + amplitude*sin(2*pi*f*(t-startTime))` for `t >= startTime`, with `amplitude=2`, `f=1`, `offset=0`.
 - There is no root output; the compared signal is `source.y`.
 
 ## Simulation Notes
 
-- Both studies run the built SSP as-is; no scenario is injected.
-- Only `sine` has registry evidence. The `step` build is not a passing behavioral case.
+- Both studies run the built SSP as-is; the scenario is packaged, not injected.
+- The registered gate passes for both cases: `source.y` has a shift-tolerant max error of 0 for `step` and ~5e-7 for `sine`.
 
 ## Packaging Notes
 
 - Exported model: `artifacts/models/variation_source_swap/<study>/model/`
 - Study artifacts: `artifacts/studies/variation_source_swap/<study>/`
+- Packaged scenario: `resources/ScenarioSet.ssv` with `resources/<study>.ssm` (external SSV + external SSM)
 - FMU sources: `models/fmu/Modelica.Blocks.Sources.Step/fmu`, `models/fmu/Modelica.Blocks.Sources.Sine/fmu`
 - Build: `python3 scripts/build_models.py run variation_source_swap`

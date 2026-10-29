@@ -1,10 +1,27 @@
 <?xml version='1.0' encoding='utf-8'?>
 <ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="System" version="1.0">
   <ssd:System name="System">
+    <ssd:ParameterBindings>
+      <ssd:ParameterBinding source="resources/ScenarioSet.ssv">
+        <ssd:ParameterMapping source="resources/direct.ssm" />
+      </ssd:ParameterBinding>
+    </ssd:ParameterBindings>
     <ssd:Elements>
       <ssd:Component name="source" source="resources/Sine.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
         <ssd:Connectors>
           <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="amplitude" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="f" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="offset" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="startTime" kind="parameter">
             <ssc:Real />
           </ssd:Connector>
         </ssd:Connectors>

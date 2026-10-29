@@ -1,0 +1,15 @@
+{
+  "artifacts": [
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "nominal_k3",
+    "model": "variation_attribute_set",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.01018296997062862,
+  "status": "completed"
+}

@@ -1,6 +1,7 @@
 {
   "composition": "System",
   "selections": {
-    "scenario": "nominalK3"
+    "boosted_scenario": "boostedK9",
+    "nominal_scenario": "nominalK3"
   }
 }

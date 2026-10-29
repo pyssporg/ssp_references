@@ -8,6 +8,11 @@
     "stop_time": 1.0
   },
   "model": "variation_source_swap",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "sine.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
   "study": "sine",
   "sut": "sut",
   "target_ssd": "SystemStructure.ssd"

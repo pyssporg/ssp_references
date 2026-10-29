@@ -1,0 +1,7 @@
+{
+  "composition": "System",
+  "selections": {
+    "path": "nestedPath",
+    "path.inner_stage": "gainStage"
+  }
+}

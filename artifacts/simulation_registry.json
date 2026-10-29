@@ -415,6 +415,23 @@
         }
       ],
       "build": "model"
+    },
+    {
+      "name": "variation_source_swap",
+      "compare_signals": [
+        "source.y"
+      ],
+      "cases": [
+        {
+          "name": "sine",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "study": "sine"
+        }
+      ],
+      "build": "model"
     }
   ]
 }

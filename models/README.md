@@ -6,7 +6,7 @@ and which backends support it.
 
 ## SSP Fixtures
 
-The 21 SSP fixtures are organized into four architectural classes per the
+The 25 SSP fixtures are organized into four architectural classes per the
 [fixture hierarchy](../docs/breakdown/02-architecture/architecture.md#2-fixture-hierarchy).
 
 ### Simple Reference Models
@@ -58,6 +58,10 @@ SSPs that test specific packaging or runtime features.
 |-------|---------|----------|------------|------------|
 | pyfmu_csv_source_sink | CSV-backed source and sink FMUs inside an SSP | ssp4sim | Behavioral | [link](./ssp/pyfmu_csv_source_sink/FIXTURE.md) |
 | scenario | SSV/SSM parameter injection and structured scenario handling | ssp4sim | Behavioral | [link](./ssp/scenario/FIXTURE.md) |
+| variation_source_swap | Definition-level source swap: the `source` part selects Step or Sine | ssp4sim, OMSimulator (`sine` only) | Behavioral | [link](./ssp/variation_source_swap/FIXTURE.md) |
+| variation_body_gain | Variant-body path: one Gain vs Product-then-Gain driven by Sine | Not registered | Build-level | [link](./ssp/variation_body_gain/FIXTURE.md) |
+| variation_attribute_set | Attribute variation over two parameter sets (k=3 vs k=9) on a fixed Step-to-Gain topology | Not registered | Build-level | [link](./ssp/variation_attribute_set/FIXTURE.md) |
+| variation_nested | Nested variation: outer direct/nested path with an inner Gain stage | Not registered | Build-level | [link](./ssp/variation_nested/FIXTURE.md) |
 
 ## FMU Building Blocks
 
@@ -86,6 +90,11 @@ Per the [test strategy](../docs/breakdown/04-verification/co_simulation_test_str
 | **Smoke** | Pipeline runs without crashing | Simulation completes; CSV output produced |
 | **Behavioral** | Output matches algebraic expectation | Max error within tight tolerance (deterministic fixtures) |
 | **Regression** | Output matches trusted baseline | Metrics within tolerance against stored reference |
+
+Build-level, as used for the variation fixtures, means the generated SSD element
+tree and packaged resources match the selected variant; it is asserted by
+`tests/test_variation_cases.py` and is not a simulation level. Only
+`variation_source_swap/sine` has a registered simulation comparison.
 
 ## Backend Key
 

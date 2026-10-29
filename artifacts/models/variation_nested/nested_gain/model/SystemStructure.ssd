@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" name="System" version="1.0">
+  <ssd:System name="System">
+    <ssd:Elements>
+      <ssd:Component name="source" source="resources/Sine.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+        <ssd:Connectors>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+      <ssd:System name="path">
+        <ssd:Connectors>
+          <ssd:Connector name="u" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+        </ssd:Connectors>
+        <ssd:Elements>
+          <ssd:System name="inner_stage">
+            <ssd:Connectors>
+              <ssd:Connector name="stage_in" kind="input">
+                <ssc:Real />
+              </ssd:Connector>
+              <ssd:Connector name="stage_out" kind="output">
+                <ssc:Real />
+              </ssd:Connector>
+            </ssd:Connectors>
+            <ssd:Elements>
+              <ssd:Component name="gain" source="resources/Gain.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+                <ssd:Connectors>
+                  <ssd:Connector name="u" kind="input">
+                    <ssc:Real />
+                  </ssd:Connector>
+                  <ssd:Connector name="y" kind="output">
+                    <ssc:Real />
+                  </ssd:Connector>
+                  <ssd:Connector name="k" kind="parameter">
+                    <ssc:Real />
+                  </ssd:Connector>
+                </ssd:Connectors>
+              </ssd:Component>
+            </ssd:Elements>
+            <ssd:Connections>
+              <ssd:Connection startConnector="stage_in" endElement="gain" endConnector="u" />
+              <ssd:Connection startElement="gain" startConnector="y" endConnector="stage_out" />
+            </ssd:Connections>
+          </ssd:System>
+          <ssd:Component name="output_gain" source="resources/Gain.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+            <ssd:Connectors>
+              <ssd:Connector name="u" kind="input">
+                <ssc:Real />
+              </ssd:Connector>
+              <ssd:Connector name="y" kind="output">
+                <ssc:Real />
+              </ssd:Connector>
+              <ssd:Connector name="k" kind="parameter">
+                <ssc:Real />
+              </ssd:Connector>
+            </ssd:Connectors>
+          </ssd:Component>
+        </ssd:Elements>
+        <ssd:Connections>
+          <ssd:Connection startConnector="u" endElement="inner_stage" endConnector="stage_in" />
+          <ssd:Connection startElement="inner_stage" startConnector="stage_out" endElement="output_gain" endConnector="u" />
+          <ssd:Connection startElement="output_gain" startConnector="y" endConnector="y" />
+        </ssd:Connections>
+      </ssd:System>
+    </ssd:Elements>
+    <ssd:Connections>
+      <ssd:Connection startElement="source" startConnector="y" endElement="path" endConnector="u" />
+    </ssd:Connections>
+  </ssd:System>
+  <ssd:DefaultExperiment startTime="0.0" stopTime="1.0" />
+</ssd:SystemStructureDescription>

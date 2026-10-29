@@ -1,0 +1,109 @@
+package VariationAttributeSet {
+  part def SspModel;
+  part def Study;
+
+  port def ParameterInterface;
+
+  port def StepParameters :> ParameterInterface {
+    attribute height : Real;
+    attribute offset : Real;
+    attribute startTime : Real;
+  }
+
+  port def GainParameters :> ParameterInterface {
+    attribute k : Real;
+  }
+
+  port def RealSignal {
+    attribute pyssp_flat_connector : Boolean = true;
+    attribute value : Real;
+  }
+
+  attribute def ParameterSet;
+
+  attribute def NominalK3 :> ParameterSet {
+    attribute height = 2.0;
+    attribute offset = 1.0;
+    attribute startTime = 0.25;
+    attribute k = 3.0;
+  }
+
+  attribute def BoostedK9 :> ParameterSet {
+    attribute height = 2.0;
+    attribute offset = 1.0;
+    attribute startTime = 0.25;
+    attribute k = 9.0;
+  }
+
+  /* One attribute variation point: both variants fix the same parameter set. */
+  variation attribute def ScenarioChoice {
+    variant attribute nominalK3 : NominalK3;
+    variant attribute boostedK9 : BoostedK9;
+  }
+
+  attribute def Experiment {
+    attribute startTime : Real;
+    attribute stopTime : Real;
+    attribute stepSize : Real;
+  }
+
+  attribute def BaselineExperiment :> Experiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 1.0;
+    attribute stepSize = 0.001;
+  }
+
+  attribute def FmuMetadata {
+    attribute source : String;
+    attribute implementation : String;
+  }
+
+  attribute def StepFmu :> FmuMetadata {
+    attribute source = "models/fmu/Modelica.Blocks.Sources.Step/fmu";
+    attribute implementation = "CoSimulation";
+  }
+
+  attribute def GainFmu :> FmuMetadata {
+    attribute source = "models/fmu/Modelica.Blocks.Math.Gain/fmu";
+    attribute implementation = "CoSimulation";
+  }
+
+  part def Step {
+    attribute fmu_meta : StepFmu;
+    in port parameters : StepParameters;
+    out port y : RealSignal;
+  }
+
+  part def Gain {
+    attribute fmu_meta : GainFmu;
+    in port parameters : GainParameters;
+    in port u : RealSignal;
+    out port y : RealSignal;
+  }
+
+  part def System :> SspModel {
+    attribute pyssp_default_start_time : Real = 0.0;
+    attribute pyssp_default_stop_time : Real = 1.0;
+    attribute scenario : ScenarioChoice;
+    part step : Step;
+    part gain : Gain;
+    connect step.y to gain.u;
+
+    bind step.parameters.height = scenario.height;
+    bind step.parameters.offset = scenario.offset;
+    bind step.parameters.startTime = scenario.startTime;
+    bind gain.parameters.k = scenario.k;
+  }
+
+  part def nominal_k3 :> Study {
+    doc /* Attribute variation selecting the k=3.0 parameter set. */
+    attribute experiment_baseline : BaselineExperiment;
+    part sut : System;
+  }
+
+  part def boosted_k9 :> Study {
+    doc /* Attribute variation selecting the k=9.0 parameter set. */
+    attribute experiment_baseline : BaselineExperiment;
+    part sut : System;
+  }
+}

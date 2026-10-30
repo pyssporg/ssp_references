@@ -114,6 +114,7 @@ package VariationBodyGain {
 
   part def one_stage :> Analysis {
     doc /* Body variation selecting the single-gain path. */
+    attribute pyssp_selection = "path=oneStage";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;
@@ -127,6 +128,7 @@ package VariationBodyGain {
 
   part def two_stages :> Analysis {
     doc /* Body variation selecting the product-then-gain path. */
+    attribute pyssp_selection = "path=twoStages";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

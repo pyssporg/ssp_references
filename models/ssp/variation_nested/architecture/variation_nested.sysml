@@ -152,6 +152,7 @@ package VariationNested {
 
   part def direct :> Analysis {
     doc /* Outer variation selecting the single-gain path. */
+    attribute pyssp_selection = "path=directPath";
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;
@@ -163,6 +164,7 @@ package VariationNested {
 
   part def nested_gain :> Analysis {
     doc /* Nested path with a Gain stage. */
+    attribute pyssp_selection = "path=nestedPath;path.inner_stage=gainStage";
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

@@ -25,21 +25,11 @@ SSD = "{http://ssp-standard.org/SSP1/SystemStructureDescription}"
 
 # model, analysis, selection (model-rooted), root components, subsystems,
 # nested components per subsystem, packaged FMU for the varied part.
-# The SSP export resolves every attribute point in the package, so both
-# analyses' usages must resolve even when one case is under test.
+# The packaged SSP resolves the analysis selection; both attribute usages are
+# passed so the case also covers a multi-key analysis map.
 ATTRIBUTE_SELECTION = {
     "nominal_scenario": "nominalK3",
     "boosted_scenario": "boostedK9",
-}
-
-# Every scenario usage on every composed analysis must resolve, including the
-# pruned `sine_high` analysis, because the adapter collects attribute usages
-# from all analyses that compose System.
-EXCLUDES_SCENARIOS = {
-    "step_baseline_scenario": "baseline",
-    "step_high_scenario": "highGain",
-    "sine_baseline_scenario": "baseline",
-    "sine_high_scenario": "highGain",
 }
 
 CASES: dict[tuple[str, str], dict] = {
@@ -121,21 +111,21 @@ CASES: dict[tuple[str, str], dict] = {
         "fmu": "resources/Sine.fmu",
     },
     ("variation_conditional_excludes", "step_baseline"): {
-        "select": {"source": "stepImplementation", **EXCLUDES_SCENARIOS},
+        "select": {"source": "stepImplementation"},
         "components": ["gain", "source"],
         "subsystems": [],
         "nested": {},
         "fmu": "resources/Gain.fmu",
     },
     ("variation_conditional_excludes", "step_high"): {
-        "select": {"source": "stepImplementation", **EXCLUDES_SCENARIOS},
+        "select": {"source": "stepImplementation"},
         "components": ["gain", "source"],
         "subsystems": [],
         "nested": {},
         "fmu": "resources/Gain.fmu",
     },
     ("variation_conditional_excludes", "sine_baseline"): {
-        "select": {"source": "sineImplementation", **EXCLUDES_SCENARIOS},
+        "select": {"source": "sineImplementation"},
         "components": ["gain", "source"],
         "subsystems": [],
         "nested": {},
@@ -347,26 +337,32 @@ def _load_build_module(model: str):
 
 
 @pytest.mark.parametrize(
-    ("model", "pruned"),
+    ("model", "pruned", "legal"),
     [
-        ("variation_conditional_requires", "sine_two"),
-        ("variation_conditional_excludes", "sine_high"),
+        (
+            "variation_conditional_requires",
+            "sine_two",
+            {"step_single", "step_two", "sine_single"},
+        ),
+        (
+            "variation_conditional_excludes",
+            "sine_high",
+            {"step_baseline", "step_high", "sine_baseline"},
+        ),
     ],
 )
-def test_conditional_guard_prunes_illegal_selection(model: str, pruned: str) -> None:
-    """The adapter-backed predicate rejects the illegal branch and never builds it."""
+def test_conditional_plan_prunes_the_violated_selection(
+    model: str, pruned: str, legal: set[str]
+) -> None:
+    """The adapter reports the illegal branch as violated and it is never built."""
     module = _load_build_module(model)
-    module._validate_guard()
-    assert not hasattr(module, "is_legal"), "the fixture still defines a local rule"
-    assert pruned in module.PRUNED
-    assert pruned not in module.SELECTIONS
-    assert pruned in module.SCOPED
-    assert module._selection_is_legal(pruned, module.SCOPED[pruned]) is False
+    module._validate_partition()
 
-    for analysis, scoped in module.SCOPED.items():
-        legal = module._selection_is_legal(analysis, scoped)
-        assert (analysis in module.SELECTIONS) is legal
-        assert (analysis in module.PRUNED) is not legal
+    plans = {plan.name: plan for plan in module.PLANS}
+    assert plans[pruned].status == "violated"
+    assert pruned not in module.SELECTIONS
+    assert set(module.SELECTIONS) == legal
+    assert all(plan.status != "invalid" for plan in module.PLANS)
 
     assert not (REPO_ROOT / "artifacts" / "models" / model / pruned).exists()
     assert not (REPO_ROOT / "artifacts" / "analyses" / model / pruned).exists()
@@ -376,6 +372,32 @@ def test_conditional_guard_prunes_illegal_selection(model: str, pruned: str) -> 
     registry = load_registry(REPO_ROOT / "artifacts" / "simulation_registry.json")
     registered = next(entry for entry in registry.models if entry.name == model)
     assert {case.name for case in registered.cases} == set(module.SELECTIONS)
+
+
+@pytest.mark.parametrize(
+    "model",
+    [
+        "variation_source_swap",
+        "variation_body_gain",
+        "variation_attribute_set",
+        "variation_nested",
+        "variation_conditional_requires",
+        "variation_conditional_excludes",
+    ],
+)
+def test_every_analysis_declares_its_selection(model: str) -> None:
+    """The architecture, not build.py, is the source of each selection."""
+    from pyssp_sysml2.model import load
+    from pyssp_sysml2.parameters.selection import (
+        analysis_part_definitions,
+        analysis_selection,
+    )
+
+    architecture = load(REPO_ROOT / "models" / "ssp" / model / "architecture")
+    analyses = analysis_part_definitions(architecture)
+    assert analyses, "the architecture declares no analysis"
+    for analysis in analyses:
+        assert analysis_selection(architecture, analysis), analysis.name
 
 
 @pytest.mark.parametrize(
@@ -430,7 +452,7 @@ def test_conditional_architecture_declares_the_constraint(
 def test_conditional_selection_record_matches_the_built_case(
     model: str, analysis: str, expected: dict[str, str]
 ) -> None:
-    """The packaged record names the selection that produced the SSP."""
+    """The packaged record names exactly the authored selection."""
     selection = (
         REPO_ROOT
         / "artifacts"
@@ -448,4 +470,4 @@ def test_conditional_selection_record_matches_the_built_case(
         )
 
     selections = json.loads(selection.read_text())["selections"]
-    assert selections.items() >= expected.items()
+    assert selections == expected

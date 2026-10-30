@@ -141,6 +141,7 @@ package VariationConditionalRequires {
 
   part def step_single :> Analysis {
     doc /* Legal: step source with a single gain stage. */
+    attribute pyssp_selection = "source=stepImplementation;gain=singleStage";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;
@@ -153,6 +154,7 @@ package VariationConditionalRequires {
 
   part def step_two :> Analysis {
     doc /* Legal: step source with two gain stages. */
+    attribute pyssp_selection = "source=stepImplementation;gain=twoStages";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;
@@ -166,6 +168,7 @@ package VariationConditionalRequires {
 
   part def sine_single :> Analysis {
     doc /* Legal: the sine source requires the single gain stage. */
+    attribute pyssp_selection = "source=sineImplementation;gain=singleStage";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;
@@ -179,6 +182,7 @@ package VariationConditionalRequires {
 
   part def sine_two :> Analysis {
     doc /* Illegal: the constraint rejects sine with two gain stages. */
+    attribute pyssp_selection = "source=sineImplementation;gain=twoStages";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

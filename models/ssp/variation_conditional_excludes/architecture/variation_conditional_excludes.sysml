@@ -131,6 +131,7 @@ package VariationConditionalExcludes {
 
   part def step_baseline :> Analysis {
     doc /* Legal: step source with the baseline scenario. */
+    attribute pyssp_selection = "source=stepImplementation;step_baseline_scenario=baseline";
     attribute experiment : BaselineExperiment;
     attribute step_baseline_scenario : ScenarioChoice;
     part sut : System;
@@ -149,6 +150,7 @@ package VariationConditionalExcludes {
 
   part def step_high :> Analysis {
     doc /* Legal: step source with the high-gain scenario. */
+    attribute pyssp_selection = "source=stepImplementation;step_high_scenario=highGain";
     attribute experiment : BaselineExperiment;
     attribute step_high_scenario : ScenarioChoice;
     part sut : System;
@@ -167,6 +169,7 @@ package VariationConditionalExcludes {
 
   part def sine_baseline :> Analysis {
     doc /* Legal: sine source with the baseline scenario. */
+    attribute pyssp_selection = "source=sineImplementation;sine_baseline_scenario=baseline";
     attribute experiment : BaselineExperiment;
     attribute sine_baseline_scenario : ScenarioChoice;
     part sut : System;
@@ -186,6 +189,7 @@ package VariationConditionalExcludes {
 
   part def sine_high :> Analysis {
     doc /* Illegal: the constraint rejects sine with the high-gain scenario. */
+    attribute pyssp_selection = "source=sineImplementation;sine_high_scenario=highGain";
     attribute experiment : BaselineExperiment;
     attribute sine_high_scenario : ScenarioChoice;
     part sut : System;

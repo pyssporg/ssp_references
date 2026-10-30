@@ -1,34 +1,42 @@
 #!/usr/bin/env python3
-"""Build variation_body_gain with one analysis per path body.
+"""Build every legal analysis of variation_body_gain.
 
-The single variation point ``System.path`` chooses between a body with one Gain
-and a body with a Product feeding a Gain; each analysis selects one variant. Each
-analysis packages its own scenario SSV and SSM into the exported SSP.
+Each analysis declares its variation selection with ``pyssp_selection``. This
+script asks the adapter for a plan per analysis, builds the legal ones, and
+packages each analysis's scenario.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
+from pyssp_sysml2.model import load
+from pyssp_sysml2.parameters.selection import analysis_plans
+from pyssp_workflow.analysis import read_scenario
 from pyssp_workflow.authoring import build_fixture, report_builds
 from pyssp_workflow.binding import bind
-from pyssp_workflow.analysis import read_scenario
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
-SELECTIONS = {
-    "one_stage": {"analysis": {"sut.path": "oneStage"}, "model": {"path": "oneStage"}},
-    "two_stages": {
-        "analysis": {"sut.path": "twoStages"},
-        "model": {"path": "twoStages"},
-    },
-}
+ARCHITECTURE = load(Path(__file__).resolve().parent / "architecture")
+
+PLANS = analysis_plans(ARCHITECTURE)
+SELECTIONS = {plan.name: plan.selection for plan in PLANS if plan.legal}
+
+
+def _validate_plans() -> None:
+    invalid = [plan for plan in PLANS if plan.status == "invalid"]
+    if invalid:
+        details = "; ".join(f"{plan.name}: {plan.detail}" for plan in invalid)
+        raise ValueError(f"invalid analysis selection: {details}")
+
 
 if __name__ == "__main__":
+    _validate_plans()
     builds = build_fixture(
         model_dir=Path(__file__).resolve().parent,
         repo_root=REPO_ROOT,
-        analyses=("one_stage", "two_stages"),
+        analyses=tuple(SELECTIONS),
         selections=SELECTIONS,
     )
     for built in builds.values():

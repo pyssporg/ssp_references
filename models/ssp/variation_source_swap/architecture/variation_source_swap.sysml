@@ -90,6 +90,7 @@ package VariationSourceSwap {
 
   part def step :> Analysis {
     doc /* Source variation selecting the Step FMU. */
+    attribute pyssp_selection = "source=step";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;
@@ -101,6 +102,7 @@ package VariationSourceSwap {
 
   part def sine :> Analysis {
     doc /* Source variation selecting the Sine FMU. */
+    attribute pyssp_selection = "source=sine";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

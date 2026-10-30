@@ -2,7 +2,7 @@
 
 ## Origin
 
-Authored in this repository at `architecture/variation_attribute_set.sysml`, adapted from `docs/breakdown/06-evolution/selected/examples/variation-points/02_attribute_variation.sysml`; the composition and FMU metadata follow `models/ssp/signal_step_gain/`. First added 2026-10-29 with the variation-point batch.
+Authored in this repository under `architecture/`, adapted from `docs/breakdown/06-evolution/selected/examples/variation-points/02_attribute_variation.sysml`; the composition and FMU metadata follow `models/ssp/signal_step_gain/`. First added 2026-10-29 with the variation-point batch.
 
 ## Overview
 
@@ -10,7 +10,9 @@ One attribute variation point, `ScenarioChoice`, over two complete parameter set
 
 ## Architecture Source
 
-- `architecture/variation_attribute_set.sysml`
+- `architecture/` split by section: `01-interfaces.sysml`,
+  `02-parameters.sysml`, `03-components.sysml`, `04-structure.sysml`,
+  `05-analyses.sysml`
 - Exportable composition: `System :> SspModel`
 - Variation point: `variation attribute def ScenarioChoice` with `variant attribute nominalK3 : NominalK3` and `variant attribute boostedK9 : BoostedK9`
 - Both sets fix `height=2.0`, `offset=1.0`, `startTime=0.25`; only `k` differs (3.0 vs 9.0).

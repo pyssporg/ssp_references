@@ -3,7 +3,7 @@
 ## Origin
 
 Assembled from shared Modelica FMUs. The model and analysis are authored in SysML
-at `architecture/signal_sine_gain_add.sysml`.
+under `architecture/`.
 
 ## Overview
 
@@ -12,7 +12,9 @@ Modelica FMUs. Parameter form: inline root parameter set.
 
 ## Architecture Source
 
-- `architecture/signal_sine_gain_add.sysml`
+- `architecture/` split by section: `01-interfaces.sysml`,
+  `02-parameters.sysml`, `03-components.sysml`, `04-structure.sysml`,
+  `05-analyses.sysml`
 - Exportable composition: `System :> SspModel`
 - Analysis composition: `baseline :> Analysis`
 - No legacy SSD, SSV, or SSM is checked into the model directory.

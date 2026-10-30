@@ -2,7 +2,7 @@
 
 ## Origin
 
-Authored in this repository at `architecture/variation_source_swap.sysml`, adapted from the definition-level part-variation shape in `docs/breakdown/06-evolution/selected/examples/variation-points/01_structural_part_variation.sysml`. The Step and Sine FMUs are shared fixtures under `models/fmu/`; first added 2026-10-29 with the variation-point batch.
+Authored in this repository under `architecture/`, adapted from the definition-level part-variation shape in `docs/breakdown/06-evolution/selected/examples/variation-points/01_structural_part_variation.sysml`. The Step and Sine FMUs are shared fixtures under `models/fmu/`; first added 2026-10-29 with the variation-point batch.
 
 ## Overview
 
@@ -10,7 +10,9 @@ One definition-level variation point, `SourceChoice`, offers two source FMUs as 
 
 ## Architecture Source
 
-- `architecture/variation_source_swap.sysml`
+- `architecture/` split by section: `01-interfaces.sysml`,
+  `02-parameters.sysml`, `03-components.sysml`, `04-structure.sysml`,
+  `05-analyses.sysml`
 - Exportable composition: `System :> SspModel`
 - Variation point: `variation part def SourceChoice` with `variant part step : Step` and `variant part sine : Sine`
 - `Step` and `Sine` expose `y` plus their FMU parameter connectors; `System` exposes no `y` port.

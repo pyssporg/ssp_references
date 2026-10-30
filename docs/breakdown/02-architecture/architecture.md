@@ -56,7 +56,10 @@ runtime-ready exported SSP and the analysis data that exercises it.
 **Input:** A model directory under `models/ssp/<model_name>/` containing at
 minimum a `build.py` script and a `FIXTURE.md` fixture note. Migrated fixtures
 carry `architecture/*.sysml` with a `part def ... :> SspModel` and, where
-analyses are defined, `part def ... :> Analysis` compositions. Some model
+analyses are defined, `part def ... :> Analysis` compositions. A large
+architecture splits along its sections (`01-interfaces`, `02-parameters`,
+`03-components`, `04-structure`, `05-analyses`); every file repeats the package
+and the loader merges the directory in file-name order. Some model
 directories still carry checked-in resource files (FMUs, legacy SSV/SSM) as
 their body. A fixture may
 keep its legacy SSD and resources as the model body and author only the analysis

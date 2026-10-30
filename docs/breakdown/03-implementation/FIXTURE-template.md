@@ -31,7 +31,11 @@ fixture", "composite SSP model").
 
 <!--
 Required for SysML-authored fixtures.
-- Path to architecture/*.sysml.
+- Path to architecture/*.sysml. A small fixture may keep one file; a larger one
+  splits along its sections into `01-interfaces.sysml`, `02-parameters.sysml`,
+  `03-components.sysml`, `04-structure.sysml`, and `05-analyses.sysml`. Every
+  split file repeats the same package, and the loader merges the directory in
+  file-name order.
 - Composition name of the exportable `SspModel`.
 - Parameter interfaces and sets authored in SysML.
 - Whether any legacy SSD/SSV/SSM remains checked in (and why).

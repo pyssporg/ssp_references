@@ -2,7 +2,7 @@
 
 ## Origin
 
-Authored in this repository at `architecture/variation_nested.sysml`, adapted from `docs/breakdown/06-evolution/selected/examples/variation-points/10_nested_variation.sysml`; the FMU metadata follows `models/ssp/signal_step_product/` and `models/ssp/signal_step_gain/`. First added 2026-10-29 with the variation-point batch.
+Authored in this repository under `architecture/`, adapted from `docs/breakdown/06-evolution/selected/examples/variation-points/10_nested_variation.sysml`; the FMU metadata follows `models/ssp/signal_step_product/` and `models/ssp/signal_step_gain/`. First added 2026-10-29 with the variation-point batch.
 
 ## Overview
 
@@ -10,7 +10,9 @@ Two levels of part variation around one fixed outer composition. The outer point
 
 ## Architecture Source
 
-- `architecture/variation_nested.sysml`
+- `architecture/` split by section: `01-interfaces.sysml`,
+  `02-parameters.sysml`, `03-components.sysml`, `04-structure.sysml`,
+  `05-analyses.sysml`
 - Exportable composition: `System :> SspModel`
 - Outer point: `variation part def PathChoice` with `variant part directPath : DirectPath` and `variant part nestedPath : NestedPath`
 - Inner point: `variation part def StageChoice` with `variant part gainStage : GainStage` and `variant part secondStage : SecondStage`

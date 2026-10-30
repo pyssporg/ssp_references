@@ -3,7 +3,7 @@
 ## Origin
 
 Assembled from shared Modelica FMUs. The model and analysis are authored in SysML
-at `architecture/signal_nested_external_bindings.sysml`.
+under `architecture/`.
 
 ## Overview
 
@@ -12,7 +12,9 @@ Modelica FMUs. Parameter form: external SSV+SSM binding on the nested system; st
 
 ## Architecture Source
 
-- `architecture/signal_nested_external_bindings.sysml`
+- `architecture/` split by section: `01-interfaces.sysml`,
+  `02-parameters.sysml`, `03-components.sysml`, `04-structure.sysml`,
+  `05-analyses.sysml`
 - Exportable composition: `System :> SspModel`
 - Analysis composition: `baseline :> Analysis`
 - No legacy SSD, SSV, or SSM is checked into the model directory.

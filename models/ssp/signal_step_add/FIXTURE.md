@@ -3,7 +3,7 @@
 ## Origin
 
 Assembled from shared Modelica FMUs. The model and analysis are authored in SysML
-at `architecture/signal_step_add.sysml`.
+under `architecture/`.
 
 ## Overview
 
@@ -12,7 +12,9 @@ Modelica FMUs. Parameter form: external SSV + external SSM (disambiguated member
 
 ## Architecture Source
 
-- `architecture/signal_step_add.sysml`
+- `architecture/` split by section: `01-interfaces.sysml`,
+  `02-parameters.sysml`, `03-components.sysml`, `04-structure.sysml`,
+  `05-analyses.sysml`
 - Exportable composition: `System :> SspModel`
 - Analysis composition: `baseline :> Analysis`
 - No legacy SSD, SSV, or SSM is checked into the model directory.

@@ -2,7 +2,7 @@
 
 ## Origin
 
-Authored in this repository at `architecture/variation_conditional_requires.sysml`, adapted from the constrained-selection shape in `docs/breakdown/06-evolution/selected/examples/variation-points/06_constrained_selection.sysml`; the FMU metadata follows `models/ssp/variation_source_swap/`. First added 2026-10-30 with the conditional-branching batch.
+Authored in this repository under `architecture/`, adapted from the constrained-selection shape in `docs/breakdown/06-evolution/selected/examples/variation-points/06_constrained_selection.sysml`; the FMU metadata follows `models/ssp/variation_source_swap/`. First added 2026-10-30 with the conditional-branching batch.
 
 ## Overview
 
@@ -12,7 +12,9 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 
 ## Architecture Source
 
-- `architecture/variation_conditional_requires.sysml`
+- `architecture/` split by section: `01-interfaces.sysml`,
+  `02-parameters.sysml`, `03-components.sysml`, `04-structure.sysml`,
+  `05-analyses.sysml`
 - Exportable composition: `System :> SspModel`
 - Source point: `variation part def SourceChoice` with `variant part stepImplementation : Step` and `variant part sineImplementation : Sine`
 - Gain point: `variation part def GainChoice` with `variant part singleStage : Gain` and `variant part twoStages : CascadedGain`

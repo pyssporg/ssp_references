@@ -99,3 +99,5 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Per DD-014, an engine that cannot run the case is not listed for the case.
 - **DD-016** — Registry Application — Pass-Through OMSimulator Drop · accepted · 2026-10-29 · `DD-016`
   Per DD-014, an engine that cannot run the case is not listed for the case.
+- **DD-017** — Large Fixture Architectures Split Along Section Boundaries · accepted · 2026-10-30 · `DD-017`
+  Fixture SysML above roughly 100 lines is split into five section files that share one package; the loader merges them in file-name order.

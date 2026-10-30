@@ -472,9 +472,10 @@ def test_conditional_architecture_declares_the_constraint(
     model: str, symbols: tuple[str, ...]
 ) -> None:
     """The authored rule and its assertion stay in the SysML source."""
-    source = (
-        REPO_ROOT / "models" / "ssp" / model / "architecture" / f"{model}.sysml"
-    ).read_text(encoding="utf-8")
+    architecture = REPO_ROOT / "models" / "ssp" / model / "architecture"
+    source = "".join(
+        path.read_text(encoding="utf-8") for path in sorted(architecture.glob("*.sysml"))
+    )
     for symbol in symbols:
         assert symbol in source
 

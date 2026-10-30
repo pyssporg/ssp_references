@@ -2,7 +2,7 @@
 
 ## Origin
 
-Authored in this repository at `architecture/variation_body_gain.sysml`, adapted from the variant-body shape in `docs/breakdown/06-evolution/selected/examples/variation-points/10_nested_variation.sysml`. The Sine, Gain, and Product FMUs are shared fixtures under `models/fmu/`; first added 2026-10-29 with the variation-point batch.
+Authored in this repository under `architecture/`, adapted from the variant-body shape in `docs/breakdown/06-evolution/selected/examples/variation-points/10_nested_variation.sysml`. The Sine, Gain, and Product FMUs are shared fixtures under `models/fmu/`; first added 2026-10-29 with the variation-point batch.
 
 ## Overview
 
@@ -10,7 +10,9 @@ One definition-level variation point, `PathChoice`, whose variants are bodies ra
 
 ## Architecture Source
 
-- `architecture/variation_body_gain.sysml`
+- `architecture/` split by section: `01-interfaces.sysml`,
+  `02-parameters.sysml`, `03-components.sysml`, `04-structure.sysml`,
+  `05-analyses.sysml`
 - Exportable composition: `System :> SspModel`
 - Variation point: `variation part def PathChoice` with `variant part oneStage { part gain : Gain; ... }` and `variant part twoStages { part product : Product; part gain : Gain; ... }`
 - `ScenarioSet` (amplitude, f, offset, startTime, k) is declared on each analysis; `bind` connects it to the source parameters and to `path.gain`.

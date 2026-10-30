@@ -34,7 +34,7 @@ Carry constraints through the adapter. Evaluate for a selected architecture. Rej
 - `System.children` holds `Constraint requiresSingleStage` and an unnamed `assert`; `sysmlpy.check_constraints(model, bindings=None)` exists.
 - `Architecture` carries constraint definitions and usages; `loader._merge_packages` merges them.
 - `parameters.constraints` models and evaluates constraints; an illegal selection is rejected before an artifact is written.
-- Fixtures: `models/ssp/variation_conditional_requires/build.py` and `.../variation_conditional_excludes/build.py` own `AUTHORED`, `SCOPED`, `SELECTIONS`, `PRUNED` and ask the adapter for legality.
+- Fixtures: `models/ssp/variation_conditional_requires/build.py` and `.../variation_conditional_excludes/build.py` build the adapter's legal plans and pin the expected violated analysis; selections are authored on each analysis (IMP-105).
 - Traceability: parent `IMP-103`; fixture notes in both `variation_conditional_*` directories; adapter paths listed in Scope.
 
 ## Scope

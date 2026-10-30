@@ -11,6 +11,7 @@ structure it must produce.
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -29,6 +30,16 @@ SSD = "{http://ssp-standard.org/SSP1/SystemStructureDescription}"
 ATTRIBUTE_SELECTION = {
     "nominal_scenario": "nominalK3",
     "boosted_scenario": "boostedK9",
+}
+
+# Every scenario usage on every composed analysis must resolve, including the
+# pruned `sine_high` analysis, because the adapter collects attribute usages
+# from all analyses that compose System.
+EXCLUDES_SCENARIOS = {
+    "step_baseline_scenario": "baseline",
+    "step_high_scenario": "highGain",
+    "sine_baseline_scenario": "baseline",
+    "sine_high_scenario": "highGain",
 }
 
 CASES: dict[tuple[str, str], dict] = {
@@ -87,6 +98,48 @@ CASES: dict[tuple[str, str], dict] = {
         "subsystems": ["path"],
         "nested": {"path": ["output_gain"], "path.inner_stage": ["gain"]},
         "fmu": "resources/Gain.fmu",
+    },
+    ("variation_conditional_requires", "step_single"): {
+        "select": {"source": "stepImplementation", "gain": "singleStage"},
+        "components": ["gain", "source"],
+        "subsystems": [],
+        "nested": {},
+        "fmu": "resources/Gain.fmu",
+    },
+    ("variation_conditional_requires", "step_two"): {
+        "select": {"source": "stepImplementation", "gain": "twoStages"},
+        "components": ["source"],
+        "subsystems": ["gain"],
+        "nested": {"gain": ["firstStage", "secondStage"]},
+        "fmu": "resources/Gain.fmu",
+    },
+    ("variation_conditional_requires", "sine_single"): {
+        "select": {"source": "sineImplementation", "gain": "singleStage"},
+        "components": ["gain", "source"],
+        "subsystems": [],
+        "nested": {},
+        "fmu": "resources/Sine.fmu",
+    },
+    ("variation_conditional_excludes", "step_baseline"): {
+        "select": {"source": "stepImplementation", **EXCLUDES_SCENARIOS},
+        "components": ["gain", "source"],
+        "subsystems": [],
+        "nested": {},
+        "fmu": "resources/Gain.fmu",
+    },
+    ("variation_conditional_excludes", "step_high"): {
+        "select": {"source": "stepImplementation", **EXCLUDES_SCENARIOS},
+        "components": ["gain", "source"],
+        "subsystems": [],
+        "nested": {},
+        "fmu": "resources/Gain.fmu",
+    },
+    ("variation_conditional_excludes", "sine_baseline"): {
+        "select": {"source": "sineImplementation", **EXCLUDES_SCENARIOS},
+        "components": ["gain", "source"],
+        "subsystems": [],
+        "nested": {},
+        "fmu": "resources/Sine.fmu",
     },
 }
 
@@ -206,6 +259,12 @@ PACKAGED: dict[tuple[str, str], str] = {
     ("variation_body_gain", "two_stages"): "path.gain.k",
     ("variation_nested", "direct"): "path.gain.k",
     ("variation_nested", "nested_gain"): "path.inner_stage.gain.k",
+    ("variation_conditional_requires", "step_single"): "gain.k",
+    ("variation_conditional_requires", "step_two"): "gain.firstStage.k",
+    ("variation_conditional_requires", "sine_single"): "gain.k",
+    ("variation_conditional_excludes", "step_baseline"): "gain.k",
+    ("variation_conditional_excludes", "step_high"): "gain.k",
+    ("variation_conditional_excludes", "sine_baseline"): "gain.k",
 }
 
 
@@ -237,3 +296,158 @@ def test_built_ssp_packages_the_selected_scenario(key: tuple[str, str]) -> None:
         if entry.get("target")
     }
     assert PACKAGED[key] in targets, f"{PACKAGED[key]} not mapped; got {sorted(targets)}"
+
+
+def _packaged_mapping_targets(ssd_path: Path) -> set[str]:
+    binding = ET.parse(ssd_path).getroot().find(
+        f".//{SSD}ParameterBindings/{SSD}ParameterBinding"
+    )
+    assert binding is not None, "the SSP has no parameter binding"
+    mapping = binding.find(f"{SSD}ParameterMapping")
+    assert mapping is not None and mapping.get("source"), (
+        "the SSM must be an external resource, not an inline mapping"
+    )
+    ssm_path = ssd_path.parent / mapping.get("source")
+    assert ssm_path.is_file(), f"packaged SSM missing: {ssm_path}"
+    return {
+        entry.get("target")
+        for entry in ET.parse(ssm_path).getroot()
+        if entry.get("target")
+    }
+
+
+def test_two_stage_selection_binds_both_stages() -> None:
+    """The cascaded branch maps the scenario to both internal Gain stages."""
+    ssd_path = (
+        REPO_ROOT
+        / "artifacts"
+        / "models"
+        / "variation_conditional_requires"
+        / "step_two"
+        / "model"
+        / "SystemStructure.ssd"
+    )
+    if not ssd_path.is_file():
+        pytest.skip(
+            "build output missing for variation_conditional_requires/step_two; "
+            "run build_models.py"
+        )
+
+    targets = _packaged_mapping_targets(ssd_path)
+    assert {"gain.firstStage.k", "gain.secondStage.k"} <= targets
+
+
+def _load_build_module(model: str):
+    path = REPO_ROOT / "models" / "ssp" / model / "build.py"
+    spec = importlib.util.spec_from_file_location(f"fixture_{model}", path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+@pytest.mark.parametrize(
+    ("model", "pruned"),
+    [
+        ("variation_conditional_requires", "sine_two"),
+        ("variation_conditional_excludes", "sine_high"),
+    ],
+)
+def test_conditional_guard_prunes_illegal_selection(model: str, pruned: str) -> None:
+    """The build guard rejects the illegal branch and never builds it."""
+    module = _load_build_module(model)
+    module._validate_guard()
+    assert pruned in module.PRUNED
+    assert pruned not in module.SELECTIONS
+
+    choice = module.AUTHORED[pruned]
+    value = choice.get("gain", choice.get("scenario"))
+    assert module.is_legal(choice["source"], value) is False
+
+    for analysis, authored in module.AUTHORED.items():
+        legal = module.is_legal(
+            authored["source"], authored.get("gain", authored.get("scenario"))
+        )
+        assert (analysis in module.SELECTIONS) is legal
+
+    assert not (REPO_ROOT / "artifacts" / "models" / model / pruned).exists()
+    assert not (REPO_ROOT / "artifacts" / "analyses" / model / pruned).exists()
+
+    from workflow.registry import load_registry
+
+    registry = load_registry(REPO_ROOT / "artifacts" / "simulation_registry.json")
+    registered = next(entry for entry in registry.models if entry.name == model)
+    assert {case.name for case in registered.cases} == set(module.SELECTIONS)
+
+
+@pytest.mark.parametrize(
+    ("model", "symbols"),
+    [
+        (
+            "variation_conditional_requires",
+            ("constraint def SineRequiresSingleStage", "assert requiresSingleStage"),
+        ),
+        (
+            "variation_conditional_excludes",
+            ("constraint def SineExcludesHighGain", "assert excludesHighGain"),
+        ),
+    ],
+)
+def test_conditional_architecture_declares_the_constraint(
+    model: str, symbols: tuple[str, ...]
+) -> None:
+    """The authored rule and its assertion stay in the SysML source."""
+    source = (
+        REPO_ROOT / "models" / "ssp" / model / "architecture" / f"{model}.sysml"
+    ).read_text(encoding="utf-8")
+    for symbol in symbols:
+        assert symbol in source
+
+
+@pytest.mark.parametrize(
+    ("model", "analysis", "expected"),
+    [
+        (
+            "variation_conditional_requires",
+            "step_single",
+            {"source": "stepImplementation", "gain": "singleStage"},
+        ),
+        (
+            "variation_conditional_requires",
+            "step_two",
+            {"source": "stepImplementation", "gain": "twoStages"},
+        ),
+        (
+            "variation_conditional_excludes",
+            "step_high",
+            {"source": "stepImplementation", "step_high_scenario": "highGain"},
+        ),
+        (
+            "variation_conditional_excludes",
+            "sine_baseline",
+            {"source": "sineImplementation", "sine_baseline_scenario": "baseline"},
+        ),
+    ],
+)
+def test_conditional_selection_record_matches_the_built_case(
+    model: str, analysis: str, expected: dict[str, str]
+) -> None:
+    """The packaged record names the selection that produced the SSP."""
+    selection = (
+        REPO_ROOT
+        / "artifacts"
+        / "models"
+        / model
+        / analysis
+        / "model"
+        / "extra"
+        / "org.pyssp"
+        / "selection.json"
+    )
+    if not selection.is_file():
+        pytest.skip(
+            f"build output missing for {model}/{analysis}; run build_models.py"
+        )
+
+    selections = json.loads(selection.read_text())["selections"]
+    assert selections.items() >= expected.items()

@@ -1,0 +1,10 @@
+{
+  "composition": "System",
+  "selections": {
+    "sine_baseline_scenario": "baseline",
+    "sine_high_scenario": "highGain",
+    "source": "stepImplementation",
+    "step_baseline_scenario": "baseline",
+    "step_high_scenario": "highGain"
+  }
+}

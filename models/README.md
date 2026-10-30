@@ -6,7 +6,7 @@ and which backends support it.
 
 ## SSP Fixtures
 
-The 25 SSP fixtures are organized into four architectural classes per the
+The 27 SSP fixtures are organized into four architectural classes per the
 [fixture hierarchy](../docs/breakdown/02-architecture/architecture.md#2-fixture-hierarchy).
 
 ### Simple Reference Models
@@ -62,6 +62,8 @@ SSPs that test specific packaging or runtime features.
 | variation_body_gain | Variant-body path: one Gain vs Product-then-Gain driven by Sine | Not registered | Build-level | [link](./ssp/variation_body_gain/FIXTURE.md) |
 | variation_attribute_set | Attribute variation over two parameter sets (k=3 vs k=9) on a fixed Step-to-Gain topology | ssp4sim, OMSimulator | Behavioral | [link](./ssp/variation_attribute_set/FIXTURE.md) |
 | variation_nested | Nested variation: outer direct/nested path with an inner Gain stage | Not registered | Build-level | [link](./ssp/variation_nested/FIXTURE.md) |
+| variation_conditional_requires | Conditional branch over two structural points: sine source requires the single gain stage; the illegal sine/two-stage branch is pruned | ssp4sim, OMSimulator | Behavioral | [link](./ssp/variation_conditional_requires/FIXTURE.md) |
+| variation_conditional_excludes | Conditional branch across a structural and an attribute point: sine source excludes the high-gain scenario; the illegal sine/high-gain branch is pruned | ssp4sim, OMSimulator | Behavioral | [link](./ssp/variation_conditional_excludes/FIXTURE.md) |
 
 ## FMU Building Blocks
 
@@ -94,9 +96,12 @@ Per the [test strategy](../docs/breakdown/04-verification/co_simulation_test_str
 Build-level, as used for the variation fixtures, means the generated SSD element
 tree and packaged resources match the selected variant; it is asserted by
 `tests/test_variation_cases.py` and is not a simulation level. The registered
-simulation comparisons are `variation_source_swap` (both analyses) and
-`variation_attribute_set` (both analyses); `variation_body_gain` and
-`variation_nested` are build-level only.
+simulation comparisons are `variation_source_swap` (both analyses),
+`variation_attribute_set` (both analyses), `variation_conditional_requires`
+(three legal combinations), and `variation_conditional_excludes` (three legal
+combinations); `variation_body_gain` and `variation_nested` are build-level
+only. The conditional fixtures also assert their build-time legality guard: the
+authored illegal combination is never built.
 
 ## Backend Key
 

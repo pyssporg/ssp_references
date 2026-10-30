@@ -7,6 +7,8 @@ stream.
 
 | Date | ID | Decision | Layers | Status | Record |
 |---|---|---|---|---|---|
+| 2026-10-29 | DD-016 | Registry Application — Pass-Through OMSimulator Drop | implementation | accepted | `DD-016` |
+| 2026-10-29 | DD-015 | Registry Application — Pass-Through OMSimulator Drop | implementation | accepted | `DD-015` |
 | 2026-10-29 | DD-014 | Registry Lists Only Backends That Run the Case | implementation | accepted | `DD-014` |
 | 2026-10-23 | PD-007 | Fixture Suite Preserves Parameter-Application Forms | product | accepted | `PD-007` |
 | 2026-10-23 | DD-013 | Generic Engine, Build, Comparison, and Figure Code Lives in the pyssp Dependencies | implementation | accepted | `DD-013` |

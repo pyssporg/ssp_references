@@ -1,0 +1,15 @@
+{
+  "artifacts": [
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "sine_baseline",
+    "model": "variation_conditional_excludes",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.009044924983754754,
+  "status": "completed"
+}

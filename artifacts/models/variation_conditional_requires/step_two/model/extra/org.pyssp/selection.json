@@ -1,0 +1,7 @@
+{
+  "composition": "System",
+  "selections": {
+    "gain": "twoStages",
+    "source": "stepImplementation"
+  }
+}

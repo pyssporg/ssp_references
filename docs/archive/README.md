@@ -95,3 +95,7 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Engine, packaging, comparison, figure, and authoring code lives upstream; this repository keeps layout, registry, gate, and fixtures.
 - **DD-014** — Registry Lists Only Backends That Run the Case · accepted · 2026-10-29 · `DD-014`
   A case's backends name the engines that can simulate it; an engine that cannot run the case is not listed.
+- **DD-015** — Registry Application — Pass-Through OMSimulator Drop · accepted · 2026-10-29 · `DD-015`
+  Per DD-014, an engine that cannot run the case is not listed for the case.
+- **DD-016** — Registry Application — Pass-Through OMSimulator Drop · accepted · 2026-10-29 · `DD-016`
+  Per DD-014, an engine that cannot run the case is not listed for the case.

@@ -463,6 +463,73 @@
         }
       ],
       "build": "model"
+    },
+    {
+      "name": "variation_conditional_requires",
+      "compare_signals": [
+        "source.y"
+      ],
+      "cases": [
+        {
+          "name": "step_single",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step_single"
+        },
+        {
+          "name": "step_two",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step_two"
+        },
+        {
+          "name": "sine_single",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "sine_single"
+        }
+      ],
+      "build": "model"
+    },
+    {
+      "name": "variation_conditional_excludes",
+      "compare_signals": [
+        "source.y",
+        "gain.y"
+      ],
+      "cases": [
+        {
+          "name": "step_baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step_baseline"
+        },
+        {
+          "name": "step_high",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step_high"
+        },
+        {
+          "name": "sine_baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "sine_baseline"
+        }
+      ],
+      "build": "model"
     }
   ]
 }

@@ -2,10 +2,10 @@
 """Build the legal analyses of variation_conditional_requires.
 
 ``SineRequiresSingleStage`` is authored as a SysML constraint and asserted on
-``System``. Each analysis declares its selection with ``pyssp_selection``; the
-adapter resolves it and evaluates the constraint. This script builds the
-``legal`` plans and pins the documented partition: ``sine_two`` is authored to
-be ``violated`` and must never reach ``build_fixture``.
+``System``. Each analysis composes a configuration that authors its selection;
+the adapter derives the selection and evaluates the constraint. This script
+builds the ``legal`` plans and pins the documented partition: ``sine_two`` is
+authored to be ``violated`` and must never reach ``build_fixture``.
 """
 
 from __future__ import annotations
@@ -28,6 +28,7 @@ EXPECTED_VIOLATED = ("sine_two",)
 
 PLANS = analysis_plans(ARCHITECTURE)
 SELECTIONS = {plan.name: plan.selection for plan in PLANS if plan.legal}
+CONFIGURATIONS = {plan.name: plan.configuration for plan in PLANS if plan.legal}
 
 
 def _validate_partition() -> None:
@@ -51,6 +52,7 @@ if __name__ == "__main__":
         repo_root=REPO_ROOT,
         analyses=tuple(SELECTIONS),
         selections=SELECTIONS,
+        configurations=CONFIGURATIONS,
     )
     for built in builds.values():
         scenario = read_scenario(built.descriptor)

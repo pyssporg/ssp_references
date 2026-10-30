@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "configuration": "DirectSystem",
   "selections": {
     "path": "directPath"
   }

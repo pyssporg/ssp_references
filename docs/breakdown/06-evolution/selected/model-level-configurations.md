@@ -41,11 +41,11 @@ This IMP evaluates replacing it with a model-level configuration, and scopes the
 
 ## Proposed Improvement
 
-1. Add `redefines` to `PartUsage` and `Attribute`, and a feature value to `PartUsage`.
-2. Capture redefinitions, feature values, and variant-usage bodies in `parser.py`, with raw-tree fallback.
-3. Add a configuration resolver: find the analysis's `sut` type, walk redefinitions to declared variants, recurse into specialized variant usages, and return the canonical map.
-4. Reuse `resolve_selected`, constraints, and `build_fixture`; add `configuration` to `selection.json`.
-5. Migrate `variation_nested` first, then the remaining fixtures.
+1. Add `redefines` to `PartUsage` and `Attribute`, and a feature value to `PartUsage`. Done.
+2. Capture redefinitions, feature values, and variant-usage bodies in `parser.py`, with raw-tree fallback. Done.
+3. Add a configuration resolver: find the analysis's `sut` type, walk redefinitions to declared variants, recurse into specialized variant usages, and return the canonical map. Done.
+4. Reuse `resolve_selected`, constraints, and `build_fixture`; add `configuration` to `selection.json`. Done.
+5. Migrate `variation_nested` first, then the remaining fixtures. Done; all six are migrated.
 
 The benefit is a standard configuration model, structurally ordered nested selection, and provenance that names the configuration and the derived variants.
 

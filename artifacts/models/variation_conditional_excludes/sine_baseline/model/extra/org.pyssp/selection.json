@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "configuration": "SineSystem",
   "selections": {
     "sine_baseline_scenario": "baseline",
     "source": "sineImplementation"

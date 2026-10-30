@@ -129,12 +129,21 @@ package VariationConditionalExcludes {
     connect source.y to gain.u;
   }
 
+  /* Configurations: each binds the source point. The scenario point is local
+     to the analysis, which carries its own feature value. */
+  part def StepSystem :> System {
+    part :>> source = SourceChoice::stepImplementation;
+  }
+
+  part def SineSystem :> System {
+    part :>> source = SourceChoice::sineImplementation;
+  }
+
   part def step_baseline :> Analysis {
     doc /* Legal: step source with the baseline scenario. */
-    attribute pyssp_selection = "source=stepImplementation;step_baseline_scenario=baseline";
     attribute experiment : BaselineExperiment;
-    attribute step_baseline_scenario : ScenarioChoice;
-    part sut : System;
+    attribute step_baseline_scenario : ScenarioChoice = ScenarioChoice::baseline;
+    part sut : StepSystem;
 
     bind sut.source.parameters.height = step_baseline_scenario.height;
     bind sut.source.parameters.offset = step_baseline_scenario.offset;
@@ -150,10 +159,9 @@ package VariationConditionalExcludes {
 
   part def step_high :> Analysis {
     doc /* Legal: step source with the high-gain scenario. */
-    attribute pyssp_selection = "source=stepImplementation;step_high_scenario=highGain";
     attribute experiment : BaselineExperiment;
-    attribute step_high_scenario : ScenarioChoice;
-    part sut : System;
+    attribute step_high_scenario : ScenarioChoice = ScenarioChoice::highGain;
+    part sut : StepSystem;
 
     bind sut.source.parameters.height = step_high_scenario.height;
     bind sut.source.parameters.offset = step_high_scenario.offset;
@@ -169,10 +177,9 @@ package VariationConditionalExcludes {
 
   part def sine_baseline :> Analysis {
     doc /* Legal: sine source with the baseline scenario. */
-    attribute pyssp_selection = "source=sineImplementation;sine_baseline_scenario=baseline";
     attribute experiment : BaselineExperiment;
-    attribute sine_baseline_scenario : ScenarioChoice;
-    part sut : System;
+    attribute sine_baseline_scenario : ScenarioChoice = ScenarioChoice::baseline;
+    part sut : SineSystem;
 
     bind sut.source.parameters.amplitude = sine_baseline_scenario.amplitude;
     bind sut.source.parameters.f = sine_baseline_scenario.f;
@@ -189,10 +196,9 @@ package VariationConditionalExcludes {
 
   part def sine_high :> Analysis {
     doc /* Illegal: the constraint rejects sine with the high-gain scenario. */
-    attribute pyssp_selection = "source=sineImplementation;sine_high_scenario=highGain";
     attribute experiment : BaselineExperiment;
-    attribute sine_high_scenario : ScenarioChoice;
-    part sut : System;
+    attribute sine_high_scenario : ScenarioChoice = ScenarioChoice::highGain;
+    part sut : SineSystem;
 
     bind sut.source.parameters.amplitude = sine_high_scenario.amplitude;
     bind sut.source.parameters.f = sine_high_scenario.f;

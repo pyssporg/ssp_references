@@ -6,7 +6,7 @@ Authored in this repository at `architecture/variation_nested.sysml`, adapted fr
 
 ## Overview
 
-Two levels of part variation around one fixed outer composition. The outer point `PathChoice` offers `directPath` (one Gain) and `nestedPath` (an inner `StageChoice` feeding `output_gain`). The inner point `StageChoice` offers `gainStage` and `secondStage`; only `gainStage` is exercised by an analysis. The source is `Sine`. Each analysis declares its own `ScenarioSet` and binds it through the variation-resolved usages, so the build packages an external SSV plus an external SSM. Each analysis declares its selection in `pyssp_selection`, and `build.py` builds the adapter's legal plans. Parameter form: external SSV + external SSM.
+Two levels of part variation around one fixed outer composition. The outer point `PathChoice` offers `directPath` (one Gain) and `nestedPath` (an inner `StageChoice` feeding `output_gain`). The inner point `StageChoice` offers `gainStage` and `secondStage`; only `gainStage` is exercised by an analysis. The source is `Sine`. Each analysis declares its own `ScenarioSet` and binds it through the variation-resolved usages, so the build packages an external SSV plus an external SSM. The selection is authored as a configuration: `direct` composes `DirectSystem`; `nested_gain` composes `NestedGainSystem`, whose specialized nested usage binds the inner point; `build.py` builds the adapter's legal plans. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -22,9 +22,9 @@ Two levels of part variation around one fixed outer composition. The outer point
 
 ## Analyses
 
-- `direct :> Analysis` declares `pyssp_selection = "path=directPath"` and binds `sut.source.parameters.offset/startTime` plus `sut.path.gain.parameters.k`; its packaged SSM targets `path.gain.k`.
-- `nested_gain :> Analysis` declares `pyssp_selection = "path=nestedPath;path.inner_stage=gainStage"` and binds `sut.source.parameters.offset/startTime`, `sut.path.output_gain.parameters.k`, and `sut.path.inner_stage.gain.parameters.k`; its packaged SSM targets `path.inner_stage.gain.k`.
-- The adapter resolves each declared selection and returns a plan; `build.py` builds the `legal` plans.
+- `direct :> Analysis` composes `DirectSystem`, which binds `path` to `PathChoice::directPath`, and binds `sut.source.parameters.offset/startTime` plus `sut.path.gain.parameters.k`; its packaged SSM targets `path.gain.k`.
+- `nested_gain :> Analysis` composes `NestedGainSystem`, whose `nestedGainPath :> PathChoice::nestedPath` body binds `inner_stage` to `StageChoice::gainStage` (`path` binds to `nestedGainPath`), and binds `sut.source.parameters.offset/startTime`, `sut.path.output_gain.parameters.k`, and `sut.path.inner_stage.gain.parameters.k`; its packaged SSM targets `path.inner_stage.gain.k`.
+- The adapter derives the selection from each composed configuration and returns a plan; `build.py` builds the `legal` plans.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
 - Each analysis directory carries `ScenarioSet.ssv` and `<analysis>.ssm`; the build binds them into the exported SSP after `build_fixture`.
 - Artifacts: `artifacts/analyses/variation_nested/<analysis>/`; analyses are never exported as SSPs.
@@ -63,7 +63,7 @@ Two levels of part variation around one fixed outer composition. The outer point
 
 - Inline outer variant bodies that contain a variation usage are rejected when resolution starts at an Analysis (`sut.path` counts as depth two). The outer variants are therefore typed definitions (`DirectPath`, `NestedPath`), with the inner point inside `NestedPath`.
 - Only two levels of variation are supported; a third level is rejected.
-- The selection is authored per analysis and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
+- The selection is authored by each analysis's configuration and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
 - `secondStage` is defined but remains unexercised.
 
 ## Packaging Notes
@@ -72,5 +72,5 @@ Two levels of part variation around one fixed outer composition. The outer point
 - Analysis artifacts: `artifacts/analyses/variation_nested/<analysis>/`
 - Packaged scenario: `resources/ScenarioSet.ssv` with `resources/<analysis>.ssm` (external SSV + external SSM)
 - Packaged FMUs: `resources/Sine`, `resources/Gain`. The architecture still defines `Product`/`ProductFmu`, but no current variant uses it, so it is not packaged.
-- Selection record: `extra/org.pyssp/selection.json` records the analysis's authored `pyssp_selection`.
+- Selection record: `extra/org.pyssp/selection.json` records the composed configuration and its derived selection.
 - Build: `python3 scripts/build_models.py run variation_nested`

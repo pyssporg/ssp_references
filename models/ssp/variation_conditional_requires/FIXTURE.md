@@ -8,7 +8,7 @@ Authored in this repository at `architecture/variation_conditional_requires.sysm
 
 Two structural variation points, `SourceChoice` and `GainChoice`, with one legality rule between them: selecting the sine source requires the single gain stage. Four source/gain combinations exist; the rule admits three. The three legal analyses are built and registered, and the fourth (`sine_two`) is authored so the pruned branch is visible in the architecture but never reaches an SSP.
 
-The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis declares its selection in `pyssp_selection`; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
+The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis composes a configuration (`StepSingleSystem`, `StepTwoSystem`, `SineSingleSystem`, `SineTwoSystem`) that binds both points; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -22,10 +22,10 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 
 ## Analyses
 
-- `step_single :> Analysis` declares `pyssp_selection = "source=stepImplementation;gain=singleStage"`. Legal.
-- `step_two :> Analysis` declares `pyssp_selection = "source=stepImplementation;gain=twoStages"`. Legal.
-- `sine_single :> Analysis` declares `pyssp_selection = "source=sineImplementation;gain=singleStage"`. Legal.
-- `sine_two :> Analysis` declares `pyssp_selection = "source=sineImplementation;gain=twoStages"`. The adapter reports it as `violated`, so `build.py` never builds it; the test pins it as the expected violated analysis.
+- `step_single :> Analysis` composes `StepSingleSystem` (`source=SourceChoice::stepImplementation`, `gain=GainChoice::singleStage`). Legal.
+- `step_two :> Analysis` composes `StepTwoSystem` (`source=SourceChoice::stepImplementation`, `gain=GainChoice::twoStages`). Legal.
+- `sine_single :> Analysis` composes `SineSingleSystem` (`source=SourceChoice::sineImplementation`, `gain=GainChoice::singleStage`). Legal.
+- `sine_two :> Analysis` composes `SineTwoSystem` (`source=SourceChoice::sineImplementation`, `gain=GainChoice::twoStages`). The adapter reports it as `violated`, so `build.py` never builds it; the test pins it as the expected violated analysis.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
 - Each built analysis carries `ScenarioSet.ssv` and `<analysis>.ssm`; the build binds them into the exported SSP after `build_fixture`.
 - Artifacts: `artifacts/analyses/variation_conditional_requires/<analysis>/`; analyses are never exported as SSPs.
@@ -67,7 +67,7 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 
 ## Limitations
 
-- The selection is authored per analysis and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
+- The selection is authored by each analysis's configuration and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
 
 ## Packaging Notes
 
@@ -76,5 +76,5 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 - Packaged scenario: `resources/ScenarioSet.ssv` with `resources/<analysis>.ssm` (external SSV + external SSM)
 - Mapping targets: `source.height`, `source.offset`, `source.startTime`, and `gain.k` for the single-stage cases; `source.height`, `source.offset`, `source.startTime`, `gain.firstStage.k`, and `gain.secondStage.k` for `step_two`.
 - FMU sources: `models/fmu/Modelica.Blocks.Sources.Step/fmu`, `models/fmu/Modelica.Blocks.Sources.Sine/fmu`, and `models/fmu/Modelica.Blocks.Math.Gain/fmu`
-- Selection record: `extra/org.pyssp/selection.json` records the analysis's authored `pyssp_selection`.
+- Selection record: `extra/org.pyssp/selection.json` records the composed configuration and its derived selection.
 - Build: `python3 scripts/build_models.py run variation_conditional_requires`

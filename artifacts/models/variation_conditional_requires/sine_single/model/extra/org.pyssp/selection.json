@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "configuration": "SineSingleSystem",
   "selections": {
     "gain": "singleStage",
     "source": "sineImplementation"

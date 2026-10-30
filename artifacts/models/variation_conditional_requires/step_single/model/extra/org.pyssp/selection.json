@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "configuration": "StepSingleSystem",
   "selections": {
     "gain": "singleStage",
     "source": "stepImplementation"

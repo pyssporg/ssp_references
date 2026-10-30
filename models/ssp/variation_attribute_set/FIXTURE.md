@@ -6,7 +6,7 @@ Authored in this repository at `architecture/variation_attribute_set.sysml`, ada
 
 ## Overview
 
-One attribute variation point, `ScenarioChoice`, over two complete parameter sets that differ only in `k`: `NominalK3` (`k=3`) and `BoostedK9` (`k=9`). Selection changes parameter values, not topology. Each analysis declares its own attribute usage typed by `ScenarioChoice` and binds it to the fixed `step`/`gain` parameters, so the build packages an external SSV plus an external SSM; the two analyses are the only difference in the deployed topology. Each analysis declares its selection in `pyssp_selection`, and `build.py` builds the adapter's legal plans. There is no structural variation in this fixture. Parameter form: external SSV + external SSM.
+One attribute variation point, `ScenarioChoice`, over two complete parameter sets that differ only in `k`: `NominalK3` (`k=3`) and `BoostedK9` (`k=9`). Selection changes parameter values, not topology. Each analysis declares its own attribute usage typed by `ScenarioChoice` and binds it to the fixed `step`/`gain` parameters, so the build packages an external SSV plus an external SSM; the two analyses are the only difference in the deployed topology. The selection is authored on each analysis's scenario usage as a feature value (`ScenarioChoice::nominalK3` or `ScenarioChoice::boostedK9`); there is no structural configuration, and `build.py` builds the adapter's legal plans. There is no structural variation in this fixture. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -19,10 +19,10 @@ One attribute variation point, `ScenarioChoice`, over two complete parameter set
 
 ## Analyses
 
-- `nominal_k3 :> Analysis` declares `pyssp_selection = "nominal_scenario=nominalK3"`; the analysis's own scenario usage resolves through its declared selection.
-- `boosted_k9 :> Analysis` declares `pyssp_selection = "boosted_scenario=boostedK9"`; the analysis's own scenario usage resolves through its declared selection.
+- `nominal_k3 :> Analysis` declares `attribute nominal_scenario : ScenarioChoice = ScenarioChoice::nominalK3`; the analysis's own scenario usage carries its variant as a feature value.
+- `boosted_k9 :> Analysis` declares `attribute boosted_scenario : ScenarioChoice = ScenarioChoice::boostedK9`; the analysis's own scenario usage carries its variant as a feature value.
 - Binds target `sut.step.parameters.height/offset/startTime` and `sut.gain.parameters.k`; the packaged SSM targets `step.height`, `step.offset`, `step.startTime`, and `gain.k`.
-- The adapter resolves each declared selection and returns a plan; `build.py` builds the `legal` plans.
+- The adapter derives the selection from each analysis's scenario feature value and returns a plan; `build.py` builds the `legal` plans.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
 - Each analysis directory carries its own SSV/SSM (`NominalK3.ssv`/`nominal_k3.ssm` or `BoostedK9.ssv`/`boosted_k9.ssm`); the build binds them into the exported SSP after `build_fixture`.
 - The exported SSD is identical across the two analyses apart from the binding: the packaged SSV selects `k=3.0` vs `k=9.0`.
@@ -58,7 +58,7 @@ One attribute variation point, `ScenarioChoice`, over two complete parameter set
 
 ## Limitations
 
-- The selection is authored per analysis and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
+- The selection is authored as a feature value on each analysis's scenario usage and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
 
 ## Packaging Notes
 
@@ -66,5 +66,5 @@ One attribute variation point, `ScenarioChoice`, over two complete parameter set
 - Analysis artifacts: `artifacts/analyses/variation_attribute_set/<analysis>/`
 - Packaged FMUs: `resources/Step`, `resources/Gain`
 - Packaged parameter sets: `resources/NominalK3.ssv` or `resources/BoostedK9.ssv`, with `resources/<analysis>.ssm` (external SSV + external SSM)
-- Selection record: `extra/org.pyssp/selection.json` records the analysis's authored `pyssp_selection`.
+- Selection record: `extra/org.pyssp/selection.json` records the derived selection; there is no configuration name because each analysis composes `System` directly.
 - Build: `python3 scripts/build_models.py run variation_attribute_set`

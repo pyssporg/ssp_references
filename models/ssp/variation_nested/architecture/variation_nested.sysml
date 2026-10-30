@@ -150,12 +150,24 @@ package VariationNested {
 
   }
 
+  /* Configurations: the outer binding selects the path variant; the nested
+     binding exists only inside the specialized nested usage. */
+  part def DirectSystem :> System {
+    part :>> path = PathChoice::directPath;
+  }
+
+  part def NestedGainSystem :> System {
+    part nestedGainPath :> PathChoice::nestedPath {
+      part :>> inner_stage = StageChoice::gainStage;
+    }
+    part :>> path = nestedGainPath;
+  }
+
   part def direct :> Analysis {
     doc /* Outer variation selecting the single-gain path. */
-    attribute pyssp_selection = "path=directPath";
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : DirectSystem;
 
     bind sut.source.parameters.offset = scenario.offset;
     bind sut.source.parameters.startTime = scenario.startTime;
@@ -164,10 +176,9 @@ package VariationNested {
 
   part def nested_gain :> Analysis {
     doc /* Nested path with a Gain stage. */
-    attribute pyssp_selection = "path=nestedPath;path.inner_stage=gainStage";
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : NestedGainSystem;
 
     bind sut.source.parameters.offset = scenario.offset;
     bind sut.source.parameters.startTime = scenario.startTime;

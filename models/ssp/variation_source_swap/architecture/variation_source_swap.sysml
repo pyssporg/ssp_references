@@ -88,12 +88,20 @@ package VariationSourceSwap {
 
   }
 
+  /* Configurations: each binds the source point to one variant. */
+  part def StepSystem :> System {
+    part :>> source = SourceChoice::step;
+  }
+
+  part def SineSystem :> System {
+    part :>> source = SourceChoice::sine;
+  }
+
   part def step :> Analysis {
     doc /* Source variation selecting the Step FMU. */
-    attribute pyssp_selection = "source=step";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : StepSystem;
 
     bind sut.source.parameters.height = scenario.height;
     bind sut.source.parameters.offset = scenario.offset;
@@ -102,10 +110,9 @@ package VariationSourceSwap {
 
   part def sine :> Analysis {
     doc /* Source variation selecting the Sine FMU. */
-    attribute pyssp_selection = "source=sine";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : SineSystem;
 
     bind sut.source.parameters.amplitude = scenario.amplitude;
     bind sut.source.parameters.f = scenario.f;

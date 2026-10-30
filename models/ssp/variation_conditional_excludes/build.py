@@ -3,10 +3,11 @@
 
 ``SineExcludesHighGain`` is authored as a SysML constraint and asserted in every
 analysis because the scenario point lives on the analysis, not on ``System``.
-Each analysis declares its selection with ``pyssp_selection``; the adapter
-resolves it and evaluates the constraint. This script builds the ``legal``
-plans and pins the documented partition: ``sine_high`` is authored to be
-``violated`` and must never reach ``build_fixture``.
+Each analysis composes a configuration that binds the source point and carries
+its own scenario feature value; the adapter derives the selection and evaluates
+the constraint. This script builds the ``legal`` plans and pins the documented
+partition: ``sine_high`` is authored to be ``violated`` and must never reach
+``build_fixture``.
 """
 
 from __future__ import annotations
@@ -29,6 +30,7 @@ EXPECTED_VIOLATED = ("sine_high",)
 
 PLANS = analysis_plans(ARCHITECTURE)
 SELECTIONS = {plan.name: plan.selection for plan in PLANS if plan.legal}
+CONFIGURATIONS = {plan.name: plan.configuration for plan in PLANS if plan.legal}
 
 
 def _validate_partition() -> None:
@@ -52,6 +54,7 @@ if __name__ == "__main__":
         repo_root=REPO_ROOT,
         analyses=tuple(SELECTIONS),
         selections=SELECTIONS,
+        configurations=CONFIGURATIONS,
     )
     for built in builds.values():
         scenario = read_scenario(built.descriptor)

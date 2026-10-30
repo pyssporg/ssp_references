@@ -6,7 +6,7 @@ Authored in this repository at `architecture/variation_source_swap.sysml`, adapt
 
 ## Overview
 
-One definition-level variation point, `SourceChoice`, offers two source FMUs as variant parts. `System.source : SourceChoice` is the only part, and `System` has no root output port. Each analysis declares its own `ScenarioSet` and binds it through the variation-resolved usage `sut.source.parameters.*`, so the build packages an external SSV plus an external SSM. The same composition therefore produces one SSP per selection: the component name `source` and the connector layout stay fixed, while the packaged FMU, the packaged scenario, and `extra/org.pyssp/selection.json` change. Each analysis declares its selection in `pyssp_selection`, and `build.py` builds the adapter's legal plans. Parameter form: external SSV + external SSM.
+One definition-level variation point, `SourceChoice`, offers two source FMUs as variant parts. `System.source : SourceChoice` is the only part, and `System` has no root output port. Each analysis declares its own `ScenarioSet` and binds it through the variation-resolved usage `sut.source.parameters.*`, so the build packages an external SSV plus an external SSM. The same composition therefore produces one SSP per selection: the component name `source` and the connector layout stay fixed, while the packaged FMU, the packaged scenario, and `extra/org.pyssp/selection.json` change. The selection is authored as a configuration: `step` composes `StepSystem` and `sine` composes `SineSystem`, and `build.py` builds the adapter's legal plans. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -20,9 +20,9 @@ One definition-level variation point, `SourceChoice`, offers two source FMUs as 
 
 ## Analyses
 
-- `step :> Analysis` declares `pyssp_selection = "source=step"` and binds `sut.source.parameters.height/offset/startTime`; its packaged SSM targets `source.height`.
-- `sine :> Analysis` declares `pyssp_selection = "source=sine"` and binds `sut.source.parameters.amplitude/f/offset/startTime`; its packaged SSM targets `source.amplitude`.
-- The adapter resolves each declared selection and returns a plan; `build.py` builds the `legal` plans.
+- `step :> Analysis` composes `StepSystem`, which binds `source` to `SourceChoice::step`, and binds `sut.source.parameters.height/offset/startTime`; its packaged SSM targets `source.height`.
+- `sine :> Analysis` composes `SineSystem`, which binds `source` to `SourceChoice::sine`, and binds `sut.source.parameters.amplitude/f/offset/startTime`; its packaged SSM targets `source.amplitude`.
+- The adapter derives the selection from each composed configuration and returns a plan; `build.py` builds the `legal` plans.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
 - Each analysis directory carries `ScenarioSet.ssv` and `<analysis>.ssm`; the build binds them into the exported SSP after `build_fixture`.
 - Artifacts: `artifacts/analyses/variation_source_swap/<analysis>/`; analyses are never exported as SSPs.
@@ -58,7 +58,7 @@ One definition-level variation point, `SourceChoice`, offers two source FMUs as 
 
 ## Limitations
 
-- The selection is authored per analysis and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
+- The selection is authored by each analysis's configuration and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
 
 ## Packaging Notes
 
@@ -66,5 +66,5 @@ One definition-level variation point, `SourceChoice`, offers two source FMUs as 
 - Analysis artifacts: `artifacts/analyses/variation_source_swap/<analysis>/`
 - Packaged scenario: `resources/ScenarioSet.ssv` with `resources/<analysis>.ssm` (external SSV + external SSM)
 - FMU sources: `models/fmu/Modelica.Blocks.Sources.Step/fmu`, `models/fmu/Modelica.Blocks.Sources.Sine/fmu`
-- Selection record: `extra/org.pyssp/selection.json` records the analysis's authored `pyssp_selection`.
+- Selection record: `extra/org.pyssp/selection.json` records the composed configuration and its derived selection.
 - Build: `python3 scripts/build_models.py run variation_source_swap`

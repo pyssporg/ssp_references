@@ -139,12 +139,33 @@ package VariationConditionalRequires {
     assert requiresSingleStage;
   }
 
+  /* Configurations: each binds both structural points; the constraint is
+     inherited from System and evaluated at the composed path. */
+  part def StepSingleSystem :> System {
+    part :>> source = SourceChoice::stepImplementation;
+    part :>> gain = GainChoice::singleStage;
+  }
+
+  part def StepTwoSystem :> System {
+    part :>> source = SourceChoice::stepImplementation;
+    part :>> gain = GainChoice::twoStages;
+  }
+
+  part def SineSingleSystem :> System {
+    part :>> source = SourceChoice::sineImplementation;
+    part :>> gain = GainChoice::singleStage;
+  }
+
+  part def SineTwoSystem :> System {
+    part :>> source = SourceChoice::sineImplementation;
+    part :>> gain = GainChoice::twoStages;
+  }
+
   part def step_single :> Analysis {
     doc /* Legal: step source with a single gain stage. */
-    attribute pyssp_selection = "source=stepImplementation;gain=singleStage";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : StepSingleSystem;
 
     bind sut.source.parameters.height = scenario.height;
     bind sut.source.parameters.offset = scenario.offset;
@@ -154,10 +175,9 @@ package VariationConditionalRequires {
 
   part def step_two :> Analysis {
     doc /* Legal: step source with two gain stages. */
-    attribute pyssp_selection = "source=stepImplementation;gain=twoStages";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : StepTwoSystem;
 
     bind sut.source.parameters.height = scenario.height;
     bind sut.source.parameters.offset = scenario.offset;
@@ -168,10 +188,9 @@ package VariationConditionalRequires {
 
   part def sine_single :> Analysis {
     doc /* Legal: the sine source requires the single gain stage. */
-    attribute pyssp_selection = "source=sineImplementation;gain=singleStage";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : SineSingleSystem;
 
     bind sut.source.parameters.amplitude = scenario.amplitude;
     bind sut.source.parameters.f = scenario.f;
@@ -182,10 +201,9 @@ package VariationConditionalRequires {
 
   part def sine_two :> Analysis {
     doc /* Illegal: the constraint rejects sine with two gain stages. */
-    attribute pyssp_selection = "source=sineImplementation;gain=twoStages";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : SineTwoSystem;
 
     bind sut.source.parameters.amplitude = scenario.amplitude;
     bind sut.source.parameters.f = scenario.f;

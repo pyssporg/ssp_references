@@ -9,6 +9,8 @@ status: current
 
 # Authored variation selection and condition ownership
 
+IMP-106 supersedes this improvement: model-level configurations replace the `pyssp_selection` attribute.
+
 A variation fixture currently restates its combination table in `build.py` and translates it into two key scopes.
 The analysis already names the combination; the selection is the only part outside the architecture.
 The adapter also owns the legality condition, but each build re-implemented the predicate.

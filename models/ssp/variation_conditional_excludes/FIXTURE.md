@@ -8,7 +8,7 @@ Authored in this repository at `architecture/variation_conditional_excludes.sysm
 
 One structural point, `SourceChoice`, and one attribute point, `ScenarioChoice`, with an exclusion between them: the sine source excludes the high-gain scenario. Four source/scenario combinations exist; the rule admits three. The three legal analyses are built and registered, and the fourth (`sine_high`) is authored so the pruned branch is visible in the architecture but never reaches an SSP.
 
-The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis declares its selection in `pyssp_selection`; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
+The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis composes `StepSystem` or `SineSystem`, which binds the source point, and carries its own scenario feature value; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -22,10 +22,10 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 
 ## Analyses
 
-- `step_baseline :> Analysis` declares `pyssp_selection = "source=stepImplementation;step_baseline_scenario=baseline"`. Legal.
-- `step_high :> Analysis` declares `pyssp_selection = "source=stepImplementation;step_high_scenario=highGain"`. Legal.
-- `sine_baseline :> Analysis` declares `pyssp_selection = "source=sineImplementation;sine_baseline_scenario=baseline"`. Legal.
-- `sine_high :> Analysis` declares `pyssp_selection = "source=sineImplementation;sine_high_scenario=highGain"`. The adapter reports it as `violated`, so `build.py` never builds it; the test pins it as the expected violated analysis.
+- `step_baseline :> Analysis` composes `StepSystem` (`source=SourceChoice::stepImplementation`) and sets `step_baseline_scenario = ScenarioChoice::baseline`. Legal.
+- `step_high :> Analysis` composes `StepSystem` (`source=SourceChoice::stepImplementation`) and sets `step_high_scenario = ScenarioChoice::highGain`. Legal.
+- `sine_baseline :> Analysis` composes `SineSystem` (`source=SourceChoice::sineImplementation`) and sets `sine_baseline_scenario = ScenarioChoice::baseline`. Legal.
+- `sine_high :> Analysis` composes `SineSystem` (`source=SourceChoice::sineImplementation`) and sets `sine_high_scenario = ScenarioChoice::highGain`. The adapter reports it as `violated`, so `build.py` never builds it; the test pins it as the expected violated analysis.
 - Each analysis declares its own scenario attribute (`step_baseline_scenario`, `step_high_scenario`, `sine_baseline_scenario`, `sine_high_scenario`) because the adapter addresses attribute usages by name.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
 - Each built analysis carries `BaselineScenario.ssv` or `HighGainScenario.ssv` plus `<analysis>.ssm`; the build binds them into the exported SSP after `build_fixture`.
@@ -68,7 +68,7 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 
 ## Limitations
 
-- The selection is authored per analysis and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
+- The selection is authored by each analysis's configuration and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
 
 ## Packaging Notes
 
@@ -77,5 +77,5 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 - Packaged scenario: `resources/BaselineScenario.ssv` or `resources/HighGainScenario.ssv` with `resources/<analysis>.ssm` (external SSV + external SSM)
 - Mapping targets: `source.height`, `source.offset`, `source.startTime`, and `gain.k` for the step cases; `source.amplitude`, `source.f`, `source.offset`, `source.startTime`, and `gain.k` for the sine case.
 - FMU sources: `models/fmu/Modelica.Blocks.Sources.Step/fmu`, `models/fmu/Modelica.Blocks.Sources.Sine/fmu`, and `models/fmu/Modelica.Blocks.Math.Gain/fmu`
-- Selection record: `extra/org.pyssp/selection.json` records the analysis's authored `pyssp_selection`.
+- Selection record: `extra/org.pyssp/selection.json` records the composed configuration and its derived selection.
 - Build: `python3 scripts/build_models.py run variation_conditional_excludes`

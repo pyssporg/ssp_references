@@ -23,18 +23,15 @@ from pyssp_workflow.authoring import derive_ssd_from_sysml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SSD = "{http://ssp-standard.org/SSP1/SystemStructureDescription}"
 
-# model, analysis, selection (model-rooted), root components, subsystems,
-# nested components per subsystem, packaged FMU for the varied part.
-# The packaged SSP resolves the analysis selection; both attribute usages are
-# passed so the case also covers a multi-key analysis map.
-ATTRIBUTE_SELECTION = {
-    "nominal_scenario": "nominalK3",
-    "boosted_scenario": "boostedK9",
-}
-
+# model, analysis, selection (model-rooted), the composed configuration, root
+# components, subsystems, nested components per subsystem, packaged FMU for the
+# varied part.
+# The packaged SSP resolves the analysis selection; the direct-generation cases
+# pass the same derived selection map against ``System``.
 CASES: dict[tuple[str, str], dict] = {
     ("variation_source_swap", "step"): {
         "select": {"source": "step"},
+        "configuration": "StepSystem",
         "components": ["source"],
         "subsystems": [],
         "nested": {},
@@ -42,6 +39,7 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_source_swap", "sine"): {
         "select": {"source": "sine"},
+        "configuration": "SineSystem",
         "components": ["source"],
         "subsystems": [],
         "nested": {},
@@ -49,6 +47,7 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_body_gain", "one_stage"): {
         "select": {"path": "oneStage"},
+        "configuration": "OneStageSystem",
         "components": ["source"],
         "subsystems": ["path"],
         "nested": {"path": ["gain"]},
@@ -56,20 +55,23 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_body_gain", "two_stages"): {
         "select": {"path": "twoStages"},
+        "configuration": "TwoStagesSystem",
         "components": ["source"],
         "subsystems": ["path"],
         "nested": {"path": ["gain", "product"]},
         "fmu": "resources/Product.fmu",
     },
     ("variation_attribute_set", "nominal_k3"): {
-        "select": ATTRIBUTE_SELECTION,
+        "select": {"nominal_scenario": "nominalK3"},
+        "configuration": None,
         "components": ["gain", "step"],
         "subsystems": [],
         "nested": {},
         "fmu": "resources/Gain.fmu",
     },
     ("variation_attribute_set", "boosted_k9"): {
-        "select": ATTRIBUTE_SELECTION,
+        "select": {"boosted_scenario": "boostedK9"},
+        "configuration": None,
         "components": ["gain", "step"],
         "subsystems": [],
         "nested": {},
@@ -77,6 +79,7 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_nested", "direct"): {
         "select": {"path": "directPath"},
+        "configuration": "DirectSystem",
         "components": ["source"],
         "subsystems": ["path"],
         "nested": {"path": ["gain"]},
@@ -84,6 +87,7 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_nested", "nested_gain"): {
         "select": {"path": "nestedPath", "path.inner_stage": "gainStage"},
+        "configuration": "NestedGainSystem",
         "components": ["source"],
         "subsystems": ["path"],
         "nested": {"path": ["output_gain"], "path.inner_stage": ["gain"]},
@@ -91,6 +95,7 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_conditional_requires", "step_single"): {
         "select": {"source": "stepImplementation", "gain": "singleStage"},
+        "configuration": "StepSingleSystem",
         "components": ["gain", "source"],
         "subsystems": [],
         "nested": {},
@@ -98,6 +103,7 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_conditional_requires", "step_two"): {
         "select": {"source": "stepImplementation", "gain": "twoStages"},
+        "configuration": "StepTwoSystem",
         "components": ["source"],
         "subsystems": ["gain"],
         "nested": {"gain": ["firstStage", "secondStage"]},
@@ -105,6 +111,7 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_conditional_requires", "sine_single"): {
         "select": {"source": "sineImplementation", "gain": "singleStage"},
+        "configuration": "SineSingleSystem",
         "components": ["gain", "source"],
         "subsystems": [],
         "nested": {},
@@ -112,6 +119,11 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_conditional_excludes", "step_baseline"): {
         "select": {"source": "stepImplementation"},
+        "analysis_select": {
+            "source": "stepImplementation",
+            "step_baseline_scenario": "baseline",
+        },
+        "configuration": "StepSystem",
         "components": ["gain", "source"],
         "subsystems": [],
         "nested": {},
@@ -119,6 +131,11 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_conditional_excludes", "step_high"): {
         "select": {"source": "stepImplementation"},
+        "analysis_select": {
+            "source": "stepImplementation",
+            "step_high_scenario": "highGain",
+        },
+        "configuration": "StepSystem",
         "components": ["gain", "source"],
         "subsystems": [],
         "nested": {},
@@ -126,6 +143,11 @@ CASES: dict[tuple[str, str], dict] = {
     },
     ("variation_conditional_excludes", "sine_baseline"): {
         "select": {"source": "sineImplementation"},
+        "analysis_select": {
+            "source": "sineImplementation",
+            "sine_baseline_scenario": "baseline",
+        },
+        "configuration": "SineSystem",
         "components": ["gain", "source"],
         "subsystems": [],
         "nested": {},
@@ -186,6 +208,22 @@ def test_selection_produces_its_element_tree(tmp_path: Path, key: tuple[str, str
         assert _nested_component_names(_nested(system, dotted)) == expected
 
 
+@pytest.mark.parametrize("key", sorted(CASES))
+def test_case_names_the_analysis_configuration(key: tuple[str, str]) -> None:
+    """Each case's selection and configuration match the adapter's plan."""
+    from pyssp_sysml2.model import load
+    from pyssp_sysml2.parameters.selection import analysis_plans
+
+    model, analysis = key
+    architecture = load(REPO_ROOT / "models" / "ssp" / model / "architecture")
+    plans = {plan.name: plan for plan in analysis_plans(architecture)}
+    assert plans[analysis].status in {"legal", "violated"}, plans[analysis].detail
+    assert plans[analysis].configuration == CASES[key]["configuration"]
+    assert dict(plans[analysis].selection) == CASES[key].get(
+        "analysis_select", CASES[key]["select"]
+    )
+
+
 def test_attribute_variation_keeps_the_structure_and_changes_the_values() -> None:
     """Parameter variation changes the packaged values, never the element tree."""
     base = REPO_ROOT / "artifacts" / "models" / "variation_attribute_set"
@@ -217,9 +255,12 @@ def test_attribute_variation_keeps_the_structure_and_changes_the_values() -> Non
         assert float(values["k"]) == expected, values
 
 
-@pytest.mark.parametrize("analysis", ["step", "sine"])
-def test_built_ssp_records_the_selection(analysis: str) -> None:
-    """The packaged SSP carries the selection identity that produced it."""
+@pytest.mark.parametrize(
+    ("analysis", "configuration"),
+    [("step", "StepSystem"), ("sine", "SineSystem")],
+)
+def test_built_ssp_records_the_selection(analysis: str, configuration: str) -> None:
+    """The packaged SSP carries the configuration and its derived selection."""
     selection = (
         REPO_ROOT
         / "artifacts"
@@ -233,7 +274,9 @@ def test_built_ssp_records_the_selection(analysis: str) -> None:
     )
     if not selection.is_file():
         pytest.skip(f"build output missing for {analysis}; run build_models.py")
-    assert json.loads(selection.read_text())["selections"] == {"source": analysis}
+    record = json.loads(selection.read_text())
+    assert record["configuration"] == configuration
+    assert record["selections"] == {"source": analysis}
 
 
 # (model, analysis) -> the mapping target that only exists after the selection is
@@ -375,29 +418,41 @@ def test_conditional_plan_prunes_the_violated_selection(
 
 
 @pytest.mark.parametrize(
-    "model",
+    ("model", "violated"),
     [
-        "variation_source_swap",
-        "variation_body_gain",
-        "variation_attribute_set",
-        "variation_nested",
-        "variation_conditional_requires",
-        "variation_conditional_excludes",
+        ("variation_source_swap", set()),
+        ("variation_body_gain", set()),
+        ("variation_attribute_set", set()),
+        ("variation_nested", set()),
+        ("variation_conditional_requires", {"sine_two"}),
+        ("variation_conditional_excludes", {"sine_high"}),
     ],
 )
-def test_every_analysis_declares_its_selection(model: str) -> None:
-    """The architecture, not build.py, is the source of each selection."""
+def test_every_analysis_is_legal_or_documented_violated(
+    model: str, violated: set[str]
+) -> None:
+    """No analysis is invalid, and a configuration names the type it specializes."""
+    from pyssp_sysml2.metadata.roles import model_usage
     from pyssp_sysml2.model import load
-    from pyssp_sysml2.parameters.selection import (
-        analysis_part_definitions,
-        analysis_selection,
-    )
+    from pyssp_sysml2.parameters.selection import analysis_plans
 
     architecture = load(REPO_ROOT / "models" / "ssp" / model / "architecture")
-    analyses = analysis_part_definitions(architecture)
-    assert analyses, "the architecture declares no analysis"
-    for analysis in analyses:
-        assert analysis_selection(architecture, analysis), analysis.name
+    plans = analysis_plans(architecture)
+    assert plans, "the architecture declares no analysis"
+    for plan in plans:
+        assert plan.status != "invalid", plan.detail
+        assert (plan.status == "violated") == (plan.name in violated), plan
+        assert plan.selection, plan.name
+
+        analysis = architecture.get_part_def(plan.name)
+        _, composed = model_usage(architecture, analysis)
+        if plan.configuration is None:
+            assert composed.name == "System", plan.name
+        else:
+            assert composed.name == plan.configuration, plan.name
+            assert any(
+                name.split("::")[-1] == "System" for name in composed.specializes
+            ), plan.name
 
 
 @pytest.mark.parametrize(
@@ -425,34 +480,38 @@ def test_conditional_architecture_declares_the_constraint(
 
 
 @pytest.mark.parametrize(
-    ("model", "analysis", "expected"),
+    ("model", "analysis", "configuration", "expected"),
     [
         (
             "variation_conditional_requires",
             "step_single",
+            "StepSingleSystem",
             {"source": "stepImplementation", "gain": "singleStage"},
         ),
         (
             "variation_conditional_requires",
             "step_two",
+            "StepTwoSystem",
             {"source": "stepImplementation", "gain": "twoStages"},
         ),
         (
             "variation_conditional_excludes",
             "step_high",
+            "StepSystem",
             {"source": "stepImplementation", "step_high_scenario": "highGain"},
         ),
         (
             "variation_conditional_excludes",
             "sine_baseline",
+            "SineSystem",
             {"source": "sineImplementation", "sine_baseline_scenario": "baseline"},
         ),
     ],
 )
 def test_conditional_selection_record_matches_the_built_case(
-    model: str, analysis: str, expected: dict[str, str]
+    model: str, analysis: str, configuration: str, expected: dict[str, str]
 ) -> None:
-    """The packaged record names exactly the authored selection."""
+    """The packaged record names exactly the configuration and its selection."""
     selection = (
         REPO_ROOT
         / "artifacts"
@@ -469,5 +528,6 @@ def test_conditional_selection_record_matches_the_built_case(
             f"build output missing for {model}/{analysis}; run build_models.py"
         )
 
-    selections = json.loads(selection.read_text())["selections"]
-    assert selections == expected
+    record = json.loads(selection.read_text())
+    assert record["configuration"] == configuration
+    assert record["selections"] == expected

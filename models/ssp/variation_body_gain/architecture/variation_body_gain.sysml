@@ -112,12 +112,20 @@ package VariationBodyGain {
 
   }
 
+  /* Configurations: each binds the path point to one variant body. */
+  part def OneStageSystem :> System {
+    part :>> path = PathChoice::oneStage;
+  }
+
+  part def TwoStagesSystem :> System {
+    part :>> path = PathChoice::twoStages;
+  }
+
   part def one_stage :> Analysis {
     doc /* Body variation selecting the single-gain path. */
-    attribute pyssp_selection = "path=oneStage";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : OneStageSystem;
 
     bind sut.source.parameters.amplitude = scenario.amplitude;
     bind sut.source.parameters.f = scenario.f;
@@ -128,10 +136,9 @@ package VariationBodyGain {
 
   part def two_stages :> Analysis {
     doc /* Body variation selecting the product-then-gain path. */
-    attribute pyssp_selection = "path=twoStages";
     attribute experiment : BaselineExperiment;
     attribute scenario : ScenarioSet;
-    part sut : System;
+    part sut : TwoStagesSystem;
 
     bind sut.source.parameters.amplitude = scenario.amplitude;
     bind sut.source.parameters.f = scenario.f;

@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "configuration": "StepTwoSystem",
   "selections": {
     "gain": "twoStages",
     "source": "stepImplementation"

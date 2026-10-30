@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build every legal analysis of variation_nested.
 
-Each analysis declares its variation selection with ``pyssp_selection``. This
-script asks the adapter for a plan per analysis, builds the legal ones, and
-packages each analysis's scenario.
+Each analysis composes a model-level configuration that authors its variation
+selection. This script asks the adapter for a plan per analysis, builds the legal
+ones, and packages each analysis's scenario.
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ ARCHITECTURE = load(Path(__file__).resolve().parent / "architecture")
 
 PLANS = analysis_plans(ARCHITECTURE)
 SELECTIONS = {plan.name: plan.selection for plan in PLANS if plan.legal}
+CONFIGURATIONS = {plan.name: plan.configuration for plan in PLANS if plan.legal}
 
 
 def _validate_plans() -> None:
@@ -38,6 +39,7 @@ if __name__ == "__main__":
         repo_root=REPO_ROOT,
         analyses=tuple(SELECTIONS),
         selections=SELECTIONS,
+        configurations=CONFIGURATIONS,
     )
     for built in builds.values():
         scenario = read_scenario(built.descriptor)

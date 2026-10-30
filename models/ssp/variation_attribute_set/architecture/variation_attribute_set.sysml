@@ -91,9 +91,8 @@ package VariationAttributeSet {
 
   part def nominal_k3 :> Analysis {
     doc /* Attribute variation selecting the k=3.0 parameter set. */
-    attribute pyssp_selection = "nominal_scenario=nominalK3";
     attribute experiment_baseline : BaselineExperiment;
-    attribute nominal_scenario : ScenarioChoice;
+    attribute nominal_scenario : ScenarioChoice = ScenarioChoice::nominalK3;
     part sut : System;
 
     bind sut.step.parameters.height = nominal_scenario.height;
@@ -104,9 +103,8 @@ package VariationAttributeSet {
 
   part def boosted_k9 :> Analysis {
     doc /* Attribute variation selecting the k=9.0 parameter set. */
-    attribute pyssp_selection = "boosted_scenario=boostedK9";
     attribute experiment_baseline : BaselineExperiment;
-    attribute boosted_scenario : ScenarioChoice;
+    attribute boosted_scenario : ScenarioChoice = ScenarioChoice::boostedK9;
     part sut : System;
 
     bind sut.step.parameters.height = boosted_scenario.height;

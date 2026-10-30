@@ -1,5 +1,6 @@
 {
   "composition": "System",
+  "configuration": "SineSystem",
   "selections": {
     "source": "sine"
   }

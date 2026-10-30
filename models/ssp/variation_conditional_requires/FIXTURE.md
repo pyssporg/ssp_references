@@ -8,7 +8,7 @@ Authored in this repository at `architecture/variation_conditional_requires.sysm
 
 Two structural variation points, `SourceChoice` and `GainChoice`, with one legality rule between them: selecting the sine source requires the single gain stage. Four source/gain combinations exist; the rule admits three. The three legal analyses are built and registered, and the fourth (`sine_two`) is authored so the pruned branch is visible in the architecture but never reaches an SSP.
 
-The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. `build.py` asks the adapter for each combination and prunes the illegal ones; the CLI would also reject an illegal `--select`. Parameter form: external SSV + external SSM.
+The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis declares its selection in `pyssp_selection`; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -22,11 +22,10 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 
 ## Analyses
 
-- `step_single :> Analysis` — step source, single stage. Legal.
-- `step_two :> Analysis` — step source, two stages. Legal.
-- `sine_single :> Analysis` — sine source, single stage. Legal.
-- `sine_two :> Analysis` — sine source, two stages. Authored but **pruned**: `build.py` puts it in `PRUNED` and `build_fixture` never receives it.
-- Selection maps are generated from one authored table: `SELECTIONS` holds the legal subset and `PRUNED` the rejected subset, so the guard cannot silently drift from the architecture description.
+- `step_single :> Analysis` declares `pyssp_selection = "source=stepImplementation;gain=singleStage"`. Legal.
+- `step_two :> Analysis` declares `pyssp_selection = "source=stepImplementation;gain=twoStages"`. Legal.
+- `sine_single :> Analysis` declares `pyssp_selection = "source=sineImplementation;gain=singleStage"`. Legal.
+- `sine_two :> Analysis` declares `pyssp_selection = "source=sineImplementation;gain=twoStages"`. The adapter reports it as `violated`, so `build.py` never builds it; the test pins it as the expected violated analysis.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
 - Each built analysis carries `ScenarioSet.ssv` and `<analysis>.ssm`; the build binds them into the exported SSP after `build_fixture`.
 - Artifacts: `artifacts/analyses/variation_conditional_requires/<analysis>/`; analyses are never exported as SSPs.
@@ -35,7 +34,7 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 ## Strategy Role
 
 - Isolates a condition between two structural variation points: the source choice narrows the legal gain choices.
-- Build-level contract test: `tests/test_variation_cases.py` asserts the per-selection element tree, the packaged external SSV+SSM, the mapping targets, and that the guard rejects `sine_two`.
+- Build-level contract test: `tests/test_variation_cases.py` asserts the per-selection element tree, the packaged external SSV+SSM, the mapping targets, and that the adapter reports `sine_two` as `violated`.
 - Catches a constraint bypass (the illegal branch building), a rule that is only documented and never enforced, a source selection that silently changes the gain topology, and a two-stage gain that loses a stage parameter binding.
 - Both legal structural shapes are registered in the cross-engine comparison gate.
 
@@ -57,7 +56,7 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 - `step_single`: `source.y = 1 + 2*[t >= 0.25]`; `gain.y = 3 * source.y`.
 - `step_two`: `source.y` is the same; `firstStage.y = 3 * source.y`, `secondStage.y = 9 * source.y`.
 - `sine_single`: `source.y = 1 + 2*sin(2*pi*(t-0.25))` for `t >= 0.25` and `1` before it; `gain.y = 3 * source.y`.
-- `sine_two` is not built. Its algebraic behavior would be `9 * source.y`, but the build guard rejects the selection before generation.
+- `sine_two` is not built. Its algebraic behavior would be `9 * source.y`, but the adapter reports the selection as `violated` and it never reaches generation.
 
 ## Simulation Notes
 
@@ -68,7 +67,7 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 
 ## Limitations
 
-- The rule is adapter-enforced: `build.py` calls `evaluate` for every authored combination. Only one rule is modelled here. A constraint that admits no legal combination would make `SELECTIONS` empty; the build script would then build nothing, and the test should be extended before adding such a rule.
+- The selection is authored per analysis and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
 
 ## Packaging Notes
 
@@ -77,4 +76,5 @@ The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and eval
 - Packaged scenario: `resources/ScenarioSet.ssv` with `resources/<analysis>.ssm` (external SSV + external SSM)
 - Mapping targets: `source.height`, `source.offset`, `source.startTime`, and `gain.k` for the single-stage cases; `source.height`, `source.offset`, `source.startTime`, `gain.firstStage.k`, and `gain.secondStage.k` for `step_two`.
 - FMU sources: `models/fmu/Modelica.Blocks.Sources.Step/fmu`, `models/fmu/Modelica.Blocks.Sources.Sine/fmu`, and `models/fmu/Modelica.Blocks.Math.Gain/fmu`
+- Selection record: `extra/org.pyssp/selection.json` records the analysis's authored `pyssp_selection`.
 - Build: `python3 scripts/build_models.py run variation_conditional_requires`

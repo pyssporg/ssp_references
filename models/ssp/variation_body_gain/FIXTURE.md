@@ -6,7 +6,7 @@ Authored in this repository at `architecture/variation_body_gain.sysml`, adapted
 
 ## Overview
 
-One definition-level variation point, `PathChoice`, whose variants are bodies rather than types. `PathChoice` declares boundary ports `u` and `y`; the `oneStage` body holds one Gain, and the `twoStages` body holds a Product feeding a Gain. `System` is `source : Sine` plus `path : PathChoice`, with `source.y -> path.u`. Each analysis selects one body and declares its own `ScenarioSet`, binding it through the variation-resolved usages `sut.source.parameters.*` and `sut.path.gain.parameters.k`, so the build packages an external SSV plus an external SSM that targets `path.gain.k`. Parameter form: external SSV + external SSM.
+One definition-level variation point, `PathChoice`, whose variants are bodies rather than types. `PathChoice` declares boundary ports `u` and `y`; the `oneStage` body holds one Gain, and the `twoStages` body holds a Product feeding a Gain. `System` is `source : Sine` plus `path : PathChoice`, with `source.y -> path.u`. Each analysis selects one body and declares its own `ScenarioSet`, binding it through the variation-resolved usages `sut.source.parameters.*` and `sut.path.gain.parameters.k`, so the build packages an external SSV plus an external SSM that targets `path.gain.k`. Each analysis declares its selection in `pyssp_selection`, and `build.py` builds the adapter's legal plans. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -19,10 +19,10 @@ One definition-level variation point, `PathChoice`, whose variants are bodies ra
 
 ## Analyses
 
-- `one_stage :> Analysis` selects `sut.path=oneStage` (model `path=oneStage`); the body's `gain` resolves to the `path.gain` binding.
-- `two_stages :> Analysis` selects `sut.path=twoStages` (model `path=twoStages`); its `gain` is also the `path.gain` binding target.
+- `one_stage :> Analysis` declares `pyssp_selection = "path=oneStage"`; the body's `gain` resolves to the `path.gain` binding.
+- `two_stages :> Analysis` declares `pyssp_selection = "path=twoStages"`; its `gain` is also the `path.gain` binding target.
 - Both analyses bind `sut.source.parameters.amplitude/f/offset/startTime` and `sut.path.gain.parameters.k`; the packaged SSM targets `source.amplitude`, `source.f`, `source.offset`, `source.startTime`, and `path.gain.k`.
-- Selection is applied at build time through `build_fixture(selections={analysis: {"analysis": {...}, "model": {...}}})`; analysis keys are rooted at the `Analysis`, model keys at `System`.
+- The adapter resolves each declared selection and returns a plan; `build.py` builds the `legal` plans.
 - Experiment: `startTime=0.0`, `stopTime=1.0`, `stepSize=0.001`.
 - Each analysis directory carries `ScenarioSet.ssv` and `<analysis>.ssm`; the build binds them into the exported SSP after `build_fixture`.
 - Artifacts: `artifacts/analyses/variation_body_gain/<analysis>/`; analyses are never exported as SSPs.
@@ -57,10 +57,15 @@ One definition-level variation point, `PathChoice`, whose variants are bodies ra
 - Not registered: there is no simulation or comparison evidence for either analysis, and the engines disagree. ssp4sim does not apply the nested `path.gain.k` target, while OMSimulator applies `k` but loses the connection into the synthesized `path` subsystem.
 - The packaged `path.gain.k` mapping is not readable as intended by either engine, so neither selection's trajectories may be read as a pass; the fixtures document the engine behavior, not a working scenario.
 
+## Limitations
+
+- The selection is authored per analysis and the adapter returns `legal`, `violated`, or `invalid`; a `violated` analysis is expected only where the fixture documents a pruned branch.
+
 ## Packaging Notes
 
 - Exported model: `artifacts/models/variation_body_gain/<analysis>/model/`
 - Analysis artifacts: `artifacts/analyses/variation_body_gain/<analysis>/`
 - Packaged scenario: `resources/ScenarioSet.ssv` with `resources/<analysis>.ssm` (external SSV + external SSM)
 - FMU sources: `models/fmu/Modelica.Blocks.Sources.Sine/fmu`, `models/fmu/Modelica.Blocks.Math.Gain/fmu`, and `models/fmu/Modelica.Blocks.Math.Product/fmu` (only in `two_stages`)
+- Selection record: `extra/org.pyssp/selection.json` records the analysis's authored `pyssp_selection`.
 - Build: `python3 scripts/build_models.py run variation_body_gain`

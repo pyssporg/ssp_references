@@ -116,8 +116,8 @@ package VariationConditionalRequires {
     variant part twoStages : CascadedGain;
   }
 
-  /* A condition over two variation points. The pinned adapter does not read it;
-   * build.py enforces the same rule and rejects the illegal branch. */
+  /* A condition over two variation points. The adapter captures and evaluates it;
+   * build.py asks the adapter and rejects the illegal branch. */
   constraint def SineRequiresSingleStage {
     in chosenSource : SourceChoice;
     in chosenGain : GainChoice;

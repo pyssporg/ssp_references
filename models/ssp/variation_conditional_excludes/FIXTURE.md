@@ -8,7 +8,7 @@ Authored in this repository at `architecture/variation_conditional_excludes.sysm
 
 One structural point, `SourceChoice`, and one attribute point, `ScenarioChoice`, with an exclusion between them: the sine source excludes the high-gain scenario. Four source/scenario combinations exist; the rule admits three. The three legal analyses are built and registered, and the fourth (`sine_high`) is authored so the pruned branch is visible in the architecture but never reaches an SSP.
 
-The pinned `pyssp_sysml2` adapter parses but discards `constraint` and `assert`, so the rule is enforced twice: once as the SysML constraint that documents intent, and once as `is_legal` in `build.py`, which owns the build guard because the adapter cannot evaluate the constraint. Parameter form: external SSV + external SSM.
+The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. `build.py` asks the adapter for each combination and prunes the illegal ones; the CLI would also reject an illegal `--select`. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -69,7 +69,7 @@ The pinned `pyssp_sysml2` adapter parses but discards `constraint` and `assert`,
 
 ## Limitations
 
-- The adapter drops `constraint` and `assert`; the SysML rule is documentation until a future adapter exposes constraints. `build.py` is the enforced copy and the test asserts the two stay aligned.
+- The rule is adapter-enforced: `build.py` calls `evaluate` for every authored combination.
 - The model scope must resolve every analysis scenario usage, including the pruned analysis, because the adapter collects attribute usages from every analysis that composes `System`. `MODEL_SCENARIOS` is therefore longer than the set of built analyses; dropping a key would make a legal build fail on the pruned analysis's scenario.
 
 ## Packaging Notes

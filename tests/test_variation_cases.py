@@ -354,21 +354,19 @@ def _load_build_module(model: str):
     ],
 )
 def test_conditional_guard_prunes_illegal_selection(model: str, pruned: str) -> None:
-    """The build guard rejects the illegal branch and never builds it."""
+    """The adapter-backed predicate rejects the illegal branch and never builds it."""
     module = _load_build_module(model)
     module._validate_guard()
+    assert not hasattr(module, "is_legal"), "the fixture still defines a local rule"
     assert pruned in module.PRUNED
     assert pruned not in module.SELECTIONS
+    assert pruned in module.SCOPED
+    assert module._selection_is_legal(pruned, module.SCOPED[pruned]) is False
 
-    choice = module.AUTHORED[pruned]
-    value = choice.get("gain", choice.get("scenario"))
-    assert module.is_legal(choice["source"], value) is False
-
-    for analysis, authored in module.AUTHORED.items():
-        legal = module.is_legal(
-            authored["source"], authored.get("gain", authored.get("scenario"))
-        )
+    for analysis, scoped in module.SCOPED.items():
+        legal = module._selection_is_legal(analysis, scoped)
         assert (analysis in module.SELECTIONS) is legal
+        assert (analysis in module.PRUNED) is not legal
 
     assert not (REPO_ROOT / "artifacts" / "models" / model / pruned).exists()
     assert not (REPO_ROOT / "artifacts" / "analyses" / model / pruned).exists()

@@ -8,7 +8,7 @@ Authored in this repository at `architecture/variation_conditional_requires.sysm
 
 Two structural variation points, `SourceChoice` and `GainChoice`, with one legality rule between them: selecting the sine source requires the single gain stage. Four source/gain combinations exist; the rule admits three. The three legal analyses are built and registered, and the fourth (`sine_two`) is authored so the pruned branch is visible in the architecture but never reaches an SSP.
 
-The pinned `pyssp_sysml2` adapter parses but discards `constraint` and `assert`, so the rule is enforced twice: once as the SysML constraint that documents intent, and once as `is_legal` in `build.py`, which owns the build guard because the adapter cannot evaluate the constraint. Parameter form: external SSV + external SSM.
+The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. `build.py` asks the adapter for each combination and prunes the illegal ones; the CLI would also reject an illegal `--select`. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 
@@ -68,8 +68,7 @@ The pinned `pyssp_sysml2` adapter parses but discards `constraint` and `assert`,
 
 ## Limitations
 
-- The adapter drops `constraint` and `assert`; the SysML rule is documentation until a future adapter exposes constraints. `build.py` is the enforced copy and the test asserts the two stay aligned.
-- Only one rule is modelled here. A constraint that admits no legal combination would make `SELECTIONS` empty; the build script would then build nothing, and the test should be extended before adding such a rule.
+- The rule is adapter-enforced: `build.py` calls `evaluate` for every authored combination. Only one rule is modelled here. A constraint that admits no legal combination would make `SELECTIONS` empty; the build script would then build nothing, and the test should be extended before adding such a rule.
 
 ## Packaging Notes
 

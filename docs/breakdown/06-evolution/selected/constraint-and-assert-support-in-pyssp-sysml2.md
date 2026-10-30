@@ -10,11 +10,11 @@ status: current
 # Constraint and assert support in pyssp_sysml2
 
 SysML v2 `constraint def`, `constraint` usage, and `assert` are authoring-time legality rules.
-`sysmlpy` parses them. `pyssp_sysml2` drops them.
-`Architecture` holds parts, ports, attributes, requirements. No constraint collection.
-`loader._merge_packages` merges those four kinds only.
-`variation.resolve` selects after load. No consumer evaluates constraints.
-The two conditional fixtures duplicate the rule in `build.py`. Workaround, not contract.
+`sysmlpy` parses them. `pyssp_sysml2` captures them into the repo-owned model and evaluates them after variation selection.
+`Architecture` carries constraint definitions and usages.
+`loader._merge_packages` merges them with the other authored kinds.
+`variation.resolve` selects after load; `parameters.constraints` evaluates the selected architecture.
+The two conditional fixtures now call the adapter; the duplicated `is_legal` rule is gone.
 
 ## Objective And End State
 
@@ -25,16 +25,16 @@ Carry constraints through the adapter. Evaluate for a selected architecture. Rej
 - Public API returns pass, fail, invalid, and unasserted per constraint.
 - CLI rejects failed asserted constraints before writing an artifact.
 - Exporter preserves constraints or refuses to erase them.
-- Fixtures call the adapter API; `is_legal` goes away.
+- Fixtures call the adapter API; no fixture-local `is_legal` remains.
 - Tests cover capture, selection, rejection, export, no-constraint behavior.
 
 ## Evidence
 
 - `sysmlpy` exposes `package.constraints`; the fixture package has one.
 - `System.children` holds `Constraint requiresSingleStage` and an unnamed `assert`; `sysmlpy.check_constraints(model, bindings=None)` exists.
-- `Architecture` has no constraint field; `loader._merge_packages` ignores `package.constraints`.
-- No adapter code models or evaluates constraints. Built SSD is identical with or without the constraint.
-- Workaround: `models/ssp/variation_conditional_requires/build.py` and `.../variation_conditional_excludes/build.py` own `AUTHORED`, `is_legal`, `SELECTIONS`, `PRUNED`.
+- `Architecture` carries constraint definitions and usages; `loader._merge_packages` merges them.
+- `parameters.constraints` models and evaluates constraints; an illegal selection is rejected before an artifact is written.
+- Fixtures: `models/ssp/variation_conditional_requires/build.py` and `.../variation_conditional_excludes/build.py` own `AUTHORED`, `SCOPED`, `SELECTIONS`, `PRUNED` and ask the adapter for legality.
 - Traceability: parent `IMP-103`; fixture notes in both `variation_conditional_*` directories; adapter paths listed in Scope.
 
 ## Scope

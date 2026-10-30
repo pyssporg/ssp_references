@@ -113,7 +113,7 @@ package VariationConditionalExcludes {
   }
 
   /* A condition that crosses from a structural point to an attribute point.
-   * The pinned adapter drops constraints; build.py enforces the same rule. */
+   * The adapter captures and evaluates it; build.py asks the adapter. */
   constraint def SineExcludesHighGain {
     in chosenSource : SourceChoice;
     in chosenScenario : ScenarioChoice;

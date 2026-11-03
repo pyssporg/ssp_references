@@ -43,14 +43,10 @@ package Embrace {
     in port Pamb : RealSignal;
     in port 'consumerFeed.p' : RealSignal;
     in port 'consumerFeed.h' : RealSignal;
-    in port 'consumerFeed.X[1]' : RealSignal;
-    in port 'consumerFeed.X[2]' : RealSignal;
-    in port 'consumerFeed.X[3]' : RealSignal;
+    in port 'consumerFeed.X' : RealSignal[3];
     in port 'consumerRet.p' : RealSignal;
     in port 'consumerRet.h' : RealSignal;
-    in port 'consumerRet.X[1]' : RealSignal;
-    in port 'consumerRet.X[2]' : RealSignal;
-    in port 'consumerRet.X[3]' : RealSignal;
+    in port 'consumerRet.X' : RealSignal[3];
     in port reqCoolingTemperature : RealSignal;
     out port 'consumerFeed.m' : RealSignal;
     out port 'consumerFeed.hn' : RealSignal;
@@ -79,14 +75,10 @@ package Embrace {
     in port heatLoad : RealSignal;
     out port 'consumerRet.p' : RealSignal;
     out port 'consumerRet.h' : RealSignal;
-    out port 'consumerRet.X[1]' : RealSignal;
-    out port 'consumerRet.X[2]' : RealSignal;
-    out port 'consumerRet.X[3]' : RealSignal;
+    out port 'consumerRet.X' : RealSignal[3];
     out port 'consumerFeed.p' : RealSignal;
     out port 'consumerFeed.h' : RealSignal;
-    out port 'consumerFeed.X[1]' : RealSignal;
-    out port 'consumerFeed.X[2]' : RealSignal;
-    out port 'consumerFeed.X[3]' : RealSignal;
+    out port 'consumerFeed.X' : RealSignal[3];
     out port inletTemp : RealSignal;
     out port outletTemp : RealSignal;
   }

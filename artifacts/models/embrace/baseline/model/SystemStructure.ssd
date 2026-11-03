@@ -210,11 +210,11 @@
       </ssd:Component>
     </ssd:Elements>
     <ssd:Connections>
-      <ssd:Connection startElement="Consumer" startConnector="consumerFeed.p" endElement="ECS_HW" endConnector="consumerFeed.p" />
-      <ssd:Connection startElement="Consumer" startConnector="consumerFeed.h" endElement="ECS_HW" endConnector="consumerFeed.h" />
       <ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[1]" endElement="ECS_HW" endConnector="consumerFeed.X[1]" />
       <ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[2]" endElement="ECS_HW" endConnector="consumerFeed.X[2]" />
       <ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[3]" endElement="ECS_HW" endConnector="consumerFeed.X[3]" />
+      <ssd:Connection startElement="Consumer" startConnector="consumerFeed.p" endElement="ECS_HW" endConnector="consumerFeed.p" />
+      <ssd:Connection startElement="Consumer" startConnector="consumerFeed.h" endElement="ECS_HW" endConnector="consumerFeed.h" />
       <ssd:Connection startElement="Consumer" startConnector="consumerRet.p" endElement="ECS_HW" endConnector="consumerRet.p" />
       <ssd:Connection startElement="Consumer" startConnector="consumerRet.h" endElement="ECS_HW" endConnector="consumerRet.h" />
       <ssd:Connection startElement="Consumer" startConnector="consumerRet.X[1]" endElement="ECS_HW" endConnector="consumerRet.X[1]" />

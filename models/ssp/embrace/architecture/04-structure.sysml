@@ -10,16 +10,12 @@ package Embrace {
     part AdaptionUnit : AdaptionUnit;
     part BC : BC;
 
+    connect Consumer.'consumerFeed.X' to ECS_HW.'consumerFeed.X';
     connect Consumer.'consumerFeed.p' to ECS_HW.'consumerFeed.p';
     connect Consumer.'consumerFeed.h' to ECS_HW.'consumerFeed.h';
-    connect Consumer.'consumerFeed.X[1]' to ECS_HW.'consumerFeed.X[1]';
-    connect Consumer.'consumerFeed.X[2]' to ECS_HW.'consumerFeed.X[2]';
-    connect Consumer.'consumerFeed.X[3]' to ECS_HW.'consumerFeed.X[3]';
     connect Consumer.'consumerRet.p' to ECS_HW.'consumerRet.p';
     connect Consumer.'consumerRet.h' to ECS_HW.'consumerRet.h';
-    connect Consumer.'consumerRet.X[1]' to ECS_HW.'consumerRet.X[1]';
-    connect Consumer.'consumerRet.X[2]' to ECS_HW.'consumerRet.X[2]';
-    connect Consumer.'consumerRet.X[3]' to ECS_HW.'consumerRet.X[3]';
+    connect Consumer.'consumerRet.X' to ECS_HW.'consumerRet.X';
     connect ECS_HW.'consumerFeed.m' to Consumer.'consumerFeed.m';
     connect ECS_HW.'consumerFeed.hn' to Consumer.'consumerFeed.hn';
     connect ECS_HW.'consumerRet.m' to Consumer.'consumerRet.m';

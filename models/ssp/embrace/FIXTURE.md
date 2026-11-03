@@ -28,10 +28,11 @@ fluid-state signals; one FMU reads its boundary conditions from a packaged
 
 `System` is exported from SysML. The FMU variable namespace uses characters a
 SysML identifier cannot (dots and array brackets), so every signal is a flat
-port whose quoted name is the FMU variable name, for example
-`in port 'consumerFeed.X[1]' : RealSignal;`. A flat port carries one connector
-named exactly as the port usage, which keeps each variable's input/output
-direction independent.
+port whose quoted name is the FMU variable name. Fixed arrays use SysML port
+multiplicity, for example `in port 'consumerFeed.X' : RealSignal[3];`, which
+expands to the connectors `consumerFeed.X[1]`, `consumerFeed.X[2]`, and
+`consumerFeed.X[3]`. A flat port carries one connector named exactly as the
+port usage, which keeps each variable's input/output direction independent.
 
 The parameter interface declares the two effective structured targets,
 `'pipeA.L'` and `'pipeB.L'`. The legacy external SSV/SSM pair was almost

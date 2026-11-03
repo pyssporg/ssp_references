@@ -24,7 +24,8 @@ A model-owned set fixes the scenario for all analyses.
 - **model-owned binds allowed**: `applied_sets` skips `SspModel` bindings when composing an analysis.
 - **experiment-only descriptors exist**: `generate analysis` writes a descriptor with no `scenario` when the analysis applies zero sets.
 - **conflict rule**: an analysis set plus a model-owned set raises an error.
-- **fixed-body precedent**: `dcmotor` and `embrace` use a fixed body plus an experiment-only analysis.
+- **fixed-body precedent**: `dcmotor` uses a fixed body plus an experiment-only analysis.
+- **migrated fixed-body precedent**: `embrace` was a fixed body with an external scenario; it now authors structure and scenario in SysML, with the mapped parameter values in an analysis-owned set.
 - **variable-scenario precedent**: `signal_*` fixtures apply the scenario in the analysis.
 
 ## Current Pain Or Risk

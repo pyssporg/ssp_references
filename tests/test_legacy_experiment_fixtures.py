@@ -1,4 +1,4 @@
-"""Guards for legacy SSP bodies whose experiment is authored in SysML.
+"""Guard for the legacy SSP body whose experiment is authored in SysML.
 
 The model hierarchy stays in the checked-in ``ssp/`` directory. The SysML
 composition declares only a boundary ``SspModel`` marker and the analysis
@@ -27,29 +27,6 @@ EXPECTED: dict[str, dict] = {
         "built_components": ["SuT_edrive_mass", "SuT_emachine_model", "stimuli_model"],
         "source_components": ["stimuli_model"],
         "source_subsystems": ["SuT"],
-    },
-    "embrace": {
-        "model_source": "models/ssp/embrace/ssp",
-        "start_time": 0.0,
-        "stop_time": 10.0,
-        "step_size": 0.01,
-        "built_components": [
-            "AdaptionUnit",
-            "Atmos",
-            "BC",
-            "Consumer",
-            "ECS_HW",
-            "ECS_SW",
-        ],
-        "source_components": [
-            "AdaptionUnit",
-            "Atmos",
-            "BC",
-            "Consumer",
-            "ECS_HW",
-            "ECS_SW",
-        ],
-        "source_subsystems": [],
     },
 }
 

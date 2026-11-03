@@ -1,7 +1,7 @@
 {
   "analysis": "baseline",
-  "composition": "EmbraceModel",
-  "description": "Legacy embrace SSP body over the baseline experiment window.",
+  "composition": "System",
+  "description": "EMBRACE thermal-management reference model over the baseline window.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,
@@ -9,7 +9,11 @@
     "stop_time": 10.0
   },
   "model": "embrace",
-  "model_source": "models/ssp/embrace/ssp",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "baseline.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
   "sut": "sut",
   "target_ssd": "SystemStructure.ssd"
 }

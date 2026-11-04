@@ -7,6 +7,9 @@ stream.
 
 | Date | ID | Decision | Layers | Status | Record |
 |---|---|---|---|---|---|
+| 2026-11-04 | OD-003 | No Local Wheelhouse | operation | accepted | `OD-003` |
+| 2026-11-04 | OD-002 | Self-Describing Wheels Install From GitHub Release Assets | operation | accepted | `OD-002` |
+| 2026-11-04 | OD-001 | Default Install Uses the Pinned Wheelhouse | operation | superseded | `OD-001` |
 | 2026-11-04 | ADR-014 | Experimental Fork Is Named experimental_pyssp_standard Everywhere a Name Is Visible | architecture, operation | accepted | `ADR-014` |
 | 2026-10-30 | DD-017 | Large Fixture Architectures Split Along Section Boundaries | implementation | accepted | `DD-017` |
 | 2026-10-29 | DD-016 | Registry Application — Pass-Through OMSimulator Drop | implementation | accepted | `DD-016` |

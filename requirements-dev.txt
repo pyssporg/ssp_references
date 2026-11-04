@@ -1,0 +1,23 @@
+# Editable development environment.
+#
+#   python3 -m pip install -r requirements-dev.txt
+#
+# The six vendored distributions are self-describing: each wheel's metadata
+# names its sibling dependencies as GitHub release URLs. pip fetches those
+# URLs even when the editable checkout is the installed distribution, so the
+# release tags must exist before this file installs.
+-r requirements.txt
+
+# The development tree lives in 3rd_party/pyssp_workflow; see 3rd_party/README.md.
+-e ./3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard
+-e ./3rd_party/pyssp_workflow
+-e ./3rd_party/pyssp_workflow/3rd_party/pyssp_simulate
+# Build-stage SysML authoring; pyssp_workflow invokes its CLI.
+-e ./3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2
+# Comparison and validation helpers used by scripts/run_comparisons.py.
+-e ./3rd_party/pyssp_workflow/3rd_party/pyssp_vv
+# Flow engine for scripts/run_campaign.py (Python 3.11+).
+-e ./3rd_party/pyssp_workflow/3rd_party/sequence_extensions
+
+# The -e entries replace the wheel installs after resolution, but resolution
+# still reads the direct references from the wheel metadata.

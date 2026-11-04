@@ -103,3 +103,12 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Per DD-014, an engine that cannot run the case is not listed for the case.
 - **DD-017** — Large Fixture Architectures Split Along Section Boundaries · accepted · 2026-10-30 · `DD-017`
   Fixture SysML above roughly 100 lines is split into five section files that share one package; the loader merges them in file-name order.
+
+### Operation
+
+- **OD-001** — Default Install Uses the Pinned Wheelhouse · superseded · 2026-11-04 · `OD-001`
+  The default install resolves the six pyssp distributions from wheelhouse/ pins; editable checkouts are a development opt-in.
+- **OD-002** — Self-Describing Wheels Install From GitHub Release Assets · accepted · 2026-11-04 · `OD-002`
+  Each pyssp wheel names sibling release assets as direct URL dependencies, and the default install fetches those URLs.
+- **OD-003** — No Local Wheelhouse · accepted · 2026-11-04 · `OD-003`
+  Installs resolve the six distributions' GitHub release assets directly; the repository keeps no local wheelhouse.

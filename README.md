@@ -54,7 +54,10 @@ definitions, fixture notes, and build metadata.
 │   │   └── 06-evolution/       # improvement candidates
 │   ├── archive/              # decision archive and generated registers
 │   └── reference/            # naming rules and reference examples
-└── requirements.txt
+├── requirements.txt          # default install: pyssp release assets
+├── requirements-dev.txt      # editable checkouts (development)
+├── requirements-sysml.txt
+└── requirements-campaign.txt
 ```
 
 
@@ -240,12 +243,17 @@ reference-model cases, the matching CSV baselines live in
 
 ## Environment Notes
 
-`requirements.txt` currently targets Linux `x86_64`:
+`requirements.txt` currently targets Linux `x86_64` and is standalone:
 
+- The six vendored pyssp distributions (`experimental-pyssp-standard`,
+  `pyssp-workflow`, `pyssp-simulate`, `pyssp-sysml2`, `pyssp-vv`,
+  `sequence-extensions-flow`) install from their GitHub release assets. Each
+  wheel's metadata names its sibling dependencies as `releases/download/v<version>/`
+  URLs, so the version graph travels inside the wheels. A tag that has not been
+  released makes the dependency unresolvable.
+  `requirements-dev.txt` replaces the wheels with editable checkouts but still
+  resolves those URLs.
 - `pyssp4sim` is pinned to the `v0.3.2` Linux `x86_64` wheel.
-- `pyssp_simulate` is installed editable from
-  `3rd_party/pyssp_workflow/3rd_party/pyssp_simulate` so the repository and its
-  simulation substrate develop together.
 - `OMSimulator` is installed from PyPI; its sdist can fail when nightly
   binaries have been removed, so a manual install may be needed.
 
@@ -264,12 +272,12 @@ environment constraints:
   files; it does not import `pyssp_sysml2` or `pyssp_standard`. Point it at a
   dedicated SysML tool environment with `--pyssp /path/to/venv/bin/pyssp` or
   the `PYSSP` environment variable. `requirements-sysml.txt` describes that
-  environment. The build stage also needs `pyssp_sysml2`; `requirements.txt`
-  installs it through the `pyssp_workflow` submodule.
+  environment. The build stage also needs `pyssp_sysml2`, which the wheel set
+  provides.
 
-The pyssp and sequence submodules are editable checkouts. See
-[`3rd_party/README.md`](3rd_party/README.md) for initialization, pinning, and
-update rules.
+The pyssp and sequence submodules are checkouts; `requirements-dev.txt` installs
+them editable. See [`3rd_party/README.md`](3rd_party/README.md) for
+initialization, pinning, and update rules.
 
 See [the ecosystem assessment](docs/breakdown/04-verification/ecosystem_adoption_assessment.md)
 for the evaluated versions and remaining gaps.
@@ -298,6 +306,10 @@ python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+The six vendored pyssp distributions come from their GitHub release assets; a
+missing release tag makes the dependency unresolvable. For editable checkouts,
+run `pip install -r requirements-dev.txt`.
 
 ### 2. Build a model
 

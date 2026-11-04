@@ -85,8 +85,10 @@ paths are recorded relative to the manifest that contains them.
 Each tool may run in its own virtual environment. Version alignment is needed
 only when an artifact format changes, not when a Python model API changes.
 
-For development, one git submodule under `3rd_party/` owns the ecosystem
-checkouts. The capabilities are nested inside it:
+By default the distributions install from tagged GitHub release wheel URLs and
+from the same URLs named in their metadata; editable checkouts are the
+development opt-in (`INFO-011`). One git submodule under `3rd_party/` owns the
+ecosystem checkouts either way. The capabilities are nested inside it:
 
 | Submodule | Used by |
 | --- | --- |
@@ -113,6 +115,10 @@ package stays `pyssp_standard`.
 | Simulate | `pyssp_workflow` + `pyssp_simulate` plus the selected engines | Runtime venv |
 | Compare | `pyssp_workflow` + `pyssp_vv` measurement and judgment | Runtime venv or a compatible environment |
 | SysML checker | `pyssp_sysml2` targeting the refactored `pyssp_standard` API | Separate environment allowed |
+
+Each row is satisfied by the release wheel URLs in `requirements.txt` by
+default; `requirements-dev.txt` composes that default, then replaces the wheel
+installs with the editable `3rd_party/` checkouts (`INFO-011`).
 
 The SysML checker accepts an explicit executable:
 

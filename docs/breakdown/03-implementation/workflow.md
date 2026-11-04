@@ -22,7 +22,7 @@ status: current
 - **Comparison**: `pyssp_workflow.compare.compare_csvs` composes one pair and writes `metrics.csv`; `pyssp_vv.measure` aligns and measures; `pyssp_vv.evidence` owns the metric-row and summary schema; `pyssp_vv.judge` produces `pass`, `fail`, or `invalid`.
 - **Gate policy**: tolerances, `SHIFT_TOLERANCE_SAMPLES`, and the verdict mapping live in `workflow/gate.py`.
 - **Figures**: `pyssp_vv.measure.build_figure_spec` describes a figure; `render_figure` draws it and imports matplotlib inside the function.
-- **Local code**: artifact layout, registry, gate, model policy, reference CSVs, and fixture bodies stay in this repository. Generic engine, packaging, comparison, figure, and authoring code lives in the pyssp packages (`DD-013`).
+- **Local code**: artifact layout, registry, gate, model policy, reference CSVs, and fixture bodies stay in this repository. Generic engine, packaging, comparison, figure, and authoring code lives in the pyssp packages, installed from the tagged GitHub release wheel URLs in `requirements.txt` by default and from those URLs plus editable checkouts for development (`DD-013`, `INFO-011`).
 - **Model policy**: signal invariants live in `workflow/model_policy.py`; registry data carries tolerances and reference applicability.
 - **Experiment packaging**: the build writes no `experiments.xml`; the analysis descriptor is the only experiment source.
 - **Campaign**: one build node per model is submitted once and reused by all cases of that model; one prepare node per case runs `run_simulations.py --prepare-only` and writes `setup.json`; per-backend simulation nodes run without rewriting it, then compare through `sequence_extensions` nodes.

@@ -2,5 +2,6 @@
 # The runtime requirements are the same; sequence_extensions adds the flow engine.
 # The project declares the distribution name sequence-extensions-flow to avoid
 # the unrelated PyPI project named sequence-extensions.
--r requirements.txt
--e ./3rd_party/pyssp_workflow/3rd_party/sequence_extensions
+# The flow engine stays an editable checkout, so campaign work tracks the
+# working tree instead of the packaged wheel.
+-r requirements-dev.txt

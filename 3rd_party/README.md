@@ -28,10 +28,15 @@ The recursive flag is required: `pyssp_workflow` pins its own dependencies.
 
 ## Install for development
 
-`requirements.txt`, `requirements-sysml.txt`, and `requirements-campaign.txt`
-install the relevant checkouts as editable packages. The paths run through
-`3rd_party/pyssp_workflow/3rd_party/`. The installs stay editable because the
-pinned commits are the development state, not a released version.
+The default `requirements.txt` install takes the six vendored distributions from
+their GitHub release assets. Each wheel's metadata names its sibling
+dependencies the same way, so the version graph travels inside the wheels.
+
+`requirements-dev.txt`, `requirements-sysml.txt`, and `requirements-campaign.txt`
+add the relevant checkouts as editable packages on top of that default. The
+paths run through `3rd_party/pyssp_workflow/3rd_party/`. Editable installs are
+the development state, because the pinned commits are not released versions;
+pip still resolves the release URLs named by the wheel metadata.
 
 ## Pinning and updates
 

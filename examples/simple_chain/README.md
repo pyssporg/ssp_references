@@ -34,12 +34,13 @@ pipeline, not a behavioral fixture.
 
 `requirements.txt` installs only what the example needs:
 
-- `pyssp_sysml2` from its GitHub repository (pinned commit)
-- `pyssp_simulate` from its GitHub repository (pinned commit)
+- `pyssp_sysml2` from its GitHub release asset (tag `v0.3.0`)
+- `pyssp_simulate` from its GitHub release asset (tag `v0.2.0`)
 - the experimental `experimental-pyssp-standard` distribution from its GitHub
-  repository (`pyssporg/experimental_pyssp_standard`; the distribution name is
-  `experimental-pyssp-standard` and the import name stays `pyssp_standard`),
-  because the PyPI release predates the API `pyssp_sysml2` needs
+  release asset (`pyssporg/experimental_pyssp_standard`, tag `v0.9.2.dev0`;
+  the distribution name is `experimental-pyssp-standard` and the import name
+  stays `pyssp_standard`), because the PyPI release predates the API
+  `pyssp_sysml2` needs
 - the pinned `ssp4sim` backend wheel (Linux `x86_64`)
 
 Run from the repository root so the relative paths to the requirements file

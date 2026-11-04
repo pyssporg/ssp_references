@@ -97,6 +97,10 @@ capability.
 - Build: `python3 scripts/build_models.py list` / `run <model>` / `run-all`.
 - Simulate, then compare: `python3 scripts/run_simulations.py`, then
   `python3 scripts/run_comparisons.py`.
-- `requirements.txt` pins local editable submodules and platform wheels. Do not
-  rewrite the dependency setup unless the task requires it.
+- `requirements.txt` is the default install: the six vendored pyssp
+  distributions are self-describing wheels whose metadata names sibling
+  GitHub release assets (`releases/download/v<version>/`). The tags must exist
+  before any install or editable checkout resolves.
+  `requirements-dev.txt` replaces the wheels with editable checkouts but still
+  resolves those release URLs.
 - Many workflows assume Linux `x86_64`, `OMSimulator`, and those pinned wheels.

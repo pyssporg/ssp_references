@@ -40,6 +40,8 @@ definitions, fixture notes, and build metadata.
 │   ├── run_comparisons.py
 │   ├── workflow/
 │   └── utils/
+├── examples/
+│   └── simple_chain/         # minimal architecture -> SSP -> simulation example
 ├── 3rd_party/                # git submodule: pyssp_workflow, which owns the capability checkouts
 ├── docs/
 │   ├── breakdown/            # current state, seven layers
@@ -55,6 +57,22 @@ definitions, fixture notes, and build metadata.
 └── requirements.txt
 ```
 
+
+## Minimal Example
+
+`examples/simple_chain/` is the smallest end-to-end path: a SysML architecture
+with two FMUs, exported to an SSP and simulated. It imports only the public
+`pyssp_sysml2` and `pyssp_simulate` APIs.
+
+```bash
+./venv/bin/python examples/simple_chain/run.py
+```
+
+It writes `examples/simple_chain/build/simple_chain.ssp` and
+`build/ssp4sim.csv`. The example has its own minimal
+[`requirements.txt`](examples/simple_chain/requirements.txt), which installs
+the pyssp packages from their GitHub repositories and pins the `ssp4sim`
+wheel. See [`examples/simple_chain/README.md`](examples/simple_chain/README.md).
 
 ## Model Workflow
 

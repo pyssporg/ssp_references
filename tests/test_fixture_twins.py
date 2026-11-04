@@ -1,9 +1,9 @@
 """Fixture twins: the canonical set against the pinned copy.
 
-The pinned ``pyssp_sysml2/3rd_party/pyssp_standard`` checkout keeps its own
-``pytest/__fixture__`` copy of the same EMBRACE example, ~5.8 MB duplicated on
-disk. It is a dependency, not editable here, so the copy can only drift away
-from the canonical one silently.
+The pinned ``pyssp_sysml2/3rd_party/experimental_pyssp_standard`` checkout
+keeps its own ``pytest/__fixture__`` copy of the same EMBRACE example, ~5.8 MB
+duplicated on disk. It is a dependency, not editable here, so the copy can only
+drift away from the canonical one silently.
 
 One divergence is known and documented: the pinned ``mixed_example.ssd`` is a
 *serialized* variant, written by an older codec, so its bytes differ while its
@@ -19,13 +19,15 @@ from pathlib import Path
 import pytest
 
 WORKFLOW = Path(__file__).resolve().parents[1] / "3rd_party" / "pyssp_workflow"
-CANONICAL = WORKFLOW / "3rd_party" / "pyssp_standard" / "tests" / "fixtures"
+CANONICAL = (
+    WORKFLOW / "3rd_party" / "experimental_pyssp_standard" / "tests" / "fixtures"
+)
 PINNED = (
     WORKFLOW
     / "3rd_party"
     / "pyssp_sysml2"
     / "3rd_party"
-    / "pyssp_standard"
+    / "experimental_pyssp_standard"
     / "pytest"
     / "__fixture__"
 )

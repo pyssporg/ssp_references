@@ -1,4 +1,6 @@
--e ./3rd_party/pyssp_workflow/3rd_party/pyssp_standard
+# Experimental fork of pyssporg/experimental_pyssp_standard (distribution
+# experimental-pyssp-standard, imports pyssp_standard).
+-e ./3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard
 #-e ./3rd_party/pyfmu_csv
 numpy
 scipy

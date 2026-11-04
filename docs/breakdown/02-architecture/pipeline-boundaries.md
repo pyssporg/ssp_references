@@ -91,7 +91,7 @@ checkouts. The capabilities are nested inside it:
 | Submodule | Used by |
 | --- | --- |
 | `3rd_party/pyssp_workflow` | Composition layer: authoring, analysis, fixture, binding, compare, nodes, development tree |
-| `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` | Build and SSP XML inspection |
+| `3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard` | Build and SSP XML inspection |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_simulate` | Simulate |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2` | Authoring (CLI) and SysML round-trip checker |
 | `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` | Build/simulation/compare campaign orchestration |
@@ -100,8 +100,11 @@ checkouts. The capabilities are nested inside it:
 See [`3rd_party/README.md`](../../3rd_party/README.md) for initialization,
 pinning, and update rules.
 
-`pyssp_standard` is the organization's experimental fork,
-`pyssporg/experimental_pyssp_standard`, not the release line.
+The vendored checkout is the organization's experimental fork,
+`pyssporg/experimental_pyssp_standard` (branch `alpha`), not the released
+`pyssporg/pyssp_standard`. The checkout directory and distribution are named
+`experimental_pyssp_standard` / `experimental-pyssp-standard`; only the import
+package stays `pyssp_standard`.
 
 | Tool | Dependency expectation | Environment |
 | --- | --- | --- |

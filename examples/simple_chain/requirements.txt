@@ -11,10 +11,10 @@
 # is reproducible and does not depend on a local checkout.
 
 # The experimental pyssp_standard checkout. Its GitHub repository is named
-# `experimental_pyssp_standard`; the distribution and import name remain
-# `pyssp-standard` / `pyssp_standard`. pyssp_sysml2 needs its refactored API,
+# `experimental_pyssp_standard`, the distribution is `experimental-pyssp-standard`,
+# and the import package stays `pyssp_standard`. pyssp_sysml2 needs its refactored API,
 # and the PyPI release (0.9.1) predates it, so install this first.
-pyssp-standard @ git+https://github.com/pyssporg/experimental_pyssp_standard.git@676673b81fb1d5802d4728392c229ef412b01835
+experimental-pyssp-standard @ git+https://github.com/pyssporg/experimental_pyssp_standard.git@676673b81fb1d5802d4728392c229ef412b01835
 pyssp_sysml2 @ git+https://github.com/pyssporg/pyssp_sysml2.git@4ebc925437b0bd7fa03f187aef2eb116e29c232b
 pyssp_simulate @ git+https://github.com/pyssporg/pyssp_simulate.git@b7b0a61cd6a02672a600422a8f48ec39fcbea12b
 

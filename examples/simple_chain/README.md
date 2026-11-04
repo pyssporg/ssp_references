@@ -36,10 +36,10 @@ pipeline, not a behavioral fixture.
 
 - `pyssp_sysml2` from its GitHub repository (pinned commit)
 - `pyssp_simulate` from its GitHub repository (pinned commit)
-- the experimental `pyssp_standard` from its GitHub repository
-  (`pyssporg/experimental_pyssp_standard`; the distribution and import name
-  stay `pyssp-standard` / `pyssp_standard`), because the PyPI release
-  predates the API `pyssp_sysml2` needs
+- the experimental `experimental-pyssp-standard` distribution from its GitHub
+  repository (`pyssporg/experimental_pyssp_standard`; the distribution name is
+  `experimental-pyssp-standard` and the import name stays `pyssp_standard`),
+  because the PyPI release predates the API `pyssp_sysml2` needs
 - the pinned `ssp4sim` backend wheel (Linux `x86_64`)
 
 Run from the repository root so the relative paths to the requirements file

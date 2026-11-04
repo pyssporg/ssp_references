@@ -80,10 +80,11 @@ capability.
     them by hand;
   - run `python3 $PB check --strict --root docs/breakdown`
     and `... node-size --strict --root docs/breakdown` after edits.
-- `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` is the only editable
-  pyssp_standard checkout. The nested
-  `pyssp_sysml2/3rd_party/pyssp_standard` copy is a pinned dependency: do not
-  edit it; local changes belong in the canonical checkout.
+- `3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard` is the only
+  editable `pyssp_standard` checkout; it is the experimental fork
+  (`pyssporg/experimental_pyssp_standard`), not the release line. The nested
+  `pyssp_sysml2/3rd_party/experimental_pyssp_standard` copy is a pinned
+  dependency: do not edit it; local changes belong in the canonical checkout.
 - Keep cross-cutting workflow or strategy notes in `docs/breakdown/`.
 - When docs move or commands change, update the references so the documented
   build and simulation flow stays accurate.

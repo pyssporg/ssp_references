@@ -12,7 +12,7 @@ Nested under `pyssp_workflow/3rd_party/`:
 
 | Path | Upstream | Role |
 | --- | --- | --- |
-| `pyssp_standard/` | `pyssporg/experimental_pyssp_standard` | SSP XML model and archive APIs used by the build stage |
+| `experimental_pyssp_standard/` | `pyssporg/experimental_pyssp_standard` | Experimental fork of `pyssporg/pyssp_standard`; SSP XML model and archive APIs used by the build stage |
 | `pyssp_simulate/` | `pyssporg/pyssp_simulate` | Simulation substrate used by the simulate stage |
 | `pyssp_sysml2/` | `pyssporg/pyssp_sysml2` | SysML authoring, study generation, and SSD round-trip tool |
 | `pyssp_vv/` | `pyssporg/pyssp_vv` | V&V capability: measurement, judgment, evidence |
@@ -39,7 +39,7 @@ Each capability checkout is pinned by the commit recorded in its parent
 repository's gitlink. The `pyssp_workflow` gitlink in this repository is the
 single version record for the whole tree.
 
-- All six checkouts are clean: `pyssp_workflow`, `pyssp_standard`,
+- All six checkouts are clean: `pyssp_workflow`, `experimental_pyssp_standard`,
   `pyssp_simulate`, `pyssp_sysml2`, `pyssp_vv`, and `sequence_extensions`.
 - This repository carries no patch that waits on a local working tree.
 - The multi-line string handling (`\n`, `\r`, `\t` decode on read, re-escape on
@@ -52,11 +52,12 @@ The build and simulate stages now consume generic code from upstream
 `pyssp_workflow`, `pyssp_simulate`, and `pyssp_vv`; this repository keeps
 artifact layout, registry, gate policy, signal invariants, and fixture data.
 
-`pyssp_sysml2`'s nested `3rd_party/pyssp_standard` submodule follows the
-experimental fork too, so the SysML tool is developed against the same
-refactored API the build stage uses. The checkout under
-`pyssp_workflow/3rd_party/pyssp_standard` is the only editable copy; the nested
-one is a pinned dependency and stays at the commit `pyssp_sysml2` records.
+`pyssp_sysml2`'s nested `3rd_party/experimental_pyssp_standard` submodule
+follows the experimental fork too, so the SysML tool is developed against the
+same refactored API the build stage uses. The checkout under
+`pyssp_workflow/3rd_party/experimental_pyssp_standard` is the only editable
+copy; the nested one is a pinned dependency and stays at the commit
+`pyssp_sysml2` records.
 
 Check before updating or resetting:
 

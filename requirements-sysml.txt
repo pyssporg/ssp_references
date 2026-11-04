@@ -7,6 +7,6 @@
 #   python3 -m venv venv-sysml
 #   venv-sysml/bin/pip install -r requirements-sysml.txt
 #
-# The SysML submodule and the refactored pyssp_standard submodule.
--e ./3rd_party/pyssp_workflow/3rd_party/pyssp_standard
+# The SysML submodule and the experimental_pyssp_standard submodule.
+-e ./3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard
 -e ./3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2

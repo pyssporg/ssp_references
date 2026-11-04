@@ -17,7 +17,7 @@ x86_64, root `venv` (Python 3.11.14, pytest 9.1.1).
 
 | Project | Path | Tests | Runtime |
 |---|---|---|---|
-| pyssp_standard (canonical) | `3rd_party/pyssp_workflow/3rd_party/pyssp_standard` | 467 | 5.6 s |
+| pyssp_standard (canonical, experimental fork) | `3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard` | 467 | 5.6 s |
 | pyssp_simulate | same tree | 148 (147 pass, 1 cosim skip) | 10.0 s |
 | pyssp_sysml2 | same tree | 248 | 32 s |
 | pyssp_workflow | `3rd_party/pyssp_workflow` | 74 | 4.2 s |
@@ -25,8 +25,8 @@ x86_64, root `venv` (Python 3.11.14, pytest 9.1.1).
 | sequence_extensions | same tree | 434 | 14.0 s |
 | root suite | `tests/` | 104 (1 strict-mode skip) | 101 s |
 
-Excluded: the pinned `pyssp_sysml2/3rd_party/pyssp_standard` copy (not
-editable), the root suite's engine-free integration tests (see EVAL-001,
+Excluded: the pinned `pyssp_sysml2/3rd_party/experimental_pyssp_standard` copy
+(not editable), the root suite's engine-free integration tests (see EVAL-001,
 EVAL-008), upstream CI matrices.
 
 ## Verdict

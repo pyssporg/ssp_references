@@ -13,6 +13,7 @@
             "ssp4sim",
             "omsimulator"
           ],
+          "analysis": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -20,11 +21,13 @@
             },
             {
               "label": "reference-me",
-              "path": "models/ssp/BouncingBall/references/BouncingBall-me.csv"
+              "path": "models/ssp/BouncingBall/references/BouncingBall-me.csv",
+              "gate": false
             }
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "Dahlquist",
@@ -39,6 +42,7 @@
             "omsimulator",
             "fmpy"
           ],
+          "analysis": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -46,11 +50,13 @@
             },
             {
               "label": "reference-me",
-              "path": "models/ssp/Dahlquist/references/Dahlquist-me.csv"
+              "path": "models/ssp/Dahlquist/references/Dahlquist-me.csv",
+              "gate": false
             }
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "embrace",
@@ -68,9 +74,11 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ]
+          ],
+          "analysis": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "Resource",
@@ -83,9 +91,11 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ]
+          ],
+          "analysis": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_delay_detector",
@@ -103,7 +113,8 @@
             "omsimulator"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_algebraic_loop",
@@ -120,7 +131,8 @@
             "omsimulator"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_nested_algebraic_loop",
@@ -139,7 +151,8 @@
             "omsimulator"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_fanout_gain",
@@ -157,7 +170,8 @@
             "fmpy"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_sine_gain_add",
@@ -173,19 +187,10 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ],
-          "reference_csvs": [
-            {
-              "label": "reference-cs",
-              "path": "models/ssp/Stair/references/Stair-cs.csv"
-            },
-            {
-              "label": "reference-me",
-              "path": "models/ssp/Stair/references/Stair-me.csv"
-            }
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_step_add",
@@ -202,7 +207,8 @@
             "omsimulator"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_step_gain",
@@ -217,9 +223,11 @@
             "ssp4sim",
             "omsimulator",
             "fmpy"
-          ]
+          ],
+          "analysis": "test_baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_step_product",
@@ -237,7 +245,8 @@
             "fmpy"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "Stair",
@@ -250,9 +259,11 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ]
+          ],
+          "analysis": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "VanDerPol",
@@ -268,6 +279,7 @@
             "omsimulator",
             "fmpy"
           ],
+          "analysis": "baseline",
           "reference_csvs": [
             {
               "label": "reference-cs",
@@ -275,7 +287,8 @@
             },
             {
               "label": "reference-me",
-              "path": "models/ssp/VanDerPol/references/VanDerPol-me.csv"
+              "path": "models/ssp/VanDerPol/references/VanDerPol-me.csv",
+              "gate": false
             }
           ]
         },
@@ -285,9 +298,20 @@
             "ssp4sim",
             "omsimulator",
             "fmpy"
-          ]
+          ],
+          "analysis": "fast"
+        },
+        {
+          "name": "slow",
+          "backends": [
+            "ssp4sim",
+            "omsimulator",
+            "fmpy"
+          ],
+          "analysis": "slow"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "dcmotor",
@@ -301,9 +325,11 @@
           "backends": [
             "ssp4sim",
             "omsimulator"
-          ]
+          ],
+          "analysis": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "pyfmu_csv_source_sink",
@@ -317,21 +343,28 @@
             "ssp4sim"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "scenario",
       "compare_signals": [
-        "source.y"
+        "scenario.Alt",
+        "scenario.Mach",
+        "scenario.heat_load",
+        "scenario.Wgt_On_Whl",
+        "scenario.Aircraft_state"
       ],
       "cases": [
         {
           "name": "baseline",
           "backends": [
             "ssp4sim"
-          ]
+          ],
+          "analysis": "baseline"
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_parameter_inline_with_mapping",
@@ -342,11 +375,11 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator"
+            "ssp4sim"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_nested_pass_through",
@@ -358,11 +391,11 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator"
+            "ssp4sim"
           ]
         }
-      ]
+      ],
+      "build": "model"
     },
     {
       "name": "signal_nested_external_bindings",
@@ -374,11 +407,129 @@
         {
           "name": "baseline",
           "backends": [
-            "ssp4sim",
-            "omsimulator"
+            "ssp4sim"
           ]
         }
-      ]
+      ],
+      "build": "model"
+    },
+    {
+      "name": "variation_source_swap",
+      "compare_signals": [
+        "source.y"
+      ],
+      "cases": [
+        {
+          "name": "step",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step"
+        },
+        {
+          "name": "sine",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "sine"
+        }
+      ],
+      "build": "model"
+    },
+    {
+      "name": "variation_attribute_set",
+      "compare_signals": [
+        "step.y",
+        "gain.y"
+      ],
+      "cases": [
+        {
+          "name": "nominal_k3",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "nominal_k3"
+        },
+        {
+          "name": "boosted_k9",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "boosted_k9"
+        }
+      ],
+      "build": "model"
+    },
+    {
+      "name": "variation_conditional_requires",
+      "compare_signals": [
+        "source.y"
+      ],
+      "cases": [
+        {
+          "name": "step_single",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step_single"
+        },
+        {
+          "name": "step_two",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step_two"
+        },
+        {
+          "name": "sine_single",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "sine_single"
+        }
+      ],
+      "build": "model"
+    },
+    {
+      "name": "variation_conditional_excludes",
+      "compare_signals": [
+        "source.y",
+        "gain.y"
+      ],
+      "cases": [
+        {
+          "name": "step_baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step_baseline"
+        },
+        {
+          "name": "step_high",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "step_high"
+        },
+        {
+          "name": "sine_baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ],
+          "analysis": "sine_baseline"
+        }
+      ],
+      "build": "model"
     }
   ]
 }

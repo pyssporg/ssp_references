@@ -23,9 +23,19 @@ from workflow.registry import (
     SimulationRegistry,
     load_registry,
 )
+from workflow.gate import (
+    GateConfig,
+    GateOutcome,
+    combine_gate_outcomes,
+    evaluate_gate,
+)
+from workflow.reference import compare_reference, ReferenceComparisonRequest
 from workflow.setup import prepare_setup
-from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
-from utils.csv import extract_series, load_numeric_csv
+from pyssp_simulate import read_result_csv
+from pyssp_simulate.result import write_result_csv
+from pyssp_vv.evidence import MetricRow
+
+from workflow.simulate import SimulationRequest, SimulationRun
 
 
 @pytest.fixture(autouse=True)
@@ -34,14 +44,17 @@ def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo_root.mkdir()
     monkeypatch.setattr("workflow.layout.REPO_ROOT", repo_root)
     monkeypatch.setattr("workflow.registry.REPO_ROOT", repo_root)
-    monkeypatch.setattr("workflow.simulate.REPO_ROOT", repo_root)
     monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
 
 
-def make_ssp_root(tmp_path: Path, model_name: str = "ExampleModel") -> Path:
-    ssp_root = tmp_path / "artifacts" / "models" / model_name / "baseline"
-    (ssp_root / "extra" / "org.fmi-standard.fmi-ls-ref").mkdir(parents=True)
-    (ssp_root / "resources").mkdir()
+ANALYSIS_NAME = "baseline"
+
+
+def make_ssp_root(
+    tmp_path: Path, model_name: str = "ExampleModel"
+) -> tuple[Path, Path]:
+    ssp_root = tmp_path / "artifacts" / "models" / model_name / ANALYSIS_NAME / "model"
+    (ssp_root / "resources").mkdir(parents=True)
     (ssp_root / "SystemStructure.ssd").write_text(
         """<?xml version="1.0" encoding="UTF-8"?>
 <ssd:SystemStructure xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructure">
@@ -49,21 +62,26 @@ def make_ssp_root(tmp_path: Path, model_name: str = "ExampleModel") -> Path:
 </ssd:SystemStructure>
 """
     )
-    (ssp_root / "extra" / "org.fmi-standard.fmi-ls-ref" / "experiments.xml").write_text(
-        """<?xml version="1.0" encoding="UTF-8"?>
-<Experiments name="ExampleModel experiments">
-  <Experiment
-      name="baseline"
-      target="SystemStructure.ssd"
-      startTime="0.0"
-      stopTime="1.0"
-      stepSize="1.0"
-      tolerance="0.0001"
-      description="Baseline case"/>
-</Experiments>
-"""
+    analysis_root = tmp_path / "artifacts" / "analyses" / model_name / ANALYSIS_NAME
+    analysis_root.mkdir(parents=True)
+    (analysis_root / "analysis.json").write_text(
+        json.dumps(
+            {
+                "model": model_name,
+                "composition": "SystemStructure.ssd",
+                "sut": "system",
+                "analysis": ANALYSIS_NAME,
+                "experiment": {
+                    "name": ANALYSIS_NAME,
+                    "start_time": 0.0,
+                    "stop_time": 1.0,
+                    "step_size": 1.0,
+                },
+                "description": "Baseline case",
+            }
+        )
     )
-    return ssp_root
+    return ssp_root, analysis_root
 
 
 def write_series(path: Path, signal_values: list[float]) -> None:
@@ -72,7 +90,7 @@ def write_series(path: Path, signal_values: list[float]) -> None:
         dtype=[("time", float), ("signal", float)],
     )
     path.parent.mkdir(parents=True, exist_ok=True)
-    write_structured_csv(path, result)
+    write_result_csv(path, result)
 
 
 def write_prefixed_csv(path: Path, signal_name: str, signal_values: list[float]) -> None:
@@ -95,32 +113,7 @@ def write_columns(path: Path, columns: dict[str, list[float]]) -> None:
     path.write_text("\n".join(rows) + "\n")
 
 
-def test_extract_series_uses_signed_data_row_for_alias_sign() -> None:
-    headers, _, columns = extract_series(
-        names=["time", "signal", "negated_alias"],
-        descriptions=["time", "signal", "negated alias"],
-        data_info=np.array(
-            [
-                [0, 2, 2],
-                [1, 2, -2],
-                [0, 0, 0],
-                [-1, -1, -1],
-            ]
-        ),
-        data_1=np.empty((0, 0)),
-        data_2=np.array(
-            [
-                [0.0, 1.0],
-                [2.0, 3.0],
-            ]
-        ),
-    )
-
-    assert headers == ["time", "signal", "negated_alias"]
-    np.testing.assert_array_equal(columns[1], np.array([2.0, 3.0]))
-    np.testing.assert_array_equal(columns[2], np.array([-2.0, -3.0]))
-
-
+@pytest.mark.level_integration
 def test_reference_csvs_are_not_inverted() -> None:
     repo_root = Path(__file__).resolve().parents[1]
     checks = [
@@ -154,9 +147,9 @@ def test_reference_csvs_are_not_inverted() -> None:
     ]
 
     for path, expected_values in checks:
-        columns = load_numeric_csv(path)["columns"]
+        data = read_result_csv(path)
         for column_name, (row_index, expected_value) in expected_values.items():
-            assert columns[column_name][row_index] == pytest.approx(expected_value)
+            assert data[column_name][row_index] == pytest.approx(expected_value)
 
 
 def test_modelica_block_fmus_expose_dependency_metadata() -> None:
@@ -216,6 +209,30 @@ def test_registry_roundtrip_supports_multiple_models_and_cases() -> None:
     assert loaded == registry
 
 
+def test_registry_roundtrip_supports_model_build_and_analysis() -> None:
+    registry = SimulationRegistry(
+        models=(
+            RegistryModel(
+                name="ExampleModel",
+                compare_signals=("signal",),
+                build="model",
+                cases=(
+                    RegistryCase(
+                        name="baseline",
+                        analysis="test_baseline",
+                        backends=("ssp4sim",),
+                    ),
+                ),
+            ),
+        ),
+    )
+
+    loaded = SimulationRegistry.from_dict(registry.to_dict())
+    assert loaded == registry
+    assert loaded.models[0].build == "model"
+    assert loaded.models[0].cases[0].analysis == "test_baseline"
+
+
 def test_registry_roundtrip_supports_reference_csvs() -> None:
     registry = SimulationRegistry(
         models=(
@@ -250,13 +267,15 @@ def test_registry_roundtrip_supports_reference_csvs() -> None:
 
 
 def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
-    ssp_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
 
     setup = prepare_setup(spec)
@@ -268,7 +287,7 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
     assert setup.window.start_time == pytest.approx(0.0)
     assert setup.window.stop_time == pytest.approx(1.0)
     assert setup.window.interval == pytest.approx(1.0)
-    assert setup.tolerance == pytest.approx(0.0001)
+    assert setup.tolerance is None
     assert setup.description == "Baseline case"
 
     loaded = type(setup).from_manifest(manifest_path)
@@ -279,17 +298,32 @@ def test_setup_manifest_roundtrip(tmp_path: Path) -> None:
     assert loaded.compare_signals == ("signal",)
     assert loaded.root_system_name == "system"
     assert loaded.window == setup.window
-    assert loaded.tolerance == pytest.approx(setup.tolerance)
+
+
+def test_prepare_setup_rejects_spec_without_analysis(tmp_path: Path) -> None:
+    ssp_root, _ = make_ssp_root(tmp_path)
+    spec = SimulationCaseSpec(
+        model_name="ExampleModel",
+        case_name="baseline",
+        ssp_root=ssp_root,
+        backends=("ssp4sim",),
+        compare_signals=("signal",),
+    )
+
+    with pytest.raises(ValueError, match="no analysis descriptor"):
+        prepare_setup(spec)
 
 
 def test_simulation_run_manifest_roundtrip(tmp_path: Path) -> None:
-    ssp_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -314,13 +348,15 @@ def test_simulation_run_manifest_roundtrip(tmp_path: Path) -> None:
 
 
 def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
-    ssp_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -353,13 +389,15 @@ def test_compare_runs_writes_metrics_and_manifest(tmp_path: Path) -> None:
 
 
 def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
-    ssp_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
         compare_signals=("step.y",),
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -382,13 +420,15 @@ def test_compare_runs_normalizes_prefixed_signal_names(tmp_path: Path) -> None:
 
 
 def test_compare_runs_validates_signal_invariants(tmp_path: Path) -> None:
-    ssp_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
+    ssp_root, analysis_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
     spec = SimulationCaseSpec(
         model_name="signal_step_gain",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
         compare_signals=("step.y", "gain.y"),
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -409,18 +449,20 @@ def test_compare_runs_validates_signal_invariants(tmp_path: Path) -> None:
 
     comparison = compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
 
-    assert comparison.summary["signal_invariant_count"] == 2
-    assert comparison.summary["max_signal_invariant_abs_error"] == pytest.approx(0.0)
+    assert comparison.max_signal_invariant_abs_error == pytest.approx(0.0)
+    assert comparison.gate.status == "pass"
 
 
-def test_compare_runs_fails_on_signal_invariant_violation(tmp_path: Path) -> None:
-    ssp_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
+def test_compare_runs_gate_fails_on_signal_invariant_violation(tmp_path: Path) -> None:
+    ssp_root, analysis_root = make_ssp_root(tmp_path, model_name="signal_step_gain")
     spec = SimulationCaseSpec(
         model_name="signal_step_gain",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator"),
         compare_signals=("step.y", "gain.y"),
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -447,18 +489,55 @@ def test_compare_runs_fails_on_signal_invariant_violation(tmp_path: Path) -> Non
     left_run.write_manifest()
     right_run.write_manifest()
 
-    with pytest.raises(ValueError, match="Signal invariant failed"):
-        compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
+    comparison = compare_runs(ComparisonRequest(run_a=left_run, run_b=right_run))
+
+    assert comparison.gate.status == "fail"
+    assert any(
+        "gain.y = 3.0 * step.y" in reason
+        for reason in comparison.gate.reasons
+    )
+
+
+def test_gate_keeps_invalid_distinct_from_failure() -> None:
+    metric = MetricRow(
+        signal="signal",
+        max_abs_error=0.0,
+        max_shift_abs_error=float("nan"),
+        mean_abs_error=0.0,
+        rmse=0.0,
+        run_a_label="reference",
+        run_a_min=0.0,
+        run_a_max=1.0,
+        run_b_label="candidate",
+        run_b_min=0.0,
+        run_b_max=1.0,
+        coverage=1.0,
+        shift_samples=0,
+        normalisation="reference_peak",
+        denominator=1.0,
+        normalised_max_abs_error=float("nan"),
+    )
+
+    outcome = evaluate_gate([metric], gate=GateConfig(atol=0.1))
+    assert outcome.status == "invalid"
+    assert any("non-finite-metric" in reason for reason in outcome.reasons)
+
+    combined = combine_gate_outcomes(
+        (outcome, GateOutcome(status="fail", reasons=("failed",)))
+    )
+    assert combined.status == "invalid"
 
 
 def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) -> None:
-    ssp_root = make_ssp_root(tmp_path)
+    ssp_root, analysis_root = make_ssp_root(tmp_path)
     spec = SimulationCaseSpec(
         model_name="ExampleModel",
         case_name="baseline",
         ssp_root=ssp_root,
         backends=("ssp4sim", "omsimulator", "fmpy"),
         compare_signals=("signal",),
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
     )
     setup = prepare_setup(spec)
     setup.write_manifest()
@@ -481,8 +560,7 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
     assert batch.manifest_path.exists()
     assert batch.summary["backend_count"] == 3
     assert batch.summary["comparison_count"] == 3
-    assert batch.summary["min_compared_signal_count"] == 1
-    assert batch.summary["max_abs_error"] == pytest.approx(0.2)
+    assert batch.summary["gate_result"] == "fail"
     assert len(batch.comparisons) == 3
 
     loaded = ComparisonBatchRun.from_manifest(batch.manifest_path)
@@ -494,3 +572,54 @@ def test_compare_run_batch_writes_results_for_multiple_backends(tmp_path: Path) 
     assert len(payload["request"]["runs"]) == 3
     assert len(payload["comparisons"]) == 3
     assert all("runs" in comparison for comparison in payload["comparisons"])
+
+
+def test_compare_reference_writes_metrics_and_gate(tmp_path: Path) -> None:
+    ssp_root, analysis_root = make_ssp_root(tmp_path, model_name="ExampleModel")
+    spec = SimulationCaseSpec(
+        model_name="ExampleModel",
+        case_name="baseline",
+        ssp_root=ssp_root,
+        backends=("ssp4sim",),
+        compare_signals=("x",),
+        gate=GateConfig(atol=0.1),
+        analysis_name=ANALYSIS_NAME,
+        analysis_root=analysis_root,
+    )
+    setup = prepare_setup(spec)
+    setup.write_manifest()
+    request = SimulationRequest(setup=setup, backend="ssp4sim")
+    write_columns(request.result_path, {"x": [1.0, 2.0]})
+    run = SimulationRun(request=request, result_path=request.result_path)
+    run.write_manifest()
+
+    reference_path = tmp_path / "reference.csv"
+    reference_path.write_text(
+        "time,default.ExampleModel.time,default.ExampleModel.x\n"
+        "0.0,0.0,1.0\n"
+        "1.0,1.0,2.0\n"
+    )
+    reference = RegistryReferenceCsv(label="reference-cs", path=reference_path)
+
+    result = compare_reference(
+        ReferenceComparisonRequest(
+            run=run,
+            reference=reference,
+            reference_path=reference_path,
+        )
+    )
+
+    assert result.metrics_path.exists()
+    assert result.manifest_path.exists()
+    assert result.gate.status == "pass"
+    assert result.summary["max_shift_abs_error"] == pytest.approx(0.0)
+
+    write_columns(request.result_path, {"x": [1.0, 3.0]})
+    failing = compare_reference(
+        ReferenceComparisonRequest(
+            run=run,
+            reference=reference,
+            reference_path=reference_path,
+        )
+    )
+    assert failing.gate.status == "fail"

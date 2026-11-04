@@ -1,0 +1,28 @@
+{
+  "candidate_label": "fmpy",
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
+  "metrics": "metrics.csv",
+  "reference_label": "reference-cs",
+  "request": {
+    "backend": "fmpy",
+    "reference": "reference-cs",
+    "reference_gate": true,
+    "reference_path": "/home/eriro/pwa/2_work/ssp_references/models/ssp/VanDerPol/references/VanDerPol-cs.csv",
+    "run_manifest": "../../../../../simulation/VanDerPol/baseline/fmpy/simulation.json"
+  },
+  "summary": {
+    "compared_signal_count": 2,
+    "max_abs_error": 0.04877732521878775,
+    "max_rel_error": 0.018115117052944614,
+    "max_shift_abs_error": 1.7319479184152442e-13,
+    "mean_abs_error": 0.001408750006266532,
+    "min_coverage": 1.0,
+    "rmse": 0.005513151963982899,
+    "run_a_label": "reference-cs",
+    "run_b_label": "fmpy",
+    "time_points": 20001
+  }
+}

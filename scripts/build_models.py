@@ -7,9 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from pyssp_standard import get_repo_root
-
-REPO_ROOT = get_repo_root(file="__SSP_REF_ROOT__")
+REPO_ROOT = Path(__file__).resolve().parents[1]
 MODELS_DIR = REPO_ROOT / "models" / "ssp"
 
 

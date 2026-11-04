@@ -1,4 +1,6 @@
 {
+  "analysis": "baseline",
+  "analysis_root": "../../../analyses/dcmotor/baseline",
   "backends": [
     "ssp4sim",
     "omsimulator"
@@ -8,13 +10,17 @@
     "SuT_emachine_model.M",
     "SuT_edrive_mass.wB"
   ],
-  "ls_ref_experiments": "../../../models/dcmotor/baseline/extra/org.fmi-standard.fmi-ls-ref/experiments.xml",
+  "description": "Legacy dcmotor SSP body over the baseline experiment window.",
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
   "model": "dcmotor",
-  "resources_dir": "../../../models/dcmotor/baseline/resources",
+  "resources_dir": "../../../models/dcmotor/baseline/model/resources",
   "root_system_name": "DC-Motor",
-  "ssp_root": "../../../models/dcmotor/baseline",
-  "system_structure": "../../../models/dcmotor/baseline/SystemStructure.ssd",
-  "tolerance": 0.0001,
+  "ssp_root": "../../../models/dcmotor/baseline/model",
+  "system_structure": "../../../models/dcmotor/baseline/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,
     "start_time": 0.0,

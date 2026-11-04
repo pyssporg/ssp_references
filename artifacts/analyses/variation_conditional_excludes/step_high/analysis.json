@@ -1,0 +1,19 @@
+{
+  "analysis": "step_high",
+  "composition": "System",
+  "description": "Legal: step source with the high-gain scenario.",
+  "experiment": {
+    "name": "experiment",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "variation_conditional_excludes",
+  "scenario": {
+    "set": "HighGainScenario",
+    "ssm": "step_high.ssm",
+    "ssv": "HighGainScenario.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

@@ -1,0 +1,19 @@
+{
+  "analysis": "baseline",
+  "composition": "System",
+  "description": "Step multiplied by a sine at the root.",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "signal_step_product",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "baseline.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

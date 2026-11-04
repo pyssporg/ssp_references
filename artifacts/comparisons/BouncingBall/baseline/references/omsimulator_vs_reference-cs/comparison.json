@@ -1,0 +1,31 @@
+{
+  "candidate_label": "omsimulator",
+  "gate": {
+    "reasons": [
+      "h: criterion-exceeded (43.0127 > 0.011 (max_abs_error))",
+      "v: criterion-exceeded (29.3908 > 0.0453412 (max_abs_error))"
+    ],
+    "status": "fail"
+  },
+  "metrics": "metrics.csv",
+  "reference_label": "reference-cs",
+  "request": {
+    "backend": "omsimulator",
+    "reference": "reference-cs",
+    "reference_gate": true,
+    "reference_path": "/home/eriro/pwa/2_work/ssp_references/models/ssp/BouncingBall/references/BouncingBall-cs.csv",
+    "run_manifest": "../../../../../simulation/BouncingBall/baseline/omsimulator/simulation.json"
+  },
+  "summary": {
+    "compared_signal_count": 2,
+    "max_abs_error": 43.130285,
+    "max_rel_error": 43.130285,
+    "max_shift_abs_error": 43.0126631,
+    "mean_abs_error": 14.148156464012068,
+    "min_coverage": 1.0,
+    "rmse": 17.981234446659734,
+    "run_a_label": "reference-cs",
+    "run_b_label": "omsimulator",
+    "time_points": 3001
+  }
+}

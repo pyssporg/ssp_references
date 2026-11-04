@@ -1,0 +1,7 @@
+{
+  "composition": "System",
+  "configuration": "StepSystem",
+  "selections": {
+    "source": "step"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "composition": "System",
+  "configuration": "OneStageSystem",
+  "selections": {
+    "path": "oneStage"
+  }
+}

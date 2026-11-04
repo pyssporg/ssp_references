@@ -1,8 +1,19 @@
 {
   "comparisons": [
     {
+      "candidate_label": "omsimulator",
+      "gate": {
+        "reasons": [
+          "add_outer.y: criterion-exceeded (0.993725 > 0.0309554 (max_abs_error))",
+          "gain_outer.y: criterion-exceeded (0.5 > 0.00848884 (max_abs_error))",
+          "add_inner.y: criterion-exceeded (1 > 0.0159745 (max_abs_error))",
+          "gain_inner.y: criterion-exceeded (0.503142 > 0.00848727 (max_abs_error))"
+        ],
+        "status": "fail"
+      },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "reference_label": "ssp4sim",
       "runs": [
         {
           "backend": "ssp4sim",
@@ -16,15 +27,29 @@
       "summary": {
         "compared_signal_count": 5,
         "max_abs_error": 2.00628318531,
+        "max_rel_error": 0.6803849008664039,
+        "max_shift_abs_error": 1.0,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 0.02582545052057882,
+        "min_coverage": 1.0,
         "rmse": 0.06130105290043618,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     }
   ],
   "error": null,
+  "gate": {
+    "reasons": [
+      "add_outer.y: criterion-exceeded (0.993725 > 0.0309554 (max_abs_error))",
+      "gain_outer.y: criterion-exceeded (0.5 > 0.00848884 (max_abs_error))",
+      "add_inner.y: criterion-exceeded (1 > 0.0159745 (max_abs_error))",
+      "gain_inner.y: criterion-exceeded (0.503142 > 0.00848727 (max_abs_error))"
+    ],
+    "status": "fail"
+  },
   "request": {
     "case": "baseline",
     "model": "signal_nested_algebraic_loop",
@@ -43,8 +68,11 @@
   "summary": {
     "backend_count": 2,
     "comparison_count": 1,
+    "gate_result": "fail",
     "max_abs_error": 2.00628318531,
-    "max_rel_error": 0.0,
+    "max_rel_error": 0.6803849008664039,
+    "max_shift_abs_error": 1.0,
+    "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 5
   }
 }

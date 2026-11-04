@@ -1,0 +1,28 @@
+{
+  "analysis": "step_single",
+  "analysis_root": "../../../analyses/variation_conditional_requires/step_single",
+  "backends": [
+    "ssp4sim",
+    "omsimulator"
+  ],
+  "case": "step_single",
+  "compare_signals": [
+    "source.y"
+  ],
+  "description": "Legal: step source with a single gain stage.",
+  "gate": {
+    "atol": 0.001,
+    "max_invariant_abs_error": 1e-08,
+    "rtol": 0.01
+  },
+  "model": "variation_conditional_requires",
+  "resources_dir": "../../../models/variation_conditional_requires/step_single/model/resources",
+  "root_system_name": "System",
+  "ssp_root": "../../../models/variation_conditional_requires/step_single/model",
+  "system_structure": "../../../models/variation_conditional_requires/step_single/model/SystemStructure.ssd",
+  "window": {
+    "interval": 0.001,
+    "start_time": 0.0,
+    "stop_time": 1.0
+  }
+}

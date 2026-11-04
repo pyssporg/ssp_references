@@ -1,0 +1,1 @@
+the goal is to start up an investigation under the breakdown evolution regarding how to capture variation points, according to 15288, in sysmlv2 and enable generating multiple simulation models from a single system architecture

@@ -6,9 +6,6 @@ from pathlib import Path
 from utils.config import REPO_ROOT
 
 
-LS_REF_EXPERIMENTS_RELATIVE = Path("extra") / "org.fmi-standard.fmi-ls-ref" / "experiments.xml"
-
-
 def sanitize_label(label: str) -> str:
     sanitized = []
     for character in label:
@@ -25,6 +22,7 @@ class ArtifactLayout:
     model_name: str
     case_name: str
     ssp_root: Path
+    analysis_root: Path | None = None
 
     @classmethod
     def from_ssp_root(cls, ssp_root: Path) -> "ArtifactLayout":
@@ -35,6 +33,24 @@ class ArtifactLayout:
             model_name=resolved_root.parent.name,
             case_name=resolved_root.name,
             ssp_root=resolved_root,
+        )
+
+    @classmethod
+    def from_model_root(
+        cls,
+        model_name: str,
+        case_name: str,
+        ssp_root: Path,
+        analysis_root: Path | None = None,
+    ) -> "ArtifactLayout":
+        resolved_root = ssp_root.resolve()
+        if not resolved_root.exists():
+            raise FileNotFoundError(f"SSP root not found: {resolved_root}")
+        return cls(
+            model_name=model_name,
+            case_name=case_name,
+            ssp_root=resolved_root,
+            analysis_root=analysis_root.resolve() if analysis_root is not None else None,
         )
 
     @property
@@ -68,12 +84,14 @@ class ArtifactLayout:
         return self.ssp_root / "SystemStructure.ssd"
 
     @property
-    def ls_ref_experiments_path(self) -> Path:
-        return self.ssp_root / LS_REF_EXPERIMENTS_RELATIVE
-
-    @property
     def resources_dir(self) -> Path:
         return self.ssp_root / "resources"
+
+    @property
+    def analysis_descriptor_path(self) -> Path | None:
+        if self.analysis_root is None:
+            return None
+        return self.analysis_root / "analysis.json"
 
     def simulation_run_dir(self, backend: str) -> Path:
         return self.simulation_case_root / sanitize_label(backend)
@@ -101,6 +119,23 @@ class ArtifactLayout:
 
     def comparison_metrics_path(self, run_a_backend: str, run_b_backend: str) -> Path:
         return self.comparison_run_dir(run_a_backend, run_b_backend) / "metrics.csv"
+
+    def reference_comparison_dir(self, backend: str, reference_label: str) -> Path:
+        return (
+            self.comparison_case_root
+            / "references"
+            / comparison_run_name(backend, reference_label)
+        )
+
+    def reference_comparison_manifest_path(self, backend: str, reference_label: str) -> Path:
+        return self.reference_comparison_dir(backend, reference_label) / "comparison.json"
+
+    def reference_comparison_metrics_path(self, backend: str, reference_label: str) -> Path:
+        return self.reference_comparison_dir(backend, reference_label) / "metrics.csv"
+
+    @property
+    def reference_comparison_batch_manifest_path(self) -> Path:
+        return self.comparison_case_root / "reference_comparisons.json"
 
     @property
     def comparison_batch_manifest_path(self) -> Path:

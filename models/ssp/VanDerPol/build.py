@@ -1,72 +1,34 @@
 #!/usr/bin/env python3
+"""Build the VanDerPol model and its baseline, fast, and slow analyses.
+
+The SysML authors the single ``VanDerPol`` component with its ``x0``/``x1``
+outputs and ``mu`` parameter connector. The baseline analysis applies no scenario
+and uses the FMU default ``mu = 1.0``; the fast and slow analyses apply
+``mu = 2.0`` and ``mu = 0.5`` as root external SSV+SSM bindings.
+"""
 
 from __future__ import annotations
 
-import tempfile
-import sys
 from pathlib import Path
 
-from pyssp_standard import LSRefExperiments, SSP, get_repo_root
-from pyssp_standard.common.archive import unpack_archive
-from pyssp_standard.standard.ls_ref.model import (
-    LSRefExperiment,
-    LSRefExperimentResource,
-)
+from pyssp_workflow.authoring import build_fixture, report_builds
+from pyssp_workflow.binding import bind
+from pyssp_workflow.analysis import read_scenario
 
-MODEL_DIR = Path(__file__).resolve().parent
-REPO_ROOT = get_repo_root(file="__SSP_REF_ROOT__")
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
-
-from utils.fmu import strip_model_exchange
-from utils.model import ModelMetaData
-
-
-def create_ssp(model: ModelMetaData, temp_dir, exp: LSRefExperiment):
-    ssp_path = temp_dir / "model.ssp"
-    ssp_path.unlink(missing_ok=True)
-
-    with SSP(ssp_path, mode="a") as ssp:
-        copied_resource_name = ssp.add_fmu(
-            "fmu",
-            model.paths.shared_fmu_dir("VanDerPol"),
-            resource_name="VanDerPol.fmu",
-            implementation="CoSimulation",
-        )
-        strip_model_exchange(ssp.runtime.resolve(f"resources/{copied_resource_name}"))
-        for parameters in exp.parameters:
-            ssp.add_external_parameterset(
-                MODEL_DIR / parameters.source, MODEL_DIR / parameters.mapping
-            )
-
-        for resource in [*exp.stimuli, *exp.references]: 
-            ssp.add_resource(MODEL_DIR / resource.source)
-            if resource.mapping is not None:
-                ssp.add_resource(MODEL_DIR / resource.mapping)
-
-        with ssp.ls_ref_experiments() as experiments:
-            experiments.add_experiment(exp)
-
-    unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
-
-
-EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
-
-
-def main() -> int:
-    model = ModelMetaData(MODEL_DIR)
-    model.reset_build_dir()
-
-    LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
-
-    with tempfile.TemporaryDirectory(prefix="vanderpol_") as temp_dir:
-        with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
-            for exp in experiments.xml.experiments:
-                create_ssp(model, Path(temp_dir), exp)
-
-    print(f"Built {model.name}")
-    return 0
-
+REPO_ROOT = Path(__file__).resolve().parents[3]
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    builds = build_fixture(
+        model_dir=Path(__file__).resolve().parent,
+        repo_root=REPO_ROOT,
+        analyses=("baseline", "fast", "slow"),
+        # The shared VanDerPol FMU declares both ModelExchange and
+        # CoSimulation; the pyssp_standard FMI2 reader keeps only the first
+        # interface, so it reports ModelExchange and rejects CoSimulation.
+        validate_fmus=False,
+    )
+    fast = read_scenario(builds["fast"].descriptor)
+    bind(builds["fast"], fast.ssv_path, ssm=fast.ssm_path)
+    slow = read_scenario(builds["slow"].descriptor)
+    bind(builds["slow"], slow.ssv_path, ssm=slow.ssm_path)
+    raise SystemExit(report_builds(builds))

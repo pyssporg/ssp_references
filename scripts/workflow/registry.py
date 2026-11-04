@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Sequence
 
 from utils.config import REPO_ROOT
 
+from .gate import GateConfig
 from .io import read_json, write_json
 from .layout import ArtifactLayout
 
@@ -18,26 +19,33 @@ def default_registry_path() -> Path:
 class RegistryReferenceCsv:
     label: str
     path: Path
+    gate: bool = True
 
     @classmethod
     def from_dict(cls, data: dict) -> "RegistryReferenceCsv":
         return cls(
             label=str(data["label"]),
             path=Path(str(data["path"])),
+            gate=bool(data.get("gate", True)),
         )
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        data: dict[str, object] = {
             "label": self.label,
             "path": self.path.as_posix(),
         }
+        if not self.gate:
+            data["gate"] = False
+        return data
 
 
 @dataclass(frozen=True)
 class RegistryCase:
     name: str
     backends: tuple[str, ...]
+    analysis: str | None = None
     reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
+    gate: GateConfig = field(default_factory=GateConfig)
 
     @classmethod
     def from_dict(cls, data: dict) -> "RegistryCase":
@@ -47,13 +55,16 @@ class RegistryCase:
         normalized_backends = tuple(str(backend).lower() for backend in backends)
         if not normalized_backends:
             raise ValueError("Registry case backends must not be empty")
+        analysis = data.get("analysis")
         return cls(
             name=str(data["name"]),
             backends=normalized_backends,
+            analysis=str(analysis) if analysis is not None else None,
             reference_csvs=tuple(
                 RegistryReferenceCsv.from_dict(reference)
                 for reference in data.get("reference_csvs", [])
             ),
+            gate=GateConfig.from_dict(data.get("gate")),
         )
 
     def to_dict(self) -> dict[str, object]:
@@ -61,8 +72,12 @@ class RegistryCase:
             "name": self.name,
             "backends": list(self.backends),
         }
+        if self.analysis is not None:
+            data["analysis"] = self.analysis
         if self.reference_csvs:
             data["reference_csvs"] = [reference.to_dict() for reference in self.reference_csvs]
+        if self.gate != GateConfig():
+            data["gate"] = self.gate.to_dict()
         return data
 
 
@@ -71,6 +86,7 @@ class RegistryModel:
     name: str
     compare_signals: tuple[str, ...]
     cases: tuple[RegistryCase, ...]
+    build: str | None = None
 
     @classmethod
     def from_dict(cls, data: dict) -> "RegistryModel":
@@ -84,18 +100,23 @@ class RegistryModel:
         cases = data.get("cases")
         if not isinstance(cases, list):
             raise TypeError("Registry model cases must be a list")
+        build = data.get("build")
         return cls(
             name=str(data["name"]),
             compare_signals=normalized_compare_signals,
             cases=tuple(RegistryCase.from_dict(case) for case in cases),
+            build=str(build) if build is not None else None,
         )
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        data: dict[str, object] = {
             "name": self.name,
             "compare_signals": list(self.compare_signals),
             "cases": [case.to_dict() for case in self.cases],
         }
+        if self.build is not None:
+            data["build"] = self.build
+        return data
 
 
 @dataclass(frozen=True)
@@ -106,9 +127,24 @@ class SimulationCaseSpec:
     backends: tuple[str, ...]
     compare_signals: tuple[str, ...]
     reference_csvs: tuple[RegistryReferenceCsv, ...] = ()
+    gate: GateConfig = field(default_factory=GateConfig)
+    build_name: str | None = None
+    analysis_name: str | None = None
+    analysis_root: Path | None = None
+
+    @property
+    def is_analysis_case(self) -> bool:
+        return self.analysis_root is not None and self.analysis_name is not None
 
     @property
     def layout(self) -> ArtifactLayout:
+        if self.is_analysis_case:
+            return ArtifactLayout.from_model_root(
+                self.model_name,
+                self.analysis_name,
+                self.ssp_root,
+                self.analysis_root,
+            )
         return ArtifactLayout.from_ssp_root(self.ssp_root)
 
 
@@ -165,7 +201,32 @@ class SimulationRegistry:
                 if not selected_backends:
                     continue
 
-                ssp_root = REPO_ROOT / "artifacts" / "models" / model.name / case.name
+                if model.build is not None or case.analysis is not None:
+                    build_name = model.build or "model"
+                    analysis_name = case.analysis or case.name
+                    ssp_root = (
+                        REPO_ROOT
+                        / "artifacts"
+                        / "models"
+                        / model.name
+                        / analysis_name
+                        / build_name
+                    )
+                    analysis_root = (
+                        REPO_ROOT
+                        / "artifacts"
+                        / "analyses"
+                        / model.name
+                        / analysis_name
+                    )
+                else:
+                    build_name = None
+                    analysis_name = None
+                    ssp_root = (
+                        REPO_ROOT / "artifacts" / "models" / model.name / case.name
+                    )
+                    analysis_root = None
+
                 specs.append(
                     SimulationCaseSpec(
                         model_name=model.name,
@@ -174,6 +235,10 @@ class SimulationRegistry:
                         backends=selected_backends,
                         compare_signals=model.compare_signals,
                         reference_csvs=case.reference_csvs,
+                        gate=case.gate,
+                        build_name=build_name,
+                        analysis_name=analysis_name,
+                        analysis_root=analysis_root,
                     )
                 )
         return specs

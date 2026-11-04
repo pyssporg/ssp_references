@@ -13,6 +13,13 @@ __pycache__/
 *.csv
 *.mat
 *.log
+artifacts/runs/
 
 .opencode/
 opencode.json
+
+.agents/
+
+.vscode/
+
+.ruff_cache/

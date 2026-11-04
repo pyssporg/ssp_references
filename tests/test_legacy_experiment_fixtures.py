@@ -1,0 +1,98 @@
+"""Guard for the legacy SSP body whose experiment is authored in SysML.
+
+The model hierarchy stays in the checked-in ``ssp/`` directory. The SysML
+composition declares only a boundary ``SspModel`` marker and the analysis
+experiment. These tests check the descriptor and that the built SSD still comes
+from the legacy body rather than from the boundary marker. No LS-REF experiment
+is generated.
+"""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from xml.etree import ElementTree as ET
+
+import pytest
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SSD = "{http://ssp-standard.org/SSP1/SystemStructureDescription}"
+
+EXPECTED: dict[str, dict] = {
+    "dcmotor": {
+        "model_source": "models/ssp/dcmotor/ssp",
+        "start_time": 0.0,
+        "stop_time": 1.0,
+        "step_size": 0.001,
+        "built_components": ["SuT_edrive_mass", "SuT_emachine_model", "stimuli_model"],
+        "source_components": ["stimuli_model"],
+        "source_subsystems": ["SuT"],
+    },
+}
+
+
+def _root(system_structure_path: Path):
+    return ET.parse(system_structure_path).getroot().find(f"{SSD}System")
+
+
+def _names(system, element: str) -> list[str]:
+    return sorted(item.get("name") for item in system.findall(f"{SSD}Elements/{SSD}{element}"))
+
+
+def _descriptor(model: str) -> dict:
+    path = REPO_ROOT / "artifacts" / "analyses" / model / "baseline" / "analysis.json"
+    if not path.is_file():
+        pytest.skip(f"analysis descriptor missing for {model}; run build_models.py")
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("model", sorted(EXPECTED))
+def test_analysis_descriptor_is_experiment_only(model: str) -> None:
+    expected = EXPECTED[model]
+    descriptor = _descriptor(model)
+
+    assert descriptor["analysis"] == "baseline"
+    assert descriptor["model_source"] == expected["model_source"]
+    assert "scenario" not in descriptor
+    experiment = descriptor["experiment"]
+    assert experiment["start_time"] == expected["start_time"]
+    assert experiment["stop_time"] == expected["stop_time"]
+    assert experiment["step_size"] == expected["step_size"]
+
+    analysis_dir = REPO_ROOT / "artifacts" / "analyses" / model / "baseline"
+    assert [path.name for path in analysis_dir.iterdir()] == ["analysis.json"]
+
+
+@pytest.mark.parametrize("model", sorted(EXPECTED))
+def test_built_body_packages_no_ls_ref_experiment(model: str) -> None:
+    built = REPO_ROOT / "artifacts" / "models" / model / "baseline" / "model"
+    if not built.is_dir():
+        pytest.skip(f"build output missing for {model}; run build_models.py")
+
+    assert not (
+        built / "extra" / "org.fmi-standard.fmi-ls-ref" / "experiments.xml"
+    ).exists()
+
+
+@pytest.mark.parametrize("model", sorted(EXPECTED))
+def test_built_ssd_comes_from_the_legacy_body(model: str) -> None:
+    expected = EXPECTED[model]
+    built = REPO_ROOT / "artifacts" / "models" / model / "baseline" / "model" / "SystemStructure.ssd"
+    if not built.is_file():
+        pytest.skip(f"build output missing for {model}; run build_models.py")
+
+    system = _root(built)
+    assert _names(system, "Component") == expected["built_components"]
+    assert _names(system, "System") == []
+
+    source = _root(REPO_ROOT / "models" / "ssp" / model / "ssp" / "SystemStructure.ssd")
+    assert _names(source, "Component") == expected["source_components"]
+    assert _names(source, "System") == expected["source_subsystems"]
+
+
+def test_registry_selects_analysis_cases() -> None:
+    data = json.loads((REPO_ROOT / "artifacts" / "simulation_registry.json").read_text())
+    models = {model["name"]: model for model in data["models"]}
+    for model in EXPECTED:
+        assert models[model]["build"] == "model"
+        assert models[model]["cases"][0]["analysis"] == "baseline"

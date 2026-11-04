@@ -1,0 +1,17 @@
+{
+  "artifacts": [
+    "config.json",
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "sine_baseline",
+    "model": "variation_conditional_excludes",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.08894693991169333,
+  "status": "completed",
+  "tolerance": 0.0001
+}

@@ -1,0 +1,19 @@
+{
+  "analysis": "test_baseline",
+  "composition": "System",
+  "description": "Step through a fixed gain over the test window.",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "signal_step_gain",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "test_baseline.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssv:ParameterSet xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" version="1.0" name="ScenarioSet">
+  <ssv:Parameters>
+    <ssv:Parameter name="pipeA.L">
+      <ssv:Real value="0.976535328081166" />
+    </ssv:Parameter>
+    <ssv:Parameter name="pipeB.L">
+      <ssv:Real value="0.976535328081166" />
+    </ssv:Parameter>
+  </ssv:Parameters>
+</ssv:ParameterSet>

@@ -4,25 +4,19 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
+from pyssp_workflow.analysis import read_analysis_descriptor
+
+from utils.domain import SimulationWindow
+
+from .gate import GateConfig
 from .io import read_json, relative_path, resolve_path, write_json
-from .layout import ArtifactLayout, LS_REF_EXPERIMENTS_RELATIVE
+from .layout import ArtifactLayout
 from .registry import SimulationCaseSpec
 
 
-@dataclass(frozen=True)
-class SimulationWindow:
-    start_time: float
-    stop_time: float
-    interval: float
-
-
-def _parse_float(attributes: dict[str, str], key: str, path: Path) -> float:
-    if key not in attributes:
-        raise KeyError(f"Missing '{key}' in LS-REF experiment {path}")
-    return float(attributes[key])
-
-
 def _read_root_system_name(system_structure_path: Path) -> str:
+    # Deliberately lenient: the SSD facade requires a conformant root
+    # name/version, while setup only needs the first system name.
     if not system_structure_path.is_file():
         raise FileNotFoundError(f"System structure not found: {system_structure_path}")
 
@@ -37,43 +31,18 @@ def _read_root_system_name(system_structure_path: Path) -> str:
     return str(system_name)
 
 
-def read_experiment_window(ssp_root: Path, case_name: str) -> tuple[SimulationWindow, float, str | None]:
-    experiments_path = ssp_root / LS_REF_EXPERIMENTS_RELATIVE
-    if not experiments_path.is_file():
-        raise FileNotFoundError(f"LS-REF experiments file not found: {experiments_path}")
-
-    root = ET.parse(experiments_path).getroot()
-    for experiment in root.findall(".//{*}Experiment"):
-        if experiment.attrib.get("name") != case_name:
-            continue
-
-        start_time = _parse_float(experiment.attrib, "startTime", experiments_path)
-        stop_time = _parse_float(experiment.attrib, "stopTime", experiments_path)
-        interval = _parse_float(experiment.attrib, "stepSize", experiments_path)
-        tolerance = _parse_float(experiment.attrib, "tolerance", experiments_path)
-        description = experiment.attrib.get("description")
-        return (
-            SimulationWindow(
-                start_time=start_time,
-                stop_time=stop_time,
-                interval=interval,
-            ),
-            tolerance,
-            description,
-        )
-
-    raise ValueError(f"Experiment '{case_name}' not found in {experiments_path}")
-
-
 @dataclass(frozen=True)
 class SimulationSetup:
     layout: ArtifactLayout
     window: SimulationWindow
-    tolerance: float
+    tolerance: float | None = None
     backends: tuple[str, ...] = field(default_factory=tuple)
     compare_signals: tuple[str, ...] = field(default_factory=tuple)
     root_system_name: str = ""
     description: str | None = None
+    gate: GateConfig = field(default_factory=GateConfig)
+    analysis_name: str | None = None
+    analysis_root: Path | None = None
 
     def __post_init__(self) -> None:
         normalized_backends = tuple(str(backend).lower() for backend in self.backends)
@@ -91,35 +60,59 @@ class SimulationSetup:
             raise ValueError("Simulation setup must declare a root system name")
         object.__setattr__(self, "root_system_name", root_system_name)
 
+    @property
+    def is_analysis(self) -> bool:
+        return self.analysis_root is not None
+
     @classmethod
     def from_spec(cls, spec: SimulationCaseSpec) -> "SimulationSetup":
-        layout = ArtifactLayout.from_ssp_root(spec.ssp_root)
-        if layout.model_name != spec.model_name or layout.case_name != spec.case_name:
+        if spec.analysis_root is None:
             raise ValueError(
-                "Registry spec does not match the SSP root layout: "
-                f"{spec.model_name}/{spec.case_name} -> {spec.ssp_root}"
+                f"Case '{spec.model_name}/{spec.case_name}' has no analysis descriptor; "
+                "the analysis supplies the experiment window"
             )
+        descriptor = spec.analysis_root / "analysis.json"
+        if not descriptor.is_file():
+            raise FileNotFoundError(f"Analysis descriptor not found: {descriptor}")
 
-        window, tolerance, description = read_experiment_window(spec.ssp_root, spec.case_name)
+        analysis = read_analysis_descriptor(descriptor)
+        layout = ArtifactLayout.from_model_root(
+            spec.model_name,
+            analysis.analysis,
+            spec.ssp_root,
+            spec.analysis_root,
+        )
         root_system_name = _read_root_system_name(layout.system_structure_path)
         return cls(
             layout=layout,
-            window=window,
-            tolerance=tolerance,
+            window=SimulationWindow(
+                start_time=analysis.experiment.start_time,
+                stop_time=analysis.experiment.stop_time,
+                interval=analysis.experiment.step_size,
+            ),
             backends=spec.backends,
             compare_signals=spec.compare_signals,
             root_system_name=root_system_name,
-            description=description,
+            gate=spec.gate,
+            analysis_name=analysis.analysis,
+            analysis_root=spec.analysis_root,
+            description=analysis.description,
         )
 
     @classmethod
     def from_manifest(cls, path: Path) -> "SimulationSetup":
         data = read_json(path)
         manifest_root = path.parent
+        analysis_root = (
+            resolve_path(manifest_root, data["analysis_root"]).resolve()
+            if data.get("analysis_root")
+            else None
+        )
         layout = ArtifactLayout(
             model_name=data["model"],
             case_name=data["case"],
             ssp_root=resolve_path(manifest_root, data["ssp_root"]).resolve(),
+            analysis_root=analysis_root,
         )
         window = SimulationWindow(**data["window"])
         backends = data["backends"]
@@ -132,11 +125,14 @@ class SimulationSetup:
         return cls(
             layout=layout,
             window=window,
-            tolerance=float(data["tolerance"]),
+            tolerance=data.get("tolerance"),
             backends=tuple(str(backend).lower() for backend in backends),
             compare_signals=tuple(str(signal).strip() for signal in compare_signals if str(signal).strip()),
             root_system_name=root_system_name,
             description=data.get("description"),
+            gate=GateConfig.from_dict(data.get("gate")),
+            analysis_name=data.get("analysis"),
+            analysis_root=analysis_root,
         )
 
     @property
@@ -166,16 +162,21 @@ class SimulationSetup:
                 "stop_time": self.window.stop_time,
                 "interval": self.window.interval,
             },
-            "tolerance": self.tolerance,
             "backends": list(self.backends),
             "compare_signals": list(self.compare_signals),
             "root_system_name": self.root_system_name,
+            "gate": self.gate.to_dict(),
             "system_structure": relative_path(manifest_root, self.layout.system_structure_path),
-            "ls_ref_experiments": relative_path(manifest_root, self.layout.ls_ref_experiments_path),
             "resources_dir": relative_path(manifest_root, self.layout.resources_dir),
         }
+        if self.tolerance is not None:
+            data["tolerance"] = self.tolerance
         if self.description is not None:
             data["description"] = self.description
+        if self.analysis_name is not None:
+            data["analysis"] = self.analysis_name
+        if self.analysis_root is not None:
+            data["analysis_root"] = relative_path(manifest_root, self.analysis_root)
         return data
 
     def write_manifest(self) -> Path:

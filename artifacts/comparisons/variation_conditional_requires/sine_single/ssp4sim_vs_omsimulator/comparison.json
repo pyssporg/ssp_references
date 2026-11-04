@@ -1,0 +1,36 @@
+{
+  "candidate_label": "omsimulator",
+  "gate": {
+    "reasons": [],
+    "status": "pass"
+  },
+  "metrics": "metrics.csv",
+  "reference_label": "ssp4sim",
+  "request": {
+    "case": "sine_single",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/variation_conditional_requires/sine_single/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/variation_conditional_requires/sine_single/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "summary": {
+    "compared_signal_count": 1,
+    "max_abs_error": 4.985699999515703e-07,
+    "max_rel_error": 1.6618999998385675e-07,
+    "max_shift_abs_error": 4.985699999515703e-07,
+    "max_signal_invariant_abs_error": 0.0,
+    "mean_abs_error": 1.8016712759520302e-07,
+    "min_coverage": 1.0,
+    "rmse": 2.43993381177401e-07,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "omsimulator",
+    "signal_invariant_count": 0,
+    "time_points": 1001
+  }
+}

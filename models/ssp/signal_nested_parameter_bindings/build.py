@@ -1,100 +1,82 @@
 #!/usr/bin/env python3
+"""Build signal_nested_parameter_bindings and its baseline analysis.
+
+Form under test: nested components carry inline parameter sets while a root
+external SSV+SSM maps into ``add.k1``/``add.k2`` and overrides the nested
+``inner.sine.amplitude``. The SysML composes the nested boundary and its
+connections; post-processing applies both binding forms.
+"""
 
 from __future__ import annotations
 
-import shutil
-import sys
 import tempfile
 from pathlib import Path
 
+from pyssp_standard import SSM, SSP
+from pyssp_workflow.authoring import build_fixture, report_builds
+from pyssp_workflow.fixture import BuiltFixture
+from pyssp_workflow.analysis import read_scenario, scenario_targets
 
-MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(REPO_ROOT / "scripts"))
-sys.path.insert(0, str(REPO_ROOT / "3rd_party" / "pyssp_standard"))
 
-from pyssp_standard import LSRefExperiments, SSP
-from pyssp_standard.common.archive import package_archive, unpack_archive
-from pyssp_standard.standard.ls_ref.model import LSRefExperiment
-from utils.fmu import strip_model_exchange
-from utils.model import ModelMetaData
+MODEL_NAME = "signal_nested_parameter_bindings"
+NESTED_SYSTEM = "inner"
 
-
-def _copy_shared_fmus(resources_dir: Path, model: ModelMetaData) -> None:
-    """Copy shared FMU stubs into the build SSP resources directory."""
-    fmus = [
-        ("Step", "Modelica.Blocks.Sources.Step"),
-        ("Add", "Modelica.Blocks.Math.Add"),
-        ("Sine", "Modelica.Blocks.Sources.Sine"),
-        ("Gain", "Modelica.Blocks.Math.Gain"),
-    ]
-    for dir_name, lib_name in fmus:
-        src = model.paths.shared_fmu_dir(lib_name)
-        dst = resources_dir / dir_name
-        dst.mkdir(parents=True, exist_ok=True)
-        for item in src.iterdir():
-            if item.is_dir():
-                shutil.copytree(item, dst / item.name, dirs_exist_ok=True)
-            else:
-                shutil.copy2(item, dst / item.name)
-        strip_model_exchange(dst)
+SCENARIO_SSV_NAME = "signal_nested_parameter_bindings_parameters.ssv"
+ROOT_MAPPING_NAME = "signal_nested_parameter_bindings_mapping.ssm"
+ROOT_MAPPINGS = (
+    ("add_k1", "add.k1"),
+    ("add_k2", "add.k2"),
+    ("inner_sine_amplitude", "inner.sine.amplitude"),
+)
 
 
-def _resolve_fixture_resource(relative_path: str, model_dir: Path) -> Path:
-    root_path = model_dir / relative_path
-    if root_path.exists():
-        return root_path
-
-    ssp_path = model_dir / "ssp" / relative_path
-    if ssp_path.exists():
-        return ssp_path
-
-    raise FileNotFoundError(f"Missing fixture resource: {relative_path}")
-
-
-def create_ssp(model: ModelMetaData, temp_dir: Path, exp: LSRefExperiment) -> None:
-    if not model.paths.source_ssp_dir.is_dir():
-        raise FileNotFoundError(f"Local SSP directory not found: {model.paths.source_ssp_dir}")
-
-    ssp_copy = temp_dir / "ssp"
-    shutil.copytree(model.paths.source_ssp_dir, ssp_copy)
-
-    # Add shared FMUs at build time (not inlined in source)
-    _copy_shared_fmus(ssp_copy / "resources", model)
-
-    ssp_path = temp_dir / "model.ssp"
-    ssp_path.unlink(missing_ok=True)
-    package_archive(ssp_copy, ssp_path, recursive=True)
-
-    with SSP(ssp_path, mode="a") as ssp:
-        for resource in [*exp.stimuli, *exp.references]:
-            ssp.add_resource(_resolve_fixture_resource(resource.source, MODEL_DIR))
-            if resource.mapping is not None:
-                ssp.add_resource(_resolve_fixture_resource(resource.mapping, MODEL_DIR))
-
-        with ssp.ls_ref_experiments() as experiments:
-            experiments.add_experiment(exp)
-
-    unpack_archive(ssp_path, model.paths.build_dir / exp.name, recursive_fmus=True, overwrite=True)
+def _inline_parameters(build: BuiltFixture) -> None:
+    """Step component inline, inner system-level inline, gain component inline."""
+    targets = scenario_targets(read_scenario(build.descriptor))
+    step = {
+        name.split(".")[-1]: value
+        for name, value in targets.items()
+        if name.startswith("step.")
+    }
+    inner_system = {
+        name[len(f"{NESTED_SYSTEM}.") :]: value
+        for name, value in targets.items()
+        if name.startswith(f"{NESTED_SYSTEM}.sine.")
+    }
+    gain = {
+        name.split(".")[-1]: value
+        for name, value in targets.items()
+        if name.startswith(f"{NESTED_SYSTEM}.gain.")
+    }
+    with SSP(build.model_dir, mode="a") as ssp, ssp.system_structure() as ssd:
+        root = ssd.system
+        next(e for e in root.elements if e.name == "step").extend_inline_parameterset(step)
+        inner = next(e for e in root.elements if e.name == NESTED_SYSTEM)
+        inner.extend_inline_parameterset(inner_system)
+        next(e for e in inner.elements if e.name == "gain").extend_inline_parameterset(gain)
 
 
-EXPERIMENTS_PATH = MODEL_DIR / "experiments.xml"
-
-
-def main() -> int:
-    model = ModelMetaData(MODEL_DIR)
-    model.reset_build_dir()
-
-    LSRefExperiments.check_document_compliance(EXPERIMENTS_PATH)
-
-    with tempfile.TemporaryDirectory(prefix="signal_nested_parameter_bindings_") as temp_dir:
-        with LSRefExperiments(EXPERIMENTS_PATH) as experiments:
-            for exp in experiments.xml.experiments:
-                create_ssp(model, Path(temp_dir), exp)
-
-    print(f"Built {model.name}")
-    return 0
+def _root_external_binding(build: BuiltFixture) -> None:
+    with tempfile.TemporaryDirectory(prefix=f"{MODEL_NAME}_") as temp_dir:
+        ssm_path = Path(temp_dir) / ROOT_MAPPING_NAME
+        with SSM(ssm_path, mode="w") as ssm:
+            for source, target in ROOT_MAPPINGS:
+                ssm.xml.add_mapping(source, target)
+        with SSP(build.model_dir, mode="a") as ssp:
+            ssp.bind_parameters(
+                build.descriptor.ssv_path,
+                mapping=ssm_path,
+                name=SCENARIO_SSV_NAME,
+            )
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    builds = build_fixture(
+        model_dir=Path(__file__).resolve().parent,
+        repo_root=REPO_ROOT,
+        analyses=("baseline",),
+    )
+    _inline_parameters(builds["baseline"])
+    _root_external_binding(builds["baseline"])
+    raise SystemExit(report_builds(builds))

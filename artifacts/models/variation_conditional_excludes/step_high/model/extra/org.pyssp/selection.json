@@ -1,0 +1,8 @@
+{
+  "composition": "System",
+  "configuration": "StepSystem",
+  "selections": {
+    "source": "stepImplementation",
+    "step_high_scenario": "highGain"
+  }
+}

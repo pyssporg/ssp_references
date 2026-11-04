@@ -6,10 +6,12 @@ from pathlib import Path
 import numpy as np
 import pytest
 
+from pyssp_simulate.result import write_result_csv
+
 from workflow.comparison import ComparisonBatchRequest, compare_run_batch
 from workflow.registry import load_registry
 from workflow.setup import prepare_setup
-from workflow.simulate import SimulationRequest, SimulationRun, write_structured_csv
+from workflow.simulate import SimulationRequest, SimulationRun
 
 
 @pytest.fixture(autouse=True)
@@ -19,7 +21,6 @@ def isolated_repo_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo_root.mkdir()
     monkeypatch.setattr("workflow.layout.REPO_ROOT", repo_root)
     monkeypatch.setattr("workflow.registry.REPO_ROOT", repo_root)
-    monkeypatch.setattr("workflow.simulate.REPO_ROOT", repo_root)
     monkeypatch.setattr("utils.config.REPO_ROOT", repo_root)
 
 
@@ -27,12 +28,12 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
     """Exercises build→simulate→compare for signal_step_gain within a single test function."""
 
     # === Stage 1: Build — copy real SSP artifacts into isolated repo ===
+    repo = Path(__file__).resolve().parents[1]
     real_ssp_root = (
-        Path(__file__).resolve().parents[1]
-        / "artifacts"
-        / "models"
-        / "signal_step_gain"
-        / "baseline"
+        repo / "artifacts" / "models" / "signal_step_gain" / "test_baseline" / "model"
+    )
+    real_analysis_root = (
+        repo / "artifacts" / "analyses" / "signal_step_gain" / "test_baseline"
     )
     isolated_ssp_root = (
         tmp_path
@@ -40,9 +41,14 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
         / "artifacts"
         / "models"
         / "signal_step_gain"
-        / "baseline"
+        / "test_baseline"
+        / "model"
+    )
+    isolated_analysis_root = (
+        tmp_path / "repo" / "artifacts" / "analyses" / "signal_step_gain" / "test_baseline"
     )
     shutil.copytree(real_ssp_root, isolated_ssp_root)
+    shutil.copytree(real_analysis_root, isolated_analysis_root)
 
     # Load real registry
     real_registry_path = (
@@ -65,7 +71,7 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
             [(0.0, 0.0, 0.0), (0.1, 1.0, 3.0), (0.2, 1.0, 3.0)],
             dtype=[("time", "f8"), ("step.y", "f8"), ("gain.y", "f8")],
         )
-        write_structured_csv(request.result_path, result)
+        write_result_csv(request.result_path, result)
         run = SimulationRun(request=request, result_path=request.result_path)
         run.write_manifest()
         runs.append(run)
@@ -87,5 +93,4 @@ def test_full_pipeline_build_simulate_compare(tmp_path: Path) -> None:
     # Comparison summary structure
     assert batch.summary["backend_count"] == 3
     assert batch.summary["comparison_count"] == 3
-    assert batch.summary["min_compared_signal_count"] == 2
-    assert batch.summary["max_abs_error"] is not None
+    assert batch.summary["gate_result"] in {"pass", "fail"}

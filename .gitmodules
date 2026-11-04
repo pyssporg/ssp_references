@@ -1,3 +1,4 @@
-[submodule "3rd_party/pyssp_standard"]
-	path = 3rd_party/pyssp_standard
-	url = git@github.com:pyssporg/pyssp_standard.git
+[submodule "3rd_party/pyssp_workflow"]
+	path = 3rd_party/pyssp_workflow
+	url = https://github.com/pyssporg/pyssp_workflow.git
+	branch = main

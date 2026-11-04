@@ -1,0 +1,17 @@
+{
+  "artifacts": [
+    "config.json",
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "ssp4sim",
+    "case": "baseline",
+    "model": "signal_nested_pass_through",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.09345544409006834,
+  "status": "completed",
+  "tolerance": 0.0001
+}

@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssm:ParameterMapping xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" version="1.0">
+  <ssm:MappingEntry source="add_k1" target="add.k1" />
+  <ssm:MappingEntry source="add_k2" target="add.k2" />
+  <ssm:MappingEntry source="gain_k" target="inner.gain.k" />
+  <ssm:MappingEntry source="sine_amplitude" target="inner.sine.amplitude" />
+  <ssm:MappingEntry source="sine_f" target="inner.sine.f" />
+  <ssm:MappingEntry source="sine_offset" target="inner.sine.offset" />
+  <ssm:MappingEntry source="sine_phase" target="inner.sine.phase" />
+  <ssm:MappingEntry source="sine_startTime" target="inner.sine.startTime" />
+  <ssm:MappingEntry source="step_height" target="step.height" />
+  <ssm:MappingEntry source="step_offset" target="step.offset" />
+  <ssm:MappingEntry source="step_startTime" target="step.startTime" />
+</ssm:ParameterMapping>

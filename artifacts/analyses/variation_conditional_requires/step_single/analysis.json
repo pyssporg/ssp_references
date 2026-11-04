@@ -1,0 +1,19 @@
+{
+  "analysis": "step_single",
+  "composition": "System",
+  "description": "Legal: step source with a single gain stage.",
+  "experiment": {
+    "name": "experiment",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "variation_conditional_requires",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "step_single.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

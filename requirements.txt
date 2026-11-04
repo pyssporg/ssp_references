@@ -1,10 +1,18 @@
--e ./3rd_party/pyssp_standard
+-e ./3rd_party/pyssp_workflow/3rd_party/pyssp_standard
 #-e ./3rd_party/pyfmu_csv
 numpy
 scipy
 fmpy
 OMSimulator
-https://github.com/jkCXf9X4/ssp4sim/releases/latest/download/pyssp4sim-0.0.0+lat-cp39-abi3-linux_x86_64.whl
+# Local editable pyssp submodules. The development tree lives in
+# 3rd_party/pyssp_workflow; see 3rd_party/README.md.
+-e ./3rd_party/pyssp_workflow
+-e ./3rd_party/pyssp_workflow/3rd_party/pyssp_simulate
+# Build-stage SysML authoring; pyssp_workflow invokes its CLI.
+-e ./3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2
+# pyssp4sim is pinned: the old releases/latest URL changed asset names between
+# releases (v0.3.2 ships pyssp4sim-0.3.2-... not pyssp4sim-0.0.0+lat-...).
+https://github.com/jkCXf9X4/ssp4sim/releases/download/v0.3.2/pyssp4sim-0.3.2-cp39-abi3-linux_x86_64.whl
 https://github.com/pyssporg/pyfmu_csv/releases/download/v0.1.10/pyfmu_csv-0-py3-none-linux_x86_64.whl
 pytest
 matplotlib

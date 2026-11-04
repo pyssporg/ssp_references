@@ -1,8 +1,17 @@
 {
   "comparisons": [
     {
+      "candidate_label": "omsimulator",
+      "gate": {
+        "reasons": [
+          "SuT_emachine_model.M: criterion-exceeded (1.80949 > 0.0240676 (max_abs_error))",
+          "SuT_edrive_mass.wB: criterion-exceeded (286.528 > 0.905744 (max_abs_error))"
+        ],
+        "status": "fail"
+      },
       "manifest": "ssp4sim_vs_omsimulator/comparison.json",
       "metrics": "ssp4sim_vs_omsimulator/metrics.csv",
+      "reference_label": "ssp4sim",
       "runs": [
         {
           "backend": "ssp4sim",
@@ -16,15 +25,27 @@
       "summary": {
         "compared_signal_count": 2,
         "max_abs_error": 287.13445537300004,
+        "max_rel_error": 3.1736529611558555,
+        "max_shift_abs_error": 286.527563409,
+        "max_signal_invariant_abs_error": 0.0,
         "mean_abs_error": 94.91298994632376,
+        "min_coverage": 1.0,
         "rmse": 101.40378070125487,
         "run_a_label": "ssp4sim",
         "run_b_label": "omsimulator",
+        "signal_invariant_count": 0,
         "time_points": 1001
       }
     }
   ],
   "error": null,
+  "gate": {
+    "reasons": [
+      "SuT_emachine_model.M: criterion-exceeded (1.80949 > 0.0240676 (max_abs_error))",
+      "SuT_edrive_mass.wB: criterion-exceeded (286.528 > 0.905744 (max_abs_error))"
+    ],
+    "status": "fail"
+  },
   "request": {
     "case": "baseline",
     "model": "dcmotor",
@@ -43,8 +64,11 @@
   "summary": {
     "backend_count": 2,
     "comparison_count": 1,
+    "gate_result": "fail",
     "max_abs_error": 287.13445537300004,
-    "max_rel_error": 0.0,
+    "max_rel_error": 3.1736529611558555,
+    "max_shift_abs_error": 286.527563409,
+    "max_signal_invariant_abs_error": 0.0,
     "min_compared_signal_count": 2
   }
 }

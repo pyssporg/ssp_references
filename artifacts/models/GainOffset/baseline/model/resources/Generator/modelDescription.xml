@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<fmiModelDescription fmiVersion="2.0" modelName="Fmu.Generator" guid="{8b2a77fc-2b8b-5f9c-9f05-32381929b976}" description="Analytic source: y = offset + gain * sin(2 * pi * frequency * t)." generationTool="pyfmi_sysml2 tooling" generationDateAndTime="2026-01-01T00:00:00Z" variableNamingConvention="structured">
+<fmiModelDescription fmiVersion="2.0" modelName="Generator" guid="{eca0627b-dad2-5d71-90b2-e450ef615122}" description="Analytic source: y = offset + gain * sin(2 * pi * frequency * t)." generationTool="pyfmi_sysml2 tooling" generationDateAndTime="2026-01-01T00:00:00Z" variableNamingConvention="structured">
   <CoSimulation modelIdentifier="Generator" />
   <ModelVariables>
     <ScalarVariable name="gain" valueReference="0" causality="parameter" variability="fixed">

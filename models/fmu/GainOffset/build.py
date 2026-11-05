@@ -8,12 +8,12 @@ to ``artifacts/build/GainOffset/``: the C interface headers, the
 packaged ``Generator.fmu``. The public FMI 2.0 headers come from
 ``pyfmi_sysml2.fmi2_headers()``.
 
-The system fixture at ``models/ssp/GainOffset/`` links
-``architecture/GainOffset.sysml`` into its own ``architecture`` directory and
-builds the SSP afterwards, embedding the archive this script packages. The
-FMU build uses ``composition="Fmu"``: the architecture declares only the FMU,
-and the generator exports components below an explicit one-part root. The FMU
-architecture relies on the dialect core definitions. Nothing generated here is
+The system fixture at ``models/ssp/GainOffset/`` consumes this directory's
+``architecture`` as an additional input and builds the SSP afterwards,
+embedding the archive this script packages. The FMU build names the
+``Generator`` definition explicitly: the architecture marks it ``:> FmuModel``,
+so the generator exports that definition as the FMU. The FMU architecture
+relies on the dialect core definitions. Nothing generated here is
 hand-edited: the definition and the artifacts are both untracked rebuild
 products under ``artifacts/``.
 """
@@ -34,7 +34,7 @@ SOURCE_FILE = MODEL_DIR / "src" / "GainOffset.c"
 BUILD_DIR = REPO_ROOT / "artifacts" / "build" / "GainOffset"
 GENERATED_HEADER_DIR = BUILD_DIR / "sources"
 
-#: Leaf component that becomes the FMU; its name is the FMI modelIdentifier.
+#: FMU definition; its name is the FMI modelName and modelIdentifier.
 COMPONENT = "Generator"
 PLATFORM = "linux64"
 #: Injected so ``generationDateAndTime`` does not change between rebuilds.
@@ -46,15 +46,15 @@ def write_definition() -> tuple[tuple[Path, ...], Path]:
     architecture = pycps_sysml2.load(
         ARCHITECTURE_DIR, pycps_sysml2.core_definitions()
     )
-    # The FMU architecture declares only the FMU, so the generator needs an
-    # explicit composition root to export the component below it.
+    # ``Generator`` is the FMU definition itself (``:> FmuModel``), so both
+    # generators name it explicitly instead of reaching it through a container.
     headers = pyfmi_sysml2.generate_c_headers(
-        architecture, GENERATED_HEADER_DIR, composition="Fmu"
+        architecture, GENERATED_HEADER_DIR, composition=COMPONENT
     )
     (description,) = pyfmi_sysml2.generate_model_description(
         architecture,
         BUILD_DIR,
-        composition="Fmu",
+        composition=COMPONENT,
         component=COMPONENT,
         generation_time=GENERATION_TIME,
     )

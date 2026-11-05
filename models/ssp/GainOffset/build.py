@@ -2,9 +2,9 @@
 """Export the SSP and the ``baseline`` analysis for the GainOffset fixture.
 
 The FMU definitions are canonical in ``models/fmu/GainOffset/architecture/``
-and reached through the ``architecture/GainOffset.sysml`` symlink; this
-directory's own ``architecture/System.sysml`` holds the system composition and
-the ``baseline`` analysis. The FMU is built by
+and passed to the loader as an include root beside this directory's own
+``architecture/System.sysml``, which holds the system composition and the
+``baseline`` analysis. The FMU is built by
 ``models/fmu/GainOffset/build.py`` first; this script only derives the SSP and
 the analysis and embeds the committed archive at
 ``artifacts/build/GainOffset/Generator.fmu``.
@@ -34,6 +34,7 @@ def main() -> int:
         # The generated FMU offers CoSimulation only, so the default validation
         # accepts it without the ModelExchange workaround the imported FMUs need.
         validate_fmus=True,
+        includes=(REPO_ROOT / "models" / "fmu" / "GainOffset" / "architecture",),
     )
     return report_builds(builds)
 

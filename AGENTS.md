@@ -36,13 +36,14 @@ capability.
   for SysML-authored fixtures the system composition lives in
   `architecture/System.sysml`.
 - `models/fmu/` holds only the FMU's side of a SysML-authored fixture:
-  `architecture/*.sysml` (the FMU definitions and the `Fmu` composition root),
-  `src/`, `build.py`, and `FIXTURE.md`; a prepared fixture keeps its `fmu/`
-  body and `references/`. `models/ssp/<model>/architecture/<model>.sysml` is a
-  relative file symlink to the canonical FMU architecture. Generated FMI
-  definitions (headers, `modelDescription.xml`) plus compiled or packaged
-  outputs live under `artifacts/build/<model>/`. The build runs FMU then SSP:
-  `run-all` builds every FMU before any SSP.
+  `architecture/*.sysml` (its complete definition, with the component declared
+  directly as `part def ... :> FmuModel`), `src/`, `build.py`, and
+  `FIXTURE.md`; a prepared fixture keeps its `fmu/` body and `references/`.
+  The SSP fixture consumes that architecture directory through
+  `build_fixture(includes=...)`; it does not copy or link the FMU file.
+  Generated FMI definitions (headers, `modelDescription.xml`) plus compiled or
+  packaged outputs live under `artifacts/build/<model>/`. The build runs FMU
+  then SSP: `run-all` builds every FMU before any SSP.
 - `artifacts/` holds generated builds, analyses, simulations, and comparisons.
 - `scripts/` holds the shared build, simulate, and compare entry points.
 - `3rd_party/` holds one submodule, `pyssp_workflow`, the composition package

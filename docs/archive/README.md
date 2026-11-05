@@ -74,6 +74,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   One submodule and one install bundle pin the stack; pyssp_workflow nests all seven checkouts and imports none of them.
 - **ADR-019** — Dialect Core Definitions Are Packaged by pycps_sysml2 · accepted · 2026-11-05 · `ADR-019`
   The dialect markers and metadata schemas are declared once in pycps_sysml2's packaged core; a model loads it as one include root beside its own architecture roots.
+- **DD-021** — FMU Marker Replaces the Composition Root; the System Includes the FMU Architecture · accepted · 2026-11-05 · `DD-021`
+  An FMU declares its component with the `FmuModel` marker, its definition name is the exported identity, and the system build includes the FMU architecture.
 
 ### Implementation
 
@@ -117,7 +119,7 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   A SysML-authored FMU keeps its generated definition in models/fmu/, its system in models/ssp/, and every compiled or packaged output under artifacts/build/.
 - **DD-019** — Generated FMI Definitions Are Build Outputs · accepted · 2026-11-05 · `DD-019`
   Generated FMI definitions live under artifacts/build/; models/fmu keeps authored sources and the committed archive carries the definition.
-- **DD-020** — SysML-Authored FMU Owns Its Architecture; Build Runs FMU Before SSP · accepted · 2026-11-05 · `DD-020`
+- **DD-020** — SysML-Authored FMU Owns Its Architecture; Build Runs FMU Before SSP · superseded · 2026-11-05 · `DD-020`
   FMU architecture holds only FMU definitions; the system fixture owns System/Analysis and links the FMU file; the build runs FMU before SSP.
 
 ### Operation

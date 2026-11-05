@@ -10,15 +10,20 @@ description), the C header (pyfmi_sysml2 C interface), the compiled binary
 (fixture-local gcc), and the packaged archive (pyfmi_sysml2 packaging). Each one
 can drift on its own: a stale header after a SysML rename, a binary compiled
 before the header changed, an archive that kept the previous ``.so``, or a model
-description whose ``ModelStructure`` no longer lists the outputs.
+description whose ``ModelStructure`` no longer lists the outputs. The two layers
+are split by ownership, not by projection: ``models/ssp/GainOffset/architecture``
+holds only the system composition and reaches the canonical FMU definitions
+through ``build_fixture(includes=...)``, so a copy or link there is a defect.
 
-These tests read only committed files -- the archive and the tracked binary --
-and judge the pieces the FMI validator does not cover (value-reference scoping,
-binary symbols, archive layout).
+These tests read committed files -- the archive, the tracked binary, and the
+authored sources -- and the loose build output the archive is packaged from, and
+judge the pieces the FMI validator does not cover (value-reference scoping, binary
+symbols, archive layout, the exported identity).
 """
 
 from __future__ import annotations
 
+import ast
 import re
 import subprocess
 import xml.etree.ElementTree as ET
@@ -31,25 +36,25 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 #: Committed archive and tracked binary.
 ARTIFACTS = REPO_ROOT / "artifacts" / "build" / "GainOffset"
 ARCHIVE = ARTIFACTS / "Generator.fmu"
+#: Loose build output, read by the identity test before the archive is repackaged.
+MODEL_DESCRIPTION = ARTIFACTS / "modelDescription.xml"
 #: Archive members carrying the definition and the generated header.
 DESCRIPTION_MEMBER = "modelDescription.xml"
 HEADER_MEMBER = "sources/GainOffset_Generator.h"
 
 #: Authored architecture: the FMU definition and the SSP system that reuses it.
 FMU_ARCHITECTURE = REPO_ROOT / "models" / "fmu" / "GainOffset" / "architecture"
+FMU_DEFINITION = FMU_ARCHITECTURE / "GainOffset.sysml"
 SSP_ARCHITECTURE = REPO_ROOT / "models" / "ssp" / "GainOffset" / "architecture"
+SSP_BUILD_SCRIPT = REPO_ROOT / "models" / "ssp" / "GainOffset" / "build.py"
+SYSTEM_DEFINITION = SSP_ARCHITECTURE / "System.sysml"
+#: The FMU source that must name the exported member, not the removed composition.
+C_SOURCE = REPO_ROOT / "models" / "fmu" / "GainOffset" / "src" / "GainOffset.c"
 
-#: Definitions the architecture imports from ``pycps_sysml2.core_definitions()``;
-#: a fixture must never redeclare one locally.
-CORE_DEFINITION_DECLARATIONS = (
-    "part def SspModel",
-    "part def Analysis",
-    "attribute def Experiment",
-    "port def ParameterInterface",
-    "attribute def FmuMetadata",
-    "attribute def SspMetadata",
-    "attribute def ParameterSet",
-)
+#: The member ``part def`` the FMU exports, and the GUID pyfmi_sysml2 derives for
+#: it: ``uuid5(NAMESPACE_URL, "pyssp_sysml2/Generator")``.
+EXPORTED_MODEL = "Generator"
+EXPORTED_GUID = "{eca0627b-dad2-5d71-90b2-e450ef615122}"
 
 #: C data type constants emitted by pyfmi_sysml2 -> FMI scalar type element.
 FMI_TYPE_BY_DATATYPE = {
@@ -153,6 +158,74 @@ def _model_identifier() -> str:
 
 def _sysml_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
+
+
+def _declares(text: str, declaration: str) -> bool:
+    """Whether ``text`` declares exactly ``declaration``.
+
+    Anchored and word-bounded, so ``part def Fmu`` cannot match the
+    ``part def FmuModel`` specialization it was replaced by.
+    """
+    return re.search(rf"^\s*{re.escape(declaration)}\b", text, re.MULTILINE) is not None
+
+
+def _path_segments(expression: ast.expr) -> tuple[str, ...]:
+    """String segments of a left-associative ``/ "segment" / ...`` expression."""
+    segments: list[str] = []
+    node = expression
+    while isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        if isinstance(node.right, ast.Constant) and isinstance(node.right.value, str):
+            segments.append(node.right.value)
+        node = node.left
+    return tuple(reversed(segments))
+
+
+def _include_roots(build_script: Path) -> set[Path]:
+    """Directories a build script passes as ``includes=``, resolved from its anchors.
+
+    ``build.py`` names its include through module constants (``REPO_ROOT /
+    "models" / ...``), so the segments are re-anchored at every ancestor of the
+    script's model directory; the canonical directory is what the caller asserts.
+    """
+    tree = ast.parse(build_script.read_text(encoding="utf-8"))
+    definitions = {
+        target.id: node.value
+        for node in tree.body
+        if isinstance(node, ast.Assign)
+        for target in node.targets
+        if isinstance(target, ast.Name)
+    }
+    anchors = tuple(
+        anchor
+        for anchor in (build_script.parent, *build_script.parent.parents)
+        if anchor.is_relative_to(REPO_ROOT)
+    )
+
+    def segment_sets(
+        expression: ast.expr, seen: frozenset[str] = frozenset()
+    ) -> set[tuple[str, ...]]:
+        if isinstance(expression, ast.Name):
+            value = definitions.get(expression.id)
+            if value is None or expression.id in seen:
+                return set()
+            return segment_sets(value, seen | {expression.id})
+        segments = _path_segments(expression)
+        if segments:
+            return {segments}
+        found: set[tuple[str, ...]] = set()
+        for child in ast.iter_child_nodes(expression):
+            found |= segment_sets(child, seen)
+        return found
+
+    return {
+        anchor.joinpath(*segments).resolve()
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Call)
+        for keyword in node.keywords
+        if keyword.arg == "includes"
+        for segments in segment_sets(keyword.value)
+        for anchor in anchors
+    }
 
 
 def test_model_description_declares_one_cosimulation_interface() -> None:
@@ -268,55 +341,111 @@ def test_archive_binary_matches_the_tracked_binary() -> None:
     assert binary.stat().st_mode & 0o111
 
 
-def test_system_architecture_links_the_fmu_definition() -> None:
-    """Drift caught: the system fixture carries a copy of the FMU architecture."""
-    linked = SSP_ARCHITECTURE / "GainOffset.sysml"
-    canonical = FMU_ARCHITECTURE / "GainOffset.sysml"
+def test_system_architecture_holds_only_the_composition() -> None:
+    """Drift caught: the system fixture copies or links the FMU definition."""
+    names = sorted(path.name for path in SSP_ARCHITECTURE.iterdir())
+    assert names == ["System.sysml"], (
+        f"{SSP_ARCHITECTURE}: expected only System.sysml, found {names}"
+    )
     assert not SSP_ARCHITECTURE.is_symlink(), SSP_ARCHITECTURE
-    assert linked.is_symlink(), linked
-    assert linked.resolve() == canonical.resolve()
-    assert sorted(path.name for path in SSP_ARCHITECTURE.iterdir()) == [
-        "GainOffset.sysml",
-        "System.sysml",
-    ]
+    assert not (SSP_ARCHITECTURE / FMU_DEFINITION.name).exists(), (
+        "the SSP architecture carries a copy or link of the FMU definition; "
+        "the build must include the canonical FMU architecture instead"
+    )
+    assert FMU_DEFINITION.is_file(), f"missing canonical FMU definition {FMU_DEFINITION}"
+    assert not FMU_DEFINITION.is_symlink(), FMU_DEFINITION
     assert sorted(path.name for path in FMU_ARCHITECTURE.iterdir()) == [
-        "GainOffset.sysml"
+        FMU_DEFINITION.name
     ]
 
 
-def test_architecture_ownership_is_split_between_layers() -> None:
-    """Drift caught: the SSP layer grows FMU definitions, or the reverse."""
-    fmu_text = _sysml_text(FMU_ARCHITECTURE / "GainOffset.sysml")
-    system_text = _sysml_text(SSP_ARCHITECTURE / "System.sysml")
+def test_system_build_includes_the_canonical_fmu_architecture() -> None:
+    """Drift caught: the SSP build stops importing the canonical FMU definitions."""
+    roots = _include_roots(SSP_BUILD_SCRIPT)
+    assert FMU_ARCHITECTURE.resolve() in roots, (
+        f"{SSP_BUILD_SCRIPT}: build_fixture(includes=...) must name "
+        f"{FMU_ARCHITECTURE}, found {sorted(roots)}"
+    )
+    assert SSP_ARCHITECTURE.resolve() not in roots, (
+        f"{SSP_BUILD_SCRIPT}: includes the SSP architecture itself instead of "
+        "the canonical FMU architecture"
+    )
+
+
+def test_fmu_architecture_declares_only_the_fmu_definitions() -> None:
+    """Drift caught: the FMU layer grows system composition, or keeps ``Fmu``."""
+    fmu_text = _sysml_text(FMU_DEFINITION)
 
     for declared in (
         "port def GeneratorParameters",
-        "part def Generator",
-        "part def Fmu",
+        "attribute def GeneratorFmu :> FmuMetadata",
+        "part def Generator :> FmuModel",
     ):
-        assert declared in fmu_text, declared
+        assert _declares(fmu_text, declared), (
+            f"{FMU_DEFINITION.name}: missing declaration {declared!r}"
+        )
+
     for leaked in (
-        "SspModel",
+        "part def Fmu",
+        "part def SspModel",
         "part def System",
         "part def Analysis",
-        "part def baseline",
+        "attribute def Experiment",
     ):
-        assert leaked not in fmu_text, leaked
+        assert not _declares(fmu_text, leaked), (
+            f"{FMU_DEFINITION.name}: declares {leaked!r}, owned by the core "
+            "dialect or the system layer"
+        )
+
+
+def test_system_architecture_declares_only_the_composition() -> None:
+    """Drift caught: the system layer grows FMU definitions, or drops its markers."""
+    system_text = _sysml_text(SYSTEM_DEFINITION)
 
     for declared in (
         "part def System :> SspModel",
         "part def baseline :> Analysis",
         "attribute def BaselineExperiment :> Experiment",
     ):
-        assert declared in system_text, declared
-    for leaked in ("part def Generator", "part def Fmu"):
-        assert leaked not in system_text, leaked
+        assert _declares(system_text, declared), (
+            f"{SYSTEM_DEFINITION.name}: missing declaration {declared!r}"
+        )
 
-    for path, text in (
-        (FMU_ARCHITECTURE / "GainOffset.sysml", fmu_text),
-        (SSP_ARCHITECTURE / "System.sysml", system_text),
+    for leaked in (
+        "part def Generator",
+        "part def FmuModel",
+        "port def GeneratorParameters",
+        "attribute def GeneratorFmu",
     ):
-        for core_definition in CORE_DEFINITION_DECLARATIONS:
-            assert core_definition not in text, (
-                f"{path.name}: redeclares core definition {core_definition}"
-            )
+        assert not _declares(system_text, leaked), (
+            f"{SYSTEM_DEFINITION.name}: declares {leaked!r}, owned by the FMU "
+            "architecture and reached through the include"
+        )
+
+
+def test_model_description_exports_the_member_model_identity() -> None:
+    """Drift caught: the binding still names the deleted ``Fmu`` composition root."""
+    assert MODEL_DESCRIPTION.is_file(), (
+        f"{MODEL_DESCRIPTION}: missing build output; regenerate it with "
+        "python3 scripts/build_models.py run GainOffset"
+    )
+    root = ET.fromstring(MODEL_DESCRIPTION.read_text(encoding="utf-8"))
+    assert root.attrib["modelName"] == EXPORTED_MODEL, root.attrib["modelName"]
+    assert root.attrib["guid"] == EXPORTED_GUID, root.attrib["guid"]
+    interface = next(
+        element for element in root if _local(element.tag) == "CoSimulation"
+    )
+    assert interface.attrib["modelIdentifier"] == EXPORTED_MODEL, (
+        interface.attrib["modelIdentifier"]
+    )
+
+
+def test_c_source_names_the_exported_member_model() -> None:
+    """Drift caught: the C source still reports the deleted composition root."""
+    model_name = re.search(
+        r'^\s*#define MODEL_NAME "([^"]*)"',
+        C_SOURCE.read_text(encoding="utf-8"),
+        re.MULTILINE,
+    )
+    assert model_name is not None, f"{C_SOURCE}: no MODEL_NAME define"
+    assert model_name.group(1) == EXPORTED_MODEL, model_name.group(1)

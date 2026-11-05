@@ -68,11 +68,13 @@ re-export shims. It is deleted when the shims are removed in v0.5.0.
 FMU: `modelDescription.xml` and the generated C headers (build outputs under
 `artifacts/build/GainOffset/`, carried for consumers by the committed
 `Generator.fmu` archive), the compiled binary, and the packaged archive must
-agree on one variable set. It also pins the architecture boundary:
-`test_architecture_ownership_is_split_between_layers` asserts that neither
-architecture file redeclares a `pycps_sysml2` core definition. The canonical FMU
-definitions and the FMU build
-script live under `models/fmu/GainOffset/`; the system composition lives in
-`models/ssp/GainOffset/architecture/System.sysml` and links `GainOffset.sysml`
-to that canonical file. The public FMI 2.0 headers come from
+agree on one variable set. It also pins the architecture boundary by ownership:
+`models/fmu/GainOffset/architecture/GainOffset.sysml` is the canonical home of
+the FMU definitions, `models/ssp/GainOffset/architecture/` holds only
+`System.sysml`, and the SSP build reaches the FMU definitions through
+`build_fixture(includes=...)` on that canonical directory — never a copy or a
+link. The exported identity (`modelName="Generator"`, its derived GUID, and
+`MODEL_NAME` in the C source) must match the built `modelDescription.xml`.
+Redeclaring a `pycps_sysml2` core definition is caught by
+`test_dialect_core.py`. The public FMI 2.0 headers come from
 `pyfmi_sysml2.fmi2_headers()`.

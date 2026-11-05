@@ -39,13 +39,14 @@ Required for SysML-authored fixtures.
   first root is the model, and a duplicate definition is an error.
 - For a SysML-authored FMU, the FMU definitions live under
   `models/fmu/<model>/architecture/`; the system composition and its analyses
-  live in `models/ssp/<model>/architecture/System.sysml`, which links the
-  canonical FMU file `<model>.sysml` with a relative symlink.
-- Composition name of the exportable `SspModel` (`System`) and, for an
-  FMU, of the FMU composition root (`Fmu`).
+  live in `models/ssp/<model>/architecture/System.sysml`, which passes the FMU
+  architecture directory to `build_fixture(includes=...)`.
+- Composition name of the exportable `SspModel` (`System`) and, for an FMU,
+  the `FmuModel` definition name (`Generator`); that name is the exported
+  `modelName`.
 - Do not redeclare a core definition (`SspModel`, `Analysis`, `Experiment`,
-  `FmuMetadata`, `SspMetadata`, `ParameterInterface`, `ParameterSet`): they come
-  from `pycps_sysml2`'s packaged core definitions.
+  `FmuMetadata`, `FmuModel`, `SspMetadata`, `ParameterInterface`,
+  `ParameterSet`): they come from `pycps_sysml2`'s packaged core definitions.
 - Parameter interfaces and sets authored in SysML.
 - Whether any legacy SSD/SSV/SSM remains checked in (and why).
 -->

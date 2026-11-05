@@ -1,10 +1,12 @@
 """Contract: no fixture redeclares a dialect core definition.
 
 ``pycps_sysml2.core_definitions()`` ships ``SspModel``, ``Analysis``,
-``ParameterInterface``, ``ParameterSet``, ``FmuMetadata``, ``SspMetadata``, and
-``Experiment``. Fixtures import them through the dialect library; a local copy
-shadows the packaged definition and drifts from the roles the library assigns
-to it.
+``FmuModel``, ``ParameterInterface``, ``ParameterSet``, ``FmuMetadata``,
+``SspMetadata``, and ``Experiment``. Fixtures import them through the dialect
+library; a local copy shadows the packaged definition and drifts from the roles
+the library assigns to it. The system fixture additionally includes the canonical
+FMU architecture instead of copying it, so the FMU definitions arrive through the
+include and are not the system root's own.
 """
 
 from __future__ import annotations
@@ -17,6 +19,10 @@ from pycps_sysml2.metadata import validate_role_markers
 from pycps_sysml2.parameters import validate_marker_definitions
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+GAINOFFSET_ARCHITECTURE = REPO_ROOT / "models" / "ssp" / "GainOffset" / "architecture"
+GAINOFFSET_FMU_ARCHITECTURE = (
+    REPO_ROOT / "models" / "fmu" / "GainOffset" / "architecture"
+)
 
 #: Every authored architecture in the repository, FMU and system alike.
 SYSML_GLOBS = (
@@ -29,11 +35,21 @@ SYSML_GLOBS = (
 CORE_DEFINITION_PREFIXES = {
     "SspModel": "part def SspModel",
     "Analysis": "part def Analysis",
+    "FmuModel": "part def FmuModel",
     "Experiment": "attribute def Experiment",
     "ParameterInterface": "port def ParameterInterface",
     "FmuMetadata": "attribute def FmuMetadata",
     "SspMetadata": "attribute def SspMetadata",
     "ParameterSet": "attribute def ParameterSet",
+}
+
+#: Definitions the GainOffset system root receives from the canonical FMU
+#: architecture include rather than declaring itself.
+FMU_INCLUDED_DEFINITIONS = {
+    "Generator",
+    "GeneratorParameters",
+    "GeneratorFmu",
+    "RealSignal",
 }
 
 CORE_DEFINITION_PATTERNS = {
@@ -43,7 +59,7 @@ CORE_DEFINITION_PATTERNS = {
 
 
 def _physical_sysml_files() -> list[Path]:
-    """Every architecture source once, with symlinked copies resolved away."""
+    """Every architecture source once, deduplicated by resolved path."""
     return sorted(
         {
             path.resolve()
@@ -68,12 +84,15 @@ def test_no_fixture_declares_a_dialect_core_definition() -> None:
 
 
 def test_fixture_resolves_core_markers_through_the_include_path() -> None:
-    """Drift caught: the repo's core-include path stops resolving the markers."""
+    """Drift caught: the include path stops resolving the core or FMU definitions."""
     architecture = pycps_sysml2.load(
-        REPO_ROOT / "models" / "ssp" / "GainOffset" / "architecture",
+        GAINOFFSET_ARCHITECTURE,
         pycps_sysml2.core_definitions(),
+        GAINOFFSET_FMU_ARCHITECTURE,
     )
 
-    assert architecture.included_definitions == set(CORE_DEFINITION_PREFIXES)
+    assert architecture.included_definitions == (
+        set(CORE_DEFINITION_PREFIXES) | FMU_INCLUDED_DEFINITIONS
+    )
     validate_role_markers(architecture)
     validate_marker_definitions(architecture)

@@ -15,14 +15,14 @@ definitions, fixture notes, and build metadata.
 ├── models/
 │   ├── fmu/
 │   │   └── <fmu_name>/
-│   │       ├── architecture/      # FMU definitions (SysML-authored fixtures)
+│   │       ├── architecture/      # complete FMU definitions (SysML-authored fixtures)
 │   │       ├── build.py           # FMU build (SysML-authored fixtures)
 │   │       ├── fmu/               # FMU definition (prepared fixtures)
 │   │       ├── src/               # authored C implementation
 │   │       └── references/
 │   └── ssp/
 │       └── <model_name>/
-│           ├── architecture/      # system composition; links the FMU definition file
+│           ├── architecture/      # system composition; includes the FMU architecture
 │           ├── build.py
 │           ├── FIXTURE.md
 │           ├── references/        # baseline CSV for the fixture
@@ -90,15 +90,16 @@ contract:
 
 - `architecture/System.sysml` is the authored system composition for migrated
   fixtures: `part def System :> SspModel` and, where analyses are defined,
-  `part def ... :> Analysis`. A SysML-authored FMU owns only its FMU definitions
-  under `models/fmu/<model>/architecture/`; `models/ssp/<model>/architecture/<model>.sysml`
-  is a relative file symlink to the canonical FMU file.
+  `part def ... :> Analysis`. A SysML-authored FMU owns its complete definition
+  under `models/fmu/<model>/architecture/`, declared directly as
+  `part def <name> :> FmuModel`; the system build passes that directory to
+  `build_fixture(includes=...)` and neither copies nor links the file.
 - `part def <Model> :> SspModel` exports one SSP; `part def <Analysis> :> Analysis`
   supplies scenario data, a description, and one experiment (`startTime`,
   `stopTime`, `stepSize`) and is never exported as an SSP. A model may author
   several analyses; each is built and registered as its own case.
 - The dialect markers — `SspModel`, `Analysis`, `Experiment`, `FmuMetadata`,
-  `SspMetadata`, `ParameterInterface`, `ParameterSet` — come from
+  `FmuModel`, `SspMetadata`, `ParameterInterface`, `ParameterSet` — come from
   `pycps_sysml2`'s packaged core definitions. `build.py` reaches them through
   `pyssp_workflow.authoring`, whose `core_definitions=True` default adds the
   core as one include; extra definition roots go in `includes=`, one more
@@ -158,7 +159,8 @@ SysML    -> reads .sysml, invokes external pyssp CLI, writes SSP/analysis
 The build workflow discovers models from two roots, `models/fmu/*/build.py`
 (those with an `architecture/` directory) and `models/ssp/*/build.py`, and
 builds in two phases: every FMU before any SSP. A model name may appear in both
-roots; a duplicate within one phase is an error.
+roots; a duplicate within one phase is an error. The SSP build includes the FMU
+architecture directory, so the FMU definition file has one home.
 
 ```bash
 python3 scripts/build_models.py list

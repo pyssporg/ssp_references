@@ -7,7 +7,8 @@ stream.
 
 | Date | ID | Decision | Layers | Status | Record |
 |---|---|---|---|---|---|
-| 2026-11-05 | DD-020 | SysML-Authored FMU Owns Its Architecture; Build Runs FMU Before SSP | implementation | accepted | `DD-020` |
+| 2026-11-05 | DD-021 | FMU Marker Replaces the Composition Root; the System Includes the FMU Architecture | architecture, implementation | accepted | `DD-021` |
+| 2026-11-05 | DD-020 | SysML-Authored FMU Owns Its Architecture; Build Runs FMU Before SSP | implementation | superseded | `DD-020` |
 | 2026-11-05 | DD-019 | Generated FMI Definitions Are Build Outputs | implementation | accepted | `DD-019` |
 | 2026-11-05 | DD-018 | Fixture Layout — Model Definition, System, Build Artifact | implementation | superseded | `DD-018` |
 | 2026-11-05 | ADR-019 | Dialect Core Definitions Are Packaged by pycps_sysml2 | architecture, implementation | accepted | `ADR-019` |

@@ -1,8 +1,8 @@
 /* FMI 2.0 CoSimulation source for the GainOffset fixture.
  *
  * The interface is authored in models/fmu/GainOffset/architecture/GainOffset.sysml
- * and emitted by pyfmi_sysml2 into GainOffset_InterfaceCommon.h and
- * GainOffset_Generator.h.
+ * as the `Generator` FMU model and emitted by pyfmi_sysml2 into
+ * GainOffset_InterfaceCommon.h and GainOffset_Generator.h.
  * This file never spells a numeric value reference: every entry of the mapping
  * table is indexed by the generated enumerator, so a change in the authored
  * variable set or order moves the binary with the headers and the
@@ -19,7 +19,7 @@
 #include "fmi2Functions.h"
 
 #define PI 3.14159265358979323846
-#define MODEL_NAME "Fmu.Generator"
+#define MODEL_NAME "Generator"
 
 /* Start values, identical to the defaults authored in GeneratorParameters. */
 #define GAIN_DEFAULT 2.0

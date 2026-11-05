@@ -1,1 +1,0 @@
-../../../fmu/GainOffset/architecture/GainOffset.sysml

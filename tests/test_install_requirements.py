@@ -1,12 +1,12 @@
 """Static checks on the requirements manifests.
 
-The default install takes the whole pyssp stack through one
-``pyssp-workflow[sysml,flow]`` direct reference in ``requirements.txt``: the
-workflow wheel transitively pins the other seven distributions. The version the
-URL names must be the version the workflow source tree declares, so a tag bump
-and a filename bump cannot drift apart. The development file composes the
-default and replaces each distribution with an editable checkout. No installs
-and no network access here.
+The default install takes the whole pyssp stack through one plain
+``pyssp-workflow`` direct reference in ``requirements.txt``: the workflow wheel
+declares the SysML bundle and the flow engine in its base dependencies, so no
+extras are selected. The version the URL names must be the version the workflow
+source tree declares, so a tag bump and a filename bump cannot drift apart. The
+development file composes the default and replaces each distribution with an
+editable checkout. No installs and no network access here.
 """
 
 from __future__ import annotations
@@ -20,6 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 REQUIREMENTS = REPO_ROOT / "requirements.txt"
 DEV_REQUIREMENTS = REPO_ROOT / "requirements-dev.txt"
 SYSML_REQUIREMENTS = REPO_ROOT / "requirements-sysml.txt"
+WORKFLOW_PYPROJECT = REPO_ROOT / "3rd_party/pyssp_workflow/pyproject.toml"
 
 #: The one pinned distribution (PEP 503 normalised) -> its editable source tree.
 #: The other seven distributions arrive transitively from this wheel.
@@ -27,14 +28,20 @@ VENDORED_TREES: dict[str, str] = {
     "pyssp-workflow": "3rd_party/pyssp_workflow",
 }
 
-#: The extras the default reference must select: the SysML bundle and the flow
-#: engine. Without them the install misses libraries the suite imports.
-REQUIRED_EXTRAS = {"sysml", "flow"}
+#: The libraries a plain ``pyssp-workflow`` install must bring as base
+#: dependencies: the SysML bundle and the flow engine. Without them the install
+#: misses libraries the suite imports.
+BASE_DEPENDENCIES = {"pyssp-sysml2", "pyfmi-sysml2", "sequence-extensions-flow"}
 
 # ``name[extra] @ url``; a bare URL or an option line never has this shape.
 _DIRECT_REFERENCE = re.compile(
     r"^(?P<name>[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
     r"\s*(?:\[(?P<extras>[^\]]*)\])?\s*@\s*(?P<url>[^\s;]+)$"
+)
+
+# ``name[extra]`` followed by any version constraint or direct reference.
+_REQUIREMENT_NAME = re.compile(
+    r"^(?P<name>[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
 )
 
 
@@ -70,6 +77,28 @@ def bundle_extras() -> set[str]:
             extras = match.group("extras") or ""
             return {extra.strip() for extra in extras.split(",") if extra.strip()}
     raise AssertionError(f"{REQUIREMENTS}: carries no direct reference")
+
+
+def workflow_project() -> dict[str, object]:
+    """Return the ``[project]`` table of the workflow source tree."""
+    text = WORKFLOW_PYPROJECT.read_text(encoding="utf-8")
+    return tomllib.loads(text)["project"]
+
+
+def requirement_names(requirements: list[str]) -> set[str]:
+    """Return the canonical distribution names of plain requirement strings."""
+    names: set[str] = set()
+    for requirement in requirements:
+        match = _REQUIREMENT_NAME.match(requirement.strip())
+        if match is None:
+            raise AssertionError(f"unparsable requirement: {requirement!r}")
+        names.add(canonical_name(match.group("name")))
+    return names
+
+
+def workflow_base_dependencies() -> set[str]:
+    """Return the canonical names a plain ``pyssp-workflow`` installs."""
+    return requirement_names(workflow_project()["dependencies"])
 
 
 def editables(path: Path) -> set[str]:
@@ -132,8 +161,20 @@ def test_default_requirements_reference_the_bundle_exactly_once() -> None:
     assert names == ["pyssp-workflow"]
 
 
-def test_default_requirements_select_the_sysml_and_flow_extras() -> None:
-    assert bundle_extras() == REQUIRED_EXTRAS
+def test_default_requirements_select_no_extras() -> None:
+    # Every former feature extra is folded into the base dependencies; an
+    # extras suffix here would name an extra that no longer exists.
+    assert bundle_extras() == set()
+
+
+def test_workflow_base_dependencies_carry_the_sysml_and_flow_libraries() -> None:
+    assert BASE_DEPENDENCIES <= workflow_base_dependencies()
+
+
+def test_workflow_declares_only_the_development_extra() -> None:
+    # A leftover feature extra means an install could still select it by name.
+    extras = workflow_project().get("optional-dependencies", {})
+    assert set(extras) == {"dev"}
 
 
 def test_default_requirements_are_not_editable_and_use_no_mirror() -> None:

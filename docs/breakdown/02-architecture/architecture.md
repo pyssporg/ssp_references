@@ -268,12 +268,12 @@ artifact:
 
 ```
   models/ssp/<model>/architecture/*.sysml   (SspModel + Analysis definitions)
-  models/fmu/<model>/fmu/                   (FMU definition for SysML-authored FMUs:
-                                             modelDescription.xml + sources/)
+  models/fmu/<model>/src/                   (authored FMU source and provenance)
            |
            |  pyfmi_sysml2 (headers, modelDescription, archive) + gcc
            v
-  artifacts/build/<model>/                      (compiled binary and packaged .fmu)
+  artifacts/build/<model>/                  (generated headers, modelDescription.xml,
+                                             compiled binary, packaged .fmu)
            |
            |  build_models.py -> build.py
            |  pyssp_workflow.authoring + pyssp_workflow.binding / pyssp_standard

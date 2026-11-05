@@ -113,6 +113,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Fixture SysML above roughly 100 lines is split into five section files that share one package; the loader merges them in file-name order.
 - **DD-018** — Fixture Layout — Model Definition, System, Build Artifact · accepted · 2026-11-05 · `DD-018`
   A SysML-authored FMU keeps its generated definition in models/fmu/, its system in models/ssp/, and every compiled or packaged output under artifacts/build/.
+- **DD-019** — Generated FMI Definitions Are Build Outputs · accepted · 2026-11-05 · `DD-019`
+  Generated FMI definitions live under artifacts/build/; models/fmu keeps authored sources and the committed archive carries the definition.
 
 ### Operation
 

@@ -473,24 +473,24 @@ def _run_probe(code: str) -> str:
 
 
 def test_nodes_import_requires_the_flow_subpackage() -> None:
-    """Nodes guard removed or widened -> a missing extra fails without a hint.
+    """Nodes guard removed or widened -> a broken install fails without a hint.
 
     With ``sequence_extensions.flow`` shadowed out, importing
-    ``pyssp_workflow.nodes`` must fail with the actionable extra hint, in a
+    ``pyssp_workflow.nodes`` must fail with the actionable install hint, in a
     fresh interpreter (no uninstall).
     """
     line = _run_probe(_ABSENT_FLOW_PROBE)
     assert line.startswith("RAISED "), line
-    assert "requires the 'flow' extra" in line
+    assert "requires sequence-extensions-flow: pip install sequence-extensions-flow" in line
 
 
 def test_nodes_import_does_not_mask_an_error_inside_flow() -> None:
     """Guard swallowing inner ImportErrors -> a broken install looks missing.
 
     With a shadowing ``flow`` whose body raises, the original error must reach
-    the caller and must not be replaced by the missing-extra hint.
+    the caller and must not be replaced by the missing-dependency hint.
     """
     line = _run_probe(_BROKEN_FLOW_PROBE)
     assert line.startswith("RAISED "), line
     assert "boom from inside flow" in line
-    assert "requires the 'flow' extra" not in line
+    assert "requires sequence-extensions-flow" not in line

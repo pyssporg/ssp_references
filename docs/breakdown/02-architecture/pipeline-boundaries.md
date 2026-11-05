@@ -88,12 +88,12 @@ only when an artifact format changes, not when a Python model API changes.
 By default the distributions install from tagged GitHub release wheel URLs and
 from the same URLs named in their metadata; editable checkouts are the
 development opt-in (`INFO-011`). The `pyssp_workflow` submodule under
-`3rd_party/` is the only top-level entry, and it is also the install bundle
-that pins the ecosystem checkouts. All of them are nested inside it:
+`3rd_party/` is the only top-level entry, and its base dependencies carry the
+whole ecosystem; all checkouts are nested inside it:
 
 | Submodule | Used by |
 | --- | --- |
-| `3rd_party/pyssp_workflow` | Composition layer and install bundle: authoring, analysis, fixture, binding, compare, nodes, development tree |
+| `3rd_party/pyssp_workflow` | Composition layer and single install reference: authoring, analysis, fixture, binding, compare, nodes, development tree |
 | `3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard` | Build and SSP XML inspection |
 | `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2` | FMI artifact emission behind the authoring stage |
 | `3rd_party/pyssp_workflow/3rd_party/pycps_sysml2` | SysML dialect behind the authoring stage |

@@ -34,15 +34,15 @@ capability.
 
 - `models/ssp/<model>/` holds the authored fixture, `build.py`, and `FIXTURE.md`.
 - `models/fmu/` holds prepared FMU fixtures with their references and the
-  generated FMI *definitions* (headers and `modelDescription.xml`) that the
-  SysML-authored fixtures compile; the system and its `build.py` live in
-  `models/ssp/`, and compiled or packaged outputs, including
-  `artifacts/build/<model>/`, live under `artifacts/`.
+  authored sources of SysML-authored fixtures (`src/`, `FIXTURE.md`); the
+  system and its `build.py` live in `models/ssp/`, and generated FMI
+  definitions (headers, `modelDescription.xml`) plus compiled or packaged
+  outputs live under `artifacts/build/<model>/`.
 - `artifacts/` holds generated builds, analyses, simulations, and comparisons.
 - `scripts/` holds the shared build, simulate, and compare entry points.
-- `3rd_party/` holds one submodule, `pyssp_workflow`, which is the install
-  bundle for the whole pyssp and SysML stack; it nests the capability
-  checkouts plus the SysML dialect (`pycps_sysml2`) and FMI artifact
+- `3rd_party/` holds one submodule, `pyssp_workflow`, the composition package
+  whose base dependencies cover the whole pyssp and SysML stack; it nests the
+  capability checkouts plus the SysML dialect (`pycps_sysml2`) and FMI artifact
   (`pyfmi_sysml2`) libraries, and imports none of them. Edits belong in their
   own repositories.
 
@@ -94,8 +94,8 @@ capability.
   dependency: do not edit it; local changes belong in the canonical checkout.
 - `3rd_party/pyssp_workflow/3rd_party/pycps_sysml2` and
   `.../pyfmi_sysml2` are nested checkouts, not repo-level submodules;
-  `3rd_party/pyssp_workflow` is the only top-level submodule and is also the
-  install bundle for both SysML libraries. They are released v0.1.0 libraries;
+  `3rd_party/pyssp_workflow` is the only top-level submodule and also carries
+  both SysML libraries as base dependencies. They are released v0.1.0 libraries;
   the editables point at these nested locations.
 - Keep cross-cutting workflow or strategy notes in `docs/breakdown/`.
 - When docs move or commands change, update the references so the documented
@@ -109,12 +109,13 @@ capability.
 - Build: `python3 scripts/build_models.py list` / `run <model>` / `run-all`.
 - Simulate, then compare: `python3 scripts/run_simulations.py`, then
   `python3 scripts/run_comparisons.py`.
-- `requirements.txt` is the default install: one `pyssp-workflow[sysml,flow]`
-  bundle whose metadata transitively pins the eight pyssp and SysML
+- `requirements.txt` is the default install: one plain `pyssp-workflow`
+  reference whose base dependencies transitively pin the eight pyssp and SysML
   distributions as sibling GitHub release assets
   (`releases/download/v<version>/`). Six are pyssp capability libraries; two
   are the SysML dialect (`pycps-sysml2`) and FMI artifact (`pyfmi-sysml2`)
-  libraries. The tags must exist before any install or editable checkout
+  libraries. There are no feature extras; the only optional-dependencies group
+  is `dev`. The tags must exist before any install or editable checkout
   resolves.
   `requirements-dev.txt` replaces the wheels with editable checkouts under
   `3rd_party/pyssp_workflow/3rd_party/` but still resolves those URLs.

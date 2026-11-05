@@ -2,8 +2,8 @@
 #
 #   python3 -m pip install -r requirements-dev.txt
 #
-# requirements.txt carries one `pyssp-workflow[sysml,flow]` reference that pulls
-# the eight pyssp and SysML distributions. Each wheel's metadata names its
+# requirements.txt carries one `pyssp-workflow` reference that pulls the eight
+# pyssp and SysML distributions. Each wheel's metadata names its
 # sibling dependencies as GitHub release URLs, so pip fetches those URLs even
 # when the editable checkout is the installed distribution; the release tags
 # must exist before this file installs.

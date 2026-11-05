@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """Thin wrapper around the per-fixture build scripts.
 
-Two fixture roots contribute buildable models:
+Two fixture roots can contribute buildable models:
 
-* ``models/ssp/*/build.py`` — SysML-authored SSP fixtures.
-* ``models/fmu/<name>/build.py`` — SysML-authored FMI fixtures, recognised by
-  an ``architecture/`` directory next to the script.
+* ``models/ssp/*/build.py`` — SysML-authored SSP fixtures. This is the only
+  root with discovered models today.
+* ``models/fmu/<name>/build.py`` — discovered only when an ``architecture/``
+  directory sits next to the script.
 
-``models/fmu/`` also holds Modelica FMU *sources* (``Modelica.Blocks.*``); their
-``build.py`` rebuilds an FMU from a ``.mo`` file with ``omc``. They have no
-``architecture/`` directory, they are inputs to other fixtures, and they are not
-part of ``run`` or ``run-all``.
+``models/fmu/`` also holds prepared FMUs and Modelica FMU *sources*
+(``Modelica.Blocks.*``); their ``build.py`` rebuilds an FMU from a ``.mo`` file
+with ``omc``. They have no ``architecture/`` directory, they are inputs to other
+fixtures, and they are not part of ``run`` or ``run-all``.
 """
 
 from __future__ import annotations

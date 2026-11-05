@@ -65,6 +65,8 @@ python3 scripts/run_simulations.py
 re-export shims. It is deleted when the shims are removed in v0.5.0.
 
 `test_fmu_artifacts.py` is the contract test for the SysML-authored `GainOffset`
-FMU: `modelDescription.xml` and the generated C headers (committed under
-`models/fmu/GainOffset/fmu/`), the compiled binary, and the packaged archive
-(committed under `artifacts/build/GainOffset/`) must agree on one variable set.
+FMU: `modelDescription.xml` and the generated C headers (build outputs under
+`artifacts/build/GainOffset/`, carried for consumers by the committed
+`Generator.fmu` archive), the compiled binary, and the packaged archive must
+agree on one variable set. The public FMI 2.0 headers come from
+`pyfmi_sysml2.fmi2_headers()`.

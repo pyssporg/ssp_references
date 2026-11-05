@@ -7,6 +7,7 @@ stream.
 
 | Date | ID | Decision | Layers | Status | Record |
 |---|---|---|---|---|---|
+| 2026-11-05 | DD-019 | Generated FMI Definitions Are Build Outputs | implementation | accepted | `DD-019` |
 | 2026-11-05 | DD-018 | Fixture Layout — Model Definition, System, Build Artifact | implementation | accepted | `DD-018` |
 | 2026-11-05 | ADR-018 | Nest the SysML Siblings Under the Workflow Install Bundle | architecture, operation | accepted | `ADR-018` |
 | 2026-11-05 | ADR-017 | FMI 2.0 Co-Simulation Only, Linux x86-64 Only | product, architecture | accepted | `ADR-017` |

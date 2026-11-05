@@ -10,9 +10,8 @@ status: current
 # SysML libraries
 
 `pycps_sysml2` is the dialect's home; the other libraries implement it. Both
-artifact libraries and the dialect arrive through `pyssp_workflow`'s `sysml`
-extra, which is an install bundle: `pyssp_workflow` carries them and imports
-none of them.
+artifact libraries and the dialect are base dependencies of `pyssp_workflow`, so
+a plain install carries them; `pyssp_workflow` imports none of them.
 
 | Concern | Owner |
 |---|---|
@@ -27,4 +26,4 @@ none of them.
 
 - **Import rule:** consumers import `pycps_sysml2`. `pyssp_sysml2.model`, `.core`, `.metadata`, and `.parameters` are v0.4.x re-export shims removed in v0.5.0; `pyssp_sysml2` and `pyfmi_sysml2` never import each other.
 - **One dialect:** both the SSP and FMI dialects draw markers, parameters, and variation from `pycps_sysml2`; `sysmlpy==0.96.4` is its only runtime dependency.
-- **Exercised here:** `models/ssp/variation_*/build.py` and `tests/test_variation_cases.py` use the dialect and selection surface; `models/ssp/GainOffset/` is the FMI fixture, with its definition in `models/fmu/GainOffset/` and its compiled outputs in `artifacts/build/GainOffset/`.
+- **Exercised here:** `models/ssp/variation_*/build.py` and `tests/test_variation_cases.py` use the dialect and selection surface; `models/ssp/GainOffset/` is the FMI fixture, with its authored source in `models/fmu/GainOffset/` and its generated definition and compiled outputs in `artifacts/build/GainOffset/`.

@@ -1,15 +1,15 @@
 # Third-Party Submodule
 
-One submodule is linked here: `pyssp_workflow`, the install bundle for the
-whole pyssp and SysML stack. It nests seven checkouts — the pyssp capability
-libraries, the SysML dialect (`pycps_sysml2`), and the FMI artifact library
-(`pyfmi_sysml2`) — and imports none of them. Its `sysml` extra carries the SysML
-libraries as an install bundle, not as a runtime dependency of
-`pyssp_workflow` itself.
+One submodule is linked here: `pyssp_workflow`, the composition package whose
+base dependencies carry the whole pyssp and SysML stack. It nests seven
+checkouts — the pyssp capability libraries, the SysML dialect (`pycps_sysml2`),
+and the FMI artifact library (`pyfmi_sysml2`) — and imports none of them. The
+SysML libraries are base dependencies, so a plain install carries them; there is
+no SysML extra.
 
 | Submodule | Upstream | Role |
 | --- | --- | --- |
-| `pyssp_workflow/` | `pyssporg/pyssp_workflow` | Composition layer for the pyssp capabilities; install bundle pinning the whole stack |
+| `pyssp_workflow/` | `pyssporg/pyssp_workflow` | Composition layer for the pyssp capabilities; one pin carrying the whole stack as base dependencies |
 
 Nested under `pyssp_workflow/3rd_party/`:
 
@@ -38,11 +38,10 @@ checkouts in its own `.gitmodules`.
 
 ## Install for development
 
-The default `requirements.txt` install takes one reference,
-`pyssp-workflow[sysml,flow]`, from its GitHub release asset; that reference
-transitively pins the eight pyssp and SysML distributions. Each wheel's
-metadata names its sibling dependencies the same way, so the version graph
-travels inside the wheels.
+The default `requirements.txt` install takes one plain `pyssp-workflow`
+reference, from its GitHub release asset; its base dependencies pin the eight
+pyssp and SysML distributions. Each wheel's metadata names its sibling
+dependencies the same way, so the version graph travels inside the wheels.
 
 `requirements-dev.txt`, `requirements-sysml.txt`, and `requirements-campaign.txt`
 add the relevant checkouts as editable packages on top of that default. Every

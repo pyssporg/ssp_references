@@ -25,3 +25,4 @@ opencode.json
 
 .ruff_cache/
 
+artifacts/build/*

@@ -1,4 +1,5 @@
 package SignalNestedExternalBindings {
+  private import PysspCore::*;
 
   part def baseline :> Analysis {
     doc /* Nested system boundary wired through an external binding. */

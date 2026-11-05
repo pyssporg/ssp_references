@@ -1,4 +1,6 @@
 package BouncingBall {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def BouncingBallParameters :> ParameterInterface {
     attribute g : Real;

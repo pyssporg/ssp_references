@@ -1,4 +1,5 @@
 package SignalNestedAlgebraicLoop {
+  private import PysspCore::*;
 
   attribute def SineFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Sine/fmu";

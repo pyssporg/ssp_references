@@ -1,4 +1,6 @@
 package VariationBodyGain {
+  private import ScalarValues::*;
+  private import PysspCore::*;
   port def SineParameters :> ParameterInterface {
     attribute amplitude : Real;
     attribute f : Real;

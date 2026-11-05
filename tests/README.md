@@ -45,6 +45,39 @@ python3 scripts/build_models.py run <model>
 python3 scripts/run_simulations.py
 ```
 
+## SysML standard gate
+
+`tests/test_sysml_standard.py` proves the authored fixtures are portable beyond
+this repository's own dialect parser. It loads each fixture's
+`architecture/*.sysml` files in one `sysmlpy.load_files` call and runs
+`sysmlpy.analyze(..., library=[PysspCore, ScalarValues])`. `sysmlpy` 0.96.4
+generates its grammar from the OMG SysML v2 2026-05 specification, so a fixture
+that parses and resolves there is valid SysML v2, not merely valid input to
+`pycps_sysml2`. The gate asserts zero analyzer errors and reports every
+unexpected finding as `fixture`, `file:line`, `code`, and `message`.
+
+The gate is deterministic and needs no network. Two deviations from a plain
+analyzer run are deliberate:
+
+- **Allowlist.** Known dialect idioms — selection by feature value and nested
+  variant chains in the `variation_*` fixtures — are listed by fixture and code
+  with an exact expected count. A new code, a new fixture, or an extra
+  occurrence fails the gate instead of being absorbed. The list and its
+  justifications live in the test module and in
+  `docs/breakdown/04-verification/sysml-standard-parser-gate.md`.
+- **Cross-root include.** `models/ssp/GainOffset` reaches `Generator` through
+  the FMU root. The gate mirrors `build_fixture(includes=...)` and adds
+  `models/fmu/GainOffset/architecture` as a second `load_files` input, which
+  removes the `UNDEFINED_SYMBOL` finding. Analyzing the SSP root alone still
+  reports it, and that isolated analysis is asserted in the test.
+
+`sysmlpy` resolves library symbols globally, so a missing `private import
+PysspCore::*;` does not produce an analyzer error. The gate therefore also
+checks that each fixture using a `PysspCore` or `ScalarValues` symbol declares
+the matching import. A deleted import fails that check even though the analyzer
+stays silent. Every analyze call in the module passes `library=`; a call
+without it caches an empty index for the rest of the process.
+
 ## Adding a test
 
 1. Choose the level first; put the test in the file whose subject matches.

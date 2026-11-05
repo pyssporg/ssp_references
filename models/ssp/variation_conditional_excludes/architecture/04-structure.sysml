@@ -1,4 +1,6 @@
 package VariationConditionalExcludes {
+  private import ScalarValues::*;
+  private import PysspCore::*;
   variation part def SourceChoice {
     out port y : RealSignal;
     variant part stepImplementation : Step;

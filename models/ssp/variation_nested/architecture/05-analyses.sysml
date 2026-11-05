@@ -1,4 +1,5 @@
 package VariationNested {
+  private import PysspCore::*;
   part def direct :> Analysis {
     doc /* Outer variation selecting the single-gain path. */
     attribute experiment_baseline : BaselineExperiment;

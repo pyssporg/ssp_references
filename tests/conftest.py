@@ -30,6 +30,7 @@ LEVEL_BY_FILE: dict[str, str] = {
     "test_pipeline_integration.py": "system",
     "test_suite_policy.py": "static",
     "test_sysml_fixtures.py": "integration",
+    "test_sysml_standard.py": "integration",
     "test_variation_cases.py": "integration",
     "test_install_requirements.py": "static",
     "test_legacy_sysml_shims.py": "contract",

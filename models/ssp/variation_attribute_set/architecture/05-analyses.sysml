@@ -1,4 +1,5 @@
 package VariationAttributeSet {
+  private import PysspCore::*;
   part def nominal_k3 :> Analysis {
     doc /* Attribute variation selecting the k=3.0 parameter set. */
     attribute experiment_baseline : BaselineExperiment;

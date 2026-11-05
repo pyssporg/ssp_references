@@ -1,4 +1,5 @@
 package DcMotor {
+  private import PysspCore::*;
 
   attribute def BaselineExperiment :> Experiment {
     attribute startTime = 0.0;

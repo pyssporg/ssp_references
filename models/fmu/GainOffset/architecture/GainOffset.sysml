@@ -1,4 +1,6 @@
 package GainOffset {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def GeneratorParameters :> ParameterInterface {
     attribute gain : Real = 2.0;

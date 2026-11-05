@@ -78,6 +78,10 @@ tests/fixtures/<subject>/<case>/
 | Artifact corpus gate | missing build reported as pass | `SSP_REQUIRE_ARTIFACTS=1` strict run |
 | Fixture-twin drift | pinned copy diverging silently | documented allowlist, red on new drift |
 
+The SysML standard parser gate (`EVAL-014`) later joins this set: an independent
+standards-derived parser must accept every authored fixture, with known dialect
+idioms pinned by an explicit allowlist.
+
 ## Target layout
 
 | Suite | Before | After |

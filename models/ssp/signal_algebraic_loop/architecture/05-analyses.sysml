@@ -1,4 +1,5 @@
 package SignalAlgebraicLoop {
+  private import PysspCore::*;
 
   part def baseline :> Analysis {
     doc /* Sine through gain, with the algebraic loop closed by add. */

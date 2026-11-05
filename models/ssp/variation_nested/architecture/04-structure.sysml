@@ -1,4 +1,6 @@
 package VariationNested {
+  private import ScalarValues::*;
+  private import PysspCore::*;
   variation part def StageChoice {
     in port stage_in : RealSignal;
     out port stage_out : RealSignal;

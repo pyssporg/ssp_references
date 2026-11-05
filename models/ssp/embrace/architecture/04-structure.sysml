@@ -1,4 +1,6 @@
 package Embrace {
+  private import ScalarValues::*;
+  private import PysspCore::*;
   part def System :> SspModel {
     attribute pyssp_default_start_time : Real = 0.0;
     attribute pyssp_default_stop_time : Real = 10.0;

@@ -1,4 +1,5 @@
 package SignalSineGainAdd {
+  private import PysspCore::*;
 
   part def baseline :> Analysis {
     doc /* Sine through a gain plus a step, added at the root. */

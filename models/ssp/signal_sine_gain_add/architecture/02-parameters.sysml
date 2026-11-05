@@ -1,4 +1,5 @@
 package SignalSineGainAdd {
+  private import PysspCore::*;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute sine_amplitude = 1.0;

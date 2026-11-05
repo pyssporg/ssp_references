@@ -1,4 +1,5 @@
 package SignalNestedAlgebraicLoop {
+  private import PysspCore::*;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute sine_amplitude = 0.5;

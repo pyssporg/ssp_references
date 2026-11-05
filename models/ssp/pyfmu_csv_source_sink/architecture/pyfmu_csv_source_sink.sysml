@@ -1,4 +1,6 @@
 package PyfmuCsvSourceSink {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute k = 1.0;

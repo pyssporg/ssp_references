@@ -1,4 +1,5 @@
 package SignalNestedPassThrough {
+  private import PysspCore::*;
 
   part def baseline :> Analysis {
     doc /* Nested pass-through system feeding the add block. */

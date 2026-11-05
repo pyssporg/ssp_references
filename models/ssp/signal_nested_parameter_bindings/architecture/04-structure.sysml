@@ -1,4 +1,6 @@
 package SignalNestedParameterBindings {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   part def System :> SspModel {
     out port y : RealSignal;

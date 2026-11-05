@@ -1,4 +1,5 @@
 package VariationConditionalExcludes {
+  private import PysspCore::*;
   part def step_baseline :> Analysis {
     doc /* Legal: step source with the baseline scenario. */
     attribute experiment : BaselineExperiment;

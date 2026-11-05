@@ -1,4 +1,5 @@
 package SignalDelayDetector {
+  private import PysspCore::*;
 
   attribute def StepFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Step/fmu";

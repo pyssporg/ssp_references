@@ -1,4 +1,5 @@
 package VariationBodyGain {
+  private import PysspCore::*;
   attribute def ScenarioSet :> ParameterSet {
     attribute amplitude = 1.0;
     attribute f = 1.0;

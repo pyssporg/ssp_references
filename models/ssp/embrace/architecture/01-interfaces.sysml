@@ -1,4 +1,6 @@
 package Embrace {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def RealSignal {
     attribute pyssp_flat_connector : Boolean = true;

@@ -1,4 +1,6 @@
 package VariationAttributeSet {
+  private import ScalarValues::*;
+  private import PysspCore::*;
   /* One attribute variation point: both variants fix the same parameter set. */
   variation attribute def ScenarioChoice {
     variant attribute nominalK3 : NominalK3;

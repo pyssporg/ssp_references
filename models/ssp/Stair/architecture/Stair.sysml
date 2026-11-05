@@ -1,4 +1,6 @@
 package Stair {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def IntegerSignal {
     attribute pyssp_flat_connector : Boolean = true;

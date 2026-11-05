@@ -1,4 +1,6 @@
 package SignalNestedAlgebraicLoop {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def SineParameters :> ParameterInterface {
     attribute amplitude : Real;

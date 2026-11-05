@@ -1,4 +1,6 @@
 package GainOffset {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   attribute def BaselineExperiment :> Experiment {
     attribute startTime = 0.0;

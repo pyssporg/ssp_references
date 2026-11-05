@@ -1,4 +1,5 @@
 package SignalNestedParameterBindings {
+  private import PysspCore::*;
 
   part def baseline :> Analysis {
     doc /* Nested inline parameter sets plus a root external mapping. */

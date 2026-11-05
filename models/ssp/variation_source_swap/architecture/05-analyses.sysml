@@ -1,4 +1,5 @@
 package VariationSourceSwap {
+  private import PysspCore::*;
   part def step :> Analysis {
     doc /* Source variation selecting the Step FMU. */
     attribute experiment : BaselineExperiment;

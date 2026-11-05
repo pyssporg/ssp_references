@@ -1,4 +1,5 @@
 package VariationSourceSwap {
+  private import PysspCore::*;
   attribute def ScenarioSet :> ParameterSet {
     attribute height = 2.0;
     attribute offset = 0.0;

@@ -1,4 +1,6 @@
 package Dahlquist {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def DahlquistParameters :> ParameterInterface {
     attribute k : Real;

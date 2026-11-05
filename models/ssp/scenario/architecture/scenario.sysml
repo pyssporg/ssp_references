@@ -1,4 +1,6 @@
 package Scenario {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def ScenarioParameters :> ParameterInterface {
     attribute scenario_input : String;

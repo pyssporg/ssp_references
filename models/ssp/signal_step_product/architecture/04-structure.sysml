@@ -1,4 +1,6 @@
 package SignalStepProduct {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   part def System :> SspModel {
     attribute pyssp_default_start_time : Real = 0.0;

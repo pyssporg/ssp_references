@@ -1,4 +1,6 @@
 package VariationNested {
+  private import ScalarValues::*;
+  private import PysspCore::*;
   port def StepParameters :> ParameterInterface {
     attribute height : Real;
     attribute offset : Real;

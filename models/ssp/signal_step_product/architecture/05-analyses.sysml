@@ -1,4 +1,5 @@
 package SignalStepProduct {
+  private import PysspCore::*;
 
   part def baseline :> Analysis {
     doc /* Step multiplied by a sine at the root. */

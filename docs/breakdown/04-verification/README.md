@@ -24,4 +24,5 @@ How claims about models, analyses, and backends are checked.
 - **EVAL-011** [Test suite restructuring and fixture credibility](test-suite-restructuring.md) — Critical audit of the six vendored pyssp_* and sequence_extensions suites plus the root contract suite, focused on the file-fixture layer, and the restructuring that makes every fixture traceable, layout-checked, and write-protected.
 - **EVAL-012** [Fixture layer implementation record](fixture-layer-implementation.md) — What the fixture restructuring built in each suite, the counts after the change, the defect injected to prove each gate red, and the gaps that remain.
 - **EVAL-013** [Package layout review across the vendored libraries](package-layout-review.md) — Flatness measurements for the six vendored packages, the two that were restructured into domain packages, and why the other four keep their layout.
+- **EVAL-014** [SysML standard parser gate](sysml-standard-parser-gate.md) — An independent standards-derived parser must accept every authored fixture.
 <!-- pb:index:end -->

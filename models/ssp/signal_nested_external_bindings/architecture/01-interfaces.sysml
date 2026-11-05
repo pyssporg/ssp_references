@@ -1,4 +1,6 @@
 package SignalNestedExternalBindings {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def StepParameters :> ParameterInterface {
     attribute height : Real;

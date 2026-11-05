@@ -1,4 +1,6 @@
 package VariationBodyGain {
+  private import ScalarValues::*;
+  private import PysspCore::*;
   /* One variation point: its variants are bodies, not types. */
   variation part def PathChoice {
     in port u : RealSignal;

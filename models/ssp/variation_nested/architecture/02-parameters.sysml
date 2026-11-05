@@ -1,4 +1,5 @@
 package VariationNested {
+  private import PysspCore::*;
   attribute def ScenarioSet :> ParameterSet {
     attribute offset = 0.0;
     attribute startTime = 0.5;

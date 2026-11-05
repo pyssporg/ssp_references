@@ -1,4 +1,5 @@
 package VariationConditionalExcludes {
+  private import PysspCore::*;
   attribute def BaselineScenario :> ParameterSet {
     attribute height = 2.0;
     attribute offset = 1.0;

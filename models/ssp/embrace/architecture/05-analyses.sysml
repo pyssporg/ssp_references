@@ -1,4 +1,5 @@
 package Embrace {
+  private import PysspCore::*;
   part def baseline :> Analysis {
     doc /* EMBRACE thermal-management reference model over the baseline window. */
     attribute experiment_baseline : BaselineExperiment;

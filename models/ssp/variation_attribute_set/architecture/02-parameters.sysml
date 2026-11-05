@@ -1,4 +1,5 @@
 package VariationAttributeSet {
+  private import PysspCore::*;
   attribute def NominalK3 :> ParameterSet {
     attribute height = 2.0;
     attribute offset = 1.0;

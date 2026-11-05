@@ -1,4 +1,5 @@
 package Embrace {
+  private import PysspCore::*;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute 'pipeA.L' = 0.976535328081166;

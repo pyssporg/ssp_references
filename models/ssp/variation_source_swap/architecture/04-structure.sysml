@@ -1,4 +1,6 @@
 package VariationSourceSwap {
+  private import ScalarValues::*;
+  private import PysspCore::*;
   /* One variation point: the source stage is one of two FMU implementations. */
   variation part def SourceChoice {
     out port y : RealSignal;

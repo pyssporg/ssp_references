@@ -1,4 +1,5 @@
 package VariationAttributeSet {
+  private import PysspCore::*;
   attribute def StepFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Step/fmu";
     attribute implementation = "CoSimulation";

@@ -1,4 +1,5 @@
 package SignalStepProduct {
+  private import PysspCore::*;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute step_height = 1.0;

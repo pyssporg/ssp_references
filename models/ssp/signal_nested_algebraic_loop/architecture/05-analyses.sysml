@@ -1,4 +1,5 @@
 package SignalNestedAlgebraicLoop {
+  private import PysspCore::*;
 
   part def baseline :> Analysis {
     doc /* Nested systems closing an algebraic loop around add and gain. */

@@ -1,4 +1,6 @@
 package VanDerPol {
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def VanDerPolParameters :> ParameterInterface {
     attribute mu : Real;

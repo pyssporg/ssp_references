@@ -1,4 +1,5 @@
 package VariationConditionalRequires {
+  private import PysspCore::*;
   part def step_single :> Analysis {
     doc /* Legal: step source with a single gain stage. */
     attribute experiment : BaselineExperiment;

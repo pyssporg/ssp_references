@@ -1,4 +1,5 @@
 package Embrace {
+  private import PysspCore::*;
 
   attribute def EcsHwFmu :> FmuMetadata {
     attribute source = "models/ssp/embrace/resources/0001_ECS_HW";

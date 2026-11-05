@@ -1,4 +1,5 @@
 package VariationBodyGain {
+  private import PysspCore::*;
   part def one_stage :> Analysis {
     doc /* Body variation selecting the single-gain path. */
     attribute experiment : BaselineExperiment;

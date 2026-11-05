@@ -1,4 +1,5 @@
 package SignalStepAdd {
+  private import PysspCore::*;
 
   part def baseline :> Analysis {
     doc /* Two steps added at the root. */

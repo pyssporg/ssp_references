@@ -5,6 +5,7 @@ title: Standard-artifact boundary audit
 summary: SSP, SSV, SSM, and SSD pass through pyssp_standard; comparison passes through pyssp_vv; non-standard crossings use public API only.
 date: 2026-10-22
 status: current
+pb_exempt: true
 ---
 
 # Standard-artifact boundary audit

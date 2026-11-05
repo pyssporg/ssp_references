@@ -1,4 +1,17 @@
 #!/usr/bin/env python3
+"""Thin wrapper around the per-fixture build scripts.
+
+Two fixture roots contribute buildable models:
+
+* ``models/ssp/*/build.py`` — SysML-authored SSP fixtures.
+* ``models/fmu/<name>/build.py`` — SysML-authored FMI fixtures, recognised by
+  an ``architecture/`` directory next to the script.
+
+``models/fmu/`` also holds Modelica FMU *sources* (``Modelica.Blocks.*``); their
+``build.py`` rebuilds an FMU from a ``.mo`` file with ``omc``. They have no
+``architecture/`` directory, they are inputs to other fixtures, and they are not
+part of ``run`` or ``run-all``.
+"""
 
 from __future__ import annotations
 
@@ -8,13 +21,30 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-MODELS_DIR = REPO_ROOT / "models" / "ssp"
+SSP_MODELS_DIR = REPO_ROOT / "models" / "ssp"
+FMU_MODELS_DIR = REPO_ROOT / "models" / "fmu"
 
 
 def discover_workflows() -> dict[str, Path]:
+    """Every buildable fixture, keyed by model name, in build order."""
     workflows: dict[str, Path] = {}
-    for workflow_path in sorted(MODELS_DIR.glob("*/build.py")):
-        workflows[workflow_path.parent.name] = workflow_path
+
+    def add(name: str, workflow_path: Path) -> None:
+        if name in workflows:
+            raise ValueError(
+                f"Model name {name!r} is used by both "
+                f"{workflows[name]} and {workflow_path}"
+            )
+        workflows[name] = workflow_path
+
+    for workflow_path in sorted(SSP_MODELS_DIR.glob("*/build.py")):
+        add(workflow_path.parent.name, workflow_path)
+
+    for workflow_path in sorted(FMU_MODELS_DIR.glob("*/build.py")):
+        if not (workflow_path.parent / "architecture").is_dir():
+            continue
+        add(workflow_path.parent.name, workflow_path)
+
     return workflows
 
 

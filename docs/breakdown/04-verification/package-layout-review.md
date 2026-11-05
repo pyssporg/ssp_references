@@ -5,6 +5,7 @@ title: Package layout review across the vendored libraries
 summary: Flatness measurements for the six vendored packages, the two that were restructured into domain packages, and why the other four keep their layout.
 date: 2026-10-28
 status: current
+pb_exempt: true
 ---
 
 # Package layout review across the vendored libraries

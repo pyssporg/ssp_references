@@ -1,6 +1,6 @@
 """Static checks on the requirements manifests.
 
-The default install takes the six vendored pyssp distributions from their
+The default install takes the eight vendored distributions from their
 GitHub release wheels through ``name @ url`` direct references in
 ``requirements.txt``. The version each URL names must be the version its source
 tree declares, so a tag bump and a filename bump cannot drift apart. The
@@ -28,6 +28,8 @@ VENDORED_TREES: dict[str, str] = {
     "pyssp-sysml2": "3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2",
     "pyssp-vv": "3rd_party/pyssp_workflow/3rd_party/pyssp_vv",
     "sequence-extensions-flow": "3rd_party/pyssp_workflow/3rd_party/sequence_extensions",
+    "pycps-sysml2": "3rd_party/pycps_sysml2",
+    "pyfmi-sysml2": "3rd_party/pyfmi_sysml2",
 }
 
 # ``name[extra] @ url``; a bare URL or an option line never has this shape.

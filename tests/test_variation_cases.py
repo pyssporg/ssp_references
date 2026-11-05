@@ -211,12 +211,13 @@ def test_selection_produces_its_element_tree(tmp_path: Path, key: tuple[str, str
 @pytest.mark.parametrize("key", sorted(CASES))
 def test_case_names_the_analysis_configuration(key: tuple[str, str]) -> None:
     """Each case's selection and configuration match the adapter's plan."""
-    from pyssp_sysml2.model import load
-    from pyssp_sysml2.parameters.selection import analysis_plans
+    from pycps_sysml2.metadata.roles import SSP_ROLES
+    from pycps_sysml2.model import load
+    from pycps_sysml2.parameters.selection import analysis_plans
 
     model, analysis = key
     architecture = load(REPO_ROOT / "models" / "ssp" / model / "architecture")
-    plans = {plan.name: plan for plan in analysis_plans(architecture)}
+    plans = {plan.name: plan for plan in analysis_plans(architecture, roles=SSP_ROLES)}
     assert plans[analysis].status in {"legal", "violated"}, plans[analysis].detail
     assert plans[analysis].configuration == CASES[key]["configuration"]
     assert dict(plans[analysis].selection) == CASES[key].get(
@@ -432,12 +433,12 @@ def test_every_analysis_is_legal_or_documented_violated(
     model: str, violated: set[str]
 ) -> None:
     """No analysis is invalid, and a configuration names the type it specializes."""
-    from pyssp_sysml2.metadata.roles import model_usage
-    from pyssp_sysml2.model import load
-    from pyssp_sysml2.parameters.selection import analysis_plans
+    from pycps_sysml2.metadata.roles import SSP_ROLES, model_usage
+    from pycps_sysml2.model import load
+    from pycps_sysml2.parameters.selection import analysis_plans
 
     architecture = load(REPO_ROOT / "models" / "ssp" / model / "architecture")
-    plans = analysis_plans(architecture)
+    plans = analysis_plans(architecture, roles=SSP_ROLES)
     assert plans, "the architecture declares no analysis"
     for plan in plans:
         assert plan.status != "invalid", plan.detail

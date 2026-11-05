@@ -4,7 +4,8 @@ type: imp
 title: Constraint and assert support in pyssp_sysml2
 summary: Carry SysML constraint and assert elements through the parser adapter and evaluate them after variation selection, so illegal variant combinations fail at build time.
 date: 2026-10-30
-status: current
+status: selected
+pb_exempt: true
 ---
 
 # Constraint and assert support in pyssp_sysml2

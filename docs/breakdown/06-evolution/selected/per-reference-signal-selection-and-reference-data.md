@@ -4,7 +4,8 @@ type: imp
 title: Per-reference signal selection and reference data
 summary: Let a reference CSV name its own signals and mapping so comparisons can target a subset of parameters without changing model-level compare signals.
 date: 2026-10-23
-status: current
+status: selected
+pb_exempt: true
 ---
 
 # Per-reference signal selection and reference data

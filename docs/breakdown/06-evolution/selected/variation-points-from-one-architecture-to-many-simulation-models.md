@@ -4,7 +4,8 @@ type: imp
 title: Variation points from one architecture to many simulation models
 summary: Capture structural and parameter variation points in SysML v2 and generate one SSP per selection; ISO/IEC 26580 vocabulary, 15288 as context.
 date: 2026-10-27
-status: current
+status: selected
+pb_exempt: true
 ---
 
 # Variation points from one architecture to many simulation models

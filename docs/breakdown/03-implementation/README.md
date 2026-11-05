@@ -13,4 +13,5 @@ Concrete authoring, build, analysis, and runtime assets.
 <!-- GENERATED FILE — do not edit. Regenerate with pb-registers. -->
 - **INFO-004** [Fixture Note Template](FIXTURE-template.md) — Canonical FIXTURE.md shape for model fixtures.
 - **INFO-008** [Build, analysis, and runtime workflow](workflow.md) — Build produces the analysis and model SSP; an explicit packaging step applies the scenario. Simulation runs the built SSP as-is.
+- **INFO-012** [SysML libraries](sysml-libraries.md) — pycps_sysml2 is the dialect home; pyssp_sysml2 emits SSP-family artifacts and pyfmi_sysml2 emits FMI 2.0 CS artifacts.
 <!-- pb:index:end -->

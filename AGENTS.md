@@ -33,11 +33,13 @@ reproducible fixtures and cross-engine comparison results, not new simulation
 capability.
 
 - `models/ssp/<model>/` holds the authored fixture, `build.py`, and `FIXTURE.md`.
-- `models/fmu/` holds prepared FMU fixtures with their references.
+- `models/fmu/` holds prepared FMU fixtures with their references, plus
+  SysML-authored FMUs that the build generates here (for example `GainOffset`).
 - `artifacts/` holds generated builds, analyses, simulations, and comparisons.
 - `scripts/` holds the shared build, simulate, and compare entry points.
-- `3rd_party/` vendors the pyssp capability checkouts; edits belong in their
-  own repositories.
+- `3rd_party/` vendors the pyssp capability tree plus the SysML dialect
+  (`pycps_sysml2`) and FMI artifact (`pyfmi_sysml2`) libraries; edits belong
+  in their own repositories.
 
 ## Hard constraints
 
@@ -85,6 +87,9 @@ capability.
   (`pyssporg/experimental_pyssp_standard`), not the release line. The nested
   `pyssp_sysml2/3rd_party/experimental_pyssp_standard` copy is a pinned
   dependency: do not edit it; local changes belong in the canonical checkout.
+- `3rd_party/pycps_sysml2` and `3rd_party/pyfmi_sysml2` are `ssp_references`-level
+  submodules, not part of `3rd_party/pyssp_workflow`. They are released v0.1.0
+  libraries; never point the editables at a nested copy.
 - Keep cross-cutting workflow or strategy notes in `docs/breakdown/`.
 - When docs move or commands change, update the references so the documented
   build and simulation flow stays accurate.
@@ -97,10 +102,12 @@ capability.
 - Build: `python3 scripts/build_models.py list` / `run <model>` / `run-all`.
 - Simulate, then compare: `python3 scripts/run_simulations.py`, then
   `python3 scripts/run_comparisons.py`.
-- `requirements.txt` is the default install: the six vendored pyssp
-  distributions are self-describing wheels whose metadata names sibling
-  GitHub release assets (`releases/download/v<version>/`). The tags must exist
-  before any install or editable checkout resolves.
+- `requirements.txt` is the default install: the eight vendored distributions
+  are self-describing wheels whose metadata names sibling GitHub release assets
+  (`releases/download/v<version>/`). Six are pyssp capability libraries; two
+  are the SysML dialect (`pycps_sysml2`) and FMI artifact (`pyfmi_sysml2`)
+  libraries. The tags must exist before any install or editable checkout
+  resolves.
   `requirements-dev.txt` replaces the wheels with editable checkouts but still
   resolves those release URLs.
 - Many workflows assume Linux `x86_64`, `OMSimulator`, and those pinned wheels.

@@ -245,9 +245,11 @@ reference-model cases, the matching CSV baselines live in
 
 `requirements.txt` currently targets Linux `x86_64` and is standalone:
 
-- The six vendored pyssp distributions (`experimental-pyssp-standard`,
+- The eight vendored distributions install from their GitHub release assets:
+  the six pyssp capability libraries (`experimental-pyssp-standard`,
   `pyssp-workflow`, `pyssp-simulate`, `pyssp-sysml2`, `pyssp-vv`,
-  `sequence-extensions-flow`) install from their GitHub release assets. Each
+  `sequence-extensions-flow`) plus the SysML dialect library `pycps-sysml2` and
+  the FMI artifact library `pyfmi-sysml2`. Each
   wheel's metadata names its sibling dependencies as `releases/download/v<version>/`
   URLs, so the version graph travels inside the wheels. A tag that has not been
   released makes the dependency unresolvable.
@@ -307,7 +309,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The six vendored pyssp distributions come from their GitHub release assets; a
+The eight vendored distributions come from their GitHub release assets; a
 missing release tag makes the dependency unresolvable. For editable checkouts,
 run `pip install -r requirements-dev.txt`.
 

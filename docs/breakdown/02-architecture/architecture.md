@@ -80,9 +80,9 @@ body with `ssp_meta.source`, and is never exported.
 **Entry point:** `scripts/build_models.py` discovers and dispatches to each
 model's own `build.py`. The model-level build script is the source of truth for
 how that particular fixture is exported and which analyses it generates.
-Migrated build scripts call `pyssp_workflow.authoring` for SysML derivation and
-then apply the fixture's parameter-application form with `pyssp_standard`
-(`ADR-013`, `DD-011`).
+Migrated build scripts load the architecture with `pycps_sysml2`, call
+`pyssp_workflow.authoring` for SysML derivation, and then apply the fixture's
+parameter-application form with `pyssp_standard` (`ADR-013`, `DD-011`).
 
 **Invariant:** The build stage does not execute simulations, does not write to
 `artifacts/simulation/` or `artifacts/comparisons/`, and does not modify
@@ -227,12 +227,33 @@ compare, and figure code lives in the vendored pyssp packages (`DD-013`).
 Evaluation tools follow the same rule. The SysML authoring path invokes an
 external `pyssp` executable through `pyssp_workflow.authoring` and exchanges
 SysML, SSD, SSV, SSM, and SSP artifacts. The round-trip checker remains an
-independent artifact-only adapter over SSD files. Neither path imports
-`pyssp_sysml2`; this lets the SysML tool run in a separate environment with its
-own versions, as long as the exchanged artifacts remain standard-conformant.
+independent artifact-only adapter over SSD files. Build scripts read the
+architecture with `pycps_sysml2` and never import `pyssp_sysml2` internals.
+This keeps the `pyssp` CLI runnable in a separate environment with its own
+versions, as long as the exchanged artifacts remain standard-conformant.
 
 The exact boundary contract, artifact classes, and tool-environment rules are
 maintained in `INFO-003`.
+
+### SysML library map
+
+Three libraries implement one dialect (`INFO-012`):
+
+```
+sysmlpy -> pycps_sysml2 -> pyssp_sysml2 -> SSD, SSV, SSM, SSP
+                        -> pyfmi_sysml2  -> FMI 2.0 CS artifacts
+pyssp_sysml2, pyfmi_sysml2 -> pyssp_standard (documents, validation, archive)
+```
+
+| Library | Owns | Imports |
+|---|---|---|
+| `pycps_sysml2` | the dialect home: parsing, IR, markers, parameters, variation, constraints | `sysmlpy` only |
+| `pyssp_sysml2` | SSP implementer: SSD/SSV/SSM/SSP emission, SSD→SysML synthesis | `pycps_sysml2`, `pyssp_standard` |
+| `pyfmi_sysml2` | FMI 2.0 CS implementer: modelDescription, C headers, Modelica connectors, FMU packaging | `pycps_sysml2`, `pyssp_standard` |
+
+Only SSD, SSV, SSM, SSP, and result CSV cross a library border; internal
+modules never do (`ADR-006`, `ADR-011`). `pyssp_sysml2` and `pyfmi_sysml2` are
+siblings: neither imports the other.
 
 No tool may add compatibility behavior to a producer's Python model merely to
 satisfy a consumer. Adapt the consumer or the artifact boundary instead. See
@@ -397,10 +418,10 @@ The following architectural violations are not allowed:
 
 8. **Library borders exchange standard artifacts first.** The SysML authoring
    path invokes the `pyssp` CLI through `pyssp_workflow.authoring` and exchanges
-   SysML/SSP artifacts. Do not import `pyssp_sysml2` into the build. When a
-   Python object must cross, it belongs to the producer's public API; internal
-   model objects and compatibility shims do not. See `ADR-006`, `ADR-007`, and
-   `ADR-011`.
+   SysML/SSP artifacts. Build scripts import `pycps_sysml2`, never
+   `pyssp_sysml2` internals. When a Python object must cross, it belongs to the
+   producer's public API; internal model objects and compatibility shims do
+   not. See `ADR-006`, `ADR-007`, `ADR-011`, and `ADR-015`.
 
 9. **Analyses must not be exported as SSPs.** Only `part def ... :> SspModel`
    definitions are exportable. A `part def ... :> Analysis` produces scenario

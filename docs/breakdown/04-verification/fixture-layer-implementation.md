@@ -5,6 +5,7 @@ title: Fixture layer implementation record
 summary: What the fixture restructuring built in each suite, the counts after the change, the defect injected to prove each gate red, and the gaps that remain.
 date: 2026-10-28
 status: current
+pb_exempt: true
 ---
 
 # Fixture layer implementation record

@@ -4,7 +4,8 @@ type: imp
 title: Scenario ownership strategy for SSP fixtures
 summary: One strategy selects whether a scenario parameter set is applied by the model, the analysis, or the build; pyfmu motivates the model-owned option.
 date: 2026-10-23
-status: current
+status: selected
+pb_exempt: true
 ---
 
 # Scenario ownership strategy for SSP fixtures

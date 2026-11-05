@@ -7,6 +7,9 @@ stream.
 
 | Date | ID | Decision | Layers | Status | Record |
 |---|---|---|---|---|---|
+| 2026-11-05 | ADR-017 | FMI 2.0 Co-Simulation Only, Linux x86-64 Only | product, architecture | accepted | `ADR-017` |
+| 2026-11-05 | ADR-016 | pycps_sysml2 Owns the SysML Dialect for Both Artifact Libraries | architecture, implementation | accepted | `ADR-016` |
+| 2026-11-05 | ADR-015 | SysML Stack Splits Into Dialect, SSP, and FMI Libraries | architecture, implementation | accepted | `ADR-015` |
 | 2026-11-04 | OD-003 | No Local Wheelhouse | operation | accepted | `OD-003` |
 | 2026-11-04 | OD-002 | Self-Describing Wheels Install From GitHub Release Assets | operation | accepted | `OD-002` |
 | 2026-11-04 | OD-001 | Default Install Uses the Pinned Wheelhouse | operation | superseded | `OD-001` |

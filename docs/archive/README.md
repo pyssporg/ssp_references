@@ -11,6 +11,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
 
 ### Product
 
+- **ADR-017** — FMI 2.0 Co-Simulation Only, Linux x86-64 Only · accepted · 2026-11-05 · `ADR-017`
+  The FMI implementer emits FMI 2.0 co-simulation artifacts for 64-bit Linux; Model Exchange and FMI 3.0 stay out of scope.
 - **PD-001** — Comparison Methodology — Engine-to-Engine Only · accepted · 2026-10-22 · `PD-001`
   Comparison is pairwise engine-to-engine; no engine is the golden reference.
 - **PD-002** — Simulation Registry Is the Single Source of Truth · accepted · 2026-10-22 · `PD-002`
@@ -64,6 +66,10 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   SysML defines wiring and the experiment; the fixture build applies the parameter form with pyssp_standard, including nested boundary wiring.
 - **ADR-014** — Experimental Fork Is Named experimental_pyssp_standard Everywhere a Name Is Visible · accepted · 2026-11-04 · `ADR-014`
   Checkout path and distribution name carry the `experimental_` marker; only the import package stays `pyssp_standard`.
+- **ADR-015** — SysML Stack Splits Into Dialect, SSP, and FMI Libraries · accepted · 2026-11-05 · `ADR-015`
+  One dialect library serves two artifact libraries; pyssp_sysml2 and pyfmi_sysml2 are siblings and never import each other.
+- **ADR-016** — pycps_sysml2 Owns the SysML Dialect for Both Artifact Libraries · accepted · 2026-11-05 · `ADR-016`
+  Variation, constraint, and parameter semantics for the SSP and FMI dialects live in pycps_sysml2, whose only runtime dependency is sysmlpy.
 
 ### Implementation
 

@@ -9,8 +9,9 @@ status: current
 
 # Install model
 
-Default install fetches the six pyssp distributions as tagged GitHub release wheel assets; development layers editable checkouts on the same default.
+Default install fetches the eight vendored distributions as tagged GitHub release wheel assets; development layers editable checkouts on the same default.
 
+- **Two families:** six pyssp capability libraries (`experimental-pyssp-standard`, `pyssp-workflow`, `pyssp-simulate`, `pyssp-sysml2`, `pyssp-vv`, `sequence-extensions-flow`) plus the two SysML libraries, dialect `pycps-sysml2` and FMI artifact `pyfmi-sysml2` (`INFO-012`).
 - **Default:** `requirements.txt` pins each distribution as a PEP 508 direct reference to its release wheel URL; every wheel's metadata names its siblings the same way, so the version graph travels inside the wheels.
 - **Prerequisite:** every distribution carries tag `v<version>` with its wheel attached; a missing tag or renamed asset makes the dependency unresolvable.
 - **Dev opt-in:** `requirements-dev.txt` composes `-r requirements.txt` and replaces the wheel installs with `-e` checkouts; resolution still follows the metadata URLs.

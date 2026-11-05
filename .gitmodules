@@ -2,3 +2,11 @@
 	path = 3rd_party/pyssp_workflow
 	url = https://github.com/pyssporg/pyssp_workflow.git
 	branch = main
+[submodule "3rd_party/pycps_sysml2"]
+	path = 3rd_party/pycps_sysml2
+	url = https://github.com/pyssporg/pycps_sysml2.git
+	branch = main
+[submodule "3rd_party/pyfmi_sysml2"]
+	path = 3rd_party/pyfmi_sysml2
+	url = https://github.com/pyssporg/pyfmi_sysml2.git
+	branch = main

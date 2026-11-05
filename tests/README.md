@@ -58,3 +58,12 @@ python3 scripts/run_simulations.py
    `pip install ...`). `tests/test_suite_policy.py` enforces this.
 5. Write only under `tmp_path`; the policy test fails a write that resolves to
    `REPO_ROOT`, `__file__`, or a repo-relative path literal.
+
+## Transitional tests
+
+`test_legacy_sysml_shims.py` is a contract test for the `pyssp_sysml2` v0.4.0
+re-export shims. It is deleted when the shims are removed in v0.5.0.
+
+`test_fmu_artifacts.py` is the contract test for the SysML-authored `GainOffset`
+FMU: `modelDescription.xml`, the generated C header, the compiled binary, and the
+staged FMU tree must agree on one variable set.

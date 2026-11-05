@@ -4,7 +4,8 @@ type: imp
 title: Model-level configurations for variation selection
 summary: Replace the custom pyssp_selection string with a SysML v2 configuration model that specializes the composition and binds each variation usage to a variant, including nested points.
 date: 2026-10-30
-status: current
+status: selected
+pb_exempt: true
 ---
 
 # Model-level configurations for variation selection

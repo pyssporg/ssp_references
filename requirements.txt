@@ -1,5 +1,7 @@
-# Standalone runtime environment. The six vendored pyssp distributions install
-# as PEP 508 direct references to their GitHub release wheels:
+# Standalone runtime environment. The eight vendored distributions install as
+# PEP 508 direct references to their GitHub release wheels: six pyssp
+# capability libraries plus the SysML dialect library (pycps_sysml2) and the
+# FMI artifact library (pyfmi_sysml2) built on it.
 #
 #   * each tree's release workflow (.github/workflows/wheels.yml) attaches the
 #     asset, and the release tag is always v<version>;
@@ -11,9 +13,11 @@
 experimental-pyssp-standard @ https://github.com/pyssporg/experimental_pyssp_standard/releases/download/v0.9.2.dev0/experimental_pyssp_standard-0.9.2.dev0-py3-none-any.whl
 pyssp-workflow @ https://github.com/pyssporg/pyssp_workflow/releases/download/v0.1.0/pyssp_workflow-0.1.0-py3-none-any.whl
 pyssp-simulate @ https://github.com/pyssporg/pyssp_simulate/releases/download/v0.2.0/pyssp_simulate-0.2.0-py3-none-any.whl
-pyssp-sysml2 @ https://github.com/pyssporg/pyssp_sysml2/releases/download/v0.3.0/pyssp_sysml2-0.3.0-py3-none-any.whl
+pyssp-sysml2 @ https://github.com/pyssporg/pyssp_sysml2/releases/download/v0.4.0/pyssp_sysml2-0.4.0-py3-none-any.whl
 pyssp-vv @ https://github.com/pyssporg/pyssp_vv/releases/download/v0.1.0/pyssp_vv-0.1.0-py3-none-any.whl
 sequence-extensions-flow @ https://github.com/jkCXf9X4/sequence_extensions/releases/download/v3.0.0/sequence_extensions_flow-3.0.0-py3-none-any.whl
+pycps-sysml2 @ https://github.com/pyssporg/pycps_sysml2/releases/download/v0.1.0/pycps_sysml2-0.1.0-py3-none-any.whl
+pyfmi-sysml2 @ https://github.com/pyssporg/pyfmi_sysml2/releases/download/v0.1.0/pyfmi_sysml2-0.1.0-py3-none-any.whl
 
 # Third-party runtime dependencies.
 numpy

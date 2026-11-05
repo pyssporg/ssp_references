@@ -5,6 +5,7 @@ title: Test suite restructuring and fixture credibility
 summary: Critical audit of the six vendored pyssp_* and sequence_extensions suites plus the root contract suite, focused on the file-fixture layer, and the restructuring that makes every fixture traceable, layout-checked, and write-protected.
 date: 2026-10-28
 status: current
+pb_exempt: true
 ---
 
 # Test suite restructuring and fixture credibility

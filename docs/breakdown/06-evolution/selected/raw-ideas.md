@@ -4,7 +4,7 @@ type: imp
 title: Raw Improvement Ideas
 summary: Unscoped improvement ideas; route each through the change pipeline.
 date: 2026-10-22
-status: current
+status: selected
 pb_exempt: true
 ---
 

@@ -4,7 +4,8 @@ type: imp
 title: Authored variation selection and condition ownership
 summary: Each analysis declares its variant selection in SysML; the adapter resolves it and reports legal, violated, and invalid analyses, leaving build.py with only the fixture's expected partition.
 date: 2026-10-30
-status: current
+status: selected
+pb_exempt: true
 ---
 
 # Authored variation selection and condition ownership

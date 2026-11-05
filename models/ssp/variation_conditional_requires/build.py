@@ -12,8 +12,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pyssp_sysml2.model import load
-from pyssp_sysml2.parameters.selection import analysis_plans
+from pycps_sysml2.metadata.roles import SSP_ROLES
+from pycps_sysml2.model import load
+from pycps_sysml2.parameters.selection import analysis_plans
 from pyssp_workflow.analysis import read_scenario
 from pyssp_workflow.authoring import build_fixture, report_builds
 from pyssp_workflow.binding import bind
@@ -26,7 +27,8 @@ ARCHITECTURE = load(Path(__file__).resolve().parent / "architecture")
 EXPECTED_LEGAL = ("step_single", "step_two", "sine_single")
 EXPECTED_VIOLATED = ("sine_two",)
 
-PLANS = analysis_plans(ARCHITECTURE)
+# Roles are explicit: the dialect library has no default role policy.
+PLANS = analysis_plans(ARCHITECTURE, roles=SSP_ROLES)
 SELECTIONS = {plan.name: plan.selection for plan in PLANS if plan.legal}
 CONFIGURATIONS = {plan.name: plan.configuration for plan in PLANS if plan.legal}
 

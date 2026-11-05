@@ -36,7 +36,8 @@ Required for SysML-authored fixtures.
   `03-components.sysml`, `04-structure.sysml`, and `05-analyses.sysml`. Every
   split file repeats the same package, and the loader merges the directory in
   file-name order. Included definition roots may supply other packages; the
-  first root is the model, and a duplicate definition is an error.
+  first root is the model, a definition of another package is stored as
+  `<package>::<name>`, and only a repeated stored key is a duplicate.
 - For a SysML-authored FMU, the FMU definitions live under
   `models/fmu/<model>/architecture/`; the system composition and its analyses
   live in `models/ssp/<model>/architecture/System.sysml`, which passes the FMU

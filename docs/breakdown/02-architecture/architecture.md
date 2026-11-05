@@ -65,17 +65,20 @@ no copy or link of the file in the system directory. The system build passes
 that directory to `build_fixture(includes=...)` (`DD-021`). A large architecture
 splits along its sections (`01-interfaces`, `02-parameters`, `03-components`,
 `04-structure`, `05-analyses`); every file repeats the package and the loader
-merges the directory in file-name order. Included definition roots load beside the model:
-the first root is the model, later roots merge vocabulary under any package
-name, and a duplicate definition is an error. Some model
+merges the directory in file-name order. Included definition roots load beside
+the model: the first root is the model, later roots contribute vocabulary under
+any package name. Storage is package scoped — a definition of the model's own
+package keeps its bare name, one from another package is stored as
+`<package>::<name>` — so only a repeated stored key is a duplicate. Some model
 directories still carry checked-in resource files (FMUs, legacy SSV/SSM) as
 their body. A fixture may
 keep its legacy SSD and resources as the model body and author only the analysis
 in SysML; the `SspModel` composition is then a boundary marker, selects the
 body with `ssp_meta.source`, and is never exported. The markers themselves are
 not authored in the fixture: the build passes `pycps_sysml2`'s packaged core
-as one include, and a local redeclaration is an error (`ADR-019`). Included
-names are excluded from export.
+as one include, so their stored keys are `PysspCore::<name>` while their
+`Definition.name` stays bare; the fixture check rejects a local redeclaration
+(`ADR-019`). Included names are excluded from export.
 
 **Output:** Two artifact classes:
 

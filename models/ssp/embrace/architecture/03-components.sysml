@@ -1,8 +1,4 @@
 package Embrace {
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
-  }
 
   attribute def EcsHwFmu :> FmuMetadata {
     attribute source = "models/ssp/embrace/resources/0001_ECS_HW";

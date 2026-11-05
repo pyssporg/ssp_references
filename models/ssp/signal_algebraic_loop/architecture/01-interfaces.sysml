@@ -1,9 +1,4 @@
 package SignalAlgebraicLoop {
-  part def SspModel;
-
-  part def Analysis;
-
-  port def ParameterInterface;
 
   port def SineParameters :> ParameterInterface {
     attribute amplitude : Real;

@@ -1,5 +1,4 @@
 package SignalAlgebraicLoop {
-  attribute def ParameterSet;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute sine_amplitude = 1.0;
@@ -8,12 +7,6 @@ package SignalAlgebraicLoop {
     attribute sine_phase = 0.0;
     attribute sine_startTime = 0.0;
     attribute gain_k = 0.5;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {

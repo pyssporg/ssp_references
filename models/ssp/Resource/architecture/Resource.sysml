@@ -1,27 +1,14 @@
 package Resource {
-  part def SspModel;
-  part def Analysis;
 
   port def IntegerSignal {
     attribute pyssp_flat_connector : Boolean = true;
     attribute value : Integer;
   }
 
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
-  }
-
   attribute def BaselineExperiment :> Experiment {
     attribute startTime = 0.0;
     attribute stopTime = 1.0;
     attribute stepSize = 0.001;
-  }
-
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
   }
 
   attribute def ResourceFmu :> FmuMetadata {

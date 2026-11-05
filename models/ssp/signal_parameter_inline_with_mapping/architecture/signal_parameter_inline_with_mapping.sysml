@@ -1,8 +1,4 @@
 package SignalParameterInlineWithMapping {
-  part def SspModel;
-  part def Analysis;
-
-  port def ParameterInterface;
 
   port def StepParameters :> ParameterInterface {
     attribute height : Real;
@@ -15,29 +11,16 @@ package SignalParameterInlineWithMapping {
     attribute value : Real;
   }
 
-  attribute def ParameterSet;
-
   attribute def ScenarioSet :> ParameterSet {
     attribute step_height = 1.0;
     attribute step_offset = 0.0;
     attribute step_startTime = 0.25;
   }
 
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
-  }
-
   attribute def BaselineExperiment :> Experiment {
     attribute startTime = 0.0;
     attribute stopTime = 1.0;
     attribute stepSize = 0.001;
-  }
-
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
   }
 
   attribute def StepFmu :> FmuMetadata {

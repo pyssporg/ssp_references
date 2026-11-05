@@ -11,11 +11,13 @@ compared through the shared entry points.
 
 The fixture is split by role:
 
-- `models/ssp/GainOffset/` (this directory) is the system: architecture, build,
-  references, and end-to-end provenance.
-- `models/fmu/GainOffset/` holds the authored FMU source
-  (`src/GainOffset.c`) and provenance; it carries no binary and no generated
-  definition text.
+- `models/fmu/GainOffset/` owns only the authored FMU definitions and source:
+  `architecture/GainOffset.sysml` (ports, metadata, `Generator`, and the `Fmu`
+  composition root) and `src/GainOffset.c`, plus its `build.py` and provenance.
+- `models/ssp/GainOffset/` (this directory) is the system:
+  `architecture/System.sysml` (`SspModel`, `Analysis`), `architecture/GainOffset.sysml`
+  (a relative file symlink to the canonical FMU file), `build.py`, references,
+  and end-to-end provenance.
 - `artifacts/build/GainOffset/` holds every generated file: the C interface
   headers, `modelDescription.xml`, the compiled `Generator.so`, and the
   packaged `Generator.fmu`. The committed archive is the definition copy
@@ -34,9 +36,13 @@ trajectory difference is a pipeline defect, not a numerical one.
 
 ## Architecture Source
 
-- `architecture/GainOffset.sysml` (single file, moved unchanged from the
-  original FMU-side location).
-- Exportable composition: `System :> SspModel`.
+- `architecture/System.sysml` declares the system: `System :> SspModel`,
+  `baseline :> Analysis`, and their experiments.
+- `architecture/GainOffset.sysml` is a relative file symlink to
+  `../../../fmu/GainOffset/architecture/GainOffset.sysml`. It supplies the FMU
+  definitions (`Generator`, `Fmu` composition root) that `System` references.
+- Exportable composition: `System :> SspModel`. FMU composition root: `Fmu`
+  (one part) because `pyfmi_sysml2` exports components below a root.
 - Analysis composition: `baseline :> Analysis`.
 - Parameter interface `GeneratorParameters` exposes `gain = 2.0`,
   `offset = 0.5`, `frequency = 1.0`; the analysis applies no scenario.
@@ -44,6 +50,8 @@ trajectory difference is a pipeline defect, not a numerical one.
   `implementation = "CoSimulation"`. The reference is a file, resolved from the
   repository root and copied verbatim into the SSP's
   `resources/Generator.fmu`.
+- Generated FMU definition: `modelName="Fmu.Generator"`,
+  `guid="{8b2a77fc-2b8b-5f9c-9f05-32381929b976}"`.
 - No legacy SSD, SSV, or SSM is checked in.
 
 ## Analyses
@@ -112,8 +120,9 @@ trajectory difference is a pipeline defect, not a numerical one.
 ## Packaging Notes
 
 - Build: `./venv/bin/python scripts/build_models.py run GainOffset`
-  (also part of `run-all`).
-- `build.py` runs ordered steps:
+  (also part of `run-all`; the FMU build must run first).
+- `models/fmu/GainOffset/build.py` runs the FMU steps with
+  `composition="Fmu"`:
   1. `pyfmi_sysml2.generate_c_headers` writes the C interface headers to
      `artifacts/build/GainOffset/sources/`;
      `pyfmi_sysml2.generate_model_description` writes
@@ -126,13 +135,16 @@ trajectory difference is a pipeline defect, not a numerical one.
      `artifacts/build/GainOffset/Generator.fmu` with the model description, the
      generated headers, the `pyfmi_sysml2.fmi2_headers()`, and the binary at
      `binaries/linux64/Generator.so`.
+- `models/ssp/GainOffset/build.py` then runs the SSP steps from `System`:
   4. `pyssp_workflow.authoring.build_fixture` exports the SSP and the
-     `baseline` analysis, embedding the archive as `resources/Generator.fmu`.
+     `baseline` analysis, embedding the archive as `resources/Generator.fmu`;
+     it fails with a clear message when the archive is missing.
   5. `report_builds` records the baseline artifact paths.
 - `generation_time` is injected as `2026-01-01T00:00:00Z`, so
   `generationDateAndTime` never moves.
-- `guid` is the deterministic uuid5 derived from `System.Generator`, not a
-  random identifier.
+- `guid` is the deterministic uuid5 derived from `Fmu.Generator`, not a random
+  identifier; the generated definition carries `modelName="Fmu.Generator"` and
+  `guid="{8b2a77fc-2b8b-5f9c-9f05-32381929b976}"`.
 - FMI 2.0 standard headers come from `pyfmi_sysml2.fmi2_headers()`; the package
   bundles the three headers that `pyssp_standard` vendors under
   `3rdParty/FMI2/headers/`.
@@ -145,13 +157,17 @@ trajectory difference is a pipeline defect, not a numerical one.
 ## Reproducibility
 
 - Build contract: rebuild with the repository venv and the toolchain named
-  below; every generated file is written by `build.py`, none is hand-edited.
+  below; `models/fmu/GainOffset/build.py` writes the FMU outputs and
+  `models/ssp/GainOffset/build.py` writes the SSP and analysis, in that order.
+  No generated file is hand-edited.
 - Toolchain used: `gcc (Ubuntu 13.4.0-6ubuntu1~22~ppa2) 13.4.0`.
 - Two consecutive `run GainOffset` invocations produce an identical
   definition set under `artifacts/build/GainOffset/`
   (`modelDescription.xml` and headers, `sha256sum` per file) and a
   byte-identical `artifacts/build/GainOffset/Generator.fmu`,
-  `sha256 db0250c15af857dfb75e869edd9c62e7f67cc2d1527b866eeeca95991b64ceee`.
+  `sha256 3167ed08f91fef3b45a4fa036f58bef63b0a2c66428dff003640c33c3ccfd97b`;
+  the compiled `Generator.so` is
+  `sha256 c6ba67695ab0273643a911c5d8e6b7a3c0b58ec912019307f93c4fb37cbd54ac`.
 - Volatile if the toolchain changes: the ELF bytes of
   `artifacts/build/GainOffset/Generator.so` (gcc version, `--build-id`, section
   ordering). `modelDescription.xml`, the headers, the archive entry list, and

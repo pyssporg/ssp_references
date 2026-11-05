@@ -54,17 +54,28 @@ inter-process calls, or hidden state.
 runtime-ready exported SSP and the analysis data that exercises it.
 
 **Input:** A model directory under `models/ssp/<model_name>/` containing at
-minimum a `build.py` script and a `FIXTURE.md` fixture note. Migrated fixtures
-carry `architecture/*.sysml` with a `part def ... :> SspModel` and, where
-analyses are defined, `part def ... :> Analysis` compositions. A large
-architecture splits along its sections (`01-interfaces`, `02-parameters`,
-`03-components`, `04-structure`, `05-analyses`); every file repeats the package
-and the loader merges the directory in file-name order. Some model
+minimum a `build.py` script and a `FIXTURE.md` fixture note. A SysML-authored
+system carries its composition at `architecture/System.sysml`
+(`part def ... :> SspModel` and, where analyses are defined,
+`part def ... :> Analysis` compositions) and has a directory under
+`models/fmu/<model_name>/` that owns only its FMU definitions
+(`architecture/*.sysml`: ports, metadata, the component, and the `Fmu`
+composition root) and `src/`; the system's
+`models/ssp/<model_name>/architecture/<model>.sysml` is a relative file symlink
+to the canonical FMU architecture. A large architecture splits along its
+sections (`01-interfaces`, `02-parameters`, `03-components`, `04-structure`,
+`05-analyses`); every file repeats the package and the loader merges the
+directory in file-name order. Included definition roots load beside the model:
+the first root is the model, later roots merge vocabulary under any package
+name, and a duplicate definition is an error. Some model
 directories still carry checked-in resource files (FMUs, legacy SSV/SSM) as
 their body. A fixture may
 keep its legacy SSD and resources as the model body and author only the analysis
 in SysML; the `SspModel` composition is then a boundary marker, selects the
-body with `ssp_meta.source`, and is never exported.
+body with `ssp_meta.source`, and is never exported. The markers themselves are
+not authored in the fixture: the build passes `pycps_sysml2`'s packaged core
+as one include, and a local redeclaration is an error (`ADR-019`). Included
+names are excluded from export.
 
 **Output:** Two artifact classes:
 
@@ -78,7 +89,12 @@ body with `ssp_meta.source`, and is never exported.
   they are build inputs that supply the window and, optionally, the scenario.
 
 **Entry point:** `scripts/build_models.py` discovers and dispatches to each
-model's own `build.py`. The model-level build script is the source of truth for
+model's own `build.py` in two phases: every `models/fmu/<model_name>/build.py`
+first, then every `models/ssp/<model_name>/build.py`. One model name may appear
+in both phases; a duplicate within a phase is an error. The FMU build exports
+the component below the `Fmu` composition root with `composition="Fmu"`; the
+SSP build exports `System`. The model-level build
+script is the source of truth for
 how that particular fixture is exported and which analyses it generates.
 Migrated build scripts load the architecture with `pycps_sysml2`, call
 `pyssp_workflow.authoring` for SysML derivation, and then apply the fixture's
@@ -206,7 +222,7 @@ forbidden from doing.
 
 | Entry Point | Owns | Forbidden From |
 |---|---|---|
-| `build_models.py` | Model discovery and dispatch to per-model `build.py`; exports `SspModel` SSPs and generates analysis artifacts | Running simulations, writing to `artifacts/simulation/` or `artifacts/comparisons/`, modifying the simulation registry |
+| `build_models.py` | Model discovery and dispatch to per-model `build.py` in two phases (FMU, then SSP); FMU builds generate FMI artifacts and package the archive, SSP builds export `SspModel` SSPs and generate analysis artifacts | Running simulations, writing to `artifacts/simulation/` or `artifacts/comparisons/`, modifying the simulation registry |
 | `run_simulations.py` | Registry expansion, analysis setup, backend dispatch, result recording | Rebuilding SSPs, mutating exported model artifacts, running comparisons |
 | `run_comparisons.py` | Pairwise engine-to-engine comparison, reference comparison, verdict recording | Re-running simulations, modifying model sources, rebuilding SSPs |
 | `run_campaign.py` | Submitting build, analysis, simulate, and compare nodes through `sequence_extensions` | Implementing domain logic; bypassing the stage entry points |
@@ -267,15 +283,18 @@ The following text diagram shows the path from model source to comparison
 artifact:
 
 ```
-  models/ssp/<model>/architecture/*.sysml   (SspModel + Analysis definitions)
+  models/fmu/<model>/architecture/*.sysml   (FMU definitions: ports, component, Fmu root)
   models/fmu/<model>/src/                   (authored FMU source and provenance)
+  models/ssp/<model>/architecture/System.sysml    (SspModel + Analysis definitions)
+  models/ssp/<model>/architecture/<model>.sysml   (relative file link to the FMU architecture)
            |
+           |  models/fmu/<model>/build.py  (composition="Fmu")
            |  pyfmi_sysml2 (headers, modelDescription, archive) + gcc
            v
   artifacts/build/<model>/                  (generated headers, modelDescription.xml,
                                              compiled binary, packaged .fmu)
            |
-           |  build_models.py -> build.py
+           |  models/ssp/<model>/build.py  (exports System)
            |  pyssp_workflow.authoring + pyssp_workflow.binding / pyssp_standard
            |  (SysML -> model SSP; analysis scenario packaged by binding.bind)
            v

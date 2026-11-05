@@ -1,5 +1,4 @@
 package SignalNestedParameterBindings {
-  attribute def ParameterSet;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute step_height = 1.0;
@@ -14,12 +13,6 @@ package SignalNestedParameterBindings {
     attribute gain_k = 0.5;
     attribute sine_amplitude = 1.0;
     attribute inner_sine_amplitude = 2.0;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {

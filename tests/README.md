@@ -68,5 +68,11 @@ re-export shims. It is deleted when the shims are removed in v0.5.0.
 FMU: `modelDescription.xml` and the generated C headers (build outputs under
 `artifacts/build/GainOffset/`, carried for consumers by the committed
 `Generator.fmu` archive), the compiled binary, and the packaged archive must
-agree on one variable set. The public FMI 2.0 headers come from
+agree on one variable set. It also pins the architecture boundary:
+`test_architecture_ownership_is_split_between_layers` asserts that neither
+architecture file redeclares a `pycps_sysml2` core definition. The canonical FMU
+definitions and the FMU build
+script live under `models/fmu/GainOffset/`; the system composition lives in
+`models/ssp/GainOffset/architecture/System.sysml` and links `GainOffset.sysml`
+to that canonical file. The public FMI 2.0 headers come from
 `pyfmi_sysml2.fmi2_headers()`.

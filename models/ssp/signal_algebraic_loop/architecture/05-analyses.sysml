@@ -1,4 +1,5 @@
 package SignalAlgebraicLoop {
+
   part def baseline :> Analysis {
     doc /* Sine through gain, with the algebraic loop closed by add. */
     attribute experiment_baseline : BaselineExperiment;

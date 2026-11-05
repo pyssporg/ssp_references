@@ -15,11 +15,14 @@ definitions, fixture notes, and build metadata.
 ├── models/
 │   ├── fmu/
 │   │   └── <fmu_name>/
-│   │       ├── fmu/               # FMU definition: modelDescription + sources
+│   │       ├── architecture/      # FMU definitions (SysML-authored fixtures)
+│   │       ├── build.py           # FMU build (SysML-authored fixtures)
+│   │       ├── fmu/               # FMU definition (prepared fixtures)
+│   │       ├── src/               # authored C implementation
 │   │       └── references/
 │   └── ssp/
 │       └── <model_name>/
-│           ├── architecture/      # authored SysML (migrated fixtures)
+│           ├── architecture/      # system composition; links the FMU definition file
 │           ├── build.py
 │           ├── FIXTURE.md
 │           ├── references/        # baseline CSV for the fixture
@@ -85,11 +88,21 @@ wheel. See [`examples/simple_chain/README.md`](examples/simple_chain/README.md).
 Each model directory under `models/ssp/<model_name>/` follows the same basic
 contract:
 
-- `architecture/*.sysml` is the authored source for migrated fixtures.
+- `architecture/System.sysml` is the authored system composition for migrated
+  fixtures: `part def System :> SspModel` and, where analyses are defined,
+  `part def ... :> Analysis`. A SysML-authored FMU owns only its FMU definitions
+  under `models/fmu/<model>/architecture/`; `models/ssp/<model>/architecture/<model>.sysml`
+  is a relative file symlink to the canonical FMU file.
 - `part def <Model> :> SspModel` exports one SSP; `part def <Analysis> :> Analysis`
   supplies scenario data, a description, and one experiment (`startTime`,
   `stopTime`, `stepSize`) and is never exported as an SSP. A model may author
   several analyses; each is built and registered as its own case.
+- The dialect markers — `SspModel`, `Analysis`, `Experiment`, `FmuMetadata`,
+  `SspMetadata`, `ParameterInterface`, `ParameterSet` — come from
+  `pycps_sysml2`'s packaged core definitions. `build.py` reaches them through
+  `pyssp_workflow.authoring`, whose `core_definitions=True` default adds the
+  core as one include; extra definition roots go in `includes=`, one more
+  `--architecture` each after the model root. A fixture must not redeclare one.
 - A fixture may keep a legacy `ssp/` body and author only the analysis. Its
   `SspModel` composition is then a boundary marker that selects the body with
   `ssp_meta.source`, and is not exported.
@@ -142,7 +155,10 @@ Compare  -> reads run manifests + CSV, writes comparisons
 SysML    -> reads .sysml, invokes external pyssp CLI, writes SSP/analysis
 ```
 
-The build workflow discovers models from `models/*/*/build.py`:
+The build workflow discovers models from two roots, `models/fmu/*/build.py`
+(those with an `architecture/` directory) and `models/ssp/*/build.py`, and
+builds in two phases: every FMU before any SSP. A model name may appear in both
+roots; a duplicate within one phase is an error.
 
 ```bash
 python3 scripts/build_models.py list

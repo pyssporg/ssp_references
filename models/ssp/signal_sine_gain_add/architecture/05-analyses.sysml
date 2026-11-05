@@ -1,4 +1,5 @@
 package SignalSineGainAdd {
+
   part def baseline :> Analysis {
     doc /* Sine through a gain plus a step, added at the root. */
     attribute experiment_baseline : BaselineExperiment;

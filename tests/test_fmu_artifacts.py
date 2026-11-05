@@ -1,16 +1,16 @@
 """Contract: the GainOffset FMU definition and its build artifacts agree.
 
-``models/fmu/GainOffset`` keeps only the authored inputs (``src/GainOffset.c``
-and ``FIXTURE.md``); it carries no committed definition. The committed
-``artifacts/build/GainOffset/Generator.fmu`` archive *is* the definition: it
-ships ``modelDescription.xml``, the generated C interface headers, and the
-compiled binary. Four independently produced pieces must describe the same
-interface: ``modelDescription.xml`` (pyfmi_sysml2 model description), the C
-header (pyfmi_sysml2 C interface), the compiled binary (fixture-local gcc), and
-the packaged archive (pyfmi_sysml2 packaging). Each one can drift on its own: a
-stale header after a SysML rename, a binary compiled before the header changed,
-an archive that kept the previous ``.so``, or a model description whose
-``ModelStructure`` no longer lists the outputs.
+``models/fmu/GainOffset`` keeps the authored inputs (``src/GainOffset.c``,
+``architecture/GainOffset.sysml``, and ``FIXTURE.md``); it carries no committed
+definition. The committed ``artifacts/build/GainOffset/Generator.fmu`` archive
+*is* the definition: it ships ``modelDescription.xml``, the generated C
+interface headers, and the compiled binary. Four independently produced pieces
+must describe the same interface: ``modelDescription.xml`` (pyfmi_sysml2 model
+description), the C header (pyfmi_sysml2 C interface), the compiled binary
+(fixture-local gcc), and the packaged archive (pyfmi_sysml2 packaging). Each one
+can drift on its own: a stale header after a SysML rename, a binary compiled
+before the header changed, an archive that kept the previous ``.so``, or a model
+description whose ``ModelStructure`` no longer lists the outputs.
 
 These tests read only committed files -- the archive and the tracked binary --
 and judge the pieces the FMI validator does not cover (value-reference scoping,
@@ -34,6 +34,22 @@ ARCHIVE = ARTIFACTS / "Generator.fmu"
 #: Archive members carrying the definition and the generated header.
 DESCRIPTION_MEMBER = "modelDescription.xml"
 HEADER_MEMBER = "sources/GainOffset_Generator.h"
+
+#: Authored architecture: the FMU definition and the SSP system that reuses it.
+FMU_ARCHITECTURE = REPO_ROOT / "models" / "fmu" / "GainOffset" / "architecture"
+SSP_ARCHITECTURE = REPO_ROOT / "models" / "ssp" / "GainOffset" / "architecture"
+
+#: Definitions the architecture imports from ``pycps_sysml2.core_definitions()``;
+#: a fixture must never redeclare one locally.
+CORE_DEFINITION_DECLARATIONS = (
+    "part def SspModel",
+    "part def Analysis",
+    "attribute def Experiment",
+    "port def ParameterInterface",
+    "attribute def FmuMetadata",
+    "attribute def SspMetadata",
+    "attribute def ParameterSet",
+)
 
 #: C data type constants emitted by pyfmi_sysml2 -> FMI scalar type element.
 FMI_TYPE_BY_DATATYPE = {
@@ -133,6 +149,10 @@ def _model_identifier() -> str:
         for element in root
         if _local(element.tag) == "CoSimulation"
     )
+
+
+def _sysml_text(path: Path) -> str:
+    return path.read_text(encoding="utf-8")
 
 
 def test_model_description_declares_one_cosimulation_interface() -> None:
@@ -246,3 +266,57 @@ def test_archive_binary_matches_the_tracked_binary() -> None:
     assert binary.is_file(), binary
     assert _member_bytes(member) == binary.read_bytes()
     assert binary.stat().st_mode & 0o111
+
+
+def test_system_architecture_links_the_fmu_definition() -> None:
+    """Drift caught: the system fixture carries a copy of the FMU architecture."""
+    linked = SSP_ARCHITECTURE / "GainOffset.sysml"
+    canonical = FMU_ARCHITECTURE / "GainOffset.sysml"
+    assert not SSP_ARCHITECTURE.is_symlink(), SSP_ARCHITECTURE
+    assert linked.is_symlink(), linked
+    assert linked.resolve() == canonical.resolve()
+    assert sorted(path.name for path in SSP_ARCHITECTURE.iterdir()) == [
+        "GainOffset.sysml",
+        "System.sysml",
+    ]
+    assert sorted(path.name for path in FMU_ARCHITECTURE.iterdir()) == [
+        "GainOffset.sysml"
+    ]
+
+
+def test_architecture_ownership_is_split_between_layers() -> None:
+    """Drift caught: the SSP layer grows FMU definitions, or the reverse."""
+    fmu_text = _sysml_text(FMU_ARCHITECTURE / "GainOffset.sysml")
+    system_text = _sysml_text(SSP_ARCHITECTURE / "System.sysml")
+
+    for declared in (
+        "port def GeneratorParameters",
+        "part def Generator",
+        "part def Fmu",
+    ):
+        assert declared in fmu_text, declared
+    for leaked in (
+        "SspModel",
+        "part def System",
+        "part def Analysis",
+        "part def baseline",
+    ):
+        assert leaked not in fmu_text, leaked
+
+    for declared in (
+        "part def System :> SspModel",
+        "part def baseline :> Analysis",
+        "attribute def BaselineExperiment :> Experiment",
+    ):
+        assert declared in system_text, declared
+    for leaked in ("part def Generator", "part def Fmu"):
+        assert leaked not in system_text, leaked
+
+    for path, text in (
+        (FMU_ARCHITECTURE / "GainOffset.sysml", fmu_text),
+        (SSP_ARCHITECTURE / "System.sysml", system_text),
+    ):
+        for core_definition in CORE_DEFINITION_DECLARATIONS:
+            assert core_definition not in text, (
+                f"{path.name}: redeclares core definition {core_definition}"
+            )

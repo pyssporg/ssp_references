@@ -1,4 +1,5 @@
 package SignalStepAdd {
+
   part def baseline :> Analysis {
     doc /* Two steps added at the root. */
     attribute experiment_baseline : BaselineExperiment;

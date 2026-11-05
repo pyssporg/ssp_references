@@ -32,19 +32,25 @@ that build, simulate, and compare them across engines. Its product is evidence:
 reproducible fixtures and cross-engine comparison results, not new simulation
 capability.
 
-- `models/ssp/<model>/` holds the authored fixture, `build.py`, and `FIXTURE.md`.
-- `models/fmu/` holds prepared FMU fixtures with their references and the
-  authored sources of SysML-authored fixtures (`src/`, `FIXTURE.md`); the
-  system and its `build.py` live in `models/ssp/`, and generated FMI
+- `models/ssp/<model>/` holds the authored fixture, `build.py`, and `FIXTURE.md`;
+  for SysML-authored fixtures the system composition lives in
+  `architecture/System.sysml`.
+- `models/fmu/` holds only the FMU's side of a SysML-authored fixture:
+  `architecture/*.sysml` (the FMU definitions and the `Fmu` composition root),
+  `src/`, `build.py`, and `FIXTURE.md`; a prepared fixture keeps its `fmu/`
+  body and `references/`. `models/ssp/<model>/architecture/<model>.sysml` is a
+  relative file symlink to the canonical FMU architecture. Generated FMI
   definitions (headers, `modelDescription.xml`) plus compiled or packaged
-  outputs live under `artifacts/build/<model>/`.
+  outputs live under `artifacts/build/<model>/`. The build runs FMU then SSP:
+  `run-all` builds every FMU before any SSP.
 - `artifacts/` holds generated builds, analyses, simulations, and comparisons.
 - `scripts/` holds the shared build, simulate, and compare entry points.
 - `3rd_party/` holds one submodule, `pyssp_workflow`, the composition package
   whose base dependencies cover the whole pyssp and SysML stack; it nests the
   capability checkouts plus the SysML dialect (`pycps_sysml2`) and FMI artifact
-  (`pyfmi_sysml2`) libraries, and imports none of them. Edits belong in their
-  own repositories.
+  (`pyfmi_sysml2`) libraries, and imports none of them. `pycps_sysml2` also
+  ships the dialect core definitions (`definitions/core.sysml`), which fixtures
+  load instead of redeclaring. Edits belong in their own repositories.
 
 ## Hard constraints
 

@@ -1,8 +1,4 @@
 package BouncingBall {
-  part def SspModel;
-  part def Analysis;
-
-  port def ParameterInterface;
 
   port def BouncingBallParameters :> ParameterInterface {
     attribute g : Real;
@@ -14,21 +10,10 @@ package BouncingBall {
     attribute value : Real;
   }
 
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
-  }
-
   attribute def BaselineExperiment :> Experiment {
     attribute startTime = 0.0;
     attribute stopTime = 3.0;
     attribute stepSize = 0.001;
-  }
-
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
   }
 
   attribute def BouncingBallFmu :> FmuMetadata {

@@ -1,8 +1,4 @@
 package Dahlquist {
-  part def SspModel;
-  part def Analysis;
-
-  port def ParameterInterface;
 
   port def DahlquistParameters :> ParameterInterface {
     attribute k : Real;
@@ -13,21 +9,10 @@ package Dahlquist {
     attribute value : Real;
   }
 
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
-  }
-
   attribute def BaselineExperiment :> Experiment {
     attribute startTime = 0.0;
     attribute stopTime = 10.0;
     attribute stepSize = 0.001;
-  }
-
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
   }
 
   attribute def DahlquistFmu :> FmuMetadata {

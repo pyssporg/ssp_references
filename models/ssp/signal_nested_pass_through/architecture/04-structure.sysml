@@ -1,4 +1,5 @@
 package SignalNestedPassThrough {
+
   part def System :> SspModel {
     out port y : RealSignal;
     attribute pyssp_default_start_time : Real = 0.0;

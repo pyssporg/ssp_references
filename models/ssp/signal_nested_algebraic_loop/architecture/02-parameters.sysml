@@ -1,5 +1,4 @@
 package SignalNestedAlgebraicLoop {
-  attribute def ParameterSet;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute sine_amplitude = 0.5;
@@ -9,12 +8,6 @@ package SignalNestedAlgebraicLoop {
     attribute sine_startTime = 0.0;
     attribute gain_outer_k = 0.25;
     attribute gain_inner_k = 0.5;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {

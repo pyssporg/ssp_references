@@ -1,4 +1,5 @@
 package SignalNestedParameterBindings {
+
   part def baseline :> Analysis {
     doc /* Nested inline parameter sets plus a root external mapping. */
     attribute experiment_baseline : BaselineExperiment;

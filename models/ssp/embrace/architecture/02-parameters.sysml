@@ -1,15 +1,8 @@
 package Embrace {
-  attribute def ParameterSet;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute 'pipeA.L' = 0.976535328081166;
     attribute 'pipeB.L' = 0.976535328081166;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {

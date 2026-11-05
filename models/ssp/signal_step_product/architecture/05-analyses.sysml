@@ -1,4 +1,5 @@
 package SignalStepProduct {
+
   part def baseline :> Analysis {
     doc /* Step multiplied by a sine at the root. */
     attribute experiment_baseline : BaselineExperiment;

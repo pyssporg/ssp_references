@@ -272,7 +272,9 @@ This repository already supports the core workflow needed for the strategy:
 - SSP fixtures live under `models/ssp/`.
 - Reusable FMU building blocks live under `models/fmu/`.
 - Migrated fixtures author `SspModel` and `Analysis` definitions under
-  `models/ssp/<model>/architecture/`.
+  `models/ssp/<model>/architecture/System.sysml`; a SysML-authored FMU keeps
+  only its FMU definitions under `models/fmu/<model>/architecture/`, and the
+  system's `<model>.sysml` is a relative file symlink to that canonical file.
 - Runnable SSPs live under `artifacts/models/<model>/<analysis>/<build>/`.
 - Analysis scenario and experiment artifacts live under
   `artifacts/analyses/<model>/<analysis>/`. Analyses are not SSPs.

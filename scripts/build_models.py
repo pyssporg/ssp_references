@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """Thin wrapper around the per-fixture build scripts.
 
-Two fixture roots can contribute buildable models:
+Two fixture roots contribute buildable models, scanned in two phases:
 
-* ``models/ssp/*/build.py`` — SysML-authored SSP fixtures. This is the only
-  root with discovered models today.
-* ``models/fmu/<name>/build.py`` — discovered only when an ``architecture/``
-  directory sits next to the script.
+* ``models/fmu/*/build.py`` — the FMU phase, scanned first. A script counts
+  only when an ``architecture/`` directory sits next to it, so the prepared
+  FMUs and Modelica FMU *sources* (``Modelica.Blocks.*``) stay inputs to other
+  fixtures rather than models of their own.
+* ``models/ssp/*/build.py`` — the SSP phase, scanned second.
 
-``models/fmu/`` also holds prepared FMUs and Modelica FMU *sources*
-(``Modelica.Blocks.*``); their ``build.py`` rebuilds an FMU from a ``.mo`` file
-with ``omc``. They have no ``architecture/`` directory, they are inputs to other
-fixtures, and they are not part of ``run`` or ``run-all``.
+A name may appear in both roots: that is one workflow that builds the FMU and
+then the SSP. Two scripts for one name in the same phase are an authoring
+error. ``run-all`` finishes every FMU build before it starts any SSP build.
 """
 
 from __future__ import annotations
@@ -19,33 +19,58 @@ from __future__ import annotations
 import argparse
 import subprocess
 import sys
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SSP_MODELS_DIR = REPO_ROOT / "models" / "ssp"
 FMU_MODELS_DIR = REPO_ROOT / "models" / "fmu"
 
+PHASES = ("fmu_build", "ssp_build")
 
-def discover_workflows() -> dict[str, Path]:
+
+@dataclass(frozen=True)
+class Workflow:
+    """The build scripts for one model, at most one per phase."""
+
+    name: str
+    fmu_build: Path | None = None
+    ssp_build: Path | None = None
+
+    def steps(self) -> tuple[Path, ...]:
+        """The scripts to run, FMU before SSP."""
+        return tuple(
+            script for script in (self.fmu_build, self.ssp_build) if script is not None
+        )
+
+
+def _scan(root: Path, *, require_architecture: bool) -> list[Path]:
+    scripts = sorted(root.glob("*/build.py"))
+    if require_architecture:
+        return [s for s in scripts if (s.parent / "architecture").is_dir()]
+    return scripts
+
+
+def _record(
+    workflows: dict[str, Workflow], name: str, phase: str, script: Path
+) -> None:
+    workflow = workflows.setdefault(name, Workflow(name))
+    existing = getattr(workflow, phase)
+    if existing is not None:
+        raise ValueError(
+            f"Model {name!r} has two {phase.removesuffix('_build')} build scripts: "
+            f"{existing} and {script}"
+        )
+    workflows[name] = replace(workflow, **{phase: script})
+
+
+def discover_workflows() -> dict[str, Workflow]:
     """Every buildable fixture, keyed by model name, in build order."""
-    workflows: dict[str, Path] = {}
-
-    def add(name: str, workflow_path: Path) -> None:
-        if name in workflows:
-            raise ValueError(
-                f"Model name {name!r} is used by both "
-                f"{workflows[name]} and {workflow_path}"
-            )
-        workflows[name] = workflow_path
-
-    for workflow_path in sorted(SSP_MODELS_DIR.glob("*/build.py")):
-        add(workflow_path.parent.name, workflow_path)
-
-    for workflow_path in sorted(FMU_MODELS_DIR.glob("*/build.py")):
-        if not (workflow_path.parent / "architecture").is_dir():
-            continue
-        add(workflow_path.parent.name, workflow_path)
-
+    workflows: dict[str, Workflow] = {}
+    for script in _scan(FMU_MODELS_DIR, require_architecture=True):
+        _record(workflows, script.parent.name, "fmu_build", script)
+    for script in _scan(SSP_MODELS_DIR, require_architecture=False):
+        _record(workflows, script.parent.name, "ssp_build", script)
     return workflows
 
 
@@ -63,8 +88,12 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def _run(script: Path) -> None:
+    subprocess.run([sys.executable, str(script)], check=True, cwd=REPO_ROOT)
+
+
 def cmd_list() -> int:
-    for name in discover_workflows():
+    for name in sorted(discover_workflows()):
         print(name)
     return 0
 
@@ -76,22 +105,18 @@ def cmd_run(models: list[str]) -> int:
         raise KeyError(f"Unknown workflow(s): {', '.join(sorted(missing))}")
 
     for model in models:
-        subprocess.run(
-            [sys.executable, str(workflows[model])],
-            check=True,
-            cwd=REPO_ROOT,
-        )
+        for script in workflows[model].steps():
+            _run(script)
     return 0
 
 
 def cmd_run_all() -> int:
     workflows = discover_workflows()
-    for model in workflows:
-        subprocess.run(
-            [sys.executable, str(workflows[model])],
-            check=True,
-            cwd=REPO_ROOT,
-        )
+    for phase in PHASES:
+        for workflow in workflows.values():
+            script = getattr(workflow, phase)
+            if script is not None:
+                _run(script)
     return 0
 
 

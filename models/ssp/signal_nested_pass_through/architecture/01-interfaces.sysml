@@ -1,9 +1,4 @@
 package SignalNestedPassThrough {
-  part def SspModel;
-
-  part def Analysis;
-
-  port def ParameterInterface;
 
   port def StepParameters :> ParameterInterface {
     attribute height : Real;

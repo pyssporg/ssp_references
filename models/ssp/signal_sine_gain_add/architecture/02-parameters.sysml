@@ -1,5 +1,4 @@
 package SignalSineGainAdd {
-  attribute def ParameterSet;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute sine_amplitude = 1.0;
@@ -13,12 +12,6 @@ package SignalSineGainAdd {
     attribute gain_k = 3.0;
     attribute add_k1 = 1.0;
     attribute add_k2 = 1.0;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {

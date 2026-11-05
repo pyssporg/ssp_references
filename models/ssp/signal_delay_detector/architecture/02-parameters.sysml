@@ -1,5 +1,4 @@
 package SignalDelayDetector {
-  attribute def ParameterSet;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute step_height = 1.0;
@@ -9,12 +8,6 @@ package SignalDelayDetector {
     attribute gain_b_k = 1.0;
     attribute add_k1 = 1.0;
     attribute add_k2 = -1.0;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {

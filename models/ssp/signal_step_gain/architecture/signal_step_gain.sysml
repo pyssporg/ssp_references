@@ -1,8 +1,4 @@
 package SignalStepGain {
-  part def SspModel;
-  part def Analysis;
-
-  port def ParameterInterface;
 
   port def StepParameters :> ParameterInterface {
     attribute height : Real;
@@ -19,8 +15,6 @@ package SignalStepGain {
     attribute value : Real;
   }
 
-  attribute def ParameterSet;
-
   attribute def ScenarioSet :> ParameterSet {
     attribute height = 2.0;
     attribute offset = 1.0;
@@ -28,23 +22,15 @@ package SignalStepGain {
     attribute k = 3.0;
   }
 
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
+  attribute def ToleranceExperiment :> Experiment {
     attribute tolerance : Real;
   }
 
-  attribute def BaselineExperiment :> Experiment {
+  attribute def BaselineExperiment :> ToleranceExperiment {
     attribute startTime = 0.0;
     attribute stopTime = 1.0;
     attribute stepSize = 0.001;
     attribute tolerance = 0.0001;
-  }
-
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
   }
 
   attribute def StepFmu :> FmuMetadata {

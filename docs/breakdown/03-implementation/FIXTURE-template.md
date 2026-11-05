@@ -35,8 +35,17 @@ Required for SysML-authored fixtures.
   splits along its sections into `01-interfaces.sysml`, `02-parameters.sysml`,
   `03-components.sysml`, `04-structure.sysml`, and `05-analyses.sysml`. Every
   split file repeats the same package, and the loader merges the directory in
-  file-name order.
-- Composition name of the exportable `SspModel`.
+  file-name order. Included definition roots may supply other packages; the
+  first root is the model, and a duplicate definition is an error.
+- For a SysML-authored FMU, the FMU definitions live under
+  `models/fmu/<model>/architecture/`; the system composition and its analyses
+  live in `models/ssp/<model>/architecture/System.sysml`, which links the
+  canonical FMU file `<model>.sysml` with a relative symlink.
+- Composition name of the exportable `SspModel` (`System`) and, for an
+  FMU, of the FMU composition root (`Fmu`).
+- Do not redeclare a core definition (`SspModel`, `Analysis`, `Experiment`,
+  `FmuMetadata`, `SspMetadata`, `ParameterInterface`, `ParameterSet`): they come
+  from `pycps_sysml2`'s packaged core definitions.
 - Parameter interfaces and sets authored in SysML.
 - Whether any legacy SSD/SSV/SSM remains checked in (and why).
 -->

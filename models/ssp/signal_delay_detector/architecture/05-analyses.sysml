@@ -1,4 +1,5 @@
 package SignalDelayDetector {
+
   part def baseline :> Analysis {
     doc /* Step routed through two gains and add, with a delayed detection path. */
     attribute experiment_baseline : BaselineExperiment;

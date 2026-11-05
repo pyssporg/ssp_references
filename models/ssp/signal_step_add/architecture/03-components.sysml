@@ -1,8 +1,4 @@
 package SignalStepAdd {
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
-  }
 
   attribute def StepFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Step/fmu";

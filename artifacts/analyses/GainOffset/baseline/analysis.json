@@ -1,7 +1,7 @@
 {
   "analysis": "baseline",
   "composition": "System",
-  "description": "Single analytic source component; the FMU interface is authored here.",
+  "description": "Single analytic source component; the FMU interface is authored in models/fmu/GainOffset.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,

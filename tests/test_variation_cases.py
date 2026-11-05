@@ -16,8 +16,8 @@ import json
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+import pycps_sysml2
 import pytest
-
 from pyssp_workflow.authoring import derive_ssd_from_sysml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -216,7 +216,10 @@ def test_case_names_the_analysis_configuration(key: tuple[str, str]) -> None:
     from pycps_sysml2.parameters.selection import analysis_plans
 
     model, analysis = key
-    architecture = load(REPO_ROOT / "models" / "ssp" / model / "architecture")
+    architecture = load(
+        REPO_ROOT / "models" / "ssp" / model / "architecture",
+        pycps_sysml2.core_definitions(),
+    )
     plans = {plan.name: plan for plan in analysis_plans(architecture, roles=SSP_ROLES)}
     assert plans[analysis].status in {"legal", "violated"}, plans[analysis].detail
     assert plans[analysis].configuration == CASES[key]["configuration"]
@@ -437,7 +440,10 @@ def test_every_analysis_is_legal_or_documented_violated(
     from pycps_sysml2.model import load
     from pycps_sysml2.parameters.selection import analysis_plans
 
-    architecture = load(REPO_ROOT / "models" / "ssp" / model / "architecture")
+    architecture = load(
+        REPO_ROOT / "models" / "ssp" / model / "architecture",
+        pycps_sysml2.core_definitions(),
+    )
     plans = analysis_plans(architecture, roles=SSP_ROLES)
     assert plans, "the architecture declares no analysis"
     for plan in plans:

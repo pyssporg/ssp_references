@@ -1,9 +1,4 @@
 package PyfmuCsvSourceSink {
-  part def SspModel;
-  part def Analysis;
-
-  port def ParameterInterface;
-  attribute def ParameterSet;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute k = 1.0;
@@ -22,21 +17,10 @@ package PyfmuCsvSourceSink {
     attribute value : Real;
   }
 
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
-  }
-
   attribute def BaselineExperiment :> Experiment {
     attribute startTime = 0.0;
     attribute stopTime = 1.0;
     attribute stepSize = 0.001;
-  }
-
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
   }
 
   attribute def CsvSourceFmu :> FmuMetadata {

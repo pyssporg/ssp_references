@@ -1,6 +1,4 @@
 package VariationConditionalExcludes {
-  attribute def ParameterSet;
-
   attribute def BaselineScenario :> ParameterSet {
     attribute height = 2.0;
     attribute offset = 1.0;
@@ -17,12 +15,6 @@ package VariationConditionalExcludes {
     attribute amplitude = 2.0;
     attribute f = 1.0;
     attribute k = 9.0;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {

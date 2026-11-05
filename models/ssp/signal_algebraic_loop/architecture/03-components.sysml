@@ -1,8 +1,4 @@
 package SignalAlgebraicLoop {
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
-  }
 
   attribute def SineFmu :> FmuMetadata {
     attribute source = "models/fmu/Modelica.Blocks.Sources.Sine/fmu";

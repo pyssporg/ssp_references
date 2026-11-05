@@ -1,5 +1,4 @@
 package SignalNestedExternalBindings {
-  attribute def ParameterSet;
 
   attribute def ScenarioSet :> ParameterSet {
     attribute step_height = 1.0;
@@ -8,12 +7,6 @@ package SignalNestedExternalBindings {
     attribute sine_amplitude = 2.0;
     attribute sine_f = 5.0;
     attribute sine_offset = 0.5;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {

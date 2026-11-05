@@ -1,8 +1,4 @@
 package VanDerPol {
-  part def SspModel;
-  part def Analysis;
-
-  port def ParameterInterface;
 
   port def VanDerPolParameters :> ParameterInterface {
     attribute mu : Real;
@@ -13,20 +9,12 @@ package VanDerPol {
     attribute value : Real;
   }
 
-  attribute def ParameterSet;
-
   attribute def FastScenario :> ParameterSet {
     attribute mu = 2.0;
   }
 
   attribute def SlowScenario :> ParameterSet {
     attribute mu = 0.5;
-  }
-
-  attribute def Experiment {
-    attribute startTime : Real;
-    attribute stopTime : Real;
-    attribute stepSize : Real;
   }
 
   attribute def BaselineExperiment :> Experiment {
@@ -45,11 +33,6 @@ package VanDerPol {
     attribute startTime = 0.0;
     attribute stopTime = 20.0;
     attribute stepSize = 0.001;
-  }
-
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
   }
 
   attribute def VanDerPolFmu :> FmuMetadata {

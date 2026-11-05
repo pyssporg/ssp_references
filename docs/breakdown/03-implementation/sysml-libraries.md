@@ -24,4 +24,4 @@ status: current
 
 - **Import rule:** consumers import `pycps_sysml2`. `pyssp_sysml2.model`, `.core`, `.metadata`, and `.parameters` are v0.4.x re-export shims removed in v0.5.0; `pyssp_sysml2` and `pyfmi_sysml2` never import each other.
 - **One dialect:** both the SSP and FMI dialects draw markers, parameters, and variation from `pycps_sysml2`; `sysmlpy==0.96.4` is its only runtime dependency.
-- **Exercised here:** `models/ssp/variation_*/build.py` and `tests/test_variation_cases.py` use the dialect and selection surface; `models/fmu/GainOffset/` is the FMI fixture.
+- **Exercised here:** `models/ssp/variation_*/build.py` and `tests/test_variation_cases.py` use the dialect and selection surface; `models/ssp/GainOffset/` is the FMI fixture, with its definition in `models/fmu/GainOffset/` and its compiled outputs in `artifacts/build/GainOffset/`.

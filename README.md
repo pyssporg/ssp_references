@@ -15,15 +15,18 @@ definitions, fixture notes, and build metadata.
 ├── models/
 │   ├── fmu/
 │   │   └── <fmu_name>/
-│   │       ├── fmu/
+│   │       ├── fmu/               # FMU definition: modelDescription + sources
 │   │       └── references/
 │   └── ssp/
 │       └── <model_name>/
 │           ├── architecture/      # authored SysML (migrated fixtures)
 │           ├── build.py
 │           ├── FIXTURE.md
+│           ├── references/        # baseline CSV for the fixture
 │           └── ssp/               # checked-in SSP bodies
 ├── artifacts/
+│   ├── build/
+│   │   └── <model_name>/          # compiled binary and packaged FMU
 │   ├── models/
 │   │   └── <model_name>/
 │   │       └── <analysis_name>/
@@ -238,8 +241,9 @@ the SSP build step.
 ## Fixture Origins
 
 Classic baseline fixtures keep their provenance in `FIXTURE.md`. For the
-reference-model cases, the matching CSV baselines live in
-`models/fmu/<model>/references/`.
+reference-model cases, the matching CSV baselines live beside their fixture:
+`models/ssp/<model>/references/` for SSP fixtures and
+`models/fmu/<model>/references/` for prepared FMUs.
 
 ## Environment Notes
 

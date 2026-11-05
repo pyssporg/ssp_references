@@ -33,8 +33,11 @@ reproducible fixtures and cross-engine comparison results, not new simulation
 capability.
 
 - `models/ssp/<model>/` holds the authored fixture, `build.py`, and `FIXTURE.md`.
-- `models/fmu/` holds prepared FMU fixtures with their references, plus
-  SysML-authored FMUs that the build generates here (for example `GainOffset`).
+- `models/fmu/` holds prepared FMU fixtures with their references and the
+  generated FMI *definitions* (headers and `modelDescription.xml`) that the
+  SysML-authored fixtures compile; the system and its `build.py` live in
+  `models/ssp/`, and compiled or packaged outputs, including
+  `artifacts/build/<model>/`, live under `artifacts/`.
 - `artifacts/` holds generated builds, analyses, simulations, and comparisons.
 - `scripts/` holds the shared build, simulate, and compare entry points.
 - `3rd_party/` vendors the pyssp capability tree plus the SysML dialect

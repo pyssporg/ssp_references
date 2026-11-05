@@ -1,15 +1,17 @@
-"""Contract: the GainOffset FMU's four artifacts agree on one variable set.
+"""Contract: the GainOffset FMU definition and its build artifacts agree.
 
-The FMU for ``models/fmu/GainOffset`` is generated here from SysML, so four
+``models/fmu/GainOffset`` holds the committed definition generated from SysML
+(``modelDescription.xml`` and the C interface headers); ``artifacts/build/
+GainOffset`` holds the compiled binary and the packaged archive. Four
 independently produced files must describe the same interface:
 ``modelDescription.xml`` (pyfmi_sysml2 model description), the C header
 (pyfmi_sysml2 C interface), the compiled binary (fixture-local gcc), and the
-staged FMU tree (pyfmi_sysml2 packaging). Each one can drift on its own: a
+packaged archive (pyfmi_sysml2 packaging). Each one can drift on its own: a
 stale header after a SysML rename, a binary compiled before the header changed,
-a packaged tree that kept the previous ``.so``, or a model description whose
+an archive that kept the previous ``.so``, or a model description whose
 ``ModelStructure`` no longer lists the outputs.
 
-These tests read the committed fixture, not the build directory, and judge the
+These tests read only committed files, never a build directory, and judge the
 pieces the FMI validator does not cover (value-reference scoping, binary
 symbols, archive layout).
 """
@@ -19,13 +21,17 @@ from __future__ import annotations
 import re
 import subprocess
 import xml.etree.ElementTree as ET
+import zipfile
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-FIXTURE = REPO_ROOT / "models" / "fmu" / "GainOffset"
-FMU = FIXTURE / "fmu"
+#: Committed FMU definition: generated text, no binary.
+DEFINITION = REPO_ROOT / "models" / "fmu" / "GainOffset"
+FMU = DEFINITION / "fmu"
 MODEL_DESCRIPTION = FMU / "modelDescription.xml"
 HEADER = FMU / "sources" / "GainOffset_Generator.h"
+#: Compiled and packaged outputs of the definition.
+ARTIFACTS = REPO_ROOT / "artifacts" / "build" / "GainOffset"
 
 #: C data type constants emitted by pyfmi_sysml2 -> FMI scalar type element.
 FMI_TYPE_BY_DATATYPE = {
@@ -101,6 +107,15 @@ def _header_vr_map() -> dict[str, tuple[str, bool]]:
     }
 
 
+def _model_identifier() -> str:
+    root = ET.parse(MODEL_DESCRIPTION).getroot()
+    return next(
+        element.attrib["modelIdentifier"]
+        for element in root
+        if _local(element.tag) == "CoSimulation"
+    )
+
+
 def test_model_description_declares_one_cosimulation_interface() -> None:
     """Drift caught: a second interface, or a Model Exchange-only binary."""
     root = ET.parse(MODEL_DESCRIPTION).getroot()
@@ -110,7 +125,7 @@ def test_model_description_declares_one_cosimulation_interface() -> None:
     ]
     assert len(interfaces) == 1
     model_identifier = interfaces[0].attrib["modelIdentifier"]
-    binary = FMU / "binaries" / "linux64" / f"{model_identifier}.so"
+    binary = ARTIFACTS / f"{model_identifier}.so"
     assert binary.is_file(), binary
 
 
@@ -168,13 +183,8 @@ def test_model_structure_lists_exactly_the_outputs() -> None:
 
 def test_binary_exports_the_fmi_entry_points() -> None:
     """Drift caught: a packaged stub or a binary built from the wrong source."""
-    root = ET.parse(MODEL_DESCRIPTION).getroot()
-    model_identifier = next(
-        element.attrib["modelIdentifier"]
-        for element in root
-        if _local(element.tag) == "CoSimulation"
-    )
-    binary = FMU / "binaries" / "linux64" / f"{model_identifier}.so"
+    model_identifier = _model_identifier()
+    binary = ARTIFACTS / f"{model_identifier}.so"
     symbols = subprocess.run(
         ["nm", "-D", "--defined-only", str(binary)],
         check=True,
@@ -185,14 +195,23 @@ def test_binary_exports_the_fmi_entry_points() -> None:
         assert re.search(rf"\bT {entry_point}$", symbols, re.MULTILINE), entry_point
 
 
-def test_staged_fmu_keeps_the_root_layout() -> None:
+def test_definition_keeps_the_fmu_root_layout() -> None:
     """Drift caught: modelDescription moved out of the root, headers dropped."""
-    root = ET.parse(MODEL_DESCRIPTION).getroot()
     assert MODEL_DESCRIPTION.parent == FMU
     assert (FMU / "sources" / "GainOffset_Generator.h").is_file()
-    model_identifier = next(
-        element.attrib["modelIdentifier"]
-        for element in root
-        if _local(element.tag) == "CoSimulation"
-    )
-    assert (FMU / "binaries" / "linux64" / f"{model_identifier}.so").stat().st_mode & 0o111
+
+
+def test_packaged_archive_matches_the_committed_definition() -> None:
+    """Drift caught: the archive kept a stale description or dropped a header."""
+    model_identifier = _model_identifier()
+    archive = ARTIFACTS / f"{model_identifier}.fmu"
+    headers = sorted((FMU / "sources").glob("*.h"))
+    headers += sorted((DEFINITION / "include").glob("*.h"))
+    with zipfile.ZipFile(archive) as bundle:
+        names = set(bundle.namelist())
+        assert bundle.read("modelDescription.xml") == MODEL_DESCRIPTION.read_bytes()
+        assert f"binaries/linux64/{model_identifier}.so" in names
+        for header in headers:
+            assert f"sources/{header.name}" in names, header
+    binary = ARTIFACTS / f"{model_identifier}.so"
+    assert binary.stat().st_mode & 0o111

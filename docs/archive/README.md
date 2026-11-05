@@ -109,6 +109,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   Per DD-014, an engine that cannot run the case is not listed for the case.
 - **DD-017** — Large Fixture Architectures Split Along Section Boundaries · accepted · 2026-10-30 · `DD-017`
   Fixture SysML above roughly 100 lines is split into five section files that share one package; the loader merges them in file-name order.
+- **DD-018** — Fixture Layout — Model Definition, System, Build Artifact · accepted · 2026-11-05 · `DD-018`
+  A SysML-authored FMU keeps its generated definition in models/fmu/, its system in models/ssp/, and every compiled or packaged output under artifacts/build/.
 
 ### Operation
 

@@ -10,7 +10,7 @@
     "backend": "omsimulator",
     "reference": "reference-cs",
     "reference_gate": true,
-    "reference_path": "/home/eriro/pwa/2_work/ssp_references/models/fmu/GainOffset/references/GainOffset-cs.csv",
+    "reference_path": "/home/eriro/pwa/2_work/ssp_references/models/ssp/GainOffset/references/GainOffset-cs.csv",
     "run_manifest": "../../../../../simulation/GainOffset/baseline/omsimulator/simulation.json"
   },
   "summary": {

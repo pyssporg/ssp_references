@@ -530,6 +530,28 @@
         }
       ],
       "build": "model"
+    },
+    {
+      "name": "GainOffset",
+      "compare_signals": [
+        "generator.y.value"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "omsimulator"
+          ],
+          "analysis": "baseline",
+          "reference_csvs": [
+            {
+              "label": "reference-cs",
+              "path": "models/ssp/GainOffset/references/GainOffset-cs.csv"
+            }
+          ]
+        }
+      ],
+      "build": "model"
     }
   ]
 }

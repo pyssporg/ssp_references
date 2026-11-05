@@ -32,7 +32,7 @@ package GainOffset {
   }
 
   attribute def GeneratorFmu :> FmuMetadata {
-    attribute source = "models/fmu/GainOffset/fmu";
+    attribute source = "artifacts/build/GainOffset/Generator.fmu";
     attribute implementation = "CoSimulation";
   }
 

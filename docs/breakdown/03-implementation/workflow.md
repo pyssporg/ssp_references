@@ -10,7 +10,7 @@ status: current
 # Build, analysis, and runtime workflow
 
 - **Authoring**: `pyssp_workflow.authoring.derive_ssp_from_sysml` and `derive_analysis_from_sysml` invoke the `pyssp` CLI; no `pyssp_sysml2` import.
-- **Layout**: a runnable SSP lives at `artifacts/models/<model>/<analysis>/<build>/`; analysis artifacts at `artifacts/analyses/<model>/<analysis>/`.
+- **Layout**: a runnable SSP lives at `artifacts/models/<model>/<analysis>/<build>/`; analysis artifacts at `artifacts/analyses/<model>/<analysis>/`; compiled and packaged FMU outputs at `artifacts/build/<model>/`. A SysML-authored FMU keeps its *definition* (generated headers and `modelDescription.xml`) under `models/fmu/<model>/fmu/`.
 - **Model build**: `build.py` is a thin runner. `pyssp_workflow.authoring.build_fixture` derives one model SSP per analysis from `architecture/*.sysml` and returns their records; `report_builds` prints them. `build_legacy_fixture` copies a checked-in SSP body instead. Neither packages the scenario.
 - **Analysis build**: `pyssp generate analysis` writes the scenario SSV, the SSM, and `analysis.json` under `artifacts/analyses/<model>/<analysis>/`; a model may build several analyses.
 - **Analysis descriptor**: `analysis.json` records model, composition, sut name, target SSD, the authored `Analysis` description, the experiment window (start, stop, step), and scenario paths. It carries no tolerance.

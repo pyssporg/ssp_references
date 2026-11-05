@@ -1,10 +1,11 @@
 """Static checks on the requirements manifests.
 
-The default install takes the eight vendored distributions from their
-GitHub release wheels through ``name @ url`` direct references in
-``requirements.txt``. The version each URL names must be the version its source
-tree declares, so a tag bump and a filename bump cannot drift apart. The
-development file composes the default and adds editable checkouts. No installs
+The default install takes the whole pyssp stack through one
+``pyssp-workflow[sysml,flow]`` direct reference in ``requirements.txt``: the
+workflow wheel transitively pins the other seven distributions. The version the
+URL names must be the version the workflow source tree declares, so a tag bump
+and a filename bump cannot drift apart. The development file composes the
+default and replaces each distribution with an editable checkout. No installs
 and no network access here.
 """
 
@@ -20,17 +21,15 @@ REQUIREMENTS = REPO_ROOT / "requirements.txt"
 DEV_REQUIREMENTS = REPO_ROOT / "requirements-dev.txt"
 SYSML_REQUIREMENTS = REPO_ROOT / "requirements-sysml.txt"
 
-# Pinned distribution name (PEP 503 normalised) -> editable source tree.
+#: The one pinned distribution (PEP 503 normalised) -> its editable source tree.
+#: The other seven distributions arrive transitively from this wheel.
 VENDORED_TREES: dict[str, str] = {
-    "experimental-pyssp-standard": "3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard",
     "pyssp-workflow": "3rd_party/pyssp_workflow",
-    "pyssp-simulate": "3rd_party/pyssp_workflow/3rd_party/pyssp_simulate",
-    "pyssp-sysml2": "3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2",
-    "pyssp-vv": "3rd_party/pyssp_workflow/3rd_party/pyssp_vv",
-    "sequence-extensions-flow": "3rd_party/pyssp_workflow/3rd_party/sequence_extensions",
-    "pycps-sysml2": "3rd_party/pycps_sysml2",
-    "pyfmi-sysml2": "3rd_party/pyfmi_sysml2",
 }
+
+#: The extras the default reference must select: the SysML bundle and the flow
+#: engine. Without them the install misses libraries the suite imports.
+REQUIRED_EXTRAS = {"sysml", "flow"}
 
 # ``name[extra] @ url``; a bare URL or an option line never has this shape.
 _DIRECT_REFERENCE = re.compile(
@@ -61,6 +60,16 @@ def direct_references(path: Path) -> list[tuple[str, str]]:
         if match is not None:
             references.append((canonical_name(match.group("name")), match.group("url")))
     return references
+
+
+def bundle_extras() -> set[str]:
+    """Return the extras selected by the default requirements reference."""
+    for line in requirement_lines(REQUIREMENTS):
+        match = _DIRECT_REFERENCE.match(line)
+        if match is not None:
+            extras = match.group("extras") or ""
+            return {extra.strip() for extra in extras.split(",") if extra.strip()}
+    raise AssertionError(f"{REQUIREMENTS}: carries no direct reference")
 
 
 def editables(path: Path) -> set[str]:
@@ -118,11 +127,13 @@ def declared_versions() -> dict[str, str]:
     }
 
 
-def test_default_requirements_reference_every_vendored_tree_once() -> None:
+def test_default_requirements_reference_the_bundle_exactly_once() -> None:
     names = [name for name, _ in direct_references(REQUIREMENTS)]
-    assert set(names) == set(VENDORED_TREES)
-    duplicates = {name for name in names if names.count(name) > 1}
-    assert duplicates == set()
+    assert names == ["pyssp-workflow"]
+
+
+def test_default_requirements_select_the_sysml_and_flow_extras() -> None:
+    assert bundle_extras() == REQUIRED_EXTRAS
 
 
 def test_default_requirements_are_not_editable_and_use_no_mirror() -> None:
@@ -172,8 +183,24 @@ def test_development_requirements_compose_the_default() -> None:
     assert direct_references(DEV_REQUIREMENTS) == []
 
 
-def test_development_requirements_are_editable_for_every_tree() -> None:
-    assert editables(DEV_REQUIREMENTS) == set(VENDORED_TREES.values())
+def test_development_requirements_point_at_trees_that_exist() -> None:
+    targets = editables(DEV_REQUIREMENTS)
+    assert VENDORED_TREES["pyssp-workflow"] in targets
+    assert sorted(target for target in targets if not (REPO_ROOT / target).is_dir()) == []
+
+
+def test_development_requirements_check_out_the_whole_bundle() -> None:
+    # Every editable is a checkout inside the one top-level submodule; a
+    # repo-level SysML submodule would be a second owner of the same pin.
+    targets = editables(DEV_REQUIREMENTS)
+    outside = sorted(
+        target for target in targets if not target.startswith("3rd_party/pyssp_workflow")
+    )
+    assert outside == []
+    assert {
+        "3rd_party/pyssp_workflow/3rd_party/pycps_sysml2",
+        "3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2",
+    } <= targets
 
 
 def test_sysml_requirements_use_no_mirror() -> None:

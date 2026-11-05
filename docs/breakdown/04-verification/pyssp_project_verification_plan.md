@@ -2,7 +2,7 @@
 id: EVAL-010
 type: eval
 title: pyssp project verification plan
-summary: Audit of the six vendored pyssp_* and sequence_extensions test suites, the level ladder each one was missing, and the restructuring that closed the contract, determinism, and failure-path gaps.
+summary: Audit of the pyssp_* and sequence_extensions test suites behind the eight pinned distributions, the level ladder each measured one was missing, and the restructuring that closed the contract, determinism, and failure-path gaps.
 date: 2026-10-28
 status: current
 pb_exempt: true
@@ -12,8 +12,10 @@ pb_exempt: true
 
 ## Scope
 
-Six vendored projects plus the root contract suite. Snapshot 2026-10-28, Linux
-x86_64, root `venv` (Python 3.11.14, pytest 9.1.1).
+Eight pinned distributions plus the root contract suite. Snapshot 2026-10-28,
+Linux x86_64, root `venv` (Python 3.11.14, pytest 9.1.1). Six suites were
+measured; the two SysML libraries added to the pin set are not measured in this
+snapshot.
 
 | Project | Path | Tests | Runtime |
 |---|---|---|---|
@@ -23,11 +25,14 @@ x86_64, root `venv` (Python 3.11.14, pytest 9.1.1).
 | pyssp_workflow | `3rd_party/pyssp_workflow` | 74 | 4.2 s |
 | pyssp_vv | same tree | 122 | 2.2 s |
 | sequence_extensions | same tree | 434 | 14.0 s |
+| pycps_sysml2 | `3rd_party/pyssp_workflow/3rd_party/pycps_sysml2` | not measured in this snapshot | not measured |
+| pyfmi_sysml2 | `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2` | not measured in this snapshot | not measured |
 | root suite | `tests/` | 104 (1 strict-mode skip) | 101 s |
 
 Excluded: the pinned `pyssp_sysml2/3rd_party/experimental_pyssp_standard` copy
 (not editable), the root suite's engine-free integration tests (see EVAL-001,
-EVAL-008), upstream CI matrices.
+EVAL-008), upstream CI matrices. The two SysML libraries are pinned and
+installed but their suites were never run for this snapshot.
 
 ## Verdict
 

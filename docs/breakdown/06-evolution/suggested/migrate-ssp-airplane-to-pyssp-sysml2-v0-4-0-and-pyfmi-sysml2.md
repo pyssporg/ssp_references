@@ -36,4 +36,4 @@ Owner: `ssp_airplane` maintainer; this repository owns the library pins, not tha
 
 ## References
 
-- `3rd_party/pyfmi_sysml2/tests/fixtures/bus/case.md`.
+- `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2/tests/fixtures/bus/case.md`.

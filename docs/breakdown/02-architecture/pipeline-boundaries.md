@@ -87,13 +87,16 @@ only when an artifact format changes, not when a Python model API changes.
 
 By default the distributions install from tagged GitHub release wheel URLs and
 from the same URLs named in their metadata; editable checkouts are the
-development opt-in (`INFO-011`). One git submodule under `3rd_party/` owns the
-ecosystem checkouts either way. The capabilities are nested inside it:
+development opt-in (`INFO-011`). The `pyssp_workflow` submodule under
+`3rd_party/` is the only top-level entry, and it is also the install bundle
+that pins the ecosystem checkouts. All of them are nested inside it:
 
 | Submodule | Used by |
 | --- | --- |
-| `3rd_party/pyssp_workflow` | Composition layer: authoring, analysis, fixture, binding, compare, nodes, development tree |
+| `3rd_party/pyssp_workflow` | Composition layer and install bundle: authoring, analysis, fixture, binding, compare, nodes, development tree |
 | `3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard` | Build and SSP XML inspection |
+| `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2` | FMI artifact emission behind the authoring stage |
+| `3rd_party/pyssp_workflow/3rd_party/pycps_sysml2` | SysML dialect behind the authoring stage |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_simulate` | Simulate |
 | `3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2` | Authoring (CLI) and SysML round-trip checker |
 | `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` | Build/simulation/compare campaign orchestration |

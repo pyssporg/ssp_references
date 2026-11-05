@@ -2,10 +2,11 @@
 #
 #   python3 -m pip install -r requirements-dev.txt
 #
-# The eight vendored distributions are self-describing: each wheel's metadata
-# names its sibling dependencies as GitHub release URLs. pip fetches those
-# URLs even when the editable checkout is the installed distribution, so the
-# release tags must exist before this file installs.
+# requirements.txt carries one `pyssp-workflow[sysml,flow]` reference that pulls
+# the eight pyssp and SysML distributions. Each wheel's metadata names its
+# sibling dependencies as GitHub release URLs, so pip fetches those URLs even
+# when the editable checkout is the installed distribution; the release tags
+# must exist before this file installs.
 -r requirements.txt
 
 # The development tree lives in 3rd_party/pyssp_workflow; see 3rd_party/README.md.
@@ -18,10 +19,10 @@
 -e ./3rd_party/pyssp_workflow/3rd_party/pyssp_vv
 # Flow engine for scripts/run_campaign.py (Python 3.11+).
 -e ./3rd_party/pyssp_workflow/3rd_party/sequence_extensions
-# SysML dialect and FMI artifact libraries; repo-level submodules, not
-# pyssp_workflow capabilities.
--e ./3rd_party/pycps_sysml2
--e ./3rd_party/pyfmi_sysml2
+# SysML dialect and FMI artifact libraries; nested in the workflow tree like
+# the capability checkouts above, as the rest of pyssp-workflow's sysml bundle.
+-e ./3rd_party/pyssp_workflow/3rd_party/pycps_sysml2
+-e ./3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2
 
 # The -e entries replace the wheel installs after resolution, but resolution
 # still reads the direct references from the wheel metadata.

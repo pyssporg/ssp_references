@@ -36,4 +36,4 @@ Owner: `pycps_sysml2` maintainer for the dialect facts, then `pyfmi_sysml2` main
 
 ## References
 
-- `3rd_party/pyfmi_sysml2/docs/breakdown/06-evolution/roadmap.md`.
+- `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2/docs/breakdown/06-evolution/roadmap.md`.

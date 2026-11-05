@@ -70,6 +70,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   One dialect library serves two artifact libraries; pyssp_sysml2 and pyfmi_sysml2 are siblings and never import each other.
 - **ADR-016** — pycps_sysml2 Owns the SysML Dialect for Both Artifact Libraries · accepted · 2026-11-05 · `ADR-016`
   Variation, constraint, and parameter semantics for the SSP and FMI dialects live in pycps_sysml2, whose only runtime dependency is sysmlpy.
+- **ADR-018** — Nest the SysML Siblings Under the Workflow Install Bundle · accepted · 2026-11-05 · `ADR-018`
+  One submodule and one install bundle pin the stack; pyssp_workflow nests all seven checkouts and imports none of them.
 
 ### Implementation
 

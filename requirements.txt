@@ -1,23 +1,20 @@
-# Standalone runtime environment. The eight vendored distributions install as
-# PEP 508 direct references to their GitHub release wheels: six pyssp
-# capability libraries plus the SysML dialect library (pycps_sysml2) and the
-# FMI artifact library (pyfmi_sysml2) built on it.
+# Standalone runtime environment. One pyssp bundle installs the whole stack:
 #
-#   * each tree's release workflow (.github/workflows/wheels.yml) attaches the
-#     asset, and the release tag is always v<version>;
-#   * an unreleased tag makes this install fail (404) instead of silently
-#     resolving an older build — bump the tag and the filename together.
+#   pyssp-workflow[sysml,flow]
+#
+# This one direct reference transitively pins the eight pyssp and SysML
+# distributions: six capability libraries (experimental-pyssp-standard,
+# pyssp-workflow, pyssp-simulate, pyssp-sysml2, pyssp-vv,
+# sequence-extensions-flow) plus the SysML dialect (pycps-sysml2) and FMI
+# artifact (pyfmi-sysml2) libraries. Each arrives as a PEP 508 direct reference
+# to a GitHub release wheel named by the workflow wheel's metadata; the release
+# tag is always v<version>, so an unreleased tag fails the install (404)
+# instead of silently resolving an older build.
 #
 # For editable checkouts of the same trees (development) install
-# requirements-dev.txt instead.
-experimental-pyssp-standard @ https://github.com/pyssporg/experimental_pyssp_standard/releases/download/v0.9.2.dev0/experimental_pyssp_standard-0.9.2.dev0-py3-none-any.whl
-pyssp-workflow @ https://github.com/pyssporg/pyssp_workflow/releases/download/v0.1.1/pyssp_workflow-0.1.1-py3-none-any.whl
-pyssp-simulate @ https://github.com/pyssporg/pyssp_simulate/releases/download/v0.2.0/pyssp_simulate-0.2.0-py3-none-any.whl
-pyssp-sysml2 @ https://github.com/pyssporg/pyssp_sysml2/releases/download/v0.4.0/pyssp_sysml2-0.4.0-py3-none-any.whl
-pyssp-vv @ https://github.com/pyssporg/pyssp_vv/releases/download/v0.1.0/pyssp_vv-0.1.0-py3-none-any.whl
-sequence-extensions-flow @ https://github.com/jkCXf9X4/sequence_extensions/releases/download/v3.0.0/sequence_extensions_flow-3.0.0-py3-none-any.whl
-pycps-sysml2 @ https://github.com/pyssporg/pycps_sysml2/releases/download/v0.1.0/pycps_sysml2-0.1.0-py3-none-any.whl
-pyfmi-sysml2 @ https://github.com/pyssporg/pyfmi_sysml2/releases/download/v0.1.0/pyfmi_sysml2-0.1.0-py3-none-any.whl
+# requirements-dev.txt instead. The third-party runtime dependencies below are
+# unchanged.
+pyssp-workflow[sysml,flow] @ https://github.com/pyssporg/pyssp_workflow/releases/download/v0.2.0/pyssp_workflow-0.2.0-py3-none-any.whl
 
 # Third-party runtime dependencies.
 numpy

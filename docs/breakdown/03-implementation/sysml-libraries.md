@@ -9,7 +9,10 @@ status: current
 
 # SysML libraries
 
-`pycps_sysml2` is the dialect's home; the other libraries implement it.
+`pycps_sysml2` is the dialect's home; the other libraries implement it. Both
+artifact libraries and the dialect arrive through `pyssp_workflow`'s `sysml`
+extra, which is an install bundle: `pyssp_workflow` carries them and imports
+none of them.
 
 | Concern | Owner |
 |---|---|

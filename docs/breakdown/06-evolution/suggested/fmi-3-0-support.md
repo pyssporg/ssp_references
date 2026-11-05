@@ -36,4 +36,4 @@ Unowned by design: no SSP toolchain here imports FMI 3.0 and ADR-017 keeps it ou
 
 ## References
 
-- `3rd_party/pyfmi_sysml2/docs/breakdown/06-evolution/roadmap.md`.
+- `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2/docs/breakdown/06-evolution/roadmap.md`.

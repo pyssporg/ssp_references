@@ -1,21 +1,23 @@
-# Third-Party Submodules
+# Third-Party Submodule
 
-Three submodules are linked here. `pyssp_workflow` is the development tree for
-the pyssp capability layer. `pycps_sysml2` (SysML dialect) and `pyfmi_sysml2`
-(FMI artifact generation) were split out of the SysML stack and are linked at
-this level, not nested under `pyssp_workflow`.
+One submodule is linked here: `pyssp_workflow`, the install bundle for the
+whole pyssp and SysML stack. It nests seven checkouts — the pyssp capability
+libraries, the SysML dialect (`pycps_sysml2`), and the FMI artifact library
+(`pyfmi_sysml2`) — and imports none of them. Its `sysml` extra carries the SysML
+libraries as an install bundle, not as a runtime dependency of
+`pyssp_workflow` itself.
 
 | Submodule | Upstream | Role |
 | --- | --- | --- |
-| `pyssp_workflow/` | `pyssporg/pyssp_workflow` | Composition layer and development tree for the pyssp capabilities |
-| `pycps_sysml2/` | `pyssporg/pycps_sysml2` | SysML v2 parser, IR, variation/selection, and marker accessors; emits no artifact |
-| `pyfmi_sysml2/` | `pyssporg/pyfmi_sysml2` | FMI 2.0 CoSimulation artifacts (`modelDescription.xml`, C headers, `.fmu`) from the SysML dialect |
+| `pyssp_workflow/` | `pyssporg/pyssp_workflow` | Composition layer for the pyssp capabilities; install bundle pinning the whole stack |
 
 Nested under `pyssp_workflow/3rd_party/`:
 
 | Path | Upstream | Role |
 | --- | --- | --- |
 | `experimental_pyssp_standard/` | `pyssporg/experimental_pyssp_standard` | Experimental fork of `pyssporg/pyssp_standard`; SSP XML model and archive APIs used by the build stage |
+| `pycps_sysml2/` | `pyssporg/pycps_sysml2` | SysML v2 parser, IR, variation/selection, and marker accessors; emits no artifact |
+| `pyfmi_sysml2/` | `pyssporg/pyfmi_sysml2` | FMI 2.0 CoSimulation artifacts (`modelDescription.xml`, C headers, `.fmu`) from the SysML dialect |
 | `pyssp_simulate/` | `pyssporg/pyssp_simulate` | Simulation substrate used by the simulate stage |
 | `pyssp_sysml2/` | `pyssporg/pyssp_sysml2` | SysML authoring, study generation, and SSD round-trip tool; an implementer of `pycps_sysml2` |
 | `pyssp_vv/` | `pyssporg/pyssp_vv` | V&V capability: measurement, judgment, evidence |
@@ -31,38 +33,43 @@ depends on `pyssp_sysml2`.
 git submodule update --init --recursive
 ```
 
-The recursive flag is required: `pyssp_workflow` pins its own dependencies.
+The recursive flag is required: `pyssp_workflow` pins all seven nested
+checkouts in its own `.gitmodules`.
 
 ## Install for development
 
-The default `requirements.txt` install takes the eight vendored distributions
-from their GitHub release assets. Each wheel's metadata names its sibling
-dependencies the same way, so the version graph travels inside the wheels.
+The default `requirements.txt` install takes one reference,
+`pyssp-workflow[sysml,flow]`, from its GitHub release asset; that reference
+transitively pins the eight pyssp and SysML distributions. Each wheel's
+metadata names its sibling dependencies the same way, so the version graph
+travels inside the wheels.
 
 `requirements-dev.txt`, `requirements-sysml.txt`, and `requirements-campaign.txt`
-add the relevant checkouts as editable packages on top of that default. The
-pyssp capability paths run through `3rd_party/pyssp_workflow/3rd_party/`; the
-SysML dialect and FMI artifact libraries resolve through their repo-level
-submodules. Editable installs are the development state, because the pinned
-commits are not released versions; pip still resolves the release URLs named by
-the wheel metadata.
+add the relevant checkouts as editable packages on top of that default. Every
+editable path runs through `3rd_party/pyssp_workflow/3rd_party/`, including the
+SysML dialect and FMI artifact libraries. Editable installs are the development
+state, because the pinned commits are not released versions; pip still resolves
+the release URLs named by the wheel metadata.
 
 ## Pinning and updates
 
-Each submodule is pinned by the commit recorded in this repository's gitlink.
-The `pyssp_workflow` gitlink is the version record for the whole capability
-tree; the two SysML/FMI gitlinks pin the released v0.1.0 libraries.
+Each submodule is pinned by the commit recorded in its owner's gitlink. This
+repository records one gitlink, `pyssp_workflow`, and that commit is the version
+record for the whole tree; the seven nested checkouts are pinned inside
+`pyssp_workflow`.
 
 - The pyssp checkouts are clean: `pyssp_workflow`, `experimental_pyssp_standard`,
-  `pyssp_simulate`, `pyssp_sysml2`, `pyssp_vv`, and `sequence_extensions`.
-- The SysML stack submodules are clean at their `main` commits.
+  `pycps_sysml2`, `pyfmi_sysml2`, `pyssp_simulate`, `pyssp_sysml2`, `pyssp_vv`,
+  and `sequence_extensions`.
+- The SysML stack checkouts are clean at the commits `pyssp_workflow` records.
 - This repository carries no patch that waits on a local working tree.
 - The multi-line string handling (`\n`, `\r`, `\t` decode on read, re-escape on
   export) and the study `doc` to `study.json` `description` path are committed
   upstream in `pyssp_sysml2` and `pyssp_workflow`.
-- Update order: land the change upstream, bump the capability gitlink in
-  `pyssp_workflow`, then bump the `pyssp_workflow` gitlink here. The SysML
-  dialect and FMI library upstreams are bumped directly in this repository.
+- Update order: land the change upstream, bump that checkout's gitlink in
+  `pyssp_workflow`, then bump the `pyssp_workflow` gitlink here. A SysML
+  library bump is therefore one entry in `pyssp_workflow`'s `.gitmodules` plus
+  one commit there.
 
 The build and simulate stages now consume generic code from upstream
 `pyssp_workflow`, `pyssp_simulate`, and `pyssp_vv`; this repository keeps
@@ -80,21 +87,22 @@ Check before updating or resetting:
 ```bash
 git -C 3rd_party/pyssp_workflow status --short
 git -C 3rd_party/pyssp_workflow submodule foreach --recursive 'echo "=== $displaypath"; git status --short'
-git -C 3rd_party/pycps_sysml2 status --short
-git -C 3rd_party/pyfmi_sysml2 status --short
 ```
 
 When updating one, run the relevant tests in `ssp_references` and in the owning
-repository, then record the new gitlink.
+repository, then record the new gitlink in `pyssp_workflow` and bump the
+`pyssp_workflow` gitlink here.
 
 ## Upstream URLs
 
-`3rd_party/pyssp_workflow`, `3rd_party/pycps_sysml2`, and
-`3rd_party/pyfmi_sysml2` use HTTPS so a fresh clone needs no SSH key. To use
-SSH locally, rewrite a URL without editing `.gitmodules`:
+`3rd_party/pyssp_workflow` and the checkouts it nests use HTTPS so a fresh
+clone needs no SSH key. To use SSH locally, rewrite a URL without editing files:
 
 ```bash
 git submodule set-url 3rd_party/pyssp_workflow git@github.com:pyssporg/pyssp_workflow.git
-git submodule set-url 3rd_party/pycps_sysml2 git@github.com:pyssporg/pycps_sysml2.git
-git submodule set-url 3rd_party/pyfmi_sysml2 git@github.com:pyssporg/pyfmi_sysml2.git
+git -C 3rd_party/pyssp_workflow submodule set-url 3rd_party/pycps_sysml2 git@github.com:pyssporg/pycps_sysml2.git
+git -C 3rd_party/pyssp_workflow submodule set-url 3rd_party/pyfmi_sysml2 git@github.com:pyssporg/pyfmi_sysml2.git
 ```
+
+A rewrite of a nested URL lives in `pyssp_workflow/.git/config`, not in the
+`ssp_references` superproject.

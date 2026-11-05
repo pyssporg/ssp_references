@@ -45,7 +45,7 @@ definitions, fixture notes, and build metadata.
 │   └── utils/
 ├── examples/
 │   └── simple_chain/         # minimal architecture -> SSP -> simulation example
-├── 3rd_party/                # git submodule: pyssp_workflow, which owns the capability checkouts
+├── 3rd_party/                # one git submodule: pyssp_workflow, the install bundle that nests the capability and SysML checkouts
 ├── docs/
 │   ├── breakdown/            # current state, seven layers
 │   │   ├── 00-intent/          # north star intent and commitments
@@ -249,14 +249,17 @@ reference-model cases, the matching CSV baselines live beside their fixture:
 
 `requirements.txt` currently targets Linux `x86_64` and is standalone:
 
-- The eight vendored distributions install from their GitHub release assets:
-  the six pyssp capability libraries (`experimental-pyssp-standard`,
-  `pyssp-workflow`, `pyssp-simulate`, `pyssp-sysml2`, `pyssp-vv`,
-  `sequence-extensions-flow`) plus the SysML dialect library `pycps-sysml2` and
-  the FMI artifact library `pyfmi-sysml2`. Each
-  wheel's metadata names its sibling dependencies as `releases/download/v<version>/`
-  URLs, so the version graph travels inside the wheels. A tag that has not been
-  released makes the dependency unresolvable.
+- One `pyssp-workflow[sysml,flow]` reference in `requirements.txt` installs the
+  whole stack: it transitively pins the eight pyssp and SysML distributions as
+  GitHub release assets — the six pyssp capability libraries
+  (`experimental-pyssp-standard`, `pyssp-workflow`, `pyssp-simulate`,
+  `pyssp-sysml2`, `pyssp-vv`, `sequence-extensions-flow`) plus the SysML
+  dialect library `pycps-sysml2` and the FMI artifact library `pyfmi-sysml2`.
+  Each wheel's metadata names its sibling dependencies as
+  `releases/download/v<version>/` URLs, so the version graph travels inside the
+  wheels. A tag that has not been released makes the dependency unresolvable.
+  The `sysml` extra is only an install bundle: `pyssp_workflow` imports none of
+  `pyssp_sysml2`, `pycps_sysml2`, or `pyfmi_sysml2`.
   `requirements-dev.txt` replaces the wheels with editable checkouts but still
   resolves those URLs.
 - `pyssp4sim` is pinned to the `v0.3.2` Linux `x86_64` wheel.
@@ -281,9 +284,10 @@ environment constraints:
   environment. The build stage also needs `pyssp_sysml2`, which the wheel set
   provides.
 
-The pyssp and sequence submodules are checkouts; `requirements-dev.txt` installs
-them editable. See [`3rd_party/README.md`](3rd_party/README.md) for
-initialization, pinning, and update rules.
+The pyssp and sequence checkouts are nested under the `pyssp_workflow`
+submodule; `requirements-dev.txt` installs them editable at those paths. See
+[`3rd_party/README.md`](3rd_party/README.md) for initialization, pinning, and
+update rules.
 
 See [the ecosystem assessment](docs/breakdown/04-verification/ecosystem_adoption_assessment.md)
 for the evaluated versions and remaining gaps.
@@ -313,9 +317,11 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The eight vendored distributions come from their GitHub release assets; a
-missing release tag makes the dependency unresolvable. For editable checkouts,
-run `pip install -r requirements-dev.txt`.
+The eight vendored distributions arrive transitively through that one
+`pyssp-workflow[sysml,flow]` reference, from GitHub release assets; a missing
+release tag makes the dependency unresolvable. For editable checkouts, run
+`pip install -r requirements-dev.txt`; its `-e` paths live under the nested
+`3rd_party/pyssp_workflow/3rd_party/` tree.
 
 ### 2. Build a model
 

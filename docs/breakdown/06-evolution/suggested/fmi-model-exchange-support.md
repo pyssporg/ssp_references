@@ -36,4 +36,4 @@ Unowned by design: no fixture needs ME and ADR-017 keeps it out of scope. Start 
 
 ## References
 
-- `3rd_party/pyfmi_sysml2/docs/breakdown/06-evolution/roadmap.md`.
+- `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2/docs/breakdown/06-evolution/roadmap.md`.

@@ -8,6 +8,7 @@ stream.
 | Date | ID | Decision | Layers | Status | Record |
 |---|---|---|---|---|---|
 | 2026-11-05 | DD-018 | Fixture Layout — Model Definition, System, Build Artifact | implementation | accepted | `DD-018` |
+| 2026-11-05 | ADR-018 | Nest the SysML Siblings Under the Workflow Install Bundle | architecture, operation | accepted | `ADR-018` |
 | 2026-11-05 | ADR-017 | FMI 2.0 Co-Simulation Only, Linux x86-64 Only | product, architecture | accepted | `ADR-017` |
 | 2026-11-05 | ADR-016 | pycps_sysml2 Owns the SysML Dialect for Both Artifact Libraries | architecture, implementation | accepted | `ADR-016` |
 | 2026-11-05 | ADR-015 | SysML Stack Splits Into Dialect, SSP, and FMI Libraries | architecture, implementation | accepted | `ADR-015` |

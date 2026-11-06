@@ -62,8 +62,7 @@ metadata.
 │   └── reference/            # naming rules and reference examples
 ├── requirements.txt          # default install: pyssp release assets
 ├── requirements-dev.txt      # editable checkouts (development)
-├── requirements-sysml.txt
-└── requirements-campaign.txt
+└── requirements-sysml.txt
 ```
 
 
@@ -295,7 +294,9 @@ environment constraints:
   ../sequence_extensions`). The project declares the distribution name
   `sequence-extensions-flow` to avoid the unrelated PyPI project named
   `sequence-extensions` (same `sequence_extensions` import). Use
-  `requirements-campaign.txt`.
+  `requirements-dev.txt` and install the flow engine as a sibling editable
+  checkout (`pip install -e ../sequence_extensions`), as the install notes at
+  the top of `requirements-dev.txt` describe.
 - `scripts/check_sysml_roundtrip.py` is an artifact-only checker. It invokes
   an external `pyssp` executable and exchanges only `SystemStructure.ssd`
   files; it does not import `pyssp_sysml2` or `pyssp_standard`. Point it at a

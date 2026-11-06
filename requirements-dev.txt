@@ -2,6 +2,12 @@
 #
 #   python3 -m pip install -r requirements-dev.txt
 #
+# For campaign work also install the flow engine as a sibling editable checkout
+# from the flat ecosystem workspace (pip install -e ../sequence_extensions) so
+# it tracks the working tree instead of the packaged wheel. It declares the
+# distribution name sequence-extensions-flow (the unrelated PyPI project named
+# sequence-extensions); the import package is still `sequence_extensions`.
+#
 # requirements.txt carries one `pyssp-workflow` reference that pulls the eight
 # pyssp and SysML distributions from tagged release wheels.
 #

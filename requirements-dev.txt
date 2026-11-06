@@ -3,26 +3,23 @@
 #   python3 -m pip install -r requirements-dev.txt
 #
 # requirements.txt carries one `pyssp-workflow` reference that pulls the eight
-# pyssp and SysML distributions. Each wheel's metadata names its
-# sibling dependencies as GitHub release URLs, so pip fetches those URLs even
-# when the editable checkout is the installed distribution; the release tags
-# must exist before this file installs.
+# pyssp and SysML distributions from tagged release wheels.
+#
+# The vendored 3rd_party/pyssp_workflow submodule tree is gone. For cross-repo
+# development, install each sibling as an editable checkout from the flat
+# ecosystem workspace (pyssp_dev/repos/) on top of the release-wheel runtime.
+# From this repository's root the siblings sit one level up:
+#
+#   python3 -m pip install -e ../pyssp_workflow
+#   python3 -m pip install -e ../experimental_pyssp_standard
+#   python3 -m pip install -e ../pyssp_simulate
+#   python3 -m pip install -e ../pyssp_sysml2
+#   python3 -m pip install -e ../pyssp_vv
+#   python3 -m pip install -e ../sequence_extensions
+#   python3 -m pip install -e ../pycps_sysml2
+#   python3 -m pip install -e ../pyfmi_sysml2
+#
+# The editable checkouts replace the wheel installs after resolution, but
+# resolution still reads the direct references from the wheel metadata, so the
+# release tags must exist before those installs.
 -r requirements.txt
-
-# The development tree lives in 3rd_party/pyssp_workflow; see 3rd_party/README.md.
--e ./3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard
--e ./3rd_party/pyssp_workflow
--e ./3rd_party/pyssp_workflow/3rd_party/pyssp_simulate
-# Build-stage SysML authoring; pyssp_workflow invokes its CLI.
--e ./3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2
-# Comparison and validation helpers used by scripts/run_comparisons.py.
--e ./3rd_party/pyssp_workflow/3rd_party/pyssp_vv
-# Flow engine for scripts/run_campaign.py (Python 3.11+).
--e ./3rd_party/pyssp_workflow/3rd_party/sequence_extensions
-# SysML dialect and FMI artifact libraries; nested in the workflow tree like
-# the capability checkouts above, as the rest of pyssp-workflow's sysml bundle.
--e ./3rd_party/pyssp_workflow/3rd_party/pycps_sysml2
--e ./3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2
-
-# The -e entries replace the wheel installs after resolution, but resolution
-# still reads the direct references from the wheel metadata.

@@ -46,12 +46,13 @@ capability.
   then SSP: `run-all` builds every FMU before any SSP.
 - `artifacts/` holds generated builds, analyses, simulations, and comparisons.
 - `scripts/` holds the shared build, simulate, and compare entry points.
-- `3rd_party/` holds one submodule, `pyssp_workflow`, the composition package
-  whose base dependencies cover the whole pyssp and SysML stack; it nests the
-  capability checkouts plus the SysML dialect (`pycps_sysml2`) and FMI artifact
-  (`pyfmi_sysml2`) libraries, and imports none of them. `pycps_sysml2` also
-  ships the dialect core definitions (`definitions/core.sysml`), which fixtures
-  load instead of redeclaring. Edits belong in their own repositories.
+- The pyssp and SysML stack is not vendored here anymore. This repo installs it
+  from release wheels (`requirements.txt` pulls one `pyssp-workflow` reference
+  that transitively carries the whole stack); cross-repo development installs
+  each sibling as an editable checkout from the flat ecosystem workspace
+  (`pyssp_dev/repos/`). `pycps_sysml2` ships the dialect core definitions
+  (`definitions/core.sysml`), which fixtures load instead of redeclaring. Edits
+  belong in their own repositories.
 
 ## Hard constraints
 
@@ -94,16 +95,17 @@ capability.
     them by hand;
   - run `python3 $PB check --strict --root docs/breakdown`
     and `... node-size --strict --root docs/breakdown` after edits.
-- `3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard` is the only
-  editable `pyssp_standard` checkout; it is the experimental fork
-  (`pyssporg/experimental_pyssp_standard`), not the release line. The nested
-  `pyssp_sysml2/3rd_party/experimental_pyssp_standard` copy is a pinned
-  dependency: do not edit it; local changes belong in the canonical checkout.
-- `3rd_party/pyssp_workflow/3rd_party/pycps_sysml2` and
-  `.../pyfmi_sysml2` are nested checkouts, not repo-level submodules;
-  `3rd_party/pyssp_workflow` is the only top-level submodule and also carries
-  both SysML libraries as base dependencies. They are released v0.1.0 libraries;
-  the editables point at these nested locations.
+- `experimental_pyssp_standard` is the experimental fork
+  (`pyssporg/experimental_pyssp_standard`), not the release line; it is the
+  canonical editable `pyssp_standard` checkout in the flat ecosystem workspace
+  (`repos/experimental_pyssp_standard`). The pinned
+  `pyssp_sysml2/3rd_party/experimental_pyssp_standard` copy that once nested
+  here is gone with the vendored tree; local changes belong in the canonical
+  checkout.
+- `pycps_sysml2` and `pyfmi_sysml2` are separate sibling repos in the flat
+  ecosystem workspace (`repos/pycps_sysml2`, `repos/pyfmi_sysml2`), released
+  v0.1.0 libraries carried as base dependencies of `pyssp-workflow`; cross-repo
+  development installs them as sibling editable checkouts.
 - Keep cross-cutting workflow or strategy notes in `docs/breakdown/`.
 - When docs move or commands change, update the references so the documented
   build and simulation flow stays accurate.
@@ -124,6 +126,8 @@ capability.
   libraries. There are no feature extras; the only optional-dependencies group
   is `dev`. The tags must exist before any install or editable checkout
   resolves.
-  `requirements-dev.txt` replaces the wheels with editable checkouts under
-  `3rd_party/pyssp_workflow/3rd_party/` but still resolves those URLs.
+  `requirements-dev.txt` composes the default without committing editable
+  lines; cross-repo development installs each sibling as an editable checkout
+  from the flat ecosystem workspace (`pip install -e ../<sibling>` from this
+  repo) on top of the release-wheel runtime.
 - Many workflows assume Linux `x86_64`, `OMSimulator`, and those pinned wheels.

@@ -17,22 +17,27 @@ Linux x86_64, root `venv` (Python 3.11.14, pytest 9.1.1). Six suites were
 measured; the two SysML libraries added to the pin set are not measured in this
 snapshot.
 
-| Project | Path | Tests | Runtime |
+Measured at the date above, with each distribution installed from its sibling
+tree in the flat ecosystem workspace (`pyssp_dev/repos/`); the former vendored
+`3rd_party/pyssp_workflow` submodule tree is gone.
+
+| Project | Path (flat workspace, `repos/`) | Tests | Runtime |
 |---|---|---|---|
-| pyssp_standard (canonical, experimental fork) | `3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard` | 467 | 5.6 s |
+| pyssp_standard (canonical, experimental fork) | `experimental_pyssp_standard` | 467 | 5.6 s |
 | pyssp_simulate | same tree | 148 (147 pass, 1 cosim skip) | 10.0 s |
 | pyssp_sysml2 | same tree | 248 | 32 s |
-| pyssp_workflow | `3rd_party/pyssp_workflow` | 74 | 4.2 s |
+| pyssp_workflow | `pyssp_workflow` | 74 | 4.2 s |
 | pyssp_vv | same tree | 122 | 2.2 s |
 | sequence_extensions | same tree | 434 | 14.0 s |
-| pycps_sysml2 | `3rd_party/pyssp_workflow/3rd_party/pycps_sysml2` | not measured in this snapshot | not measured |
-| pyfmi_sysml2 | `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2` | not measured in this snapshot | not measured |
+| pycps_sysml2 | `pycps_sysml2` | not measured in this snapshot | not measured |
+| pyfmi_sysml2 | `pyfmi_sysml2` | not measured in this snapshot | not measured |
 | root suite | `tests/` | 104 (1 strict-mode skip) | 101 s |
 
-Excluded: the pinned `pyssp_sysml2/3rd_party/experimental_pyssp_standard` copy
-(not editable), the root suite's engine-free integration tests (see EVAL-001,
-EVAL-008), upstream CI matrices. The two SysML libraries are pinned and
-installed but their suites were never run for this snapshot.
+Excluded: the pinned `experimental_pyssp_standard` copy that once nested inside
+`pyssp_sysml2` (gone with the vendored tree), the root suite's engine-free
+integration tests (see EVAL-001, EVAL-008), upstream CI matrices. The two SysML
+libraries are pinned and installed but their suites were never run for this
+snapshot.
 
 ## Verdict
 

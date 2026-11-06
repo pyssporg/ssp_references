@@ -87,23 +87,22 @@ only when an artifact format changes, not when a Python model API changes.
 
 By default the distributions install from tagged GitHub release wheel URLs and
 from the same URLs named in their metadata; editable checkouts are the
-development opt-in (`INFO-011`). The `pyssp_workflow` submodule under
-`3rd_party/` is the only top-level entry, and its base dependencies carry the
-whole ecosystem; all checkouts are nested inside it:
+development opt-in (`INFO-011`). The stack is no longer vendored here: one
+`pyssp-workflow` reference in `requirements.txt` installs the whole ecosystem
+from release wheels, and cross-repo development installs each sibling as an
+editable checkout from its own tree in the flat ecosystem workspace
+(`pyssp_dev/repos/`):
 
-| Submodule | Used by |
+| Repo (flat workspace, `pyssp_dev/repos/`) | Used by |
 | --- | --- |
-| `3rd_party/pyssp_workflow` | Composition layer and single install reference: authoring, analysis, fixture, binding, compare, nodes, development tree |
-| `3rd_party/pyssp_workflow/3rd_party/experimental_pyssp_standard` | Build and SSP XML inspection |
-| `3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2` | FMI artifact emission behind the authoring stage |
-| `3rd_party/pyssp_workflow/3rd_party/pycps_sysml2` | SysML dialect behind the authoring stage |
-| `3rd_party/pyssp_workflow/3rd_party/pyssp_simulate` | Simulate |
-| `3rd_party/pyssp_workflow/3rd_party/pyssp_sysml2` | Authoring (CLI) and SysML round-trip checker |
-| `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` | Build/simulation/compare campaign orchestration |
-| `3rd_party/pyssp_workflow/3rd_party/pyssp_vv` | Measurement, judgment, evidence, and reporting |
-
-See [`3rd_party/README.md`](../../3rd_party/README.md) for initialization,
-pinning, and update rules.
+| `pyssp_workflow` | Composition layer and single install reference: authoring, analysis, fixture, binding, compare, nodes, development tree |
+| `experimental_pyssp_standard` | Build and SSP XML inspection |
+| `pyfmi_sysml2` | FMI artifact emission behind the authoring stage |
+| `pycps_sysml2` | SysML dialect behind the authoring stage |
+| `pyssp_simulate` | Simulate |
+| `pyssp_sysml2` | Authoring (CLI) and SysML round-trip checker |
+| `sequence_extensions` | Build/simulation/compare campaign orchestration |
+| `pyssp_vv` | Measurement, judgment, evidence, and reporting |
 
 The vendored checkout is the organization's experimental fork,
 `pyssporg/experimental_pyssp_standard` (branch `alpha`), not the released
@@ -120,8 +119,9 @@ package stays `pyssp_standard`.
 | SysML checker | `pyssp_sysml2` targeting the refactored `pyssp_standard` API | Separate environment allowed |
 
 Each row is satisfied by the release wheel URLs in `requirements.txt` by
-default; `requirements-dev.txt` composes that default, then replaces the wheel
-installs with the editable `3rd_party/` checkouts (`INFO-011`).
+default; `requirements-dev.txt` composes that default so cross-repo development
+installs each sibling `pip install -e ../<name>` from the flat ecosystem
+workspace (`INFO-011`).
 
 The SysML checker accepts an explicit executable:
 

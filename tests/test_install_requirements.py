@@ -4,9 +4,10 @@ The default install takes the whole pyssp stack through one plain
 ``pyssp-workflow`` direct reference in ``requirements.txt``: the workflow wheel
 declares the SysML bundle and the flow engine in its base dependencies, so no
 extras are selected. The version the URL names must be the version the workflow
-source tree declares, so a tag bump and a filename bump cannot drift apart. The
-development file composes the default and replaces each distribution with an
-editable checkout. No installs and no network access here.
+source tree declares, so a tag bump and a filename bump cannot drift apart.
+The vendored ``3rd_party/pyssp_workflow`` submodule tree is gone: development
+installs each sibling as an editable checkout from the flat ecosystem workspace
+(``pyssp_dev/repos/``). No installs and no network access here.
 """
 
 from __future__ import annotations
@@ -16,17 +17,18 @@ import tomllib
 from pathlib import Path, PurePosixPath
 from urllib.parse import urlsplit
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
+# Sibling repos live beside this repo in the flat ecosystem workspace
+# (pyssp_dev/repos/). A file here sits in tests/, so parents[0]=tests,
+# parents[1]=this repo, parents[2]=pyssp_dev/repos.
+FLAT_REPOS = Path(__file__).resolve().parents[2]
+WORKFLOW_ROOT = FLAT_REPOS / "pyssp_workflow"
+WORKFLOW_PYPROJECT = WORKFLOW_ROOT / "pyproject.toml"
 REQUIREMENTS = REPO_ROOT / "requirements.txt"
 DEV_REQUIREMENTS = REPO_ROOT / "requirements-dev.txt"
 SYSML_REQUIREMENTS = REPO_ROOT / "requirements-sysml.txt"
-WORKFLOW_PYPROJECT = REPO_ROOT / "3rd_party/pyssp_workflow/pyproject.toml"
-
-#: The one pinned distribution (PEP 503 normalised) -> its editable source tree.
-#: The other seven distributions arrive transitively from this wheel.
-VENDORED_TREES: dict[str, str] = {
-    "pyssp-workflow": "3rd_party/pyssp_workflow",
-}
 
 #: The libraries a plain ``pyssp-workflow`` install must bring as base
 #: dependencies: the SysML bundle and the flow engine. Without them the install
@@ -80,7 +82,14 @@ def bundle_extras() -> set[str]:
 
 
 def workflow_project() -> dict[str, object]:
-    """Return the ``[project]`` table of the workflow source tree."""
+    """Return the ``[project]`` table of the workflow source tree.
+
+    The tree lives at the sibling ``repos/pyssp_workflow`` checkout in the flat
+    ecosystem workspace; a standalone run without that checkout skips the checks
+    that need it instead of erroring.
+    """
+    if not WORKFLOW_PYPROJECT.is_file():
+        pytest.skip("requires flat ecosystem checkout: repos/pyssp_workflow")
     text = WORKFLOW_PYPROJECT.read_text(encoding="utf-8")
     return tomllib.loads(text)["project"]
 
@@ -150,10 +159,8 @@ def pyproject_version(tree: Path) -> str:
 
 
 def declared_versions() -> dict[str, str]:
-    return {
-        canonical: pyproject_version(REPO_ROOT / tree)
-        for canonical, tree in VENDORED_TREES.items()
-    }
+    """Return the pinned distribution -> version declared by the workflow tree."""
+    return {"pyssp-workflow": pyproject_version(WORKFLOW_ROOT)}
 
 
 def test_default_requirements_reference_the_bundle_exactly_once() -> None:
@@ -205,7 +212,7 @@ def test_direct_reference_urls_name_the_tree_version() -> None:
 
 
 def test_default_requirements_exclude_the_nested_pinned_copy() -> None:
-    # pyssp_sysml2 carries a pinned pyssp-standard copy that imports the same
+    # pyssp_sysml2 carried a pinned pyssp-standard copy that imports the same
     # pyssp_standard package; installing it next to the fork would collide.
     names = {name for name, _ in direct_references(REQUIREMENTS)}
     assert "pyssp-standard" not in names
@@ -224,24 +231,14 @@ def test_development_requirements_compose_the_default() -> None:
     assert direct_references(DEV_REQUIREMENTS) == []
 
 
-def test_development_requirements_point_at_trees_that_exist() -> None:
+def test_development_requirements_contain_no_vendored_editables() -> None:
+    # The vendored 3rd_party/pyssp_workflow tree is gone. Development installs
+    # each sibling as an editable checkout from the flat ecosystem workspace
+    # (pip install -e ../<sibling> in pyssp_dev/repos/), documented as comments
+    # rather than committed -e lines, so no editable survives here.
     targets = editables(DEV_REQUIREMENTS)
-    assert VENDORED_TREES["pyssp-workflow"] in targets
-    assert sorted(target for target in targets if not (REPO_ROOT / target).is_dir()) == []
-
-
-def test_development_requirements_check_out_the_whole_bundle() -> None:
-    # Every editable is a checkout inside the one top-level submodule; a
-    # repo-level SysML submodule would be a second owner of the same pin.
-    targets = editables(DEV_REQUIREMENTS)
-    outside = sorted(
-        target for target in targets if not target.startswith("3rd_party/pyssp_workflow")
-    )
-    assert outside == []
-    assert {
-        "3rd_party/pyssp_workflow/3rd_party/pycps_sysml2",
-        "3rd_party/pyssp_workflow/3rd_party/pyfmi_sysml2",
-    } <= targets
+    assert targets == set()
+    assert not any("3rd_party" in target for target in targets)
 
 
 def test_sysml_requirements_use_no_mirror() -> None:

@@ -38,8 +38,13 @@ from pyssp_vv.policy import Criterion, Policy, Sufficiency
 from sequence_extensions.flow import RunLog, RunOptions, execute_flow
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-WORKFLOW_ROOT = REPO_ROOT / "3rd_party" / "pyssp_workflow"
-SYSML2_ROOT = WORKFLOW_ROOT / "3rd_party" / "pyssp_sysml2"
+# The vendored 3rd_party/pyssp_workflow submodule tree is gone. Cross-project
+# contract tests target the sibling repos beside this one in the flat ecosystem
+# workspace (pyssp_dev/repos/): parents[0]=tests, parents[1]=this repo,
+# parents[2]=pyssp_dev/repos.
+FLAT_REPOS = Path(__file__).resolve().parents[2]
+WORKFLOW_ROOT = FLAT_REPOS / "pyssp_workflow"
+SYSML2_ROOT = FLAT_REPOS / "pyssp_sysml2"
 GOLDEN_TEST = SYSML2_ROOT / "tests" / "test_golden_artifacts.py"
 
 #: The schema reviewed as EVAL-005. Copied literally, not imported, so a
@@ -286,6 +291,8 @@ def test_sysml2_goldens_are_readable_and_stable_under_pyssp_standard() -> None:
     reference and mapping target inside the golden tree, and asserts the
     read-only open leaves every artifact byte-identical. No regeneration.
     """
+    if not GOLDEN_TEST.is_file():
+        pytest.skip("requires flat ecosystem checkout: repos/pyssp_sysml2")
     golden = _golden_test_module()
     golden_root: Path = golden.GOLDEN_ROOT
     cases: dict[str, str] = golden.CASES

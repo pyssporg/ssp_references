@@ -2,6 +2,7 @@
 # The runtime requirements are the same; sequence_extensions adds the flow engine.
 # The project declares the distribution name sequence-extensions-flow to avoid
 # the unrelated PyPI project named sequence-extensions.
-# The flow engine stays an editable checkout, so campaign work tracks the
-# working tree instead of the packaged wheel.
+# Install the flow engine as a sibling editable checkout from the flat ecosystem
+# workspace (python3 -m pip install -e ../sequence_extensions) so campaign work
+# tracks the working tree instead of the packaged wheel.
 -r requirements-dev.txt

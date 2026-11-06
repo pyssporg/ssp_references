@@ -4,9 +4,10 @@ Curated SSP model fixtures plus the scripts used to prepare them, simulate them,
 and compare results across engines.
 
 The repository is primarily a working collection of reference models under
-`models/ssp/`. Most source material comes from vendored upstream projects in
-`3rd_party/`, while the checked-in model directories hold the authored model
-definitions, fixture notes, and build metadata.
+`models/ssp/`. The pyssp and SysML stack is no longer vendored here; it is
+installed from release wheels (`requirements.txt`), while the checked-in model
+directories hold the authored model definitions, fixture notes, and build
+metadata.
 
 ## Layout
 
@@ -48,7 +49,6 @@ definitions, fixture notes, and build metadata.
 │   └── utils/
 ├── examples/
 │   └── simple_chain/         # minimal architecture -> SSP -> simulation example
-├── 3rd_party/                # one git submodule: pyssp_workflow, the composition package that nests the capability and SysML checkouts
 ├── docs/
 │   ├── breakdown/            # current state, seven layers
 │   │   ├── 00-intent/          # north star intent and commitments
@@ -289,11 +289,13 @@ If you work on another platform, expect to adjust dependencies manually.
 The campaign runner and `pyssp_sysml2` round-trip tool have their own
 environment constraints:
 
-- `scripts/run_campaign.py` requires Python 3.11+ and the editable
-  `3rd_party/pyssp_workflow/3rd_party/sequence_extensions` checkout. The project
-  declares the distribution name `sequence-extensions-flow` to avoid the
-  unrelated PyPI project named `sequence-extensions` (same `sequence_extensions`
-  import). Use `requirements-campaign.txt`.
+- `scripts/run_campaign.py` requires Python 3.11+ and the
+  `sequence-extensions-flow` flow engine, installed as a sibling editable
+  checkout from the flat ecosystem workspace (`pip install -e
+  ../sequence_extensions`). The project declares the distribution name
+  `sequence-extensions-flow` to avoid the unrelated PyPI project named
+  `sequence-extensions` (same `sequence_extensions` import). Use
+  `requirements-campaign.txt`.
 - `scripts/check_sysml_roundtrip.py` is an artifact-only checker. It invokes
   an external `pyssp` executable and exchanges only `SystemStructure.ssd`
   files; it does not import `pyssp_sysml2` or `pyssp_standard`. Point it at a
@@ -302,10 +304,10 @@ environment constraints:
   environment. The build stage also needs `pyssp_sysml2`, which the wheel set
   provides.
 
-The pyssp and sequence checkouts are nested under the `pyssp_workflow`
-submodule; `requirements-dev.txt` installs them editable at those paths. See
-[`3rd_party/README.md`](3rd_party/README.md) for initialization, pinning, and
-update rules.
+The pyssp and sequence checkouts are siblings in the flat ecosystem workspace
+(`pyssp_dev/repos/`); `requirements-dev.txt` installs them editable from the
+wheel-build runtime. See the install notes in `requirements-dev.txt` for the
+editable sibling-relative commands.
 
 See [the ecosystem assessment](docs/breakdown/04-verification/ecosystem_adoption_assessment.md)
 for the evaluated versions and remaining gaps.
@@ -324,22 +326,21 @@ All commands run from the repository root.
 ### 1. Clone and set up
 
 ```bash
-git clone --recurse-submodules <repo-url> ssp_references
+git clone <repo-url> ssp_references
 cd ssp_references
-
-# If the repository was cloned without submodules:
-# git submodule update --init --recursive
 
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-The eight vendored distributions arrive transitively through that one plain
+The eight distributions arrive transitively through that one plain
 `pyssp-workflow` reference, from GitHub release assets; a missing
-release tag makes the dependency unresolvable. For editable checkouts, run
-`pip install -r requirements-dev.txt`; its `-e` paths live under the nested
-`3rd_party/pyssp_workflow/3rd_party/` tree.
+release tag makes the dependency unresolvable. For editable checkouts, install
+each sibling from the flat ecosystem workspace (`pip install -e
+../pyssp_workflow`, and the other siblings in `pyssp_dev/repos/`) on top of
+`pip install -r requirements.txt`; `requirements-dev.txt` describes the
+workspace layout.
 
 ### 2. Build a model
 

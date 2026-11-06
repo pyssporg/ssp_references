@@ -20,8 +20,9 @@ Six vendored suites plus the root suite. Before the change: 457 tests in
 `pyssp_standard`, 140 in `pyssp_simulate`, 241 in `pyssp_sysml2`, 71 in
 `pyssp_workflow`, 119 in `pyssp_vv`, 428 in `sequence_extensions`, 87 in the
 root suite. Counts after are in EVAL-012. Excluded: the pinned
-`pyssp_sysml2/3rd_party/experimental_pyssp_standard`, vendored
-`3rdParty/` suites, engine installation.
+`experimental_pyssp_standard` copy that once nested inside `pyssp_sysml2` (an
+editable dependency, since removed with the vendored tree), engine
+installation.
 
 ## Verdict
 

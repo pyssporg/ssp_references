@@ -26,3 +26,6 @@ opencode.json
 .ruff_cache/
 
 artifacts/build/*
+# FMU resource data (e.g. pyfmu-csv boundary files) is part of the fixture;
+# only generated result CSVs should be ignored.
+!**/resources/data/*.csv

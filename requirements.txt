@@ -26,7 +26,7 @@ OMSimulator
 
 # pyssp4sim is pinned: the old releases/latest URL changed asset names between
 # releases (v0.3.2 ships pyssp4sim-0.3.2-... not pyssp4sim-0.0.0+lat-...).
-https://github.com/jkCXf9X4/ssp4sim/releases/download/v0.3.4/pyssp4sim-0.3.4-cp39-abi3-linux_x86_64.whl
+https://github.com/pyssporg/ssp4sim/releases/download/v0.3.4/pyssp4sim-0.3.4-cp39-abi3-linux_x86_64.whl
 https://github.com/pyssporg/pyfmu_csv/releases/download/v.0.1.12/pyfmu_csv-0-py3-none-linux_x86_64.whl
 pytest
 matplotlib

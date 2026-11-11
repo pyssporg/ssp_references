@@ -15,4 +15,4 @@ pyssp-simulate @ https://github.com/pyssporg/pyssp_simulate/releases/download/v0
 
 # ssp4sim backend. Not on PyPI; the wheel is Linux x86_64 only, so it is
 # pinned here exactly as the repository-level requirements.txt pins it.
-https://github.com/jkCXf9X4/ssp4sim/releases/download/v0.3.4/pyssp4sim-0.3.4-cp39-abi3-linux_x86_64.whl
+https://github.com/pyssporg/ssp4sim/releases/download/v0.3.4/pyssp4sim-0.3.4-cp39-abi3-linux_x86_64.whl

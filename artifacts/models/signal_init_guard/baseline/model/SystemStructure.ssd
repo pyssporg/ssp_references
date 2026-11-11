@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssd:SystemStructureDescription xmlns:ssc="http://ssp-standard.org/SSP1/SystemStructureCommon" xmlns:ssd="http://ssp-standard.org/SSP1/SystemStructureDescription" xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" name="System" version="1.0">
+  <ssd:System name="System">
+    <ssd:ParameterBindings>
+      <ssd:ParameterBinding>
+        <ssd:ParameterValues>
+          <ssv:ParameterSet version="1.0" name="ScenarioSet">
+            <ssv:Parameters>
+              <ssv:Parameter name="add.k1">
+                <ssv:Real value="1" />
+              </ssv:Parameter>
+              <ssv:Parameter name="add.k2">
+                <ssv:Real value="0" />
+              </ssv:Parameter>
+              <ssv:Parameter name="source.amplitude">
+                <ssv:Real value="0.5" />
+              </ssv:Parameter>
+              <ssv:Parameter name="source.f">
+                <ssv:Real value="1" />
+              </ssv:Parameter>
+              <ssv:Parameter name="source.offset">
+                <ssv:Real value="10" />
+              </ssv:Parameter>
+              <ssv:Parameter name="source.phase">
+                <ssv:Real value="0" />
+              </ssv:Parameter>
+              <ssv:Parameter name="source.startTime">
+                <ssv:Real value="0" />
+              </ssv:Parameter>
+            </ssv:Parameters>
+          </ssv:ParameterSet>
+        </ssd:ParameterValues>
+      </ssd:ParameterBinding>
+    </ssd:ParameterBindings>
+    <ssd:Elements>
+      <ssd:Component name="source" source="resources/Sine.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+        <ssd:Connectors>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="amplitude" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="f" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="offset" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="phase" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="startTime" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+      <ssd:Component name="guard" source="resources/InitGuard.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+        <ssd:Connectors>
+          <ssd:Connector name="u" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+      <ssd:Component name="add" source="resources/Add.fmu" type="application/x-fmu-sharedlibrary" implementation="CoSimulation">
+        <ssd:Connectors>
+          <ssd:Connector name="u1" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="u2" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="y" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="k1" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="k2" kind="parameter">
+            <ssc:Real />
+          </ssd:Connector>
+        </ssd:Connectors>
+      </ssd:Component>
+    </ssd:Elements>
+    <ssd:Connections>
+      <ssd:Connection startElement="source" startConnector="y" endElement="guard" endConnector="u" />
+      <ssd:Connection startElement="guard" startConnector="y" endElement="add" endConnector="u1" />
+    </ssd:Connections>
+  </ssd:System>
+  <ssd:DefaultExperiment startTime="0.0" stopTime="1.0" />
+</ssd:SystemStructureDescription>

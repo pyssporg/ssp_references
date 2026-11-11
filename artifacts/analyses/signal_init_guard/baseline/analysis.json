@@ -1,0 +1,19 @@
+{
+  "analysis": "baseline",
+  "composition": "System",
+  "description": "Signal chain with a validating guard: source (Sine) -> guard\n(InitGuard) -> add (Add). The guard fails initialization with a\nhard assert when its connected input still holds the default zero,\nturning the silent independent-initialization failure into a crash.",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "signal_init_guard",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "baseline.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

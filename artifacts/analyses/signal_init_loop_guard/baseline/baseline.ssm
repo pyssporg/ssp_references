@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssm:ParameterMapping xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" version="1.0">
+  <ssm:MappingEntry source="div_c" target="div.c" />
+  <ssm:MappingEntry source="gain_k" target="gain.k" />
+  <ssm:MappingEntry source="gain_c" target="gain.c" />
+</ssm:ParameterMapping>

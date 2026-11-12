@@ -230,6 +230,61 @@
       "build": "model"
     },
     {
+      "name": "signal_init_chain_guard",
+      "compare_signals": [
+        "source.y",
+        "guard.y",
+        "add.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "analysis": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ],
+      "build": "model"
+    },
+    {
+      "name": "signal_init_loop",
+      "compare_signals": [
+        "gain_a.y",
+        "gain_b.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "analysis": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ],
+      "build": "model"
+    },
+    {
+      "name": "signal_init_loop_guard",
+      "compare_signals": [
+        "gain.y",
+        "div.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "analysis": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
+          ]
+        }
+      ],
+      "build": "model"
+    },
+    {
       "name": "signal_step_product",
       "compare_signals": [
         "step.y",
@@ -243,6 +298,25 @@
             "ssp4sim",
             "omsimulator",
             "fmpy"
+          ]
+        }
+      ],
+      "build": "model"
+    },
+    {
+      "name": "signal_init_chain",
+      "compare_signals": [
+        "source.y",
+        "gain.y",
+        "add.y"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "analysis": "baseline",
+          "backends": [
+            "ssp4sim",
+            "omsimulator"
           ]
         }
       ],

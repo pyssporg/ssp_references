@@ -1,0 +1,38 @@
+{
+  "candidate_label": "omsimulator",
+  "gate": {
+    "reasons": [
+      "add.y: criterion-exceeded (10 > 0.106 (max_abs_error))"
+    ],
+    "status": "fail"
+  },
+  "metrics": "metrics.csv",
+  "reference_label": "ssp4sim",
+  "request": {
+    "case": "baseline",
+    "runs": [
+      {
+        "backend": "ssp4sim",
+        "manifest": "../../../../simulation/signal_init_chain/baseline/ssp4sim/simulation.json"
+      },
+      {
+        "backend": "omsimulator",
+        "manifest": "../../../../simulation/signal_init_chain/baseline/omsimulator/simulation.json"
+      }
+    ]
+  },
+  "summary": {
+    "compared_signal_count": 3,
+    "max_abs_error": 10.0031415927,
+    "max_rel_error": 0.9526792443721483,
+    "max_shift_abs_error": 10.0,
+    "max_signal_invariant_abs_error": 0.0,
+    "mean_abs_error": 0.016656458995760934,
+    "min_coverage": 1.0,
+    "rmse": 0.3315553097450292,
+    "run_a_label": "ssp4sim",
+    "run_b_label": "omsimulator",
+    "signal_invariant_count": 0,
+    "time_points": 1001
+  }
+}

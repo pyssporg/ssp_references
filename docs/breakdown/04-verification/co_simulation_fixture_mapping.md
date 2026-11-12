@@ -90,6 +90,39 @@ These fixtures now exist as SSP models under `models/ssp/`.
 | `signal_nested_external_bindings` | Implemented | [signal_nested_external_bindings](../models/ssp/signal_nested_external_bindings/FIXTURE.md) |
 | `signal_nested_parameter_bindings` | Implemented | [signal_nested_parameter_bindings](../models/ssp/signal_nested_parameter_bindings/FIXTURE.md) |
 
+### Initialization Fixtures
+
+These fixtures isolate FMI/SSP initialization semantics — what each
+component commits at the start-time frontier when it exits
+initialization mode — and form a complete 2x2 over the connection graph
+(DAG with a topological order vs cycle that requires iteration) and the
+failure mode (silent wrong frontier values vs loud abort). Each cell has
+exactly one minimal fixture; each owns a distinct fault class.
+
+| Graph / failure | Silent (wrong frontier, heals) | Loud (abort at init) |
+| --- | --- | --- |
+| **DAG** (order exists) | `signal_init_chain` — `Sine->Gain->Add`. omsimulator propagates; ssp4sim lags one hop. Fault: ordering choice | `signal_init_chain_guard` — chain + `InitGuard` assert `u>1e-6`. omsimulator passes; ssp4sim aborts (`[exit_init]`). Fault: independent init, assert fires |
+| **Cycle** (no order; iteration required) | `signal_init_loop` — 2x `LoopGain` cycle. omsimulator iterates to the fixed point; ssp4sim commits defaults, heals. Fault: not iterating | `signal_init_loop_guard` — cycle + `DivideGuard` (`y=c/u`). no engine passes today (omsimulator + all ssp4sim executor modes abort). Fault: division by zero in a cycle |
+
+The loud fixtures intentionally "build on" their silent counterparts
+(same topology, one asserting component): the silent one is the
+reference for what correct initialization looks like, the loud one turns
+the failure into a hard abort. This companion pattern is not duplication.
+
+The cyclic row is distinct from the runtime algebraic-loop fixtures
+(`signal_algebraic_loop`, `signal_nested_algebraic_loop`): those are
+scheduler loops judged on steady-state fixed-point convergence at step
+time (la2 executor, `test_loop_aware_nested.py` and
+`test_la2_e2e_compat.py`), not on initialization-time committed values.
+
+Three of the four init fixtures are registered for both backends and run
+in the parent sweep: `signal_init_chain` and `signal_init_loop` pass
+under ssp4sim (silent wrong frontier values), while
+`signal_init_chain_guard` and `signal_init_loop_guard` are strict xfails
+(ssp4sim aborts). The acyclic row is the reference for IMP-048
+(propagation through initialization); the cyclic guard row documents the
+future development target for loop-capable initialization.
+
 ## Coverage Assessment
 
 The repository already has good coverage for:

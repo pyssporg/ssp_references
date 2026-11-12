@@ -1,0 +1,15 @@
+{
+  "artifacts": [
+    "result.csv"
+  ],
+  "error": null,
+  "request": {
+    "backend": "omsimulator",
+    "case": "baseline",
+    "model": "signal_init_loop",
+    "setup_manifest": "../setup.json"
+  },
+  "result": "result.csv",
+  "runtime_s": 0.00941159698413685,
+  "status": "completed"
+}

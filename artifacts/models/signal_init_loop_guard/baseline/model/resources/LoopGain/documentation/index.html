@@ -1,0 +1,15 @@
+
+<h1>LoopGain</h1>
+<p> <i>Loop building block whose connected input and output form one hop of a
+  cross-FMU algebraic loop.
+
+  Two instances wired in a cycle (a.y -> b.u, b.y -> a.u) have no
+  topological initialization order: the consistent start values are the
+  fixed point of the loop, so an engine must iterate during
+  initialization (or accept inconsistent defaults) instead of following
+  a source-first ordering. With the loop gains below (k = 0.5 per hop)
+  the fixed point is unique and the iteration contracts by 0.25 per
+  turn, so the required initialization iteration converges quickly.
+  </i> </p>
+<h4> <u> Information </u> </h4>
+<h4> <u> Revisions </u> </h4>

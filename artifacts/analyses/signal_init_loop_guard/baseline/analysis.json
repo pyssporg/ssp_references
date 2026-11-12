@@ -1,0 +1,19 @@
+{
+  "analysis": "baseline",
+  "composition": "System",
+  "description": "Cyclic signal loop with a validating divider: gain (LoopGain,\nk=0.5, c=10) and div (DivideGuard, c=100) wired in a cycle. No\ntopological initialization order exists; div refuses initialization\nwhile its input holds the default zero, because evaluating c/u\nwould divide by zero.",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "signal_init_loop_guard",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "baseline.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

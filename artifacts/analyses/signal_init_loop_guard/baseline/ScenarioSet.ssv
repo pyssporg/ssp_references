@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssv:ParameterSet xmlns:ssv="http://ssp-standard.org/SSP1/SystemStructureParameterValues" version="1.0" name="ScenarioSet">
+  <ssv:Parameters>
+    <ssv:Parameter name="gain_k">
+      <ssv:Real value="0.5" />
+    </ssv:Parameter>
+    <ssv:Parameter name="gain_c">
+      <ssv:Real value="10" />
+    </ssv:Parameter>
+    <ssv:Parameter name="div_c">
+      <ssv:Real value="100" />
+    </ssv:Parameter>
+  </ssv:Parameters>
+</ssv:ParameterSet>

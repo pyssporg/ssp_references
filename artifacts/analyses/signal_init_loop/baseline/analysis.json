@@ -1,0 +1,19 @@
+{
+  "analysis": "baseline",
+  "composition": "System",
+  "description": "Signal loop requiring iterative initialization: gain_a (LoopGain,\nk=0.5, c=10) and gain_b (LoopGain, k=0.5, c=0) wired in a cycle.\nNo topological initialization order exists; the consistent start\nvalues are the loop's fixed point (y_a = 40/3, y_b = 20/3).",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.001,
+    "stop_time": 1.0
+  },
+  "model": "signal_init_loop",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "baseline.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

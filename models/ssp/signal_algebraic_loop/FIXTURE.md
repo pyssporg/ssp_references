@@ -52,6 +52,10 @@ This fixture is registered for simulation with the following backends:
 
 - Validate solver and scheduler handling when the system has one closed algebraic loop.
 - Distinguish loop-resolution errors from acyclic feedthrough errors.
+- A runtime scheduler loop, distinct from the init-time frontier cycle
+  fixtures (`signal_init_loop`, `signal_init_loop_guard`): this fixture is
+  judged on steady-state fixed-point convergence at step time, not on
+  initialization-time committed values.
 
 ## Expected Behavior
 

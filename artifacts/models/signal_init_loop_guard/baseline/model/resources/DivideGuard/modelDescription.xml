@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<fmiModelDescription fmiVersion="2.0" modelName="DivideGuard" guid="{4297448f-92e0-4ef6-a1e8-79515cd3f5cc}" description="Loop block that divides a constant by its connected input, and refuses&#10;  initialization while that input is zero.&#10;&#10;  A zero connected input during initialization is doubly wrong: the loop's&#10;  consistent start values are its fixed point (never zero with a nonzero&#10;  dividend), and evaluating c/u with u = 0 would divide by zero. The FMI&#10;  2.0 contract lets the FMU reject initialization: if the engine calls&#10;  exitInitializationMode while this block's input still holds its default&#10;  start value instead of an iterated loop solution, this model reports&#10;  the violation with a hard assert and the engine must abort.&#10;  " version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-11-12T08:53:13Z" variableNamingConvention="structured" numberOfEventIndicators="0">
+  <CoSimulation modelIdentifier="DivideGuard" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" />
+  <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="1e-06" stepSize="0.002" />
+  <ModelVariables>
+    <ScalarVariable name="der(_D_outputAlias_y)" valueReference="0">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable name="u" valueReference="3" causality="input">
+      <Real start="0.0" />
+    </ScalarVariable>
+    <ScalarVariable name="y" valueReference="4" causality="output">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable name="c" valueReference="5" description="Dividend" causality="parameter" variability="fixed">
+      <Real start="100.0" />
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="3" dependencies="2" dependenciesKind="dependent" />
+    </Outputs>
+    <InitialUnknowns>
+      <Unknown index="3" dependencies="2 4" dependenciesKind="dependent dependent" />
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

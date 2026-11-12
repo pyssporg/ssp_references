@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='utf-8'?>
+<fmiModelDescription fmiVersion="2.0" modelName="LoopGain" guid="{4fec2587-5ecb-4ce9-99ed-8aa73bd7aee3}" description="Loop building block whose connected input and output form one hop of a&#10;  cross-FMU algebraic loop.&#10;&#10;  Two instances wired in a cycle (a.y -&gt; b.u, b.y -&gt; a.u) have no&#10;  topological initialization order: the consistent start values are the&#10;  fixed point of the loop, so an engine must iterate during&#10;  initialization (or accept inconsistent defaults) instead of following&#10;  a source-first ordering. With the loop gains below (k = 0.5 per hop)&#10;  the fixed point is unique and the iteration contracts by 0.25 per&#10;  turn, so the required initialization iteration converges quickly.&#10;  " version="" generationTool="OpenModelica Compiler OpenModelica 1.26.1" generationDateAndTime="2026-11-11T20:48:31Z" variableNamingConvention="structured" numberOfEventIndicators="0">
+  <CoSimulation modelIdentifier="LoopGain" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" canRunAsynchronuously="false" />
+  <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="1e-06" stepSize="0.002" />
+  <ModelVariables>
+    <ScalarVariable name="der(_D_outputAlias_y)" valueReference="0">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable name="u" valueReference="3" causality="input">
+      <Real start="0.0" />
+    </ScalarVariable>
+    <ScalarVariable name="y" valueReference="4" causality="output">
+      <Real />
+    </ScalarVariable>
+    <ScalarVariable name="c" valueReference="5" description="Loop excitation offset" causality="parameter" variability="fixed">
+      <Real start="0.0" />
+    </ScalarVariable>
+    <ScalarVariable name="k" valueReference="6" description="Loop gain" causality="parameter" variability="fixed">
+      <Real start="0.5" />
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="3" dependencies="2" dependenciesKind="dependent" />
+    </Outputs>
+    <InitialUnknowns>
+      <Unknown index="3" dependencies="2 4 5" dependenciesKind="dependent dependent dependent" />
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

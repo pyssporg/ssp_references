@@ -133,7 +133,7 @@ trajectory difference is a pipeline defect, not a numerical one.
   2. `gcc -std=c11 -O2 -fPIC -shared` compiles `src/GainOffset.c` into
      `artifacts/build/GainOffset/Generator.so`, using the generated headers and
      the `pyfmi_sysml2` FMI headers as include paths.
-  3. `pyfmi_sysml2.package_fmu` writes
+  3. `pyssp_standard.FMU.package` writes
      `artifacts/build/GainOffset/Generator.fmu` with the model description, the
      generated headers, the `pyfmi_sysml2.fmi2_headers()`, and the binary at
      `binaries/linux64/Generator.so`.

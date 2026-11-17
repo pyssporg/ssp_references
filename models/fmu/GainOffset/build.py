@@ -26,6 +26,7 @@ from pathlib import Path
 
 import pycps_sysml2
 import pyfmi_sysml2
+from pyssp_standard import FMU
 
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -84,12 +85,12 @@ def package_binary(
     binary: Path, generated_headers: tuple[Path, ...], model_description: Path
 ) -> Path:
     """Write the deterministic FMU archive from the definition and the binary."""
-    return pyfmi_sysml2.package_fmu(
+    return FMU.package(
         BUILD_DIR / f"{COMPONENT}.fmu",
         model_description=model_description,
-        binary=binary,
-        platform=PLATFORM,
-        headers=generated_headers + pyfmi_sysml2.fmi2_headers(),
+        binaries={PLATFORM: binary},
+        sources=generated_headers + pyfmi_sysml2.fmi2_headers(),
+        fmi_version="2.0",
     )
 
 

@@ -41,7 +41,7 @@ CoSimulation interface and marks the `Generator` definition `:> FmuModel`;
    `modelDescription.xml` to `artifacts/build/GainOffset/`.
 2. `gcc -std=c11 -O2 -fPIC -shared` compiles `src/GainOffset.c` into
    `artifacts/build/GainOffset/Generator.so`.
-3. `pyfmi_sysml2.package_fmu` writes
+3. `pyssp_standard.FMU.package` writes
    `artifacts/build/GainOffset/Generator.fmu`.
 
 The SSP build then runs `models/ssp/GainOffset/build.py`, which derives the SSP

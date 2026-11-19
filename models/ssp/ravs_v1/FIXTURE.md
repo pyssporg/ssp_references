@@ -26,8 +26,9 @@ fluid-state signals; one FMU reads its boundary conditions from a packaged
 
 ## Architecture Source
 
-- `architecture/01-interfaces.sysml` — model/analysis markers, flat signal
-  ports, and the ECS_HW parameter interface.
+- `architecture/01-interfaces.sysml` — model/analysis markers, the flat signal
+  port, the `FluidState` and `SwSignals` grouped proxy ports, and the ECS_HW
+  parameter interface.
 - `architecture/02-parameters.sysml` — scenario set and experiment window.
 - `architecture/03-components.sysml` — FMU metadata and the six component
   definitions.
@@ -37,12 +38,18 @@ fluid-state signals; one FMU reads its boundary conditions from a packaged
 - No legacy SSD, SSV, or SSM is checked in.
 
 `System` is exported from SysML. The FMU variable namespace uses characters a
-SysML identifier cannot (dots and array brackets), so every signal is a flat
-port whose quoted name is the FMU variable name. Fixed arrays use SysML port
-multiplicity, for example `in port 'consumerFeed.X' : RealSignal[3];`, which
-expands to the connectors `consumerFeed.X[1]`, `consumerFeed.X[2]`, and
-`consumerFeed.X[3]`. A flat port carries one connector named exactly as the
-port usage, which keeps each variable's input/output direction independent.
+SysML identifier cannot (dots and array brackets), so ports are shaped around
+the FMU variable names. An FMU prefix whose members share one direction is a
+grouped proxy port: `in port consumerFeed : FluidState;` expands to the
+connectors `consumerFeed.p`, `consumerFeed.h`, `consumerFeed.X[1]`,
+`consumerFeed.X[2]`, and `consumerFeed.X[3]`. Fixed arrays inside a group are
+quoted members (`attribute 'X[1]' : Real;`) because the exporter does not
+expand attribute multiplicity. A prefix split by direction is grouped on one
+side only: `consumerFeed.p`/`.h`/`.X` are inputs on ECS_HW while
+`consumerFeed.m`/`.hn` are outputs, and one port usage cannot carry both, so
+the `m`/`.hn` variables stay flat quoted ports on the shared `RealSignal`
+definition. A flat port carries one connector named exactly as the port usage,
+which keeps that variable's input/output direction independent.
 
 The parameter interface declares the two effective structured targets,
 `'pipeA.L'` and `'pipeB.L'`. The legacy external SSV/SSM pair was almost

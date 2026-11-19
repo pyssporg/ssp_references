@@ -12,19 +12,14 @@ package RavsV1 {
     part AdaptionUnit : AdaptionUnit;
     part BC : BC;
 
-    connect Consumer.'consumerFeed.X' to ECS_HW.'consumerFeed.X';
-    connect Consumer.'consumerFeed.p' to ECS_HW.'consumerFeed.p';
-    connect Consumer.'consumerFeed.h' to ECS_HW.'consumerFeed.h';
-    connect Consumer.'consumerRet.p' to ECS_HW.'consumerRet.p';
-    connect Consumer.'consumerRet.h' to ECS_HW.'consumerRet.h';
-    connect Consumer.'consumerRet.X' to ECS_HW.'consumerRet.X';
+    connect Consumer.consumerFeed to ECS_HW.consumerFeed;
+    connect Consumer.consumerRet to ECS_HW.consumerRet;
     connect ECS_HW.'consumerFeed.m' to Consumer.'consumerFeed.m';
     connect ECS_HW.'consumerFeed.hn' to Consumer.'consumerFeed.hn';
     connect ECS_HW.'consumerRet.m' to Consumer.'consumerRet.m';
     connect ECS_HW.'consumerRet.hn' to Consumer.'consumerRet.hn';
     connect ECS_HW.LHexTout to AdaptionUnit.LHexTout;
-    connect AdaptionUnit.'sWsignals.Aircraft_State' to ECS_SW.'Input.Aircraft_State';
-    connect AdaptionUnit.'sWsignals.TLiquid' to ECS_SW.'Input.TLiquid';
+    connect AdaptionUnit.sWsignals to ECS_SW.Input;
     connect ECS_SW.TCoolingPack to ECS_HW.reqCoolingTemperature;
     connect Atmos.Tamb to Consumer.Tamb;
     connect Atmos.Pamb to Consumer.Pamb;

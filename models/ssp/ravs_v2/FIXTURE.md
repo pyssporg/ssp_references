@@ -34,8 +34,9 @@ exercises subsystem nesting and boundary connectors from SysML.
 
 ## Architecture Source
 
-- `architecture/01-interfaces.sysml` — flat signal ports and the two parameter
-  interfaces (`InterfaceModelParameters`, `ValveModelParameters`).
+- `architecture/01-interfaces.sysml` — the flat signal port, the `FluidState`
+  and `SwSignals` grouped proxy ports, and the two parameter interfaces
+  (`InterfaceModelParameters`, `ValveModelParameters`).
 - `architecture/02-parameters.sysml` — scenario set and experiment window.
 - `architecture/03-components.sysml` — FMU metadata, the six top-level
   components, the two `valve` members, and the nested `valve` definition.
@@ -45,11 +46,17 @@ exercises subsystem nesting and boundary connectors from SysML.
   binds.
 - No legacy SSD, SSV, or SSM is checked in.
 
-`System` is exported from SysML. FMU variable names use dots, so every signal
-is a flat port whose quoted name is the FMU variable name. The source SSD has
-no `<Dimension>` entries: the `X[1..3]` variables are three distinct scalars,
-so they are declared as fixed arrays (`'consumerFeed.X' : RealSignal[3]`) and
-expand to the same three connectors.
+`System` is exported from SysML. FMU variable names use dots, so ports are
+shaped around the FMU variable names. An FMU prefix whose members share one
+direction is a grouped proxy port: `out port consumerFeed : FluidState;`
+expands to the connectors `consumerFeed.p`, `consumerFeed.h`,
+`consumerFeed.X[1]`, `consumerFeed.X[2]`, and `consumerFeed.X[3]`. The source
+SSD has no `<Dimension>` entries, so the `X[1..3]` variables are three distinct
+scalars and appear as quoted members (`attribute 'X[1]' : Real;`) inside the
+group; attribute multiplicity is not expanded. A prefix split by direction is
+grouped on one side only, because one port usage cannot carry both directions;
+the remaining variables stay flat quoted ports on the shared `RealSignal`
+definition.
 
 Three deviations from the source SSD are deliberate:
 

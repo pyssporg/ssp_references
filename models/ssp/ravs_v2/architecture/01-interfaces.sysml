@@ -12,6 +12,19 @@ package RavsV2 {
     attribute value : Integer;
   }
 
+  port def FluidState {
+    attribute p : Real;
+    attribute h : Real;
+    attribute 'X[1]' : Real;
+    attribute 'X[2]' : Real;
+    attribute 'X[3]' : Real;
+  }
+
+  port def SwSignals {
+    attribute TLiquid : Real;
+    attribute Aircraft_State : Integer;
+  }
+
   port def InterfaceModelParameters :> ParameterInterface {
     attribute timestep : Real;
     attribute pT : Real;

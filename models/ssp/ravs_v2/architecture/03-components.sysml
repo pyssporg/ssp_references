@@ -45,8 +45,7 @@ package RavsV2 {
     attribute fmu_meta : AdaptionFmu;
     in port Aircraft_State : RealSignal;
     in port LHexTout : RealSignal;
-    out port 'sWsignals.TLiquid' : RealSignal;
-    out port 'sWsignals.Aircraft_State' : IntegerSignal;
+    out port sWsignals : SwSignals;
   }
 
   part def atmos {
@@ -59,9 +58,7 @@ package RavsV2 {
 
   part def consumer {
     attribute fmu_meta : ConsumerFmu;
-    in port 'consumerRet.p' : RealSignal;
-    in port 'consumerRet.h' : RealSignal;
-    in port 'consumerRet.X' : RealSignal[3];
+    in port consumerRet : FluidState;
     in port 'consumerFeed.m' : RealSignal;
     in port 'consumerFeed.hn' : RealSignal;
     in port Alt : RealSignal;
@@ -71,9 +68,7 @@ package RavsV2 {
     in port heatLoad : RealSignal;
     out port 'consumerRet.m' : RealSignal;
     out port 'consumerRet.hn' : RealSignal;
-    out port 'consumerFeed.p' : RealSignal;
-    out port 'consumerFeed.h' : RealSignal;
-    out port 'consumerFeed.X' : RealSignal[3];
+    out port consumerFeed : FluidState;
     out port inletTemp : RealSignal;
     out port outletTemp : RealSignal;
   }
@@ -84,24 +79,19 @@ package RavsV2 {
     in port Mach : RealSignal;
     in port Tamb : RealSignal;
     in port Pamb : RealSignal;
-    in port 'consumerFeed.p' : RealSignal;
-    in port 'consumerFeed.h' : RealSignal;
-    in port 'consumerFeed.X' : RealSignal[3];
+    in port consumerFeed : FluidState;
     in port 'consumerRet.m' : RealSignal;
     in port 'consumerRet.hn' : RealSignal;
     in port reqCoolingTemperature : RealSignal;
     out port 'consumerFeed.m' : RealSignal;
     out port 'consumerFeed.hn' : RealSignal;
-    out port 'consumerRet.p' : RealSignal;
-    out port 'consumerRet.h' : RealSignal;
-    out port 'consumerRet.X' : RealSignal[3];
+    out port consumerRet : FluidState;
     out port LHexTout : RealSignal;
   }
 
   part def ecs_sw {
     attribute fmu_meta : EcsSwFmu;
-    in port 'Input.TLiquid' : RealSignal;
-    in port 'Input.Aircraft_State' : IntegerSignal;
+    in port Input : SwSignals;
     out port TCoolingPack : RealSignal;
   }
 
@@ -115,16 +105,12 @@ package RavsV2 {
     in port valve_mflowB : RealSignal;
     in port 'pmhn.m' : RealSignal;
     in port 'pmhn.hn' : RealSignal;
-    in port 'pmh.p' : RealSignal;
-    in port 'pmh.h' : RealSignal;
-    in port 'pmh.X' : RealSignal[3];
+    in port pmh : FluidState;
     out port valve_u : RealSignal;
     out port valve_p1 : RealSignal;
     out port valve_p2 : RealSignal;
     out port valve_p3 : RealSignal;
-    out port 'pmhn.p' : RealSignal;
-    out port 'pmhn.h' : RealSignal;
-    out port 'pmhn.X' : RealSignal[3];
+    out port pmhn : FluidState;
     out port 'pmh.m' : RealSignal;
     out port 'pmh.hn' : RealSignal;
   }

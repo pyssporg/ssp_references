@@ -210,11 +210,11 @@
       </ssd:Component>
     </ssd:Elements>
     <ssd:Connections>
+      <ssd:Connection startElement="Consumer" startConnector="consumerFeed.p" endElement="ECS_HW" endConnector="consumerFeed.p" />
+      <ssd:Connection startElement="Consumer" startConnector="consumerFeed.h" endElement="ECS_HW" endConnector="consumerFeed.h" />
       <ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[1]" endElement="ECS_HW" endConnector="consumerFeed.X[1]" />
       <ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[2]" endElement="ECS_HW" endConnector="consumerFeed.X[2]" />
       <ssd:Connection startElement="Consumer" startConnector="consumerFeed.X[3]" endElement="ECS_HW" endConnector="consumerFeed.X[3]" />
-      <ssd:Connection startElement="Consumer" startConnector="consumerFeed.p" endElement="ECS_HW" endConnector="consumerFeed.p" />
-      <ssd:Connection startElement="Consumer" startConnector="consumerFeed.h" endElement="ECS_HW" endConnector="consumerFeed.h" />
       <ssd:Connection startElement="Consumer" startConnector="consumerRet.p" endElement="ECS_HW" endConnector="consumerRet.p" />
       <ssd:Connection startElement="Consumer" startConnector="consumerRet.h" endElement="ECS_HW" endConnector="consumerRet.h" />
       <ssd:Connection startElement="Consumer" startConnector="consumerRet.X[1]" endElement="ECS_HW" endConnector="consumerRet.X[1]" />
@@ -225,8 +225,8 @@
       <ssd:Connection startElement="ECS_HW" startConnector="consumerRet.m" endElement="Consumer" endConnector="consumerRet.m" />
       <ssd:Connection startElement="ECS_HW" startConnector="consumerRet.hn" endElement="Consumer" endConnector="consumerRet.hn" />
       <ssd:Connection startElement="ECS_HW" startConnector="LHexTout" endElement="AdaptionUnit" endConnector="LHexTout" />
-      <ssd:Connection startElement="AdaptionUnit" startConnector="sWsignals.Aircraft_State" endElement="ECS_SW" endConnector="Input.Aircraft_State" />
       <ssd:Connection startElement="AdaptionUnit" startConnector="sWsignals.TLiquid" endElement="ECS_SW" endConnector="Input.TLiquid" />
+      <ssd:Connection startElement="AdaptionUnit" startConnector="sWsignals.Aircraft_State" endElement="ECS_SW" endConnector="Input.Aircraft_State" />
       <ssd:Connection startElement="ECS_SW" startConnector="TCoolingPack" endElement="ECS_HW" endConnector="reqCoolingTemperature" />
       <ssd:Connection startElement="Atmos" startConnector="Tamb" endElement="Consumer" endConnector="Tamb" />
       <ssd:Connection startElement="Atmos" startConnector="Pamb" endElement="Consumer" endConnector="Pamb" />

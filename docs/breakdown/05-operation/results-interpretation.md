@@ -90,7 +90,7 @@ nonzero when any gate fails or is invalid.
 - **Deterministic signal-propagation** models have algebraically predictable
   outputs, so the gate runs at tight tolerances.
 - **Simple reference models** show small solver-dependent drift.
-- **Composite models** (dcmotor, refecs_v1, refecs_v2) show wider divergence from
+- **Composite models** (dcmotor, ravs_v1, ravs_v2) show wider divergence from
   multi-FMU coupling and cross-component signal routing.
 
 ## Related

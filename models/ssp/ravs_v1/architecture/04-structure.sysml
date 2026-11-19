@@ -1,4 +1,4 @@
-package RefecsV1 {
+package RavsV1 {
   private import ScalarValues::*;
   private import PysspCore::*;
   part def System :> SspModel {

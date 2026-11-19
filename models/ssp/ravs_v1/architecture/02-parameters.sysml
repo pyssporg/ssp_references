@@ -1,4 +1,4 @@
-package RefecsV1 {
+package RavsV1 {
   private import PysspCore::*;
 
   attribute def ScenarioSet :> ParameterSet {

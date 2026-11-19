@@ -48,8 +48,8 @@ Multi-component SSPs exercising realistic coupling and scheduling.
 | Model | Purpose | Backends | Test Level | FIXTURE.md |
 |-------|---------|----------|------------|------------|
 | dcmotor | DC motor model with electrical and mechanical subsystems | ssp4sim, OMSimulator | Regression | [link](./ssp/dcmotor/FIXTURE.md) |
-| refecs_v1 | Reference Environmental Control System (RefECS) v1; EMBRACE-derived multi-FMU coupling | ssp4sim, OMSimulator | Regression | [link](./ssp/refecs_v1/FIXTURE.md) |
-| refecs_v2 | Reference Environmental Control System (RefECS) v2; D16 aerospace hydraulic/thermal demo with a nested valve subsystem | ssp4sim, OMSimulator | Regression | [link](./ssp/refecs_v2/FIXTURE.md) |
+| ravs_v1 | Reference Aircraft Vehicle Systems (RAVS) v1; EMBRACE-derived multi-FMU coupling | ssp4sim, OMSimulator | Regression | [link](./ssp/ravs_v1/FIXTURE.md) |
+| ravs_v2 | Reference Aircraft Vehicle Systems (RAVS) v2; D16 aerospace hydraulic/thermal demo with a nested valve subsystem | ssp4sim, OMSimulator | Regression | [link](./ssp/ravs_v2/FIXTURE.md) |
 
 ### Special-Purpose SSPs
 

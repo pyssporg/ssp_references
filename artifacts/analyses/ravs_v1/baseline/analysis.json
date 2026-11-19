@@ -1,14 +1,14 @@
 {
   "analysis": "baseline",
   "composition": "System",
-  "description": "RefECS v2 hydraulic/thermal aerospace demo over the baseline window.",
+  "description": "RAVS v1 thermal-management reference model over the baseline window.",
   "experiment": {
     "name": "experiment_baseline",
     "start_time": 0.0,
-    "step_size": 0.0333,
+    "step_size": 0.01,
     "stop_time": 10.0
   },
-  "model": "refecs_v2",
+  "model": "ravs_v1",
   "scenario": {
     "set": "ScenarioSet",
     "ssm": "baseline.ssm",

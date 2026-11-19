@@ -140,7 +140,7 @@ EXPECTED: dict[str, dict] = {
         "subsystem_boundary": {"inner": [("gain.y", "y")]},
         "form": "external+mapping",
     },
-    "refecs_v1": {
+    "ravs_v1": {
         "analysis": "baseline",
         "components": ["AdaptionUnit", "Atmos", "BC", "Consumer", "ECS_HW", "ECS_SW"],
         "connections": [
@@ -178,7 +178,7 @@ EXPECTED: dict[str, dict] = {
         "subsystems": [],
         "form": "external+mapping",
     },
-    "refecs_v2": {
+    "ravs_v2": {
         "analysis": "baseline",
         "components": ["adaption", "atmos", "consumer", "ecs_hw", "ecs_sw", "fuel"],
         "connections": [

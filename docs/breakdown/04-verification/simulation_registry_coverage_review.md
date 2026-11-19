@@ -21,7 +21,7 @@ pb_exempt: true
 |---|-------|---------|-------------|----------|-------|-----------------|
 | 1 | BouncingBall | ✅ | ✅ | ssp4sim, OMSimulator | baseline | ✅ |
 | 2 | Dahlquist | ✅ | ✅ | OMSimulator, FMPy | baseline | ✅ |
-| 3 | refecs_v1 | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ |
+| 3 | ravs_v1 | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ |
 | 4 | Resource | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ |
 | 5 | signal_delay_detector | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ |
 | 6 | signal_fanout_gain | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ |
@@ -78,9 +78,9 @@ pb_exempt: true
 - **Backend rationale:** Three backends validate coupled-execution behavior across all engines. Composite SSPs with multiple interacting FMUs are the most common failure surface and benefit from broad coverage. This entry was missing from the registry and has been added.
 - **Registry verification:** ❌ Missing before review → ✅ Added during IMP-CAND-G.
 
-**13. refecs_v1**
+**13. ravs_v1**
 - **Test level:** Regression
-- **Backend rationale:** Three backends for the same reason as dcmotor. RefECS v1 is a larger, resource-heavy orchestration case. OMSimulator requires special flags (`--ignoreInitialUnknowns=true`, `--wallTime=true`, etc.) noted in the FIXTURE.md.
+- **Backend rationale:** Three backends for the same reason as dcmotor. RAVS v1 is a larger, resource-heavy orchestration case. OMSimulator requires special flags (`--ignoreInitialUnknowns=true`, `--wallTime=true`, etc.) noted in the FIXTURE.md.
 - **Registry verification:** Present with `baseline` case and backends `ssp4sim`, `omsimulator`, `fmpy`.
 
 ### Special-Purpose SSPs
@@ -113,7 +113,7 @@ This variation is justified per the per-model rationale above and should be pres
 **Action:** No change needed; rationale documented in this review.
 
 ### Finding 3: FMPy Not Documented in README
-The models/README.md Backend Key table and model backend columns did not list FMPy as a supported backend, even though it was already used in the registry (e.g., refecs_v1, signal-propagation fixtures). FMPy has been added to the Backend Key and all applicable model table rows.
+The models/README.md Backend Key table and model backend columns did not list FMPy as a supported backend, even though it was already used in the registry (e.g., ravs_v1, signal-propagation fixtures). FMPy has been added to the Backend Key and all applicable model table rows.
 
 **Action:** Updated models/README.md with FMPy in Backend Key and backend columns.
 

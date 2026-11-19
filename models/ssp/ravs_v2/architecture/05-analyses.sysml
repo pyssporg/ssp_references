@@ -1,8 +1,8 @@
-package RefecsV2 {
+package RavsV2 {
   private import PysspCore::*;
 
   part def baseline :> Analysis {
-    doc /* RefECS v2 hydraulic/thermal aerospace demo over the baseline window. */
+    doc /* RAVS v2 hydraulic/thermal aerospace demo over the baseline window. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

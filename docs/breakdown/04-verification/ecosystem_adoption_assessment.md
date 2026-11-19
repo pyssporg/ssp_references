@@ -49,7 +49,7 @@ the remaining OMSimulator run is the parameter-mapping parsing gap in §4.
 | --- | --- |
 | BouncingBall, Dahlquist, Resource, Stair, VanDerPol | All registered backends run |
 | Deterministic signal fixtures (`signal_*`) | All registered backends run, except the known OMSimulator/ssp4sim gaps in §4 |
-| dcmotor, refecs_v1 (RefECS v1) | Both registered backends run |
+| dcmotor, ravs_v1 | Both registered backends run |
 | `pyfmu_csv_source_sink`, `scenario` | ssp4sim runs; these cases are registered for ssp4sim only |
 | `signal_parameter_inline_with_mapping` | ssp4sim runs; OMSimulator fails on parameter-mapping parsing |
 
@@ -69,7 +69,7 @@ results (raw engine output, default gate `atol=1e-3`, `rtol=1e-2`):
 | signal_algebraic_loop, signal_fanout_gain, signal_sine_gain_add, signal_step_add, signal_step_gain, signal_step_product | pass | timing skew removed by shift tolerance |
 | BouncingBall | fail | OMSimulator misses bounce events (`h`/`v` diverge) |
 | VanDerPol fast | pass | all registered backends agree within the gate tolerance |
-| dcmotor, refecs_v1 | fail | composite engines diverge by 32–287 |
+| dcmotor, ravs_v1 | fail | composite engines diverge by 32–287 |
 | signal_delay_detector, signal_nested_algebraic_loop | fail | initialization/iteration difference up to 1.0 |
 
 These failures are evidence, not test noise. They are the first concrete VV

@@ -1,11 +1,11 @@
-# refecs_v1
+# ravs_v1
 
-Reference Environmental Control System (RefECS), version 1.
+Reference Aircraft Vehicle Systems (RAVS), version 1.
 
 ## Version
 
 - v1 is the legacy EMBRACE-derived composite (formerly `models/ssp/embrace`).
-- v2 is the D16 aerospace demo sibling fixture, `refecs_v2`.
+- v2 is the D16 aerospace demo sibling fixture, `ravs_v2`.
 - Both are separate models in the registry, and both are exercised by tests.
 - Historical run artifacts produced before the rename remain under
   `artifacts/{simulation,comparisons,plots}/embrace/`.
@@ -13,13 +13,13 @@ Reference Environmental Control System (RefECS), version 1.
 ## Origin
 
 Authored SSP fixture built around local component FMUs and a boundary-conditions
-CSV source. The FMUs live under `models/ssp/refecs_v1/resources/`; they were
+CSV source. The FMUs live under `models/ssp/ravs_v1/resources/`; they were
 previously packaged through a checked-in `ssp/` body, which the SysML
 architecture now replaces.
 
 ## Overview
 
-`refecs_v1` is a larger composite SSP fixture representing a realistic,
+`ravs_v1` is a larger composite SSP fixture representing a realistic,
 resource-heavy orchestration case. Six co-simulation FMUs exchange scalar and
 fluid-state signals; one FMU reads its boundary conditions from a packaged
 `data/CONOPS.csv`.
@@ -58,7 +58,7 @@ physical-signal trajectories exactly (the `$wallTime` columns are run-dependent)
 - Experiment: `startTime=0.0`, `stopTime=10.0`, `stepSize=0.01`.
 - Tolerance is not part of the experiment; the FMUs declare it in their
   `DefaultExperiment`.
-- Artifacts: `artifacts/analyses/refecs_v1/baseline/`
+- Artifacts: `artifacts/analyses/ravs_v1/baseline/`
 - Analyses are never exported as SSPs.
 
 ## Structure
@@ -101,10 +101,10 @@ physical-signal trajectories exactly (the `$wallTime` columns are run-dependent)
 
 ## Packaging Notes
 
-- Exported model: `artifacts/models/refecs_v1/baseline/model/`
-- Analysis artifacts: `artifacts/analyses/refecs_v1/baseline/`
-- FMU sources: `models/ssp/refecs_v1/resources/{0001_ECS_HW,0002_ECS_SW,0003_Consumer,0004_Atmos,0005_AdaptionUnit,BC}`
-- Build: `python3 scripts/build_models.py run refecs_v1`
+- Exported model: `artifacts/models/ravs_v1/baseline/model/`
+- Analysis artifacts: `artifacts/analyses/ravs_v1/baseline/`
+- FMU sources: `models/ssp/ravs_v1/resources/{0001_ECS_HW,0002_ECS_SW,0003_Consumer,0004_Atmos,0005_AdaptionUnit,BC}`
+- Build: `python3 scripts/build_models.py run ravs_v1`
 - The legacy `signalFilter.xml` and the OMSimulator `SimulationInformation`
   annotation are not carried into the SysML export. OMSimulator runs with the
   repository-wide options in `scripts/workflow/simulate.py`; the result

@@ -7,6 +7,7 @@ stream.
 
 | Date | ID | Decision | Layers | Status | Record |
 |---|---|---|---|---|---|
+| 2026-11-19 | DEC-002 | Reference Aircraft Vehicle Systems (RAVS) — `refecs` Becomes `ravs` | architecture, verification | accepted | `DEC-002` |
 | 2026-11-19 | DEC-001 | Versioned RefECS Family — `embrace` Becomes `refecs_v1` | architecture, verification | accepted | `DEC-001` |
 | 2026-11-05 | DD-021 | FMU Marker Replaces the Composition Root; the System Includes the FMU Architecture | architecture, implementation | accepted | `DD-021` |
 | 2026-11-05 | DD-020 | SysML-Authored FMU Owns Its Architecture; Build Runs FMU Before SSP | implementation | superseded | `DD-020` |

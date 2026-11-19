@@ -26,7 +26,7 @@ A model-owned set fixes the scenario for all analyses.
 - **experiment-only descriptors exist**: `generate analysis` writes a descriptor with no `scenario` when the analysis applies zero sets.
 - **conflict rule**: an analysis set plus a model-owned set raises an error.
 - **fixed-body precedent**: `dcmotor` uses a fixed body plus an experiment-only analysis.
-- **migrated fixed-body precedent**: `refecs_v1` (RefECS v1) was a fixed body with an external scenario; it now authors structure and scenario in SysML, with the mapped parameter values in an analysis-owned set.
+- **migrated fixed-body precedent**: `ravs_v1` was a fixed body with an external scenario; it now authors structure and scenario in SysML, with the mapped parameter values in an analysis-owned set.
 - **variable-scenario precedent**: `signal_*` fixtures apply the scenario in the analysis.
 
 ## Current Pain Or Risk

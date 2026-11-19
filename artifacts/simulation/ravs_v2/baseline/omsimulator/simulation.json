@@ -6,10 +6,10 @@
   "request": {
     "backend": "omsimulator",
     "case": "baseline",
-    "model": "refecs_v2",
+    "model": "ravs_v2",
     "setup_manifest": "../setup.json"
   },
   "result": "result.csv",
-  "runtime_s": 41.808259587036446,
+  "runtime_s": 41.56756256707013,
   "status": "completed"
 }

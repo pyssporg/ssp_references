@@ -1,43 +1,43 @@
-package RefecsV2 {
+package RavsV2 {
   private import PysspCore::*;
 
   attribute def AdaptionFmu :> FmuMetadata {
-    attribute source = "models/ssp/refecs_v2/resources/adaption";
+    attribute source = "models/ssp/ravs_v2/resources/adaption";
     attribute implementation = "CoSimulation";
   }
 
   attribute def AtmosFmu :> FmuMetadata {
-    attribute source = "models/ssp/refecs_v2/resources/atmos";
+    attribute source = "models/ssp/ravs_v2/resources/atmos";
     attribute implementation = "CoSimulation";
   }
 
   attribute def ConsumerFmu :> FmuMetadata {
-    attribute source = "models/ssp/refecs_v2/resources/consumer";
+    attribute source = "models/ssp/ravs_v2/resources/consumer";
     attribute implementation = "CoSimulation";
   }
 
   attribute def EcsHwFmu :> FmuMetadata {
-    attribute source = "models/ssp/refecs_v2/resources/ecs_hw";
+    attribute source = "models/ssp/ravs_v2/resources/ecs_hw";
     attribute implementation = "CoSimulation";
   }
 
   attribute def EcsSwFmu :> FmuMetadata {
-    attribute source = "models/ssp/refecs_v2/resources/ecs_sw";
+    attribute source = "models/ssp/ravs_v2/resources/ecs_sw";
     attribute implementation = "CoSimulation";
   }
 
   attribute def FuelFmu :> FmuMetadata {
-    attribute source = "models/ssp/refecs_v2/resources/fuel";
+    attribute source = "models/ssp/ravs_v2/resources/fuel";
     attribute implementation = "CoSimulation";
   }
 
   attribute def InterfaceModelFmu :> FmuMetadata {
-    attribute source = "models/ssp/refecs_v2/resources/interface_model";
+    attribute source = "models/ssp/ravs_v2/resources/interface_model";
     attribute implementation = "CoSimulation";
   }
 
   attribute def ValveModelFmu :> FmuMetadata {
-    attribute source = "models/ssp/refecs_v2/resources/valve_model";
+    attribute source = "models/ssp/ravs_v2/resources/valve_model";
     attribute implementation = "CoSimulation";
   }
 

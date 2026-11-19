@@ -78,6 +78,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   An FMU declares its component with the `FmuModel` marker, its definition name is the exported identity, and the system build includes the FMU architecture.
 - **DEC-001** — Versioned RefECS Family — `embrace` Becomes `refecs_v1` · accepted · 2026-11-19 · `DEC-001`
   The SSP fixture `models/ssp/embrace` is `models/ssp/refecs_v1`, the first version in a family where each version registers as a separate model and test.
+- **DEC-002** — Reference Aircraft Vehicle Systems (RAVS) — `refecs` Becomes `ravs` · accepted · 2026-11-19 · `DEC-002`
+  The fixture family `refecs_v1`/`refecs_v2` becomes `ravs_v1`/`ravs_v2`, "Reference Aircraft Vehicle Systems", because the modelled system is no longer ECS-specific.
 
 ### Implementation
 

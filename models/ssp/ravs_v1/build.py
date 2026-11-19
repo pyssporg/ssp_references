@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the SysML-authored refecs_v1 (RefECS v1) model and apply its baseline scenario."""
+"""Build the SysML-authored ravs_v1 (RAVS v1) model and apply its baseline scenario."""
 
 from __future__ import annotations
 

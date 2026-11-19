@@ -59,7 +59,7 @@
       "build": "model"
     },
     {
-      "name": "refecs_v1",
+      "name": "ravs_v1",
       "compare_signals": [
         "AdaptionUnit.sWsignals.Aircraft_State",
         "AdaptionUnit.sWsignals.TLiquid",
@@ -81,7 +81,7 @@
       "build": "model"
     },
     {
-      "name": "refecs_v2",
+      "name": "ravs_v2",
       "compare_signals": [
         "adaption.sWsignals.Aircraft_State",
         "adaption.sWsignals.TLiquid",

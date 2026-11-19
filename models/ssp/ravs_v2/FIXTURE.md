@@ -1,11 +1,11 @@
-# refecs_v2
+# ravs_v2
 
-Reference Environmental Control System (RefECS), version 2: the D16 aerospace
+Reference Aircraft Vehicle Systems (RAVS), version 2: the D16 aerospace
 hydraulic/thermal demonstrator.
 
 ## Version
 
-- v1 is the legacy EMBRACE-derived composite (`models/ssp/refecs_v1`).
+- v1 is the legacy EMBRACE-derived composite (`models/ssp/ravs_v1`).
 - v2 is the D16 aerospace demo SSP contributed as
   `opsc_d16_aerospace_demo.ssp`.
 - Both are separate models in the registry, and both are exercised by tests.
@@ -27,7 +27,7 @@ live in the sibling `openscaling` checkout under
 
 ## Overview
 
-`refecs_v2` is a hydraulic/thermal/atmospheric composite: eight FMI 2.0
+`ravs_v2` is a hydraulic/thermal/atmospheric composite: eight FMI 2.0
 CoSimulation FMUs over 54 connections, one of them a nested `valve` subsystem
 with its own boundary ports. It is the first fixture in the repository that
 exercises subsystem nesting and boundary connectors from SysML.
@@ -78,7 +78,7 @@ defaults here as well.
 - The source SSD has no `<DefaultExperiment>`. The window is derived: 10 s is
   the common stop time of the D16 FMUs, and 0.0333 s is the `ecs_sw` step. The
   Modelica-derived FMUs default to a 1 s window and would truncate the run.
-- Artifacts: `artifacts/analyses/refecs_v2/baseline/`
+- Artifacts: `artifacts/analyses/ravs_v2/baseline/`
 - Analyses are never exported as SSPs.
 
 ## Structure
@@ -130,10 +130,10 @@ defaults here as well.
 
 ## Packaging Notes
 
-- Exported model: `artifacts/models/refecs_v2/baseline/model/`
-- Analysis artifacts: `artifacts/analyses/refecs_v2/baseline/`
-- FMU sources: `models/ssp/refecs_v2/resources/{adaption,atmos,consumer,ecs_hw,ecs_sw,fuel,interface_model,valve_model}`
-- Build: `python3 scripts/build_models.py run refecs_v2`
+- Exported model: `artifacts/models/ravs_v2/baseline/model/`
+- Analysis artifacts: `artifacts/analyses/ravs_v2/baseline/`
+- FMU sources: `models/ssp/ravs_v2/resources/{adaption,atmos,consumer,ecs_hw,ecs_sw,fuel,interface_model,valve_model}`
+- Build: `python3 scripts/build_models.py run ravs_v2`
 - The source archive is not checked in; `resources/` holds the unpacked FMU
   bodies that the archive carried.
 

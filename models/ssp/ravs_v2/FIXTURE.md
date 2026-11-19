@@ -34,9 +34,10 @@ exercises subsystem nesting and boundary connectors from SysML.
 
 ## Architecture Source
 
-- `architecture/01-interfaces.sysml` — the flat signal port, the `FluidState`
-  and `SwSignals` grouped proxy ports, and the two parameter interfaces
-  (`InterfaceModelParameters`, `ValveModelParameters`).
+- `architecture/01-interfaces.sysml` — the flat scalar signal ports, the
+  `FluidState` fluid port (plain and conjugated), the `SwSignals` grouped
+  proxy port, and the two parameter interfaces (`InterfaceModelParameters`,
+  `ValveModelParameters`).
 - `architecture/02-parameters.sysml` — scenario set and experiment window.
 - `architecture/03-components.sysml` — FMU metadata, the six top-level
   components, the two `valve` members, and the nested `valve` definition.
@@ -47,16 +48,20 @@ exercises subsystem nesting and boundary connectors from SysML.
 - No legacy SSD, SSV, or SSM is checked in.
 
 `System` is exported from SysML. FMU variable names use dots, so ports are
-shaped around the FMU variable names. An FMU prefix whose members share one
-direction is a grouped proxy port: `out port consumerFeed : FluidState;`
-expands to the connectors `consumerFeed.p`, `consumerFeed.h`,
-`consumerFeed.X[1]`, `consumerFeed.X[2]`, and `consumerFeed.X[3]`. The source
-SSD has no `<Dimension>` entries, so the `X[1..3]` variables are three distinct
-scalars and appear as quoted members (`attribute 'X[1]' : Real;`) inside the
-group; attribute multiplicity is not expanded. A prefix split by direction is
-grouped on one side only, because one port usage cannot carry both directions;
-the remaining variables stay flat quoted ports on the shared `RealSignal`
-definition.
+shaped around the FMU variable names. A fluid port carries both directions in
+one usage through member-level `in`/`out`: `FluidState` marks `p`, `h`, and
+`X` as outputs and `m` and `hn` as inputs. The mirrored side types the same
+port with the conjugated definition, `~FluidState`, which flips `p`, `h`, and
+`X` to inputs and `m` and `hn` to outputs; for example `fuel.pmhn` is
+`FluidState` (`pmhn.p` output, `pmhn.m` input) while `fuel.pmh` is
+`~FluidState`. Each collapsed port keeps one `connect`, and the SSD expands
+every member with its own direction. The
+source SSD has no `<Dimension>` entries, so the `X[1..3]` variables are three
+distinct scalars; the dialect carries them as one fixed attribute array
+(`attribute X : Real[3];`), expanded to `X[1]`–`X[3]` at export. A
+`RealSignal`/`IntegerSignal` port has one member named `value`, so it is a
+scalar port: the exporter names its connector for the port itself (`Alt`,
+`Tamb`) and no flat export option is needed.
 
 Three deviations from the source SSD are deliberate:
 

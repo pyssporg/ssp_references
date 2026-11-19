@@ -38,13 +38,9 @@ package RavsV1 {
     in port Mach : RealSignal;
     in port Tamb : RealSignal;
     in port Pamb : RealSignal;
-    in port consumerFeed : FluidState;
-    in port consumerRet : FluidState;
+    in port consumerFeed : ~FluidState;
+    in port consumerRet : ~FluidState;
     in port reqCoolingTemperature : RealSignal;
-    out port 'consumerFeed.m' : RealSignal;
-    out port 'consumerFeed.hn' : RealSignal;
-    out port 'consumerRet.m' : RealSignal;
-    out port 'consumerRet.hn' : RealSignal;
     out port LHexTout : RealSignal;
   }
 
@@ -56,17 +52,13 @@ package RavsV1 {
 
   part def Consumer {
     attribute fmu_meta : ConsumerFmu;
-    in port 'consumerRet.m' : RealSignal;
-    in port 'consumerRet.hn' : RealSignal;
-    in port 'consumerFeed.m' : RealSignal;
-    in port 'consumerFeed.hn' : RealSignal;
+    out port consumerRet : FluidState;
+    out port consumerFeed : FluidState;
     in port Alt : RealSignal;
     in port Mach : RealSignal;
     in port Tamb : RealSignal;
     in port Pamb : RealSignal;
     in port heatLoad : RealSignal;
-    out port consumerRet : FluidState;
-    out port consumerFeed : FluidState;
     out port inletTemp : RealSignal;
     out port outletTemp : RealSignal;
   }

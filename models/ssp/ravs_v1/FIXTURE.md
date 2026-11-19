@@ -26,9 +26,9 @@ fluid-state signals; one FMU reads its boundary conditions from a packaged
 
 ## Architecture Source
 
-- `architecture/01-interfaces.sysml` — model/analysis markers, the flat signal
-  port, the `FluidState` and `SwSignals` grouped proxy ports, and the ECS_HW
-  parameter interface.
+- `architecture/01-interfaces.sysml` — model/analysis markers, the flat scalar
+  signal ports, the `FluidState` fluid port (plain and conjugated), the
+  `SwSignals` grouped proxy port, and the ECS_HW parameter interface.
 - `architecture/02-parameters.sysml` — scenario set and experiment window.
 - `architecture/03-components.sysml` — FMU metadata and the six component
   definitions.
@@ -39,17 +39,19 @@ fluid-state signals; one FMU reads its boundary conditions from a packaged
 
 `System` is exported from SysML. The FMU variable namespace uses characters a
 SysML identifier cannot (dots and array brackets), so ports are shaped around
-the FMU variable names. An FMU prefix whose members share one direction is a
-grouped proxy port: `in port consumerFeed : FluidState;` expands to the
-connectors `consumerFeed.p`, `consumerFeed.h`, `consumerFeed.X[1]`,
-`consumerFeed.X[2]`, and `consumerFeed.X[3]`. Fixed arrays inside a group are
-quoted members (`attribute 'X[1]' : Real;`) because the exporter does not
-expand attribute multiplicity. A prefix split by direction is grouped on one
-side only: `consumerFeed.p`/`.h`/`.X` are inputs on ECS_HW while
-`consumerFeed.m`/`.hn` are outputs, and one port usage cannot carry both, so
-the `m`/`.hn` variables stay flat quoted ports on the shared `RealSignal`
-definition. A flat port carries one connector named exactly as the port usage,
-which keeps that variable's input/output direction independent.
+the FMU variable names. A fluid port carries both directions in one usage
+through member-level `in`/`out`: `FluidState` marks `p`, `h`, and `X` as
+outputs and `m` and `hn` as inputs. The mirrored side types the same port with
+the conjugated definition, `~FluidState`, which flips `p`, `h`, and `X` to
+inputs and `m` and `hn` to outputs; for example `ECS_HW.consumerFeed` is
+`~FluidState` (`consumerFeed.p` input, `consumerFeed.m` output). Each collapsed
+port keeps one `connect`, and the SSD expands every member with its own
+direction. The three
+`X` components are one fixed attribute array (`attribute X : Real[3];`),
+expanded to `X[1]`–`X[3]` at export. A `RealSignal`/`IntegerSignal` port has
+one member named `value`, so it is a scalar port: the exporter names its
+connector for the port itself (`Alt`, `Tamb`) and no flat export option is
+needed.
 
 The parameter interface declares the two effective structured targets,
 `'pipeA.L'` and `'pipeB.L'`. The legacy external SSV/SSM pair was almost

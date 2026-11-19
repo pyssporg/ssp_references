@@ -264,22 +264,35 @@ def _subsystems(system) -> list[str]:
     return sorted(e.get("name") for e in system.findall(f"{SSD}Elements/{SSD}System"))
 
 
-def _wiring(system) -> list[tuple[str, str, str, str]]:
-    """Connections between two elements; boundary ends are excluded."""
+def _wiring(system) -> list[tuple[tuple[str, str], tuple[str, str]]]:
+    """Connections between two elements; boundary ends are excluded.
+
+    An SSP connection is undirected, so the two ends are normalized into a
+    stable order and the fixture expectations are normalized the same way.
+    """
     result = []
     for connection in system.findall(f"{SSD}Connections/{SSD}Connection"):
         start_element = connection.get("startElement")
         end_element = connection.get("endElement")
         if start_element and end_element:
             result.append(
-                (
-                    start_element,
-                    connection.get("startConnector"),
-                    end_element,
-                    connection.get("endConnector"),
+                tuple(
+                    sorted(
+                        (
+                            (start_element, connection.get("startConnector")),
+                            (end_element, connection.get("endConnector")),
+                        )
+                    )
                 )
             )
     return sorted(result)
+
+
+def _expected_wiring(connections) -> list[tuple[tuple[str, str], tuple[str, str]]]:
+    """Normalize four-element expectations like :func:`_wiring`."""
+    return sorted(
+        tuple(sorted((connection[:2], connection[2:]))) for connection in connections
+    )
 
 
 def _endpoint(element: str | None, connector: str) -> str:
@@ -326,7 +339,7 @@ def test_sysml_wiring(tmp_path: Path, model: str) -> None:
     system = _root(output)
     assert _components(system) == expected["components"]
     assert _subsystems(system) == expected["subsystems"]
-    assert _wiring(system) == sorted(expected["connections"])
+    assert _wiring(system) == _expected_wiring(expected["connections"])
     assert _boundary_wiring(system) == sorted(expected.get("boundary", []))
     for subsystem_name, connections in expected.get("subsystem_boundary", {}).items():
         subsystem = system.find(f"{SSD}Elements/{SSD}System[@name='{subsystem_name}']")

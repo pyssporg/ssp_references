@@ -3,21 +3,19 @@ package RavsV2 {
   private import PysspCore::*;
 
   port def RealSignal {
-    attribute pyssp_flat_connector : Boolean = true;
     attribute value : Real;
   }
 
   port def IntegerSignal {
-    attribute pyssp_flat_connector : Boolean = true;
     attribute value : Integer;
   }
 
   port def FluidState {
-    attribute p : Real;
-    attribute h : Real;
-    attribute 'X[1]' : Real;
-    attribute 'X[2]' : Real;
-    attribute 'X[3]' : Real;
+    out attribute p : Real;
+    out attribute h : Real;
+    out attribute X : Real[3];
+    in attribute m : Real;
+    in attribute hn : Real;
   }
 
   port def SwSignals {

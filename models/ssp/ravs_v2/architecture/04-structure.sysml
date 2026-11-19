@@ -1,10 +1,13 @@
 package RavsV2 {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
+  attribute def RavsV2DefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 10.0;
+  }
+
   part def System :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 10.0;
+    attribute defaults : RavsV2DefaultExperiment;
 
     part adaption : adaption;
     part atmos : atmos;
@@ -30,13 +33,7 @@ package RavsV2 {
     connect adaption.sWsignals to ecs_sw.Input;
     connect ecs_sw.TCoolingPack to ecs_hw.reqCoolingTemperature;
     connect ecs_hw.consumerFeed to consumer.consumerFeed;
-    connect ecs_hw.'consumerFeed.hn' to consumer.'consumerFeed.hn';
-    connect ecs_hw.'consumerFeed.m' to consumer.'consumerFeed.m';
     connect consumer.consumerRet to fuel.pmhn;
-    connect consumer.'consumerRet.hn' to fuel.'pmhn.hn';
-    connect consumer.'consumerRet.m' to fuel.'pmhn.m';
     connect fuel.pmh to ecs_hw.consumerRet;
-    connect fuel.'pmh.hn' to ecs_hw.'consumerRet.hn';
-    connect fuel.'pmh.m' to ecs_hw.'consumerRet.m';
   }
 }

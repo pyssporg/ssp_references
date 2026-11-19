@@ -56,27 +56,6 @@
           <ssd:Connector name="consumerRet.X[3]" kind="input">
             <ssc:Real />
           </ssd:Connector>
-          <ssd:Connector name="consumerFeed.m" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="consumerFeed.hn" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="Alt" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="Mach" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="Tamb" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="Pamb" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="heatLoad" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
           <ssd:Connector name="consumerRet.m" kind="output">
             <ssc:Real />
           </ssd:Connector>
@@ -96,6 +75,27 @@
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="consumerFeed.X[3]" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="consumerFeed.m" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="consumerFeed.hn" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="Alt" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="Mach" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="Tamb" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="Pamb" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="heatLoad" kind="input">
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="inletTemp" kind="output">
@@ -135,19 +135,13 @@
           <ssd:Connector name="consumerFeed.X[3]" kind="input">
             <ssc:Real />
           </ssd:Connector>
-          <ssd:Connector name="consumerRet.m" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="consumerRet.hn" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="reqCoolingTemperature" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
           <ssd:Connector name="consumerFeed.m" kind="output">
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="consumerFeed.hn" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="reqCoolingTemperature" kind="input">
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="consumerRet.p" kind="output">
@@ -163,6 +157,12 @@
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="consumerRet.X[3]" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="consumerRet.m" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="consumerRet.hn" kind="input">
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="LHexTout" kind="output">
@@ -203,12 +203,6 @@
           <ssd:Connector name="valve_mflowB" kind="input">
             <ssc:Real />
           </ssd:Connector>
-          <ssd:Connector name="pmhn.m" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
-          <ssd:Connector name="pmhn.hn" kind="input">
-            <ssc:Real />
-          </ssd:Connector>
           <ssd:Connector name="pmh.p" kind="input">
             <ssc:Real />
           </ssd:Connector>
@@ -222,6 +216,12 @@
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="pmh.X[3]" kind="input">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="pmh.m" kind="output">
+            <ssc:Real />
+          </ssd:Connector>
+          <ssd:Connector name="pmh.hn" kind="output">
             <ssc:Real />
           </ssd:Connector>
           <ssd:Connector name="valve_u" kind="output">
@@ -251,10 +251,10 @@
           <ssd:Connector name="pmhn.X[3]" kind="output">
             <ssc:Real />
           </ssd:Connector>
-          <ssd:Connector name="pmh.m" kind="output">
+          <ssd:Connector name="pmhn.m" kind="input">
             <ssc:Real />
           </ssd:Connector>
-          <ssd:Connector name="pmh.hn" kind="output">
+          <ssd:Connector name="pmhn.hn" kind="input">
             <ssc:Real />
           </ssd:Connector>
         </ssd:Connectors>
@@ -462,22 +462,22 @@
       <ssd:Connection startElement="ecs_hw" startConnector="consumerFeed.X[1]" endElement="consumer" endConnector="consumerFeed.X[1]" />
       <ssd:Connection startElement="ecs_hw" startConnector="consumerFeed.X[2]" endElement="consumer" endConnector="consumerFeed.X[2]" />
       <ssd:Connection startElement="ecs_hw" startConnector="consumerFeed.X[3]" endElement="consumer" endConnector="consumerFeed.X[3]" />
-      <ssd:Connection startElement="ecs_hw" startConnector="consumerFeed.hn" endElement="consumer" endConnector="consumerFeed.hn" />
       <ssd:Connection startElement="ecs_hw" startConnector="consumerFeed.m" endElement="consumer" endConnector="consumerFeed.m" />
+      <ssd:Connection startElement="ecs_hw" startConnector="consumerFeed.hn" endElement="consumer" endConnector="consumerFeed.hn" />
       <ssd:Connection startElement="consumer" startConnector="consumerRet.p" endElement="fuel" endConnector="pmhn.p" />
       <ssd:Connection startElement="consumer" startConnector="consumerRet.h" endElement="fuel" endConnector="pmhn.h" />
       <ssd:Connection startElement="consumer" startConnector="consumerRet.X[1]" endElement="fuel" endConnector="pmhn.X[1]" />
       <ssd:Connection startElement="consumer" startConnector="consumerRet.X[2]" endElement="fuel" endConnector="pmhn.X[2]" />
       <ssd:Connection startElement="consumer" startConnector="consumerRet.X[3]" endElement="fuel" endConnector="pmhn.X[3]" />
-      <ssd:Connection startElement="consumer" startConnector="consumerRet.hn" endElement="fuel" endConnector="pmhn.hn" />
       <ssd:Connection startElement="consumer" startConnector="consumerRet.m" endElement="fuel" endConnector="pmhn.m" />
+      <ssd:Connection startElement="consumer" startConnector="consumerRet.hn" endElement="fuel" endConnector="pmhn.hn" />
       <ssd:Connection startElement="fuel" startConnector="pmh.p" endElement="ecs_hw" endConnector="consumerRet.p" />
       <ssd:Connection startElement="fuel" startConnector="pmh.h" endElement="ecs_hw" endConnector="consumerRet.h" />
       <ssd:Connection startElement="fuel" startConnector="pmh.X[1]" endElement="ecs_hw" endConnector="consumerRet.X[1]" />
       <ssd:Connection startElement="fuel" startConnector="pmh.X[2]" endElement="ecs_hw" endConnector="consumerRet.X[2]" />
       <ssd:Connection startElement="fuel" startConnector="pmh.X[3]" endElement="ecs_hw" endConnector="consumerRet.X[3]" />
-      <ssd:Connection startElement="fuel" startConnector="pmh.hn" endElement="ecs_hw" endConnector="consumerRet.hn" />
       <ssd:Connection startElement="fuel" startConnector="pmh.m" endElement="ecs_hw" endConnector="consumerRet.m" />
+      <ssd:Connection startElement="fuel" startConnector="pmh.hn" endElement="ecs_hw" endConnector="consumerRet.hn" />
     </ssd:Connections>
   </ssd:System>
   <ssd:DefaultExperiment startTime="0.0" stopTime="10.0" />

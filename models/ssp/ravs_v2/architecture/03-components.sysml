@@ -58,17 +58,13 @@ package RavsV2 {
 
   part def consumer {
     attribute fmu_meta : ConsumerFmu;
-    in port consumerRet : FluidState;
-    in port 'consumerFeed.m' : RealSignal;
-    in port 'consumerFeed.hn' : RealSignal;
+    in port consumerRet : ~FluidState;
+    out port consumerFeed : FluidState;
     in port Alt : RealSignal;
     in port Mach : RealSignal;
     in port Tamb : RealSignal;
     in port Pamb : RealSignal;
     in port heatLoad : RealSignal;
-    out port 'consumerRet.m' : RealSignal;
-    out port 'consumerRet.hn' : RealSignal;
-    out port consumerFeed : FluidState;
     out port inletTemp : RealSignal;
     out port outletTemp : RealSignal;
   }
@@ -79,12 +75,8 @@ package RavsV2 {
     in port Mach : RealSignal;
     in port Tamb : RealSignal;
     in port Pamb : RealSignal;
-    in port consumerFeed : FluidState;
-    in port 'consumerRet.m' : RealSignal;
-    in port 'consumerRet.hn' : RealSignal;
+    in port consumerFeed : ~FluidState;
     in port reqCoolingTemperature : RealSignal;
-    out port 'consumerFeed.m' : RealSignal;
-    out port 'consumerFeed.hn' : RealSignal;
     out port consumerRet : FluidState;
     out port LHexTout : RealSignal;
   }
@@ -103,16 +95,12 @@ package RavsV2 {
     in port Mach : RealSignal;
     in port valve_mflowA : RealSignal;
     in port valve_mflowB : RealSignal;
-    in port 'pmhn.m' : RealSignal;
-    in port 'pmhn.hn' : RealSignal;
-    in port pmh : FluidState;
+    in port pmh : ~FluidState;
     out port valve_u : RealSignal;
     out port valve_p1 : RealSignal;
     out port valve_p2 : RealSignal;
     out port valve_p3 : RealSignal;
     out port pmhn : FluidState;
-    out port 'pmh.m' : RealSignal;
-    out port 'pmh.hn' : RealSignal;
   }
 
   part def valve_model {

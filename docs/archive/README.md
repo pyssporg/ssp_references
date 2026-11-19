@@ -1,4 +1,4 @@
-<!-- GENERATED FILE — do not edit. Regenerate with pb-registers. -->
+<!-- GENERATED FILE — do not edit. Regenerate with `pb registers`. -->
 
 # Decision Stream
 
@@ -76,6 +76,8 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   The dialect markers and metadata schemas are declared once in pycps_sysml2's packaged core; a model loads it as one include root beside its own architecture roots.
 - **DD-021** — FMU Marker Replaces the Composition Root; the System Includes the FMU Architecture · accepted · 2026-11-05 · `DD-021`
   An FMU declares its component with the `FmuModel` marker, its definition name is the exported identity, and the system build includes the FMU architecture.
+- **DEC-001** — Versioned RefECS Family — `embrace` Becomes `refecs_v1` · accepted · 2026-11-19 · `DEC-001`
+  The SSP fixture `models/ssp/embrace` is `models/ssp/refecs_v1`, the first version in a family where each version registers as a separate model and test.
 
 ### Implementation
 

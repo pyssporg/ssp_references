@@ -1,7 +1,7 @@
-package Embrace {
+package RefecsV1 {
   private import PysspCore::*;
   part def baseline :> Analysis {
-    doc /* EMBRACE thermal-management reference model over the baseline window. */
+    doc /* RefECS v1 thermal-management reference model over the baseline window. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;
     part sut : System;

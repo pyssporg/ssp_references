@@ -48,10 +48,13 @@ These are the main fast-running behavioral checks.
 
 These cover more realistic coupling behavior.
 
+`refecs_v1` is the first of two planned versions; `refecs_v2` will be registered
+as a separate model, and both run as tests.
+
 | Fixture | Strategy Role | Detail |
 | --- | --- | --- |
 | `dcmotor` | Composite SSP model | [dcmotor](../models/ssp/dcmotor/FIXTURE.md) |
-| `embrace` | Composite SSP model | [embrace](../models/ssp/embrace/FIXTURE.md) |
+| `refecs_v1` | Composite SSP model | [refecs_v1](../models/ssp/refecs_v1/FIXTURE.md) |
 
 ### Reusable FMU Building Blocks
 

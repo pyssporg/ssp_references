@@ -59,7 +59,7 @@
       "build": "model"
     },
     {
-      "name": "embrace",
+      "name": "refecs_v1",
       "compare_signals": [
         "AdaptionUnit.sWsignals.Aircraft_State",
         "AdaptionUnit.sWsignals.TLiquid",

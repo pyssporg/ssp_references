@@ -1,4 +1,4 @@
-package Embrace {
+package RefecsV1 {
   private import PysspCore::*;
 
   attribute def ScenarioSet :> ParameterSet {

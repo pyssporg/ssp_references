@@ -159,7 +159,7 @@ These building blocks are useful for:
 
 ### Composite SSP Models
 
-Examples: `dcmotor`, `embrace`.
+Examples: `dcmotor`, `refecs_v1` (RefECS v1).
 
 These models are useful for:
 

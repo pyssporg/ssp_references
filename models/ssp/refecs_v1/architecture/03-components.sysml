@@ -1,33 +1,33 @@
-package Embrace {
+package RefecsV1 {
   private import PysspCore::*;
 
   attribute def EcsHwFmu :> FmuMetadata {
-    attribute source = "models/ssp/embrace/resources/0001_ECS_HW";
+    attribute source = "models/ssp/refecs_v1/resources/0001_ECS_HW";
     attribute implementation = "CoSimulation";
   }
 
   attribute def EcsSwFmu :> FmuMetadata {
-    attribute source = "models/ssp/embrace/resources/0002_ECS_SW";
+    attribute source = "models/ssp/refecs_v1/resources/0002_ECS_SW";
     attribute implementation = "CoSimulation";
   }
 
   attribute def ConsumerFmu :> FmuMetadata {
-    attribute source = "models/ssp/embrace/resources/0003_Consumer";
+    attribute source = "models/ssp/refecs_v1/resources/0003_Consumer";
     attribute implementation = "CoSimulation";
   }
 
   attribute def AtmosFmu :> FmuMetadata {
-    attribute source = "models/ssp/embrace/resources/0004_Atmos";
+    attribute source = "models/ssp/refecs_v1/resources/0004_Atmos";
     attribute implementation = "CoSimulation";
   }
 
   attribute def AdaptionUnitFmu :> FmuMetadata {
-    attribute source = "models/ssp/embrace/resources/0005_AdaptionUnit";
+    attribute source = "models/ssp/refecs_v1/resources/0005_AdaptionUnit";
     attribute implementation = "CoSimulation";
   }
 
   attribute def BcFmu :> FmuMetadata {
-    attribute source = "models/ssp/embrace/resources/BC";
+    attribute source = "models/ssp/refecs_v1/resources/BC";
     attribute implementation = "CoSimulation";
   }
 

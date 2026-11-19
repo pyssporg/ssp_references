@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ssm:ParameterMapping xmlns:ssm="http://ssp-standard.org/SSP1/SystemStructureParameterMapping" version="1.0">
+  <ssm:MappingEntry source="timestep" target="valve.interface_model.timestep" />
+  <ssm:MappingEntry source="pT" target="valve.interface_model.pT" />
+  <ssm:MappingEntry source="pP" target="valve.interface_model.pP" />
+  <ssm:MappingEntry source="rho" target="valve.interface_model.rho" />
+  <ssm:MappingEntry source="p_PS_const" target="valve.interface_model.p_PS_const" />
+  <ssm:MappingEntry source="d_A" target="valve.valve_model.d_A" />
+  <ssm:MappingEntry source="d_B" target="valve.valve_model.d_B" />
+  <ssm:MappingEntry source="KqMO_PABT_gain" target="valve.valve_model.KqMO_PABT_gain" />
+  <ssm:MappingEntry source="KqMI_PABT_gain" target="valve.valve_model.KqMI_PABT_gain" />
+  <ssm:MappingEntry source="KqMO_PBAT_gain" target="valve.valve_model.KqMO_PBAT_gain" />
+  <ssm:MappingEntry source="KqMI_PBAT_gain" target="valve.valve_model.KqMI_PBAT_gain" />
+</ssm:ParameterMapping>

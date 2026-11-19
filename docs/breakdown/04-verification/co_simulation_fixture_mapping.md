@@ -48,13 +48,14 @@ These are the main fast-running behavioral checks.
 
 These cover more realistic coupling behavior.
 
-`refecs_v1` is the first of two planned versions; `refecs_v2` will be registered
-as a separate model, and both run as tests.
+`refecs_v1` and `refecs_v2` are registered as separate models, and both run as
+tests. v2 adds subsystem nesting and boundary connectors.
 
 | Fixture | Strategy Role | Detail |
 | --- | --- | --- |
 | `dcmotor` | Composite SSP model | [dcmotor](../models/ssp/dcmotor/FIXTURE.md) |
 | `refecs_v1` | Composite SSP model | [refecs_v1](../models/ssp/refecs_v1/FIXTURE.md) |
+| `refecs_v2` | Composite SSP model | [refecs_v2](../models/ssp/refecs_v2/FIXTURE.md) |
 
 ### Reusable FMU Building Blocks
 

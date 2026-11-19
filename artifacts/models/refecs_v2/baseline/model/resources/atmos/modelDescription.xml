@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<fmiModelDescription fmiVersion="2.0" modelName="Atmos" guid="{86f78baa-0aa6-4e20-92c9-9fffe5f6aeab}" generationTool="Dymola Version 2025x, 2024-12-20" generationDateAndTime="2025-10-29T10:12:16Z" variableNamingConvention="structured" numberOfEventIndicators="2">
+  <CoSimulation modelIdentifier="Atmos" canGetAndSetFMUstate="true" canSerializeFMUstate="true" providesDirectionalDerivative="true" canNotUseMemoryManagementFunctions="true" canHandleVariableCommunicationStepSize="true" canInterpolateInputs="true" maxOutputDerivativeOrder="1" />
+  <TypeDefinitions>
+    <SimpleType name="Modelica.Blocks.Interfaces.RealOutput">
+      <Real />
+    </SimpleType>
+    <SimpleType name="ModelicaFluidLite.Common.RealIn">
+      <Real />
+    </SimpleType>
+  </TypeDefinitions>
+  <DefaultExperiment startTime="0.0" stopTime="1.0" tolerance="0.0001" />
+  <ModelVariables>
+    <ScalarVariable name="Tamb" valueReference="603979776" causality="output">
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+    </ScalarVariable>
+    <ScalarVariable name="Pamb" valueReference="603979777" causality="output">
+      <Real declaredType="Modelica.Blocks.Interfaces.RealOutput" />
+    </ScalarVariable>
+    <ScalarVariable name="Alt" valueReference="620756992" description="Altitude" causality="input">
+      <Real declaredType="ModelicaFluidLite.Common.RealIn" start="0.0" />
+    </ScalarVariable>
+    <ScalarVariable name="Ma" valueReference="620756993" description="Mach number" causality="input">
+      <Real declaredType="ModelicaFluidLite.Common.RealIn" start="0.0" />
+    </ScalarVariable>
+    <ScalarVariable name="DTisa" valueReference="16777216" causality="parameter" variability="tunable">
+      <Real start="0.0" />
+    </ScalarVariable>
+  </ModelVariables>
+  <ModelStructure>
+    <Outputs>
+      <Unknown index="1" dependencies="3" dependenciesKind="dependent" />
+      <Unknown index="2" dependencies="3" dependenciesKind="dependent" />
+    </Outputs>
+    <InitialUnknowns>
+      <Unknown index="1" dependencies="3 5" dependenciesKind="dependent dependent" />
+      <Unknown index="2" dependencies="3 5" dependenciesKind="dependent dependent" />
+    </InitialUnknowns>
+  </ModelStructure>
+</fmiModelDescription>

@@ -1,0 +1,19 @@
+{
+  "analysis": "baseline",
+  "composition": "System",
+  "description": "RefECS v2 hydraulic/thermal aerospace demo over the baseline window.",
+  "experiment": {
+    "name": "experiment_baseline",
+    "start_time": 0.0,
+    "step_size": 0.0333,
+    "stop_time": 10.0
+  },
+  "model": "refecs_v2",
+  "scenario": {
+    "set": "ScenarioSet",
+    "ssm": "baseline.ssm",
+    "ssv": "ScenarioSet.ssv"
+  },
+  "sut": "sut",
+  "target_ssd": "SystemStructure.ssd"
+}

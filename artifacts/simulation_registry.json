@@ -81,6 +81,28 @@
       "build": "model"
     },
     {
+      "name": "refecs_v2",
+      "compare_signals": [
+        "adaption.sWsignals.Aircraft_State",
+        "adaption.sWsignals.TLiquid",
+        "atmos.Pamb",
+        "consumer.outletTemp",
+        "ecs_hw.LHexTout",
+        "ecs_sw.TCoolingPack",
+        "fuel.pmh.p"
+      ],
+      "cases": [
+        {
+          "name": "baseline",
+          "backends": [
+            "omsimulator"
+          ],
+          "analysis": "baseline"
+        }
+      ],
+      "build": "model"
+    },
+    {
       "name": "Resource",
       "compare_signals": [
         "y"

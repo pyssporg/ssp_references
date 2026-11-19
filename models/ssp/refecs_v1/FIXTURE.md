@@ -5,7 +5,7 @@ Reference Environmental Control System (RefECS), version 1.
 ## Version
 
 - v1 is the legacy EMBRACE-derived composite (formerly `models/ssp/embrace`).
-- v2 is planned as a sibling fixture, `refecs_v2`.
+- v2 is the D16 aerospace demo sibling fixture, `refecs_v2`.
 - Both are separate models in the registry, and both are exercised by tests.
 - Historical run artifacts produced before the rename remain under
   `artifacts/{simulation,comparisons,plots}/embrace/`.

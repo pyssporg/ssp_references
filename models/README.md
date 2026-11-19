@@ -6,7 +6,7 @@ and which backends support it.
 
 ## SSP Fixtures
 
-The 27 SSP fixtures are organized into four architectural classes per the
+The 28 SSP fixtures are organized into four architectural classes per the
 [fixture hierarchy](../docs/breakdown/02-architecture/architecture.md#2-fixture-hierarchy).
 
 ### Simple Reference Models
@@ -49,6 +49,7 @@ Multi-component SSPs exercising realistic coupling and scheduling.
 |-------|---------|----------|------------|------------|
 | dcmotor | DC motor model with electrical and mechanical subsystems | ssp4sim, OMSimulator | Regression | [link](./ssp/dcmotor/FIXTURE.md) |
 | refecs_v1 | Reference Environmental Control System (RefECS) v1; EMBRACE-derived multi-FMU coupling | ssp4sim, OMSimulator | Regression | [link](./ssp/refecs_v1/FIXTURE.md) |
+| refecs_v2 | Reference Environmental Control System (RefECS) v2; D16 aerospace hydraulic/thermal demo with a nested valve subsystem | ssp4sim, OMSimulator | Regression | [link](./ssp/refecs_v2/FIXTURE.md) |
 
 ### Special-Purpose SSPs
 

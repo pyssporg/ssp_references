@@ -23,7 +23,6 @@ LEVEL_BY_FILE: dict[str, str] = {
     "test_campaign.py": "system",
     "test_cross_project_contracts.py": "contract",
     "test_dialect_core.py": "static",
-    "test_fixture_twins.py": "static",
     "test_fmu_artifacts.py": "contract",
     "test_legacy_experiment_fixtures.py": "integration",
     "test_markers.py": "static",

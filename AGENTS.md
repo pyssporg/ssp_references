@@ -112,12 +112,20 @@ capability.
 
 ## Environment
 
-- Use the repo-local `venv`: `source venv/bin/activate`, or call
-  `./venv/bin/python` directly.
-- Tests: `python3 -m pytest tests/`.
-- Build: `python3 scripts/build_models.py list` / `run <model>` / `run-all`.
-- Simulate, then compare: `python3 scripts/run_simulations.py`, then
-  `python3 scripts/run_comparisons.py`.
+- `venv/` is git-ignored and not checked in; create it once per checkout with a
+  system Python 3.11+ (stock `python3` may be older, and
+  `sequence-extensions-flow` requires >= 3.11):
+  `python3.11 -m venv venv && venv/bin/pip install -r requirements.txt`.
+  Then `source venv/bin/activate`, or call `./venv/bin/python` directly.
+- Tests: `venv/bin/python -m pytest tests/` (the full suite takes about three
+  minutes).
+- Build: `venv/bin/python scripts/build_models.py list` / `run <model>` /
+  `run-all`.
+- Simulate, then compare: `venv/bin/python scripts/run_simulations.py`, then
+  `venv/bin/python scripts/run_comparisons.py`.
+- Cross-project checks in `tests/test_cross_project_contracts.py` run against
+  the installed release wheels (no sibling checkouts, mocks, engines, or
+  network); they pin the library seams this repository's pipeline crosses.
 - `requirements.txt` is the default install: one plain `pyssp-workflow`
   reference whose base dependencies transitively pin the eight pyssp and SysML
   distributions as sibling GitHub release assets

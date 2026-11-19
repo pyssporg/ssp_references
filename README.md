@@ -330,7 +330,7 @@ All commands run from the repository root.
 git clone <repo-url> ssp_references
 cd ssp_references
 
-python3 -m venv venv
+python3.11 -m venv venv   # use the 3.11+ interpreter if python3 is older
 source venv/bin/activate
 pip install -r requirements.txt
 ```

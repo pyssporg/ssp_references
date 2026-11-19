@@ -1,49 +1,26 @@
 """Static checks on the requirements manifests.
 
-The default install takes the whole pyssp stack through one plain
-``pyssp-workflow`` direct reference in ``requirements.txt``: the workflow wheel
-declares the SysML bundle and the flow engine in its base dependencies, so no
-extras are selected. The version the URL names must be the version the workflow
-source tree declares, so a tag bump and a filename bump cannot drift apart.
-The vendored ``3rd_party/pyssp_workflow`` submodule tree is gone: development
-installs each sibling as an editable checkout from the flat ecosystem workspace
-(``pyssp_dev/repos/``). No installs and no network access here.
+``requirements.txt`` is this repository's default install contract: one plain
+``pyssp-workflow`` direct reference brings the whole pyssp stack as base
+dependencies, and ``requirements-dev.txt`` composes it. These checks keep the
+manifests internally consistent — a single direct reference, no extras, no
+mirror, no committed editables — with no installs and no network access.
 """
 
 from __future__ import annotations
 
 import re
-import tomllib
-from pathlib import Path, PurePosixPath
-from urllib.parse import urlsplit
-
-import pytest
+from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-# Sibling repos live beside this repo in the flat ecosystem workspace
-# (pyssp_dev/repos/). A file here sits in tests/, so parents[0]=tests,
-# parents[1]=this repo, parents[2]=pyssp_dev/repos.
-FLAT_REPOS = Path(__file__).resolve().parents[2]
-WORKFLOW_ROOT = FLAT_REPOS / "pyssp_workflow"
-WORKFLOW_PYPROJECT = WORKFLOW_ROOT / "pyproject.toml"
 REQUIREMENTS = REPO_ROOT / "requirements.txt"
 DEV_REQUIREMENTS = REPO_ROOT / "requirements-dev.txt"
 SYSML_REQUIREMENTS = REPO_ROOT / "requirements-sysml.txt"
-
-#: The libraries a plain ``pyssp-workflow`` install must bring as base
-#: dependencies: the SysML bundle and the flow engine. Without them the install
-#: misses libraries the suite imports.
-BASE_DEPENDENCIES = {"pyssp-sysml2", "pyfmi-sysml2", "sequence-extensions-flow"}
 
 # ``name[extra] @ url``; a bare URL or an option line never has this shape.
 _DIRECT_REFERENCE = re.compile(
     r"^(?P<name>[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
     r"\s*(?:\[(?P<extras>[^\]]*)\])?\s*@\s*(?P<url>[^\s;]+)$"
-)
-
-# ``name[extra]`` followed by any version constraint or direct reference.
-_REQUIREMENT_NAME = re.compile(
-    r"^(?P<name>[A-Za-z0-9](?:[A-Za-z0-9._-]*[A-Za-z0-9])?)"
 )
 
 
@@ -81,35 +58,6 @@ def bundle_extras() -> set[str]:
     raise AssertionError(f"{REQUIREMENTS}: carries no direct reference")
 
 
-def workflow_project() -> dict[str, object]:
-    """Return the ``[project]`` table of the workflow source tree.
-
-    The tree lives at the sibling ``repos/pyssp_workflow`` checkout in the flat
-    ecosystem workspace; a standalone run without that checkout skips the checks
-    that need it instead of erroring.
-    """
-    if not WORKFLOW_PYPROJECT.is_file():
-        pytest.skip("requires flat ecosystem checkout: repos/pyssp_workflow")
-    text = WORKFLOW_PYPROJECT.read_text(encoding="utf-8")
-    return tomllib.loads(text)["project"]
-
-
-def requirement_names(requirements: list[str]) -> set[str]:
-    """Return the canonical distribution names of plain requirement strings."""
-    names: set[str] = set()
-    for requirement in requirements:
-        match = _REQUIREMENT_NAME.match(requirement.strip())
-        if match is None:
-            raise AssertionError(f"unparsable requirement: {requirement!r}")
-        names.add(canonical_name(match.group("name")))
-    return names
-
-
-def workflow_base_dependencies() -> set[str]:
-    """Return the canonical names a plain ``pyssp-workflow`` installs."""
-    return requirement_names(workflow_project()["dependencies"])
-
-
 def editables(path: Path) -> set[str]:
     """Return the checkout paths that ``-e`` / ``--editable`` selects."""
     targets: set[str] = set()
@@ -118,49 +66,6 @@ def editables(path: Path) -> set[str]:
             if line.startswith(prefix):
                 targets.add(line[len(prefix) :].strip().removeprefix("./"))
     return targets
-
-
-def wheel_filename(canonical: str, version: str) -> str:
-    """Return the PEP 427 wheel filename for a release asset."""
-    return f"{canonical.replace('-', '_')}-{version}-py3-none-any.whl"
-
-
-def pyproject_version(tree: Path) -> str:
-    """Return the distribution version a source tree declares.
-
-    A static ``[project] version`` wins. Trees that declare
-    ``dynamic = ["version"]`` are resolved through the
-    ``[tool.setuptools.dynamic] version`` attribute, whose module holds the
-    literal ``__version__`` assignment.
-    """
-    pyproject = tree / "pyproject.toml"
-    data = tomllib.loads(pyproject.read_text(encoding="utf-8"))
-    project = data["project"]
-    version = project.get("version")
-    if version is not None:
-        return str(version)
-    if "version" not in project.get("dynamic", []):
-        raise ValueError(f"{pyproject}: declares no static or dynamic version")
-    attribute = data["tool"]["setuptools"]["dynamic"]["version"]["attr"]
-    module = str(attribute).split(".")[0]
-    for candidate in (
-        tree / "src" / module / "__init__.py",
-        tree / module / "__init__.py",
-    ):
-        if not candidate.is_file():
-            continue
-        text = candidate.read_text(encoding="utf-8")
-        match = re.search(
-            r"^__version__\s*=\s*[\"']([^\"']+)[\"']", text, re.MULTILINE
-        )
-        if match:
-            return match.group(1)
-    raise ValueError(f"{pyproject}: cannot resolve {attribute!r}")
-
-
-def declared_versions() -> dict[str, str]:
-    """Return the pinned distribution -> version declared by the workflow tree."""
-    return {"pyssp-workflow": pyproject_version(WORKFLOW_ROOT)}
 
 
 def test_default_requirements_reference_the_bundle_exactly_once() -> None:
@@ -174,16 +79,6 @@ def test_default_requirements_select_no_extras() -> None:
     assert bundle_extras() == set()
 
 
-def test_workflow_base_dependencies_carry_the_sysml_and_flow_libraries() -> None:
-    assert BASE_DEPENDENCIES <= workflow_base_dependencies()
-
-
-def test_workflow_declares_only_the_development_extra() -> None:
-    # A leftover feature extra means an install could still select it by name.
-    extras = workflow_project().get("optional-dependencies", {})
-    assert set(extras) == {"dev"}
-
-
 def test_default_requirements_are_not_editable_and_use_no_mirror() -> None:
     options = [
         line for line in requirement_lines(REQUIREMENTS) if line.startswith("-")
@@ -194,21 +89,6 @@ def test_default_requirements_are_not_editable_and_use_no_mirror() -> None:
         for line in options
         if line.startswith(("--find-links", "--extra-index-url", "-f"))
     ]
-
-
-def test_direct_reference_urls_name_the_tree_version() -> None:
-    versions = declared_versions()
-    wrong: dict[str, str] = {}
-    for canonical, url in direct_references(REQUIREMENTS):
-        version = versions[canonical]
-        expected = wheel_filename(canonical, version)
-        if PurePosixPath(urlsplit(url).path).name != expected:
-            wrong[url] = expected
-        # The release asset lives under a v<version> tag; a tag typo must fail
-        # offline rather than at install time.
-        if f"/releases/download/v{version}/" not in url:
-            wrong[url] = f"/releases/download/v{version}/"
-    assert wrong == {}
 
 
 def test_default_requirements_exclude_the_nested_pinned_copy() -> None:

@@ -1,4 +1,4 @@
-"""Cross-project contracts: the hand-written seams between vendored projects.
+"""Cross-project contracts: the hand-written seams between installed libraries.
 
 Each seam is an edge no project owns alone, and each has rotted once already:
 ``pyssp_simulate``'s fixture used an API ``pyssp_standard`` had removed, and a
@@ -6,17 +6,15 @@ Each seam is an edge no project owns alone, and each has rotted once already:
 pin the edges with both sides real -- no mocks, no engines, no network.
 
 The rule for every test here: the docstring names the drift it catches, and
-both sides of the seam are the installed projects, never a stand-in.
+both sides of the seam are the installed libraries, never a stand-in.
 """
 
 from __future__ import annotations
 
-import importlib.util
 import subprocess
 import sys
 import zipfile
 from pathlib import Path
-from types import ModuleType
 
 import pytest
 
@@ -38,14 +36,6 @@ from pyssp_vv.policy import Criterion, Policy, Sufficiency
 from sequence_extensions.flow import RunLog, RunOptions, execute_flow
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-# The vendored 3rd_party/pyssp_workflow submodule tree is gone. Cross-project
-# contract tests target the sibling repos beside this one in the flat ecosystem
-# workspace (pyssp_dev/repos/): parents[0]=tests, parents[1]=this repo,
-# parents[2]=pyssp_dev/repos.
-FLAT_REPOS = Path(__file__).resolve().parents[2]
-WORKFLOW_ROOT = FLAT_REPOS / "pyssp_workflow"
-SYSML2_ROOT = FLAT_REPOS / "pyssp_sysml2"
-GOLDEN_TEST = SYSML2_ROOT / "tests" / "test_golden_artifacts.py"
 
 #: The schema reviewed as EVAL-005. Copied literally, not imported, so a
 #: rename in the writer or the judge has to be approved here too.
@@ -267,95 +257,6 @@ def test_evidence_rows_round_trip_into_a_judge_verdict(tmp_path: Path) -> None:
     from pyssp_workflow import compare as workflow_compare
 
     assert workflow_compare.write_metric_csv is write_metric_csv
-
-
-# --------------------------------------------------------------------------- #
-# Seam 3: pyssp_sysml2 generated artifacts -> pyssp_standard readers
-# --------------------------------------------------------------------------- #
-def _golden_test_module() -> ModuleType:
-    """Load the generator's own golden test for its pinned paths and cases."""
-    spec = importlib.util.spec_from_file_location(
-        "_pyssp_sysml2_golden_test", GOLDEN_TEST
-    )
-    assert spec is not None and spec.loader is not None
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module
-
-
-def test_sysml2_goldens_are_readable_and_stable_under_pyssp_standard() -> None:
-    """Writer renames a golden/case or reader re-serializes -> bytes differ.
-
-    Reads the committed SSD and SSV artifacts the generator's golden test pins,
-    validates them through ``SSD``/``SSV``, resolves every external parameter
-    reference and mapping target inside the golden tree, and asserts the
-    read-only open leaves every artifact byte-identical. No regeneration.
-    """
-    if not GOLDEN_TEST.is_file():
-        pytest.skip("requires flat ecosystem checkout: repos/pyssp_sysml2")
-    golden = _golden_test_module()
-    golden_root: Path = golden.GOLDEN_ROOT
-    cases: dict[str, str] = golden.CASES
-
-    assert golden_root == GOLDEN_TEST.parent / "golden"
-    assert {path.name for path in golden_root.iterdir() if path.is_dir()} == set(cases)
-
-    for case, composition in cases.items():
-        case_dir = golden_root / case
-        ssd_path = case_dir / "SystemStructure.ssd"
-        assert ssd_path.is_file(), f"missing golden SSD: {ssd_path}"
-
-        ssd_bytes = ssd_path.read_bytes()
-        with SSD(ssd_path, mode="r") as ssd:
-            assert ssd.check_compliance() is True
-
-            system = ssd.system
-            assert system is not None
-            # The composition the generator's golden test passes to generate_ssd.
-            assert ssd.xml.name == composition
-            assert system.name == composition
-
-            connectors = {
-                (element.name, connector.name)
-                for element in system.elements
-                for connector in element.connectors
-            }
-            bindings = system.get_parameter_bindings()
-            assert bindings, f"{case}: SSD declares no parameter binding"
-
-            for binding in bindings:
-                assert binding.source is not None
-                ssv_path = case_dir / binding.source
-                assert ssv_path.is_file(), f"unresolved binding source: {ssv_path}"
-
-                ssv_bytes = ssv_path.read_bytes()
-                with SSV(ssv_path, mode="r") as ssv:
-                    assert ssv.check_compliance() is True
-                    assert ssv.xml.name == ssv_path.stem
-                    parameter_names = [entry.name for entry in ssv.xml.parameters]
-                assert ssv_path.read_bytes() == ssv_bytes
-                assert parameter_names
-
-                mapping = binding.parameter_mapping
-                if mapping is not None and mapping.mapping is not None:
-                    for entry in mapping.mapping.mappings:
-                        component, _, connector = entry.target.partition(".")
-                        assert (component, connector) in connectors, (
-                            f"{case}: mapping target {entry.target!r} names no "
-                            "component connector"
-                        )
-
-                if binding.prefix:
-                    component = binding.prefix.rstrip(".")
-                    assert component in {
-                        element.name for element in system.elements
-                    }, f"{case}: binding prefix {binding.prefix!r} names no component"
-                    for name in parameter_names:
-                        assert (component, name) in connectors, (
-                            f"{case}: {component}.{name} is not a declared connector"
-                        )
-
-        assert ssd_path.read_bytes() == ssd_bytes
 
 
 # --------------------------------------------------------------------------- #

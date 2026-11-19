@@ -28,7 +28,6 @@ identical outcomes.
 | level markers and invariant | root | `pytest.ini`, `tests/conftest.py:LEVEL_BY_FILE`, `tests/test_markers.py` (5) |
 | artifact corpus gate | root | `tests/test_artifact_corpus.py` (3) |
 | skip-remedy and write policy | root, pyssp_workflow, pyssp_vv, pyssp_simulate | `test_suite_policy.py` / `test_fixture_policy.py` |
-| fixture-twin drift | root | `tests/test_fixture_twins.py` (7) |
 | inline-document extraction | pyssp_sysml2 | `tests/fixtures/<subject>/` (108 files) + AST gate |
 
 ### SysML documents moved out of test modules

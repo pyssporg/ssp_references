@@ -2,8 +2,12 @@ package Stair {
   private import ScalarValues::*;
   private import PysspCore::*;
 
+  attribute def StairDefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 9.0;
+  }
+
   port def IntegerSignal {
-    attribute pyssp_flat_connector : Boolean = true;
     attribute value : Integer;
   }
 
@@ -24,8 +28,8 @@ package Stair {
   }
 
   part def System :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 9.0;
+    attribute defaults : StairDefaultExperiment;
+
     part fmu : Stair;
   }
 

@@ -6,10 +6,6 @@ package RavsV1 {
     attribute value : Real;
   }
 
-  port def IntegerSignal {
-    attribute value : Integer;
-  }
-
   port def FluidState {
     out attribute p : Real;
     out attribute h : Real;

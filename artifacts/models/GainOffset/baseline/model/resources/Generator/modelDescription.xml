@@ -11,7 +11,7 @@
     <ScalarVariable name="frequency" valueReference="2" causality="parameter" variability="fixed">
       <Real start="1.0" />
     </ScalarVariable>
-    <ScalarVariable name="y.value" valueReference="3" causality="output">
+    <ScalarVariable name="y" valueReference="3" causality="output">
       <Real />
     </ScalarVariable>
   </ModelVariables>

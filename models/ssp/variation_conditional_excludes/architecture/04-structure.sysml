@@ -1,6 +1,12 @@
 package VariationConditionalExcludes {
   private import ScalarValues::*;
   private import PysspCore::*;
+
+  attribute def VariationConditionalExcludesDefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 1.0;
+  }
+
   variation part def SourceChoice {
     out port y : RealSignal;
     variant part stepImplementation : Step;
@@ -22,8 +28,8 @@ package VariationConditionalExcludes {
   }
 
   part def System :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 1.0;
+    attribute defaults : VariationConditionalExcludesDefaultExperiment;
+
     part source : SourceChoice;
     part gain : Gain;
     connect source.y to gain.u;

@@ -630,7 +630,7 @@
     {
       "name": "GainOffset",
       "compare_signals": [
-        "generator.y.value"
+        "generator.y"
       ],
       "cases": [
         {

@@ -2,13 +2,17 @@ package BouncingBall {
   private import ScalarValues::*;
   private import PysspCore::*;
 
+  attribute def BouncingBallDefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 3.0;
+  }
+
   port def BouncingBallParameters :> ParameterInterface {
     attribute g : Real;
     attribute e : Real;
   }
 
   port def RealSignal {
-    attribute pyssp_flat_connector : Boolean = true;
     attribute value : Real;
   }
 
@@ -31,8 +35,8 @@ package BouncingBall {
   }
 
   part def System :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 3.0;
+    attribute defaults : BouncingBallDefaultExperiment;
+
     part fmu : BouncingBall;
   }
 

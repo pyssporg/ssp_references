@@ -95,7 +95,7 @@ trajectory difference is a pipeline defect, not a numerical one.
 - `y(0) = 0.5`, `y(0.25) = 2.5`, `y(0.5) = 0.5`, `y(0.75) = -1.5`,
   `y(1.0) = 0.5`.
 - Reference trajectory: `references/GainOffset-cs.csv`, column
-  `generator.y.value`, generated from the closed form on the simulation time
+  `generator.y`, generated from the closed form on the simulation time
   grid.
 - Measured against OMSimulator 3.0.0.post116: `max_abs_error = 4.96e-12` over
   1001 time points (double rounding of the printed reference).

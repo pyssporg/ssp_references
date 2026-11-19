@@ -2,12 +2,16 @@ package Dahlquist {
   private import ScalarValues::*;
   private import PysspCore::*;
 
+  attribute def DahlquistDefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 10.0;
+  }
+
   port def DahlquistParameters :> ParameterInterface {
     attribute k : Real;
   }
 
   port def RealSignal {
-    attribute pyssp_flat_connector : Boolean = true;
     attribute value : Real;
   }
 
@@ -29,8 +33,8 @@ package Dahlquist {
   }
 
   part def System :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 10.0;
+    attribute defaults : DahlquistDefaultExperiment;
+
     part fmu : Dahlquist;
   }
 

@@ -37,21 +37,11 @@ fluid-state signals; one FMU reads its boundary conditions from a packaged
 - `architecture/05-analyses.sysml` — `baseline :> Analysis`.
 - No legacy SSD, SSV, or SSM is checked in.
 
-`System` is exported from SysML. The FMU variable namespace uses characters a
-SysML identifier cannot (dots and array brackets), so ports are shaped around
-the FMU variable names. A fluid port carries both directions in one usage
-through member-level `in`/`out`: `FluidState` marks `p`, `h`, and `X` as
-outputs and `m` and `hn` as inputs. The mirrored side types the same port with
-the conjugated definition, `~FluidState`, which flips `p`, `h`, and `X` to
-inputs and `m` and `hn` to outputs; for example `ECS_HW.consumerFeed` is
-`~FluidState` (`consumerFeed.p` input, `consumerFeed.m` output). Each collapsed
-port keeps one `connect`, and the SSD expands every member with its own
-direction. The three
-`X` components are one fixed attribute array (`attribute X : Real[3];`),
-expanded to `X[1]`–`X[3]` at export. A `RealSignal`/`IntegerSignal` port has
-one member named `value`, so it is a scalar port: the exporter names its
-connector for the port itself (`Alt`, `Tamb`) and no flat export option is
-needed.
+`System` is exported from SysML; the
+[port dialect](../../../docs/reference/port-dialect.md) explains how ports are
+shaped around FMU variable names. In this fixture the mirrored fluid side is
+`ECS_HW.consumerFeed : ~FluidState` (`consumerFeed.p` input, `consumerFeed.m`
+output).
 
 The parameter interface declares the two effective structured targets,
 `'pipeA.L'` and `'pipeB.L'`. The legacy external SSV/SSM pair was almost
@@ -64,7 +54,8 @@ physical-signal trajectories exactly (the `$wallTime` columns are run-dependent)
 
 - `baseline :> Analysis`
 - Scenario set: `ScenarioSet`
-- Experiment: `startTime=0.0`, `stopTime=10.0`, `stepSize=0.01`.
+- Experiment window and step: see `architecture/02-parameters.sysml`; the
+  0.0–10.0 bounds are the exported `DefaultExperiment`.
 - Tolerance is not part of the experiment; the FMUs declare it in their
   `DefaultExperiment`.
 - Artifacts: `artifacts/analyses/ravs_v1/baseline/`
@@ -72,9 +63,14 @@ physical-signal trajectories exactly (the `$wallTime` columns are run-dependent)
 
 ## Structure
 
-- `BC -> Atmos, Consumer, ECS_HW, AdaptionUnit`
-- `Consumer <-> ECS_HW` over `consumerFeed` and `consumerRet`
-- `ECS_HW -> AdaptionUnit -> ECS_SW -> ECS_HW`
+Wiring and composition live in `architecture/04-structure.sysml`.
+
+## Deviations from the legacy SSD
+
+- **Connector orientation.** The regenerated SSD orients four connections the
+  other way (`Consumer` start vs `ECS_HW` start for `consumerFeed.{m,hn}` and
+  `consumerRet.{m,hn}`); the endpoint pairs are identical and SSP connections
+  are undirected.
 
 ## Strategy Role
 

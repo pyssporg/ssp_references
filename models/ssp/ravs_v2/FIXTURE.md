@@ -28,9 +28,9 @@ live in the sibling `openscaling` checkout under
 ## Overview
 
 `ravs_v2` is a hydraulic/thermal/atmospheric composite: eight FMI 2.0
-CoSimulation FMUs over 54 connections, one of them a nested `valve` subsystem
-with its own boundary ports. It is the first fixture in the repository that
-exercises subsystem nesting and boundary connectors from SysML.
+CoSimulation FMUs wired over 37 top-level connections plus the nested `valve`
+subsystem, which has its own boundary ports. It is the first fixture in the
+repository that exercises subsystem nesting and boundary connectors from SysML.
 
 ## Architecture Source
 
@@ -41,27 +41,18 @@ exercises subsystem nesting and boundary connectors from SysML.
 - `architecture/02-parameters.sysml` — scenario set and experiment window.
 - `architecture/03-components.sysml` — FMU metadata, the six top-level
   components, the two `valve` members, and the nested `valve` definition.
-- `architecture/04-structure.sysml` — `System :> SspModel` composition and the
-  37 top-level connections.
+- `architecture/04-structure.sysml` — `System :> SspModel` composition and
+  wiring.
 - `architecture/05-analyses.sysml` — `baseline :> Analysis` and the parameter
   binds.
 - No legacy SSD, SSV, or SSM is checked in.
 
-`System` is exported from SysML. FMU variable names use dots, so ports are
-shaped around the FMU variable names. A fluid port carries both directions in
-one usage through member-level `in`/`out`: `FluidState` marks `p`, `h`, and
-`X` as outputs and `m` and `hn` as inputs. The mirrored side types the same
-port with the conjugated definition, `~FluidState`, which flips `p`, `h`, and
-`X` to inputs and `m` and `hn` to outputs; for example `fuel.pmhn` is
-`FluidState` (`pmhn.p` output, `pmhn.m` input) while `fuel.pmh` is
-`~FluidState`. Each collapsed port keeps one `connect`, and the SSD expands
-every member with its own direction. The
-source SSD has no `<Dimension>` entries, so the `X[1..3]` variables are three
-distinct scalars; the dialect carries them as one fixed attribute array
-(`attribute X : Real[3];`), expanded to `X[1]`–`X[3]` at export. A
-`RealSignal`/`IntegerSignal` port has one member named `value`, so it is a
-scalar port: the exporter names its connector for the port itself (`Alt`,
-`Tamb`) and no flat export option is needed.
+`System` is exported from SysML; the
+[port dialect](../../../docs/reference/port-dialect.md) explains how ports are
+shaped around FMU variable names. Here `fuel.pmhn` is `FluidState` (`pmhn.p`
+output, `pmhn.m` input) while `fuel.pmh` is `~FluidState`. The source SSD has
+no `<Dimension>` entries, so the `X[1..3]` variables are three distinct
+scalars.
 
 Three deviations from the source SSD are deliberate:
 
@@ -72,9 +63,10 @@ Three deviations from the source SSD are deliberate:
 - **Unused components.** `FMU_16_aero_stimuli`, `FMU_16_auto_interface`,
   `FMU_16_auto_stimuli`, `FMU_UQ_interface`, and the UQ setup file
   `od_L90LS_UD_OS_OS.xml` are not referenced by the SSD and are not carried.
-- **Enumeration signal.** `interface_model`'s `Input.Aircraft_State` is an FMI
-  Enumeration variable; the dialect has no enumeration type, so it is modelled
-  as `IntegerSignal`.
+- **Enumeration signal.** `ecs_sw`'s `Input.Aircraft_State` is an FMI
+  Enumeration variable; the dialect has no enumeration type, so the `SwSignals`
+  proxy port carries it as `attribute Aircraft_State : Integer`, and `adaption`
+  takes a matching `in port Aircraft_State : RealSignal`.
 
 The two source `ParameterSet`s are informative duplicates of the FMU start
 values. `consumer` and `ecs_hw` additionally declare non-default starts for
@@ -84,9 +76,10 @@ defaults here as well.
 ## Analyses
 
 - `baseline :> Analysis`
-- Scenario set: `ScenarioSet` (11 members, applied to `interface_model` and
-  `valve_model`).
-- Experiment: `startTime=0.0`, `stopTime=10.0`, `stepSize=0.0333`.
+- Scenario set: `ScenarioSet` in `architecture/02-parameters.sysml`, applied to
+  `interface_model` and `valve_model`.
+- Experiment window and step: see `architecture/02-parameters.sysml`; the
+  0.0–10.0 bounds are the exported `DefaultExperiment`.
 - The source SSD has no `<DefaultExperiment>`. The window is derived: 10 s is
   the common stop time of the D16 FMUs, and 0.0333 s is the `ecs_sw` step. The
   Modelica-derived FMUs default to a 1 s window and would truncate the run.
@@ -95,13 +88,8 @@ defaults here as well.
 
 ## Structure
 
-- `valve <-> fuel` over `p1..p3`, `u`, `mflowA`, and `mflowB`
-- `atmos.Tamb` and `atmos.Pamb` fan out to `ecs_hw`, `consumer`, and `fuel`
-- `ecs_hw <-> consumer`, then `consumer -> fuel -> ecs_hw` over the
-  `pmh`/`pmhn` liquid line
-- `ecs_hw -> adaption -> ecs_sw -> ecs_hw` over the thermal loop
-- Inside `valve`: `valve_model <-> interface_model`; `p1` fans in from
-  `valve_model.pA` and `pB`; `Debug` taps `valve_model.Debug`
+Wiring, including the nested `valve` connections, lives in
+`architecture/04-structure.sysml`.
 
 ## Strategy Role
 

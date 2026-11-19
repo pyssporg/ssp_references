@@ -5,6 +5,8 @@
 
 /* Generated interface for GainOffset.Generator. Do not edit manually. */
 
+#define GAINOFFSET_GENERATOR_GUID "{eca0627b-dad2-5d71-90b2-e450ef615122}"
+
 typedef enum GainOffset_Generator_ValueReference {
   GAINOFFSET_GENERATOR_VR_GAIN = 0,
   GAINOFFSET_GENERATOR_VR_OFFSET = 1,
@@ -23,6 +25,8 @@ struct GainOffset_Generator_Instance {
   double offset = 0.5;
   double frequency = 1;
   GainOffset_RealSignal y = {};
+  /* Implementer-owned state; the runtime never reads or writes it. */
+  void* user_data = nullptr;
 };
 
 inline void GainOffset_Generator_initialize_vr_map(GainOffset_Generator_Instance* instance) {

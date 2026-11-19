@@ -2,9 +2,14 @@ package SignalInitChain {
   private import ScalarValues::*;
   private import PysspCore::*;
 
+  attribute def SignalInitChainDefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 1.0;
+  }
+
   part def System :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 1.0;
+    attribute defaults : SignalInitChainDefaultExperiment;
+
     part source : Sine;
     part gain : Gain;
     part add : Add;

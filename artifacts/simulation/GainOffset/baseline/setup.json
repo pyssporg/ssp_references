@@ -6,9 +6,9 @@
   ],
   "case": "baseline",
   "compare_signals": [
-    "generator.y.value"
+    "generator.y"
   ],
-  "description": "Single analytic source component; the FMU interface is authored here.",
+  "description": "Single analytic source component; the FMU interface is authored in models/fmu/GainOffset.",
   "gate": {
     "atol": 0.001,
     "max_invariant_abs_error": 1e-08,

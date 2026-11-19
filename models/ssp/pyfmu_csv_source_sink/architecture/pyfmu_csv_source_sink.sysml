@@ -2,6 +2,11 @@ package PyfmuCsvSourceSink {
   private import ScalarValues::*;
   private import PysspCore::*;
 
+  attribute def PyfmuCsvSourceSinkDefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 1.0;
+  }
+
   attribute def ScenarioSet :> ParameterSet {
     attribute k = 1.0;
   }
@@ -15,7 +20,6 @@ package PyfmuCsvSourceSink {
   }
 
   port def RealSignal {
-    attribute pyssp_flat_connector : Boolean = true;
     attribute value : Real;
   }
 
@@ -48,8 +52,8 @@ package PyfmuCsvSourceSink {
   }
 
   part def System :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 1.0;
+    attribute defaults : PyfmuCsvSourceSinkDefaultExperiment;
+
     attribute scenario : ScenarioSet;
     part source : CsvSource;
     part sink : Gain;

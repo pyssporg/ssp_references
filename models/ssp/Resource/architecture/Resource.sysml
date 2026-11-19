@@ -2,8 +2,12 @@ package Resource {
   private import ScalarValues::*;
   private import PysspCore::*;
 
+  attribute def ResourceDefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 1.0;
+  }
+
   port def IntegerSignal {
-    attribute pyssp_flat_connector : Boolean = true;
     attribute value : Integer;
   }
 
@@ -24,8 +28,8 @@ package Resource {
   }
 
   part def System :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 1.0;
+    attribute defaults : ResourceDefaultExperiment;
+
     part fmu : Resource;
   }
 

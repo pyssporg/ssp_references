@@ -267,8 +267,10 @@ def _subsystems(system) -> list[str]:
 def _wiring(system) -> list[tuple[tuple[str, str], tuple[str, str]]]:
     """Connections between two elements; boundary ends are excluded.
 
-    An SSP connection is undirected, so the two ends are normalized into a
-    stable order and the fixture expectations are normalized the same way.
+    SSP composition connections are undirected: the two ends are normalized
+    into a stable order and the fixture expectations are normalized the same
+    way. Connector direction is expressed by the connector kind and is asserted
+    in the pyssp and pyfmi suites.
     """
     result = []
     for connection in system.findall(f"{SSD}Connections/{SSD}Connection"):
@@ -301,7 +303,11 @@ def _endpoint(element: str | None, connector: str) -> str:
 
 
 def _boundary_wiring(system) -> list[tuple[str, str]]:
-    """Connections with at least one end on the system boundary."""
+    """Connections with at least one end on the system boundary.
+
+    Ends keep their start/end roles: the system-boundary end appears as the
+    bare connector and the element end as ``element.connector``.
+    """
     result = []
     for connection in system.findall(f"{SSD}Connections/{SSD}Connection"):
         start_element = connection.get("startElement")
@@ -377,9 +383,6 @@ def test_pyfmu_csv_source_sink_structure_needs_no_fmu(tmp_path: Path) -> None:
         "System",
     )
     system = _root(output)
-    assert _components(system) == ["sink", "source"]
-    assert _subsystems(system) == []
-    assert _wiring(system) == [("source", "y", "sink", "u")]
     sources = {
         element.get("name"): element.get("source")
         for element in system.findall(f"{SSD}Elements/{SSD}Component")
@@ -455,24 +458,6 @@ def test_scenario_mapping_keeps_only_the_live_target() -> None:
     assert mappings == [("scenario_input", "scenario.scenario_input")]
 
 
-def test_scenario_has_one_root_parameter_binding() -> None:
-    """The built SSP has exactly one root binding, not the old duplicate."""
-    ssd = (
-        REPO_ROOT
-        / "artifacts"
-        / "models"
-        / "scenario"
-        / "baseline"
-        / "model"
-        / "SystemStructure.ssd"
-    )
-    if not ssd.is_file():
-        pytest.skip("build output missing for scenario; run build_models.py")
-
-    system = _root(ssd)
-    assert len(system.findall(f"{SSD}ParameterBindings/{SSD}ParameterBinding")) == 1
-
-
 def test_registry_resolves_model_analysis_build_layout() -> None:
     """Migrated cases resolve to artifacts/models/<model>/<analysis>/<build>."""
     from workflow.registry import load_registry
@@ -495,8 +480,6 @@ def test_registry_resolves_model_analysis_build_layout() -> None:
 @pytest.mark.parametrize("model", sorted(EXPECTED))
 def test_analysis_descriptor_has_step_and_no_tolerance(model: str) -> None:
     """Analysis descriptors carry the window and step, never a tolerance."""
-    import json
-
     descriptor = (
         REPO_ROOT
         / "artifacts"

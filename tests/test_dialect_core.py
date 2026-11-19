@@ -2,7 +2,7 @@
 
 ``pycps_sysml2.core_definitions()`` ships ``SspModel``, ``Analysis``,
 ``FmuModel``, ``ParameterInterface``, ``ParameterSet``, ``FmuMetadata``,
-``SspMetadata``, and ``Experiment``. Fixtures import them through the dialect
+``SspMetadata``, ``DefaultExperiment``, and ``Experiment``. Fixtures import them through the dialect
 library; a local copy shadows the packaged definition and drifts from the roles
 the library assigns to it. The system fixture additionally includes the canonical
 FMU architecture instead of copying it, so the FMU definitions arrive through the
@@ -39,6 +39,7 @@ CORE_DEFINITION_PREFIXES = {
     "SspModel": "part def SspModel",
     "Analysis": "part def Analysis",
     "FmuModel": "part def FmuModel",
+    "DefaultExperiment": "attribute def DefaultExperiment",
     "Experiment": "attribute def Experiment",
     "ParameterInterface": "port def ParameterInterface",
     "FmuMetadata": "attribute def FmuMetadata",

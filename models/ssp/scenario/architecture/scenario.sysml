@@ -35,7 +35,7 @@ package Scenario {
     attribute implementation = "CoSimulation";
   }
 
-  part def Scenario {
+  part def Scenario :> FmuModel {
     attribute fmu_meta : ScenarioFmu;
     in port parameters : ScenarioParameters;
     out port Alt : RealSignal;

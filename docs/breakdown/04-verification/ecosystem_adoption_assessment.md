@@ -121,16 +121,15 @@ recorded for the role markers. Analyses compose the model with `part sut : Model
 structural inheritance of parts/connections is not supported and is not
 required.
 
-**Gap: the round-trip was lossy.** For
-`artifacts/models/signal_step_gain/baseline/SystemStructure.ssd` the original
-implementation lost connector `kind`, parameter bindings, the default
-experiment, and `implementation`, and rewrote connectors as `port.attribute`.
-
-**Patched in 0.1.1:** SSD metadata that has no first-class SysML equivalent is
-carried as `pyssp_*` control attributes and skipped by the SSV/FMI generators.
-The same fixture now round-trips structurally: connector kinds, parameter
-values/source, `implementation="CoSimulation"`, and `DefaultExperiment`
-(`0.0..1.0`) survive. The generated architecture is preserved at
+**Round-trip coverage.** For
+`artifacts/models/signal_step_gain/test_baseline/model/SystemStructure.ssd` the
+recovered architecture keeps connector kinds, parameter bindings, the default
+experiment, and FMU metadata as typed attribute containers
+(`attribute fmu_meta`, `attribute defaults`, `bind ...`), and every recovered
+FMU component specializes `FmuModel`. The recovered metadata carries
+`implementation="CoSimulation"`; `source` is not recovered because the packaged
+resource path is derived at build time. The generated architecture is
+self-contained, so it locally declares the core symbols it uses. It is preserved at
 [`signal_step_gain.architecture.sysml`](../../reference/examples/signal_step_gain.architecture.sysml)
 as an evaluation artifact, not a build input.
 

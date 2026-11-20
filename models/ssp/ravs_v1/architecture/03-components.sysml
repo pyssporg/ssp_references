@@ -31,7 +31,7 @@ package RavsV1 {
     attribute implementation = "CoSimulation";
   }
 
-  part def ECS_HW {
+  part def ECS_HW :> FmuModel {
     attribute fmu_meta : EcsHwFmu;
     in port parameters : EcsHwParameters;
     in port Alt : RealSignal;
@@ -44,13 +44,13 @@ package RavsV1 {
     out port LHexTout : RealSignal;
   }
 
-  part def ECS_SW {
+  part def ECS_SW :> FmuModel {
     attribute fmu_meta : EcsSwFmu;
     in port Input : SwSignals;
     out port TCoolingPack : RealSignal;
   }
 
-  part def Consumer {
+  part def Consumer :> FmuModel {
     attribute fmu_meta : ConsumerFmu;
     out port consumerRet : FluidState;
     out port consumerFeed : FluidState;
@@ -63,7 +63,7 @@ package RavsV1 {
     out port outletTemp : RealSignal;
   }
 
-  part def Atmos {
+  part def Atmos :> FmuModel {
     attribute fmu_meta : AtmosFmu;
     in port Alt : RealSignal;
     in port Ma : RealSignal;
@@ -71,14 +71,14 @@ package RavsV1 {
     out port Pamb : RealSignal;
   }
 
-  part def AdaptionUnit {
+  part def AdaptionUnit :> FmuModel {
     attribute fmu_meta : AdaptionUnitFmu;
     in port Aircraft_State : RealSignal;
     in port LHexTout : RealSignal;
     out port sWsignals : SwSignals;
   }
 
-  part def BC {
+  part def BC :> FmuModel {
     attribute fmu_meta : BcFmu;
     out port Alt : RealSignal;
     out port Mach : RealSignal;

@@ -27,7 +27,7 @@ package BouncingBall {
     attribute implementation = "CoSimulation";
   }
 
-  part def BouncingBall {
+  part def BouncingBall :> FmuModel {
     attribute fmu_meta : BouncingBallFmu;
     in port parameters : BouncingBallParameters;
     out port h : RealSignal;

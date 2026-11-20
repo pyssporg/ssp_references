@@ -22,6 +22,7 @@
  */
 package MultiCompositionModels {
   part def SspModel;
+  part def FmuModel;
   part def Analysis;
 
   port def ParameterInterface;
@@ -103,19 +104,19 @@ package MultiCompositionModels {
     attribute implementation = "CoSimulation";
   }
 
-  part def Step {
+  part def Step :> FmuModel {
     attribute fmu_meta : StepFmu;
     in port parameters : StepParameters;
     out port y : RealSignal;
   }
 
-  part def Sine {
+  part def Sine :> FmuModel {
     attribute fmu_meta : SineFmu;
     in port parameters : SineParameters;
     out port y : RealSignal;
   }
 
-  part def Gain {
+  part def Gain :> FmuModel {
     attribute fmu_meta : GainFmu;
     in port parameters : GainParameters;
     in port u : RealSignal;

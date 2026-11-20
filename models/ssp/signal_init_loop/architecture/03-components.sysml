@@ -6,7 +6,7 @@ package SignalInitLoop {
     attribute implementation = "CoSimulation";
   }
 
-  part def LoopGain {
+  part def LoopGain :> FmuModel {
     attribute fmu_meta : LoopGainFmu;
     in port parameters : LoopGainParameters;
     in port u : RealSignal;

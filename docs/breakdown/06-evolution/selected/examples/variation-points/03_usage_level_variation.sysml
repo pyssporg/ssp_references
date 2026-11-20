@@ -23,6 +23,7 @@
  */
 package UsageLevelVariation {
   part def SspModel;
+  part def FmuModel;
 
   port def ParameterInterface;
 
@@ -69,19 +70,19 @@ package UsageLevelVariation {
     out port y : RealSignal;
   }
 
-  part def Step :> SignalSource {
+  part def Step :> SignalSource, FmuModel {
     attribute fmu_meta : StepFmu;
     in port parameters : StepParameters;
     out port :>> y : RealSignal;
   }
 
-  part def Sine :> SignalSource {
+  part def Sine :> SignalSource, FmuModel {
     attribute fmu_meta : SineFmu;
     in port parameters : SineParameters;
     out port :>> y : RealSignal;
   }
 
-  part def Gain {
+  part def Gain :> FmuModel {
     attribute fmu_meta : GainFmu;
     in port u : RealSignal;
     out port y : RealSignal;

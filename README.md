@@ -92,11 +92,18 @@ contract:
   `part def ... :> Analysis`. A SysML-authored FMU owns its complete definition
   under `models/fmu/<model>/architecture/`, declared directly as
   `part def <name> :> FmuModel`; the system build passes that directory to
-  `build_fixture(includes=...)` and neither copies nor links the file.
+  `build_fixture(includes=...)` and neither copies nor links the file. Every
+  part definition naming an FMU through `attribute fmu_meta` specializes
+  `FmuModel` explicitly — the marker is authored, never inferred from the
+  metadata attribute.
 - `part def <Model> :> SspModel` exports one SSP; `part def <Analysis> :> Analysis`
   supplies scenario data, a description, and one experiment (`startTime`,
-  `stopTime`, `stepSize`) and is never exported as an SSP. A model may author
-  several analyses; each is built and registered as its own case.
+  `stopTime`, `stepSize`, optionally `tolerance`) and is never exported as an
+  SSP. A model may author several analyses; each is built and registered as its
+  own case. The SSD system binds its `startTime`/`stopTime` defaults through
+  `attribute defaults : <X>DefaultExperiment;`, the core's `ssd:DefaultExperiment`
+  mirror; an analysis authors `Experiment`, the FMI superset that adds
+  `stepSize` and `tolerance`.
 - The dialect markers — `SspModel`, `Analysis`, `Experiment`, `FmuMetadata`,
   `FmuModel`, `SspMetadata`, `ParameterInterface`, `ParameterSet` — come from
   `pycps_sysml2`'s packaged core definitions. `build.py` reaches them through

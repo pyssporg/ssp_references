@@ -28,11 +28,7 @@ package SignalStepGain {
     attribute k = 3.0;
   }
 
-  attribute def ToleranceExperiment :> Experiment {
-    attribute tolerance : Real;
-  }
-
-  attribute def BaselineExperiment :> ToleranceExperiment {
+  attribute def BaselineExperiment :> Experiment {
     attribute startTime = 0.0;
     attribute stopTime = 1.0;
     attribute stepSize = 0.001;
@@ -49,13 +45,13 @@ package SignalStepGain {
     attribute implementation = "CoSimulation";
   }
 
-  part def Step {
+  part def Step :> FmuModel {
     attribute fmu_meta : StepFmu;
     in port parameters : StepParameters;
     out port y : RealSignal;
   }
 
-  part def Gain {
+  part def Gain :> FmuModel {
     attribute fmu_meta : GainFmu;
     in port parameters : GainParameters;
     in port u : RealSignal;

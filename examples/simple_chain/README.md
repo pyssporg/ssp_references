@@ -2,8 +2,9 @@
 
 The smallest end-to-end example in this repository: one SysML architecture,
 two existing FMUs, and one simulation script. It uses only the public APIs of
-`pyssp_sysml2` and `pyssp_simulate`; no repository workflow, registry, or
-artifact-layout code is involved.
+`pyssp_sysml2`, `pycps_sysml2` (the dialect core the architecture imports), and
+`pyssp_simulate`; no repository workflow, registry, or artifact-layout code is
+involved.
 
 ## What it builds
 
@@ -75,6 +76,7 @@ ssp_path = generate_ssp(
     output_path=BUILD_DIR / "simple_chain.ssp",
     composition="SimpleChain",
     fmu_root=REPO_ROOT,
+    includes=(core_definitions(),),
 )
 
 result = simulate(

@@ -22,7 +22,7 @@ package Stair {
     attribute implementation = "CoSimulation";
   }
 
-  part def Stair {
+  part def Stair :> FmuModel {
     attribute fmu_meta : StairFmu;
     out port counter : IntegerSignal;
   }

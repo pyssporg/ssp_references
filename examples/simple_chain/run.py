@@ -2,14 +2,16 @@
 """Build and simulate a two-FMU SSP with the minimal pyssp packages.
 
 The only imports are the public surfaces of ``pyssp_sysml2`` (architecture to
-SSP) and ``pyssp_simulate`` (SSP to trajectories). No repository-local
-workflow or registry code is involved.
+SSP), ``pycps_sysml2`` (the dialect core definitions the architecture imports),
+and ``pyssp_simulate`` (SSP to trajectories). No repository-local workflow or
+registry code is involved.
 """
 
 from __future__ import annotations
 
 from pathlib import Path
 
+from pycps_sysml2 import core_definitions
 from pyssp_simulate import SimulationSpec, simulate
 from pyssp_sysml2 import generate_ssp
 
@@ -24,6 +26,7 @@ def main() -> int:
         output_path=BUILD_DIR / "simple_chain.ssp",
         composition="SimpleChain",
         fmu_root=REPO_ROOT,
+        includes=(core_definitions(),),
     )
     print(f"Built {ssp_path}")
 

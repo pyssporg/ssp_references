@@ -16,13 +16,13 @@ package SignalNestedPassThrough {
     attribute implementation = "CoSimulation";
   }
 
-  part def Step {
+  part def Step :> FmuModel {
     attribute fmu_meta : StepFmu;
     in port parameters : StepParameters;
     out port y : RealSignal;
   }
 
-  part def Add {
+  part def Add :> FmuModel {
     attribute fmu_meta : AddFmu;
     in port parameters : AddParameters;
     in port u1 : RealSignal;
@@ -30,7 +30,7 @@ package SignalNestedPassThrough {
     out port y : RealSignal;
   }
 
-  part def Gain {
+  part def Gain :> FmuModel {
     attribute fmu_meta : GainFmu;
     in port parameters : GainParameters;
     in port u : RealSignal;

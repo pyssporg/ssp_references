@@ -61,8 +61,10 @@ system carries its composition at `architecture/System.sysml`
 under `models/fmu/<model_name>/` that owns its complete definition
 (`architecture/*.sysml`: ports, metadata, and the component declared directly
 as `part def <name> :> FmuModel`) and `src/`; there is no composition root and
-no copy or link of the file in the system directory. The system build passes
-that directory to `build_fixture(includes=...)` (`DD-021`). A large architecture
+no copy or link of the file in the system directory. Every part definition that
+names an FMU (`attribute fmu_meta`) specializes `FmuModel`; the marker is
+authored on each component, never inferred from the metadata attribute. The
+system build passes that directory to `build_fixture(includes=...)` (`DD-021`). A large architecture
 splits along its sections (`01-interfaces`, `02-parameters`, `03-components`,
 `04-structure`, `05-analyses`); every file repeats the package and the loader
 merges the directory in file-name order. Included definition roots load beside

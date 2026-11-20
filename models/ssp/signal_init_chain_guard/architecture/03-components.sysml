@@ -16,19 +16,19 @@ package SignalInitChainGuard {
     attribute implementation = "CoSimulation";
   }
 
-  part def Sine {
+  part def Sine :> FmuModel {
     attribute fmu_meta : SineFmu;
     in port parameters : SineParameters;
     out port y : RealSignal;
   }
 
-  part def InitGuard {
+  part def InitGuard :> FmuModel {
     attribute fmu_meta : InitGuardFmu;
     in port u : RealSignal;
     out port y : RealSignal;
   }
 
-  part def Add {
+  part def Add :> FmuModel {
     attribute fmu_meta : AddFmu;
     in port parameters : AddParameters;
     in port u1 : RealSignal;

@@ -26,7 +26,7 @@ package Dahlquist {
     attribute implementation = "CoSimulation";
   }
 
-  part def Dahlquist {
+  part def Dahlquist :> FmuModel {
     attribute fmu_meta : DahlquistFmu;
     in port parameters : DahlquistParameters;
     out port x : RealSignal;

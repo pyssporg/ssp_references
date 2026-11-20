@@ -31,6 +31,7 @@ GAINOFFSET_FMU_ARCHITECTURE = (
 SYSML_GLOBS = (
     "models/ssp/*/architecture/*.sysml",
     "models/fmu/*/architecture/*.sysml",
+    "examples/*/architecture/*.sysml",
 )
 
 #: Core definitions from ``pycps_sysml2.core_definitions()`` and the declaration
@@ -42,6 +43,7 @@ CORE_DEFINITION_PREFIXES = {
     "DefaultExperiment": "attribute def DefaultExperiment",
     "Experiment": "attribute def Experiment",
     "ParameterInterface": "port def ParameterInterface",
+    "SourcedMetadata": "attribute def SourcedMetadata",
     "FmuMetadata": "attribute def FmuMetadata",
     "SspMetadata": "attribute def SspMetadata",
     "ParameterSet": "attribute def ParameterSet",
@@ -97,6 +99,22 @@ def test_no_fixture_declares_a_dialect_core_definition() -> None:
         if CORE_DEFINITION_PATTERNS[name].search(path.read_text(encoding="utf-8"))
     ]
     assert violations == [], "\n".join(violations)
+
+
+def test_every_fmu_component_specializes_fmu_model() -> None:
+    """Drift caught: an FMU component carries fmu_meta but stays implicit."""
+    implicit = []
+    for directory in sorted({path.parent for path in _physical_sysml_files()}):
+        architecture = pycps_sysml2.load(directory, pycps_sysml2.core_definitions())
+        implicit.extend(
+            f"{directory}: 'part def {definition.name}' carries fmu_meta but "
+            "does not specialize FmuModel"
+            for definition in architecture.part_definitions.values()
+            if "fmu_meta" in definition.attributes
+            and definition.name != "FmuModel"
+            and not is_fmu_model(architecture, definition)
+        )
+    assert implicit == [], "\n".join(implicit)
 
 
 def test_fixture_resolves_core_markers_through_the_include_path() -> None:

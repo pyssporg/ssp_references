@@ -46,7 +46,7 @@ package VanDerPol {
     attribute implementation = "CoSimulation";
   }
 
-  part def VanDerPol {
+  part def VanDerPol :> FmuModel {
     attribute fmu_meta : VanDerPolFmu;
     in port parameters : VanDerPolParameters;
     out port x0 : RealSignal;

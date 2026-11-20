@@ -41,14 +41,14 @@ package RavsV2 {
     attribute implementation = "CoSimulation";
   }
 
-  part def adaption {
+  part def adaption :> FmuModel {
     attribute fmu_meta : AdaptionFmu;
     in port Aircraft_State : RealSignal;
     in port LHexTout : RealSignal;
     out port sWsignals : SwSignals;
   }
 
-  part def atmos {
+  part def atmos :> FmuModel {
     attribute fmu_meta : AtmosFmu;
     in port Alt : RealSignal;
     in port Ma : RealSignal;
@@ -56,7 +56,7 @@ package RavsV2 {
     out port Pamb : RealSignal;
   }
 
-  part def consumer {
+  part def consumer :> FmuModel {
     attribute fmu_meta : ConsumerFmu;
     in port consumerRet : ~FluidState;
     out port consumerFeed : FluidState;
@@ -69,7 +69,7 @@ package RavsV2 {
     out port outletTemp : RealSignal;
   }
 
-  part def ecs_hw {
+  part def ecs_hw :> FmuModel {
     attribute fmu_meta : EcsHwFmu;
     in port Alt : RealSignal;
     in port Mach : RealSignal;
@@ -81,13 +81,13 @@ package RavsV2 {
     out port LHexTout : RealSignal;
   }
 
-  part def ecs_sw {
+  part def ecs_sw :> FmuModel {
     attribute fmu_meta : EcsSwFmu;
     in port Input : SwSignals;
     out port TCoolingPack : RealSignal;
   }
 
-  part def fuel {
+  part def fuel :> FmuModel {
     attribute fmu_meta : FuelFmu;
     in port P_AMB : RealSignal;
     in port T_AMB : RealSignal;
@@ -103,7 +103,7 @@ package RavsV2 {
     out port pmhn : FluidState;
   }
 
-  part def valve_model {
+  part def valve_model :> FmuModel {
     attribute fmu_meta : ValveModelFmu;
     in port parameters : ValveModelParameters;
     in port uA : RealSignal;
@@ -126,7 +126,7 @@ package RavsV2 {
     out port Debug : RealSignal;
   }
 
-  part def interface_model {
+  part def interface_model :> FmuModel {
     attribute fmu_meta : InterfaceModelFmu;
     in port parameters : InterfaceModelParameters;
     in port 'qTA.out.y' : RealSignal;

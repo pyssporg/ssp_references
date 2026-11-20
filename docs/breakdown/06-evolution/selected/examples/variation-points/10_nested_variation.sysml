@@ -49,6 +49,7 @@
  */
 package NestedVariation {
   part def SspModel;
+  part def FmuModel;
 
   port def RealSignal {
     attribute pyssp_flat_connector : Boolean = true;
@@ -75,18 +76,18 @@ package NestedVariation {
     attribute implementation = "CoSimulation";
   }
 
-  part def Step {
+  part def Step :> FmuModel {
     attribute fmu_meta : StepFmu;
     out port y : RealSignal;
   }
 
-  part def Gain {
+  part def Gain :> FmuModel {
     attribute fmu_meta : GainFmu;
     in port u : RealSignal;
     out port y : RealSignal;
   }
 
-  part def Attenuate {
+  part def Attenuate :> FmuModel {
     attribute fmu_meta : AttenuateFmu;
     in port u : RealSignal;
     out port y : RealSignal;

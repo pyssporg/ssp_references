@@ -38,13 +38,13 @@ package PyfmuCsvSourceSink {
     attribute implementation = "CoSimulation";
   }
 
-  part def CsvSource {
+  part def CsvSource :> FmuModel {
     attribute fmu_meta : CsvSourceFmu;
     in port parameters : CsvSourceParameters;
     out port y : RealSignal;
   }
 
-  part def Gain {
+  part def Gain :> FmuModel {
     attribute fmu_meta : GainFmu;
     in port parameters : GainParameters;
     in port u : RealSignal;

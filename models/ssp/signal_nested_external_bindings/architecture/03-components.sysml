@@ -11,13 +11,13 @@ package SignalNestedExternalBindings {
     attribute implementation = "CoSimulation";
   }
 
-  part def Step {
+  part def Step :> FmuModel {
     attribute fmu_meta : StepFmu;
     in port parameters : StepParameters;
     out port y : RealSignal;
   }
 
-  part def Sine {
+  part def Sine :> FmuModel {
     attribute fmu_meta : SineFmu;
     in port parameters : SineParameters;
     out port y : RealSignal;

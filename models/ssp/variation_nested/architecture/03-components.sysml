@@ -15,20 +15,20 @@ package VariationNested {
     attribute implementation = "CoSimulation";
   }
 
-  part def Sine {
+  part def Sine :> FmuModel {
     attribute fmu_meta : SineFmu;
     in port parameters : SineParameters;
     out port y : RealSignal;
   }
 
-  part def Gain {
+  part def Gain :> FmuModel {
     attribute fmu_meta : GainFmu;
     in port parameters : GainParameters;
     in port u : RealSignal;
     out port y : RealSignal;
   }
 
-  part def Product {
+  part def Product :> FmuModel {
     attribute fmu_meta : ProductFmu;
     in port u1 : RealSignal;
     in port u2 : RealSignal;

@@ -1,14 +1,14 @@
 package SimpleChain {
-  part def SspModel;
+  private import ScalarValues::*;
+  private import PysspCore::*;
 
   port def RealSignal {
-    attribute pyssp_flat_connector : Boolean = true;
     attribute value : Real;
   }
 
-  attribute def FmuMetadata {
-    attribute source : String;
-    attribute implementation : String;
+  attribute def SimpleChainDefaultExperiment :> DefaultExperiment {
+    attribute startTime = 0.0;
+    attribute stopTime = 1.0;
   }
 
   attribute def SineFmu :> FmuMetadata {
@@ -21,20 +21,19 @@ package SimpleChain {
     attribute implementation = "CoSimulation";
   }
 
-  part def Sine {
+  part def Sine :> FmuModel {
     attribute fmu_meta : SineFmu;
     out port y : RealSignal;
   }
 
-  part def Gain {
+  part def Gain :> FmuModel {
     attribute fmu_meta : GainFmu;
     in port u : RealSignal;
     out port y : RealSignal;
   }
 
   part def SimpleChain :> SspModel {
-    attribute pyssp_default_start_time : Real = 0.0;
-    attribute pyssp_default_stop_time : Real = 1.0;
+    attribute defaults : SimpleChainDefaultExperiment;
     part sine : Sine;
     part gain : Gain;
     connect sine.y to gain.u;

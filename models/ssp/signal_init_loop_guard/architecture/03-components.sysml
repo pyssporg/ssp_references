@@ -11,14 +11,14 @@ package SignalInitLoopGuard {
     attribute implementation = "CoSimulation";
   }
 
-  part def LoopGain {
+  part def LoopGain :> FmuModel {
     attribute fmu_meta : LoopGainFmu;
     in port parameters : LoopGainParameters;
     in port u : RealSignal;
     out port y : RealSignal;
   }
 
-  part def DivideGuard {
+  part def DivideGuard :> FmuModel {
     attribute fmu_meta : DivideGuardFmu;
     in port parameters : DivideGuardParameters;
     in port u : RealSignal;

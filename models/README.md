@@ -6,7 +6,7 @@ and which backends support it.
 
 ## SSP Fixtures
 
-The 28 SSP fixtures are organized into four architectural classes per the
+The 33 SSP fixtures are organized into four architectural classes per the
 [fixture hierarchy](../docs/breakdown/02-architecture/architecture.md#2-fixture-hierarchy).
 
 ### Simple Reference Models
@@ -20,6 +20,7 @@ Single-FMU SSPs for basic behavioral checks and smoke testing.
 | Dahlquist | Dahlquist test equation; numerical stability baseline | ssp4sim, OMSimulator, FMPy | Smoke | [link](./ssp/Dahlquist/FIXTURE.md) |
 | Stair | Stair-step function; discrete-time output behavior | ssp4sim, OMSimulator | Smoke | [link](./ssp/Stair/FIXTURE.md) |
 | Resource | Resource consumption and memory management baseline | ssp4sim, OMSimulator | Smoke | [link](./ssp/Resource/FIXTURE.md) |
+| GainOffset | Minimal SysML-authored FMU (C source) through FMI emission, packaging, simulation | OMSimulator | Regression | [link](./ssp/GainOffset/FIXTURE.md) |
 
 ### Deterministic Signal-Propagation Fixtures
 
@@ -40,6 +41,10 @@ used as loop-resolution diagnostics, suitable for cross-engine comparison.
 | signal_parameter_inline_with_mapping | Step with inline SSV and external SSM mapping | Output tracks step configuration | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
 | signal_nested_pass_through | Step signal routed through a nested gain subsystem | Nested boundary output matches the source path | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_pass_through/FIXTURE.md) |
 | signal_nested_external_bindings | Nested system with external SSV+SSM bindings | Root step output routed to system connector | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_external_bindings/FIXTURE.md) |
+| signal_init_chain | Three-FMU strict chain with connected inputs | Start-time frontier matches each component's committed values | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_init_chain/FIXTURE.md) |
+| signal_init_chain_guard | Strict chain with a guard that rejects a zero connected input at init | Initialization aborts loudly rather than committing a default | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_init_chain_guard/FIXTURE.md) |
+| signal_init_loop | Two pass-through gains wired in a cycle | Loop fixed point reached by iteration, not ordering | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_init_loop/FIXTURE.md) |
+| signal_init_loop_guard | Cyclic loop whose second component divides by its input | Division by zero during initialization aborts at startup | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_init_loop_guard/FIXTURE.md) |
 
 ### Composite SSPs
 

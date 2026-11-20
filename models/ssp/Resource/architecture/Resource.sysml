@@ -22,7 +22,7 @@ package Resource {
     attribute implementation = "CoSimulation";
   }
 
-  part def Resource {
+  part def Resource :> FmuModel {
     attribute fmu_meta : ResourceFmu;
     out port y : IntegerSignal;
   }

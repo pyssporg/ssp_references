@@ -50,7 +50,7 @@ repository that exercises subsystem nesting and boundary connectors from SysML.
 `System` is exported from SysML; the
 [port dialect](../../../docs/reference/port-dialect.md) explains how ports are
 shaped around FMU variable names. Here `fuel.pmhn` is `FluidState` (`pmhn.p`
-output, `pmhn.m` input) while `fuel.pmh` is `~FluidState`. The source SSD has
+output, `pmhn.m` input) while `fuel.pmh` is `FluidStateConjugate`. The source SSD has
 no `<Dimension>` entries, so the `X[1..3]` variables are three distinct
 scalars.
 

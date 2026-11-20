@@ -40,8 +40,8 @@ fluid-state signals; one FMU reads its boundary conditions from a packaged
 `System` is exported from SysML; the
 [port dialect](../../../docs/reference/port-dialect.md) explains how ports are
 shaped around FMU variable names. In this fixture the mirrored fluid side is
-`ECS_HW.consumerFeed : ~FluidState` (`consumerFeed.p` input, `consumerFeed.m`
-output).
+`ECS_HW.consumerFeed : FluidStateConjugate` (`consumerFeed.p` input,
+`consumerFeed.m` output).
 
 The parameter interface declares the two effective structured targets,
 `'pipeA.L'` and `'pipeB.L'`. The legacy external SSV/SSM pair was almost

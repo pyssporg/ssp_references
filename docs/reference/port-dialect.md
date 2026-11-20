@@ -6,9 +6,10 @@ characters a SysML identifier cannot (dots and array brackets).
 - A fluid port carries both directions in one usage through member-level
   `in`/`out`: `FluidState` marks `p`, `h`, and `X` as outputs and `m` and `hn`
   as inputs.
-- The mirrored side types the same port with the conjugated definition,
-  `~FluidState`, which flips `p`, `h`, and `X` to inputs and `m` and `hn` to
-  outputs.
+- The mirrored side types the same port with an authored conjugate definition,
+  `FluidStateConjugate`, which declares `p`, `h`, and `X` as inputs and `m` and
+  `hn` as outputs. Write the reversal out: `sysmlpy` records `~FluidState`
+  literally and never registers the conjugated symbol.
 - Each collapsed port keeps one `connect`; the SSD expands every member with
   its own direction.
 - A fixed attribute array (`attribute X : Real[3];`) is expanded to

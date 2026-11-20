@@ -58,7 +58,7 @@ package RavsV2 {
 
   part def consumer :> FmuModel {
     attribute fmu_meta : ConsumerFmu;
-    in port consumerRet : ~FluidState;
+    in port consumerRet : FluidStateConjugate;
     out port consumerFeed : FluidState;
     in port Alt : RealSignal;
     in port Mach : RealSignal;
@@ -75,7 +75,7 @@ package RavsV2 {
     in port Mach : RealSignal;
     in port Tamb : RealSignal;
     in port Pamb : RealSignal;
-    in port consumerFeed : ~FluidState;
+    in port consumerFeed : FluidStateConjugate;
     in port reqCoolingTemperature : RealSignal;
     out port consumerRet : FluidState;
     out port LHexTout : RealSignal;
@@ -95,7 +95,7 @@ package RavsV2 {
     in port Mach : RealSignal;
     in port valve_mflowA : RealSignal;
     in port valve_mflowB : RealSignal;
-    in port pmh : ~FluidState;
+    in port pmh : FluidStateConjugate;
     out port valve_u : RealSignal;
     out port valve_p1 : RealSignal;
     out port valve_p2 : RealSignal;

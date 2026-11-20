@@ -38,8 +38,8 @@ package RavsV1 {
     in port Mach : RealSignal;
     in port Tamb : RealSignal;
     in port Pamb : RealSignal;
-    in port consumerFeed : ~FluidState;
-    in port consumerRet : ~FluidState;
+    in port consumerFeed : FluidStateConjugate;
+    in port consumerRet : FluidStateConjugate;
     in port reqCoolingTemperature : RealSignal;
     out port LHexTout : RealSignal;
   }

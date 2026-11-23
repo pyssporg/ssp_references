@@ -1,4 +1,7 @@
-# Naming Conventions
+# Breakdown Naming Conventions
+
+Product-breakdown identifiers, record names, and archive conventions. SysML
+fixture naming is in [`sysml-naming.md`](./sysml-naming.md).
 
 - **Current state**: layer leaves carry `id`, `type`, `title`, `summary`, `date`, and `status` front-matter.
 - **Citations**: cite another node by ID in backticks, never by a markdown path.

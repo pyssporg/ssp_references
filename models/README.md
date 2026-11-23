@@ -2,7 +2,8 @@
 
 This document lists every SSP and FMU fixture in the repository. Use it to
 quickly understand what models are available, what each one demonstrates,
-and which backends support it.
+and which backends support it. SysML authoring conventions are in
+[`docs/reference/sysml-naming.md`](../docs/reference/sysml-naming.md).
 
 ## SSP Fixtures
 

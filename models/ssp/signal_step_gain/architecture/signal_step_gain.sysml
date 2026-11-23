@@ -66,7 +66,7 @@ package SignalStepGain {
     connect step.y to gain.u;
   }
 
-  part def test_baseline :> Analysis {
+  part def baseline :> Analysis {
     doc /* Step through a fixed gain over the test window. */
     attribute experiment_baseline : BaselineExperiment;
     attribute scenario : ScenarioSet;

@@ -3,7 +3,7 @@
   <ssd:System name="System">
     <ssd:ParameterBindings>
       <ssd:ParameterBinding source="resources/ScenarioSet.ssv">
-        <ssd:ParameterMapping source="resources/test_baseline.ssm" />
+        <ssd:ParameterMapping source="resources/baseline.ssm" />
       </ssd:ParameterBinding>
     </ssd:ParameterBindings>
     <ssd:Elements>

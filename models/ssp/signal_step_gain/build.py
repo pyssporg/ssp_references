@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the exported signal_step_gain model and its test_baseline analysis.
+"""Build the exported signal_step_gain model and its baseline analysis.
 
 Parameter form: one root external SSV+SSM binding bound after the model build.
 """
@@ -18,8 +18,8 @@ if __name__ == "__main__":
     builds = build_fixture(
         model_dir=Path(__file__).resolve().parent,
         repo_root=REPO_ROOT,
-        analyses=("test_baseline",),
+        analyses=("baseline",),
     )
-    scenario = read_scenario(builds["test_baseline"].descriptor)
-    bind(builds["test_baseline"], scenario.ssv_path, ssm=scenario.ssm_path)
+    scenario = read_scenario(builds["baseline"].descriptor)
+    bind(builds["baseline"], scenario.ssv_path, ssm=scenario.ssm_path)
     raise SystemExit(report_builds(builds))

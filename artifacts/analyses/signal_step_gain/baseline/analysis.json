@@ -1,5 +1,5 @@
 {
-  "analysis": "test_baseline",
+  "analysis": "baseline",
   "composition": "System",
   "description": "Step through a fixed gain over the test window.",
   "experiment": {
@@ -11,7 +11,7 @@
   "model": "signal_step_gain",
   "scenario": {
     "set": "ScenarioSet",
-    "ssm": "test_baseline.ssm",
+    "ssm": "baseline.ssm",
     "ssv": "ScenarioSet.ssv"
   },
   "sut": "sut",

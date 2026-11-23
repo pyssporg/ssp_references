@@ -6,7 +6,7 @@
   "error": null,
   "request": {
     "backend": "ssp4sim",
-    "case": "test_baseline",
+    "case": "baseline",
     "model": "signal_step_gain",
     "setup_manifest": "../setup.json"
   },

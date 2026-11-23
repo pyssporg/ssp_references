@@ -7,15 +7,15 @@
   "metrics": "metrics.csv",
   "reference_label": "ssp4sim",
   "request": {
-    "case": "test_baseline",
+    "case": "baseline",
     "runs": [
       {
         "backend": "ssp4sim",
-        "manifest": "../../../../simulation/signal_step_gain/test_baseline/ssp4sim/simulation.json"
+        "manifest": "../../../../simulation/signal_step_gain/baseline/ssp4sim/simulation.json"
       },
       {
         "backend": "fmpy",
-        "manifest": "../../../../simulation/signal_step_gain/test_baseline/fmpy/simulation.json"
+        "manifest": "../../../../simulation/signal_step_gain/baseline/fmpy/simulation.json"
       }
     ]
   },

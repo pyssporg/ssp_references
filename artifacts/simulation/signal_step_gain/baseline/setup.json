@@ -1,12 +1,12 @@
 {
-  "analysis": "test_baseline",
-  "analysis_root": "../../../analyses/signal_step_gain/test_baseline",
+  "analysis": "baseline",
+  "analysis_root": "../../../analyses/signal_step_gain/baseline",
   "backends": [
     "ssp4sim",
     "omsimulator",
     "fmpy"
   ],
-  "case": "test_baseline",
+  "case": "baseline",
   "compare_signals": [
     "step.y",
     "gain.y"
@@ -18,10 +18,10 @@
     "rtol": 0.01
   },
   "model": "signal_step_gain",
-  "resources_dir": "../../../models/signal_step_gain/test_baseline/model/resources",
+  "resources_dir": "../../../models/signal_step_gain/baseline/model/resources",
   "root_system_name": "System",
-  "ssp_root": "../../../models/signal_step_gain/test_baseline/model",
-  "system_structure": "../../../models/signal_step_gain/test_baseline/model/SystemStructure.ssd",
+  "ssp_root": "../../../models/signal_step_gain/baseline/model",
+  "system_structure": "../../../models/signal_step_gain/baseline/model/SystemStructure.ssd",
   "window": {
     "interval": 0.001,
     "start_time": 0.0,

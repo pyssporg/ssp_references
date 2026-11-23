@@ -246,7 +246,7 @@
             "omsimulator",
             "fmpy"
           ],
-          "analysis": "test_baseline"
+          "analysis": "baseline"
         }
       ],
       "build": "model"

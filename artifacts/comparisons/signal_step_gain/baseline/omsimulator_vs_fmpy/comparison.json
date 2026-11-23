@@ -7,15 +7,15 @@
   "metrics": "metrics.csv",
   "reference_label": "omsimulator",
   "request": {
-    "case": "test_baseline",
+    "case": "baseline",
     "runs": [
       {
         "backend": "omsimulator",
-        "manifest": "../../../../simulation/signal_step_gain/test_baseline/omsimulator/simulation.json"
+        "manifest": "../../../../simulation/signal_step_gain/baseline/omsimulator/simulation.json"
       },
       {
         "backend": "fmpy",
-        "manifest": "../../../../simulation/signal_step_gain/test_baseline/fmpy/simulation.json"
+        "manifest": "../../../../simulation/signal_step_gain/baseline/fmpy/simulation.json"
       }
     ]
   },

@@ -12,11 +12,11 @@
       "runs": [
         {
           "backend": "ssp4sim",
-          "manifest": "../../../simulation/signal_step_gain/test_baseline/ssp4sim/simulation.json"
+          "manifest": "../../../simulation/signal_step_gain/baseline/ssp4sim/simulation.json"
         },
         {
           "backend": "omsimulator",
-          "manifest": "../../../simulation/signal_step_gain/test_baseline/omsimulator/simulation.json"
+          "manifest": "../../../simulation/signal_step_gain/baseline/omsimulator/simulation.json"
         }
       ],
       "summary": {
@@ -46,11 +46,11 @@
       "runs": [
         {
           "backend": "ssp4sim",
-          "manifest": "../../../simulation/signal_step_gain/test_baseline/ssp4sim/simulation.json"
+          "manifest": "../../../simulation/signal_step_gain/baseline/ssp4sim/simulation.json"
         },
         {
           "backend": "fmpy",
-          "manifest": "../../../simulation/signal_step_gain/test_baseline/fmpy/simulation.json"
+          "manifest": "../../../simulation/signal_step_gain/baseline/fmpy/simulation.json"
         }
       ],
       "summary": {
@@ -80,11 +80,11 @@
       "runs": [
         {
           "backend": "omsimulator",
-          "manifest": "../../../simulation/signal_step_gain/test_baseline/omsimulator/simulation.json"
+          "manifest": "../../../simulation/signal_step_gain/baseline/omsimulator/simulation.json"
         },
         {
           "backend": "fmpy",
-          "manifest": "../../../simulation/signal_step_gain/test_baseline/fmpy/simulation.json"
+          "manifest": "../../../simulation/signal_step_gain/baseline/fmpy/simulation.json"
         }
       ],
       "summary": {
@@ -109,20 +109,20 @@
     "status": "pass"
   },
   "request": {
-    "case": "test_baseline",
+    "case": "baseline",
     "model": "signal_step_gain",
     "runs": [
       {
         "backend": "ssp4sim",
-        "manifest": "../../../simulation/signal_step_gain/test_baseline/ssp4sim/simulation.json"
+        "manifest": "../../../simulation/signal_step_gain/baseline/ssp4sim/simulation.json"
       },
       {
         "backend": "omsimulator",
-        "manifest": "../../../simulation/signal_step_gain/test_baseline/omsimulator/simulation.json"
+        "manifest": "../../../simulation/signal_step_gain/baseline/omsimulator/simulation.json"
       },
       {
         "backend": "fmpy",
-        "manifest": "../../../simulation/signal_step_gain/test_baseline/fmpy/simulation.json"
+        "manifest": "../../../simulation/signal_step_gain/baseline/fmpy/simulation.json"
       }
     ]
   },

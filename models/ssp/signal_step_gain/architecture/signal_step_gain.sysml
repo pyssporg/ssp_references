@@ -32,7 +32,6 @@ package SignalStepGain {
     attribute startTime = 0.0;
     attribute stopTime = 1.0;
     attribute stepSize = 0.001;
-    attribute tolerance = 0.0001;
   }
 
   attribute def StepFmu :> FmuMetadata {

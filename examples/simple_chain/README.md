@@ -1,107 +1,82 @@
 # simple_chain
 
-The smallest end-to-end example in this repository: one SysML architecture,
-two existing FMUs, and one simulation script. It uses only the public APIs of
-`pyssp_sysml2`, `pycps_sysml2` (the dialect core the architecture imports), and
-`pyssp_simulate`; no repository workflow, registry, or artifact-layout code is
-involved.
+Builds the `SimpleChain` architecture — two existing Modelica FMUs wired
+`Sine.y → Gain.u` — into an `.ssp`, then simulates it with the `ssp4sim`
+backend.
 
-## What it builds
+## Run
 
-```text
-architecture/simple_chain.sysml
-        │  pyssp_sysml2.generate_ssp
-        ▼
-build/simple_chain.ssp
-        │  pyssp_simulate.simulate(backend="ssp4sim")
-        ▼
-build/ssp4sim.csv
+From the workspace root, in the workspace venv:
+
+```bash
+python repos/ssp_references/examples/simple_chain/run.py
 ```
 
-The architecture wires two leaf FMUs:
+Everything lands under the gitignored `build/examples/simple_chain/`:
 
-- `Sine` — `models/fmu/Modelica.Blocks.Sources.Sine/fmu`
-- `Gain` — `models/fmu/Modelica.Blocks.Math.Gain/fmu`
+| Path | What |
+| --- | --- |
+| `simple_chain.ssp` | the packaged architecture, SSD, and both FMUs |
+| `ssp4sim.csv` | the simulated trajectory |
+
+Expected output:
 
 ```text
-Sine.y ──▶ Gain.u
+SSP: build/examples/simple_chain/simple_chain.ssp
+CSV: build/examples/simple_chain/ssp4sim.csv
 ```
+
+`--out DIR` writes both artifacts to another directory. The `SimulationSpec`
+sets `tolerance=1e-6` because the `ssp4sim` backend rejects an omitted
+tolerance.
+
+## Setup
+
+Activate the workspace venv from the root `README.md`, which supplies
+`pyssp_sysml2`, `pycps_sysml2`, `pyssp_simulate`, and the `ssp4sim` backend:
+
+```bash
+source .venv-experimental/bin/activate
+```
+
+This example's `requirements.txt` pins its standalone release-wheel set:
+`pyssp_sysml2` `v0.5.0` (which pulls `experimental-pyssp-standard`
+`v0.9.3.dev0` transitively), `pyssp_simulate` `v0.3.0`, and `ssp4sim`
+`v0.3.4`.
+
+## What the definition encodes
+
+`architecture/simple_chain.sysml` uses the `PysspCore` dialect roles owned by
+`pyssp_sysml_definitions` and re-exported by
+`pycps_sysml2.core_definitions()`
+(`repos/pyssp_sysml_definitions/src/pyssp_sysml_definitions/core.sysml`):
+
+- `Sine` and `Gain` are `FmuModel`s. Each `fmu_meta :> FmuMetadata` names its
+  `source` under `models/fmu/` and `implementation = "CoSimulation"`.
+- `RealSignal` is the one port definition: an `attribute value : Real`.
+- `SimpleChain :> SspModel` is the exportable SSP boundary, with
+  `DefaultExperiment` start `0.0` and stop `1.0`.
 
 Both FMUs keep their model-description defaults (`amplitude=1`, `f=1`,
 `k=1`), so `Gain.y` follows the sine wave. The example demonstrates the
 pipeline, not a behavioral fixture.
 
-## Setup
+## Composition
 
-`requirements.txt` installs only what the example needs:
+`SimpleChain` declares `part sine : Sine`, `part gain : Gain`, and one
+connection:
 
-- `pyssp_sysml2` from its GitHub release asset (tag `v0.3.0`)
-- `pyssp_simulate` from its GitHub release asset (tag `v0.2.0`)
-- the experimental `experimental-pyssp-standard` distribution, pulled
-  transitively from its release asset by `pyssp_sysml2`'s metadata
-  (`pyssporg/experimental_pyssp_standard`, tag `v0.9.2.dev0`; the import name
-  stays `pyssp_standard`), because the PyPI release predates the API
-  `pyssp_sysml2` needs
-- the pinned `ssp4sim` backend wheel (Linux `x86_64`)
-
-Run from the repository root so the relative paths to the requirements file
-and `run.py` resolve. The environment lives under `build/`, which is
-git-ignored:
-
-```bash
-python3 -m venv examples/simple_chain/build/venv
-examples/simple_chain/build/venv/bin/pip install -r examples/simple_chain/requirements.txt
+```text
+sine.y ──▶ gain.u
 ```
 
-## Run it
-
-```bash
-examples/simple_chain/build/venv/bin/python examples/simple_chain/run.py
-```
-
-Generated files:
-
-- `build/simple_chain.ssp` — the packaged architecture, SSD, and both FMUs
-- `build/ssp4sim.csv` — the simulated trajectory
-
-`build/` is git-ignored.
-
-## Script
-
-`run.py` has two steps:
-
-```python
-ssp_path = generate_ssp(
-    architecture_path=EXAMPLE_DIR / "architecture",
-    output_path=BUILD_DIR / "simple_chain.ssp",
-    composition="SimpleChain",
-    fmu_root=REPO_ROOT,
-    includes=(core_definitions(),),
-)
-
-result = simulate(
-    SimulationSpec(
-        ssp=ssp_path,
-        start_time=0.0,
-        stop_time=1.0,
-        step_size=0.001,
-        tolerance=1e-6,
-        result_file=BUILD_DIR / "ssp4sim.csv",
-    ),
-    backend="ssp4sim",
-)
-```
-
-`ssp4sim` requires an explicit `tolerance`; the backend raises `ValueError`
-when it is omitted. The SSP is a standard artifact at the library border:
-`pyssp_sysml2` writes it and `pyssp_simulate` reads it. Neither package hands
-an internal object to the other.
+`Sine` is output-only and `Gain` takes that signal in and publishes its own
+output, so the composition is the two components plus that single wire.
 
 ## Files
 
 | Path | Purpose |
-|------|---------|
+| --- | --- |
 | `architecture/simple_chain.sysml` | Authored architecture: two `part def`s, ports, and one connection |
-| `run.py` | Builds the SSP and runs the ssp4sim backend |
-| `requirements.txt` | Minimal pip environment for the example |
-| `build/` | Generated SSP and result CSV (not checked in) |
+| `run.py` | Builds the SSP and runs the `ssp4sim` backend |
+| `requirements.txt` | Release-wheel pins for a standalone install |

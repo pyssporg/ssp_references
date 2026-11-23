@@ -278,12 +278,12 @@ reference-model cases, the matching CSV baselines live beside their fixture:
   distributions as GitHub release assets — the six pyssp capability libraries
   (`experimental-pyssp-standard`, `pyssp-workflow`, `pyssp-simulate`,
   `pyssp-sysml2`, `pyssp-vv`, `sequence-extensions-flow`) plus the SysML
-  dialect library `pycps-sysml2` and the FMI artifact library `pyfmi-sysml2`.
+  dialect library `pycps-sysml2` and the FMI artifact library `pyfmi-interfaces`.
   Each wheel's metadata names its sibling dependencies as
   `releases/download/v<version>/` URLs, so the version graph travels inside the
   wheels. A tag that has not been released makes the dependency unresolvable.
   No feature extras exist: `pyssp_workflow` imports none of `pyssp_sysml2`,
-  `pycps_sysml2`, or `pyfmi_sysml2`, and its only optional group is `dev`.
+  `pycps_sysml2`, or `pyfmi_interfaces`, and its only optional group is `dev`.
   `requirements-dev.txt` replaces the wheels with editable checkouts but still
   resolves those URLs.
 - `pyssp4sim` is pinned to the `v0.3.2` Linux `x86_64` wheel.

@@ -23,7 +23,8 @@
 #   python3 -m pip install -e ../pyssp_vv
 #   python3 -m pip install -e ../sequence_extensions
 #   python3 -m pip install -e ../pycps_sysml2
-#   python3 -m pip install -e ../pyfmi_sysml2
+#   python3 -m pip install -e ../pyfmi_interfaces
+#   python3 -m pip install -e ../pyfmi_sysml
 #
 # The editable checkouts replace the wheel installs after resolution, but
 # resolution still reads the direct references from the wheel metadata, so the

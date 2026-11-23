@@ -110,4 +110,4 @@ link. The exported identity (`modelName="Generator"`, its derived GUID, and
 `MODEL_NAME` in the C source) must match the built `modelDescription.xml`.
 Redeclaring a `pycps_sysml2` core definition is caught by
 `test_dialect_core.py`. The public FMI 2.0 headers come from
-`pyfmi_sysml2.fmi2_headers()`.
+`pyfmi_interfaces.fmi2_headers()`.

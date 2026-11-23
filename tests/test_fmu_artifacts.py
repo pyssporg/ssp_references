@@ -5,9 +5,10 @@
 definition. The committed ``artifacts/build/GainOffset/Generator.fmu`` archive
 *is* the definition: it ships ``modelDescription.xml``, the generated C
 interface headers, and the compiled binary. Four independently produced pieces
-must describe the same interface: ``modelDescription.xml`` (pyfmi_sysml2 model
-description), the C header (pyfmi_sysml2 C interface), the compiled binary
-(fixture-local gcc), and the packaged archive (pyfmi_sysml2 packaging). Each one
+must describe the same interface: ``modelDescription.xml`` (pyfmi_interfaces
+model description), the C header (pyfmi_interfaces C interface), the compiled
+binary (fixture-local gcc), and the packaged archive (pyfmi_interfaces
+emission, ``pyssp_standard`` packaging). Each one
 can drift on its own: a stale header after a SysML rename, a binary compiled
 before the header changed, an archive that kept the previous ``.so``, or a model
 description whose ``ModelStructure`` no longer lists the outputs. The two layers
@@ -24,13 +25,14 @@ symbols, archive layout, the exported identity).
 from __future__ import annotations
 
 import ast
+import hashlib
 import re
 import subprocess
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-import pyfmi_sysml2
+import pyfmi_interfaces
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 #: Committed archive and tracked binary.
@@ -51,12 +53,21 @@ SYSTEM_DEFINITION = SSP_ARCHITECTURE / "System.sysml"
 #: The FMU source that must name the exported member, not the removed composition.
 C_SOURCE = REPO_ROOT / "models" / "fmu" / "GainOffset" / "src" / "GainOffset.c"
 
-#: The member ``part def`` the FMU exports, and the GUID pyfmi_sysml2 derives for
-#: it: ``uuid5(NAMESPACE_URL, "pyssp_sysml2/Generator")``.
+#: The member ``part def`` the FMU exports, and the GUID pyfmi_interfaces derives
+#: for it: ``uuid5(NAMESPACE_URL, "pyssp_sysml2/Generator")`` (the namespace
+#: string is frozen from the former library name).
 EXPORTED_MODEL = "Generator"
 EXPORTED_GUID = "{eca0627b-dad2-5d71-90b2-e450ef615122}"
 
-#: C data type constants emitted by pyfmi_sysml2 -> FMI scalar type element.
+#: Emission identity and float form of the current generator.
+GENERATION_TOOL = "pyfmi_interfaces tooling"
+EXPECTED_STARTS = {"gain": "2", "offset": "0.5", "frequency": "1"}
+
+#: The fixture note that records the pinned hashes, and the artifact root they name.
+FIXTURE_NOTE = REPO_ROOT / "models" / "fmu" / "GainOffset" / "FIXTURE.md"
+_PINNED_HASH = re.compile(r"^- `([^`]+)`: `([0-9a-f]{64})`$", re.MULTILINE)
+
+#: C data type constants emitted by pyfmi_interfaces -> FMI scalar type element.
 FMI_TYPE_BY_DATATYPE = {
     "GAINOFFSET_DATA_REAL": "Real",
     "GAINOFFSET_DATA_INTEGER": "Integer",
@@ -324,7 +335,7 @@ def test_archive_headers_live_under_sources() -> None:
     for header in headers:
         assert header.startswith("sources/"), header
         assert "/" not in header.removeprefix("sources/"), header
-    for public in pyfmi_sysml2.fmi2_headers():
+    for public in pyfmi_interfaces.fmi2_headers():
         member = f"sources/{public.name}"
         assert member in names, public
         assert _member_bytes(member) == public.read_bytes(), public
@@ -438,6 +449,35 @@ def test_model_description_exports_the_member_model_identity() -> None:
     assert interface.attrib["modelIdentifier"] == EXPORTED_MODEL, (
         interface.attrib["modelIdentifier"]
     )
+
+
+def test_model_description_records_the_current_generator_and_start_form() -> None:
+    """Drift caught: the definition regresses to the former tooling or float form."""
+    root = _description_root()
+    assert root.attrib["generationTool"] == GENERATION_TOOL
+    starts = {
+        element.attrib["name"]: child.attrib["start"]
+        for element in root.iter()
+        if _local(element.tag) == "ScalarVariable"
+        for child in element
+        if "start" in child.attrib
+    }
+    assert starts == EXPECTED_STARTS
+
+
+def test_fixture_note_pins_the_built_artifacts() -> None:
+    """Drift caught: the documented sha256 block disagrees with the artifacts."""
+    pins = dict(_PINNED_HASH.findall(FIXTURE_NOTE.read_text(encoding="utf-8")))
+    assert set(pins) == {
+        "Generator.fmu",
+        "Generator.so",
+        "modelDescription.xml",
+        "sources/GainOffset_Generator.h",
+        "sources/GainOffset_InterfaceCommon.h",
+    }, pins
+    for name, expected in pins.items():
+        actual = hashlib.sha256((ARTIFACTS / name).read_bytes()).hexdigest()
+        assert actual == expected, name
 
 
 def test_c_source_names_the_exported_member_model() -> None:

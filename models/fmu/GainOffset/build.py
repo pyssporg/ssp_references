@@ -6,7 +6,12 @@ its architecture (``architecture/GainOffset.sysml``). Every generated file goes
 to ``artifacts/build/GainOffset/``: the C interface headers, the
 ``modelDescription.xml`` definition, the compiled ``Generator.so``, and the
 packaged ``Generator.fmu``. The public FMI 2.0 headers come from
-``pyfmi_sysml2.fmi2_headers()``.
+``pyfmi_interfaces.fmi2_headers()``.
+
+The architecture is parsed once through the ``pyfmi_sysml`` composition layer:
+``load_architecture`` merges the packaged core definitions, and the
+source-taking wrappers reduce that one architecture onto the ``pyfmi_interfaces``
+emitters. The parser and the emitters are never called separately.
 
 The system fixture at ``models/ssp/GainOffset/`` consumes this directory's
 ``architecture`` as an additional input and builds the SSP afterwards,
@@ -21,12 +26,13 @@ products under ``artifacts/``.
 from __future__ import annotations
 
 import subprocess
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
-import pycps_sysml2
-import pyfmi_sysml2
+import pyfmi_interfaces
+import pyfmi_sysml
 from pyssp_standard import FMU
+from pyssp_sysml_definitions import core_definitions
 
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -39,20 +45,20 @@ GENERATED_HEADER_DIR = BUILD_DIR / "sources"
 COMPONENT = "Generator"
 PLATFORM = "linux64"
 #: Injected so ``generationDateAndTime`` does not change between rebuilds.
-GENERATION_TIME = datetime(2026, 1, 1, tzinfo=timezone.utc)
+GENERATION_TIME = datetime(2026, 1, 1, tzinfo=UTC)
 
 
 def write_definition() -> tuple[tuple[Path, ...], Path]:
     """Generate the definition and the build-side C interface headers."""
-    architecture = pycps_sysml2.load(
-        ARCHITECTURE_DIR, pycps_sysml2.core_definitions()
+    architecture = pyfmi_sysml.load_architecture(
+        ARCHITECTURE_DIR, includes=(core_definitions(),)
     )
     # ``Generator`` is the FMU definition itself (``:> FmuModel``), so both
     # generators name it explicitly instead of reaching it through a container.
-    headers = pyfmi_sysml2.generate_c_headers(
+    headers = pyfmi_sysml.generate_c_headers(
         architecture, GENERATED_HEADER_DIR, composition=COMPONENT
     )
-    (description,) = pyfmi_sysml2.generate_model_description(
+    (description,) = pyfmi_sysml.generate_model_description(
         architecture,
         BUILD_DIR,
         composition=COMPONENT,
@@ -71,7 +77,7 @@ def compile_binary() -> Path:
     """Compile the fixture's C implementation into the FMU binary."""
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
     binary = BUILD_DIR / f"{COMPONENT}.so"
-    fmi_headers = pyfmi_sysml2.fmi2_headers()
+    fmi_headers = pyfmi_interfaces.fmi2_headers()
     include_dirs = {GENERATED_HEADER_DIR, *(header.parent for header in fmi_headers)}
     command = ["gcc", "-std=c11", "-O2", "-fPIC", "-shared"]
     for directory in sorted(include_dirs):
@@ -89,7 +95,7 @@ def package_binary(
         BUILD_DIR / f"{COMPONENT}.fmu",
         model_description=model_description,
         binaries={PLATFORM: binary},
-        sources=generated_headers + pyfmi_sysml2.fmi2_headers(),
+        sources=generated_headers + pyfmi_interfaces.fmi2_headers(),
         fmi_version="2.0",
     )
 

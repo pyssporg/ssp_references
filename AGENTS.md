@@ -102,10 +102,13 @@ capability.
   `pyssp_sysml2/3rd_party/experimental_pyssp_standard` copy that once nested
   here is gone with the vendored tree; local changes belong in the canonical
   checkout.
-- `pycps_sysml2` and `pyfmi_sysml2` are separate sibling repos in the flat
-  ecosystem workspace (`repos/pycps_sysml2`, `repos/pyfmi_sysml2`), released
-  v0.1.0 libraries carried as base dependencies of `pyssp-workflow`; cross-repo
-  development installs them as sibling editable checkouts.
+- `pycps_sysml2`, `pyfmi_interfaces`, and `pyfmi_sysml` are separate sibling
+  repos in the flat ecosystem workspace (`repos/pycps_sysml2`,
+  `repos/pyfmi_interfaces`, `repos/pyfmi_sysml`). `pycps_sysml2` is the dialect,
+  `pyfmi_interfaces` emits FMI artifacts from the parser-free reduction, and
+  `pyfmi_sysml` is the composition layer that owns the source-taking commands.
+  `pyssp-workflow` carries the dialect and the FMI emitter; cross-repo
+  development installs the siblings as editable checkouts.
 - Keep cross-cutting workflow or strategy notes in `docs/breakdown/`.
 - When docs move or commands change, update the references so the documented
   build and simulation flow stays accurate.
@@ -130,7 +133,7 @@ capability.
   reference whose base dependencies transitively pin the eight pyssp and SysML
   distributions as sibling GitHub release assets
   (`releases/download/v<version>/`). Six are pyssp capability libraries; two
-  are the SysML dialect (`pycps-sysml2`) and FMI artifact (`pyfmi-sysml2`)
+  are the SysML dialect (`pycps-sysml2`) and FMI artifact (`pyfmi-interfaces`)
   libraries. There are no feature extras; the only optional-dependencies group
   is `dev`. The tags must exist before any install or editable checkout
   resolves.

@@ -21,8 +21,8 @@ status: current
 - **Registry**: the simulation registry selects active model builds, analyses, backends, signals, references, and gate policy.
 - **Verdict**: a comparison verdict is pass, fail, or invalid.
 - **Ownership**: generic build, run, compare, and verify behavior comes from the pyssp ecosystem.
-- **FMI fixtures**: FMI fixtures generate through `pyfmi_sysml2` — C headers, modelDescription, Modelica connectors, and FMU packaging.
-- **FMI ownership**: `pyssp_sysml2` emits no FMI; its `generate fmi` removal is transitional, and the migration note names `pyfmi_sysml2`.
+- **FMI fixtures**: FMI fixtures generate through the `pyfmi_sysml` composition layer, which drives the `pyfmi_interfaces` emitters — C headers, modelDescription, Modelica connectors — and packages through `pyssp_standard.FMU.package`.
+- **FMI ownership**: `pyssp_sysml2` emits no FMI; its `generate fmi` command is removed, and `pyfmi-sysml` owns the source-taking FMI commands while `pyfmi_interfaces` owns the emitters.
 - **Library boundaries**: pass standardized artifacts first; when no standard exists, pass only documented public API types, never private or adapter-only structures.
 
 ## Owns

@@ -97,7 +97,8 @@ editable checkout from its own tree in the flat ecosystem workspace
 | --- | --- |
 | `pyssp_workflow` | Composition layer and single install reference: authoring, analysis, fixture, binding, compare, nodes, development tree |
 | `experimental_pyssp_standard` | Build and SSP XML inspection |
-| `pyfmi_sysml2` | FMI artifact emission behind the authoring stage |
+| `pyfmi_interfaces` | FMI artifact emission from the parser-free reduction |
+| `pyfmi_sysml` | SysML composition and the source-taking FMI commands |
 | `pycps_sysml2` | SysML dialect behind the authoring stage |
 | `pyssp_simulate` | Simulate |
 | `pyssp_sysml2` | Authoring (CLI) and SysML round-trip checker |

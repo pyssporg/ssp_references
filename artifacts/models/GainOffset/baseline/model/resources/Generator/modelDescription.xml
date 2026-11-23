@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
-<fmiModelDescription fmiVersion="2.0" modelName="Generator" guid="{eca0627b-dad2-5d71-90b2-e450ef615122}" description="Analytic source: y = offset + gain * sin(2 * pi * frequency * t)." generationTool="pyfmi_sysml2 tooling" generationDateAndTime="2026-01-01T00:00:00Z" variableNamingConvention="structured">
+<fmiModelDescription fmiVersion="2.0" modelName="Generator" guid="{eca0627b-dad2-5d71-90b2-e450ef615122}" description="Analytic source: y = offset + gain * sin(2 * pi * frequency * t)." generationTool="pyfmi_interfaces tooling" generationDateAndTime="2026-01-01T00:00:00Z" variableNamingConvention="structured">
   <CoSimulation modelIdentifier="Generator" />
   <ModelVariables>
     <ScalarVariable name="gain" valueReference="0" causality="parameter" variability="fixed">
-      <Real start="2.0" />
+      <Real start="2" />
     </ScalarVariable>
     <ScalarVariable name="offset" valueReference="1" causality="parameter" variability="fixed">
       <Real start="0.5" />
     </ScalarVariable>
     <ScalarVariable name="frequency" valueReference="2" causality="parameter" variability="fixed">
-      <Real start="1.0" />
+      <Real start="1" />
     </ScalarVariable>
     <ScalarVariable name="y" valueReference="3" causality="output">
       <Real />

@@ -1,13 +1,24 @@
 # GainOffset — FMU architecture and source
 
-## Provenance
+## Origin
 
-This directory holds only the authored FMU *architecture* and *source* for
-`GainOffset`. `architecture/GainOffset.sysml` declares the FMI 2.0
-CoSimulation interface and marks the `Generator` definition `:> FmuModel`;
-`src/GainOffset.c` implements it. The system that embeds the FMU, its
-`baseline` analysis, and the end-to-end provenance live in
-`models/ssp/GainOffset/FIXTURE.md`.
+Authored in this repository on 2026-11-05; no upstream fixture was imported.
+`architecture/GainOffset.sysml` declares the FMI 2.0 CoSimulation interface and
+marks the `Generator` definition `:> FmuModel`; `src/GainOffset.c` implements
+it. The system that embeds the FMU, its `baseline` analysis, and the end-to-end
+provenance live in `models/ssp/GainOffset/FIXTURE.md`.
+
+## Overview
+
+This directory holds the FMU half of the minimal end-to-end SysML → FMI → SSP
+fixture. The architecture declares one component — three parameters and one
+output — and the build emits its C interface headers and
+`modelDescription.xml`, compiles `src/GainOffset.c` into `Generator.so`, and
+packages `Generator.fmu`. The physics is the closed form
+`y(t) = offset + gain * sin(2 * pi * frequency * t)`, so a trajectory
+difference is a pipeline defect, not a numerical one.
+
+## Architecture Source
 
 - `architecture/GainOffset.sysml` is the canonical FMU architecture. It
   declares only the FMU — ports, `GeneratorParameters`, `FmuMetadata`, and
@@ -19,15 +30,18 @@ CoSimulation interface and marks the `Generator` definition `:> FmuModel`;
   selecting leaf components below a container root.
 - `src/GainOffset.c` implements the generated FMI 2.0 CoSimulation interface;
   its `MODEL_NAME` is `"Generator"`.
-- The build names the definition with `composition="Generator"` (and
-  `component="Generator"`). Generated C interface headers and
-  `modelDescription.xml` are build outputs under
-  `artifacts/build/GainOffset/`; the FMI 2.0 standard headers come from
-  `pyfmi_interfaces.fmi2_headers()`.
 - There is no binary and no definition text here, so this directory is not
   loadable as an FMU on its own. The committed
   `artifacts/build/GainOffset/Generator.fmu` archive is the definition copy
   consumers read.
+
+## Strategy Role
+
+- Pipeline half: proves the emitted C interface, `modelDescription.xml`, and
+  compiled binary agree on one variable set.
+- Regression anchor for FMI emission and archive packaging.
+- Reproduction check: the definition set and the archive must be byte-stable
+  across reruns.
 
 ## Rebuild
 

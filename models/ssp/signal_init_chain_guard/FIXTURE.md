@@ -30,6 +30,16 @@ mode that is silent in `signal_init_chain` becomes a hard crash at startup.
 - Artifacts: `artifacts/analyses/signal_init_chain_guard/baseline/`
 - Analyses are never exported as SSPs.
 
+## Strategy Role
+
+- Hard-failure companion to `signal_init_chain`: the same strict chain, but the
+  guard turns the silent initialization-frontier lag into an explicit abort.
+- Behavior anchor for the FMI 2.0 initialization contract: an engine must
+  propagate committed upstream outputs through connections before the guard
+  exits initialization.
+- Cross-engine diagnostic: `omsimulator` runs the full window and `ssp4sim`
+  aborts during initialization; a change in either direction is reported.
+
 ## Backends
 
 This fixture is registered for simulation with the following backends:

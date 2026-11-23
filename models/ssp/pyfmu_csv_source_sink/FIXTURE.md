@@ -20,9 +20,12 @@ inline mapping.
 - Analysis composition: `baseline :> Analysis`
 - No legacy SSD, SSV, SSM, or `experiments.xml` is checked into the model
   directory.
-- `CsvSourceFmu` deliberately has no `fmu_meta.source`: the composition is
-  exported with an empty `source` on the `source` component, and the build
-  attaches the generated FMU to the built artifact afterwards.
+- `CsvSourceFmu` deliberately has no `fmu_meta.source`: the SysML leaves the
+  inherited `source` slot unfilled, so the export emits the `source` component
+  with an empty `source` instead of a path. After export the build attaches the
+  generated FMU there as `resources/CsvSource.fmu`. The `sink` component's
+  `GainFmu.source` is filled at export, so its SSD entry already names
+  `resources/Gain.fmu`.
 
 ## Analyses
 
@@ -67,8 +70,10 @@ SSP as-is.
 ## Packaging Notes
 
 - `build.py` exports the structure (the `source` component has an empty SSD
-  `source`), generates `CsvSource.fmu` from `input/signals.csv`, and attaches
-  it to the built artifact with `SSP.attach_fmu`.
+  `source`), generates `CsvSource.fmu` from `input/signals.csv`, attaches it
+  to the `source` component with `SSP.attach_fmu`, then reopens the packaged
+  SSP and asserts that the resource exists and that the component's `source`
+  points at it.
 - `generate ssp` packages `ScenarioSet` as
   `resources/parameter_sets/ScenarioSet.ssv` with an inline parameter mapping.
   The build adds no parameter set.

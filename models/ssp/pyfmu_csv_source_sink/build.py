@@ -27,7 +27,21 @@ def _attach_source_fmu(build: BuiltFixture) -> None:
         fmu_path = Path(temp_dir) / "CsvSource.fmu"
         package_fmu_from_csv(SOURCE_CSV, fmu_path, "CsvSource")
         with SSP(build.model_dir, mode="a") as ssp:
-            ssp.attach_fmu("source", fmu_path)
+            resource_name = ssp.attach_fmu("source", fmu_path)
+            if resource_name not in ssp.resources:
+                raise RuntimeError(
+                    f"packaged SSP lacks the attached {resource_name}"
+                )
+            with ssp.system_structure() as ssd:
+                if ssd.xml.system is None:
+                    raise RuntimeError("packaged SSP has no system structure")
+                component = ssd.xml.system.find_component("source")
+                expected = f"resources/{resource_name}"
+                if component is None or component.source != expected:
+                    actual = None if component is None else component.source
+                    raise RuntimeError(
+                        f"source component points at {actual!r}, not {expected!r}"
+                    )
 
 
 if __name__ == "__main__":

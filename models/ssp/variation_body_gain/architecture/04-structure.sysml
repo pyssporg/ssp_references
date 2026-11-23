@@ -1,5 +1,4 @@
 package VariationBodyGain {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def VariationBodyGainDefaultExperiment :> DefaultExperiment {

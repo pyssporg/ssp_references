@@ -1,5 +1,4 @@
 package VariationConditionalRequires {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def VariationConditionalRequiresDefaultExperiment :> DefaultExperiment {

@@ -1,5 +1,4 @@
 package VariationConditionalExcludes {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def VariationConditionalExcludesDefaultExperiment :> DefaultExperiment {

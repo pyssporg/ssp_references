@@ -1,5 +1,4 @@
 package GainOffset {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def GainOffsetDefaultExperiment :> DefaultExperiment {

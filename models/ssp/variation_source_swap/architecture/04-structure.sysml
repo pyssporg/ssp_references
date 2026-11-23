@@ -1,5 +1,4 @@
 package VariationSourceSwap {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def VariationSourceSwapDefaultExperiment :> DefaultExperiment {

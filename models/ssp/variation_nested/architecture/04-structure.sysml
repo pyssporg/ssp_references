@@ -1,5 +1,4 @@
 package VariationNested {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def VariationNestedDefaultExperiment :> DefaultExperiment {

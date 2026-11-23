@@ -1,5 +1,4 @@
 package SignalAlgebraicLoop {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalAlgebraicLoopDefaultExperiment :> DefaultExperiment {

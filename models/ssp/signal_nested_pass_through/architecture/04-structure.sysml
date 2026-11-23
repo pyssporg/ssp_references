@@ -1,5 +1,4 @@
 package SignalNestedPassThrough {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalNestedPassThroughDefaultExperiment :> DefaultExperiment {

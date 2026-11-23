@@ -1,5 +1,4 @@
 package SignalInitLoopGuard {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalInitLoopGuardDefaultExperiment :> DefaultExperiment {

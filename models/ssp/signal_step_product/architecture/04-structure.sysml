@@ -1,5 +1,4 @@
 package SignalStepProduct {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalStepProductDefaultExperiment :> DefaultExperiment {

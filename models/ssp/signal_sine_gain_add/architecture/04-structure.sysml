@@ -1,5 +1,4 @@
 package SignalSineGainAdd {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalSineGainAddDefaultExperiment :> DefaultExperiment {

@@ -1,5 +1,4 @@
 package SignalNestedParameterBindings {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalNestedParameterBindingsDefaultExperiment :> DefaultExperiment {

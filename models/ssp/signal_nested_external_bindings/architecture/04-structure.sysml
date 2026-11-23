@@ -1,5 +1,4 @@
 package SignalNestedExternalBindings {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalNestedExternalBindingsDefaultExperiment :> DefaultExperiment {

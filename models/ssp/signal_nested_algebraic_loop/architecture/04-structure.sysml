@@ -1,5 +1,4 @@
 package SignalNestedAlgebraicLoop {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalNestedAlgebraicLoopDefaultExperiment :> DefaultExperiment {

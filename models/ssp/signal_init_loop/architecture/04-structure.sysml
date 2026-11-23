@@ -1,5 +1,4 @@
 package SignalInitLoop {
-  private import ScalarValues::*;
   private import PysspCore::*;
 
   attribute def SignalInitLoopDefaultExperiment :> DefaultExperiment {

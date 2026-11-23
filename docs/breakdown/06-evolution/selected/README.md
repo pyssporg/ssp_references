@@ -7,6 +7,11 @@ summary: Scoped improvement candidates awaiting implementation.
 
 Scoped improvement candidates awaiting implementation.
 
+The `.sysml` files under `examples/` are proposal sketches, not fixtures: they
+are excluded from `tests/test_sysml_standard.py`, declare the core markers
+locally instead of importing `PysspCore`, and may still use retired `pyssp_*`
+control attributes that `pycps_sysml2.validate` rejects.
+
 ## Contents
 
 <!-- pb:index:start -->

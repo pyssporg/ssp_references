@@ -70,14 +70,18 @@ metadata.
 
 `examples/simple_chain/` is the smallest end-to-end path: a SysML architecture
 with two FMUs, exported to an SSP and simulated. It imports only the public
-`pyssp_sysml2` and `pyssp_simulate` APIs.
+surfaces of `pyssp_sysml2`, `pycps_sysml2` (the dialect core definitions), and
+`pyssp_simulate`.
+
+From the workspace root, in the workspace venv:
 
 ```bash
-./venv/bin/python examples/simple_chain/run.py
+python repos/ssp_references/examples/simple_chain/run.py
 ```
 
-It writes `examples/simple_chain/build/simple_chain.ssp` and
-`build/ssp4sim.csv`. The example has its own minimal
+It writes `build/examples/simple_chain/simple_chain.ssp` and
+`build/examples/simple_chain/ssp4sim.csv` (relative to the working directory;
+`--out DIR` changes the directory). The example has its own minimal
 [`requirements.txt`](examples/simple_chain/requirements.txt), which installs
 the pyssp packages from their GitHub repositories and pins the `ssp4sim`
 wheel. See [`examples/simple_chain/README.md`](examples/simple_chain/README.md).

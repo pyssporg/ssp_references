@@ -40,14 +40,16 @@ Required for SysML-authored fixtures.
   `<package>::<name>`, and only a repeated stored key is a duplicate.
 - For a SysML-authored FMU, the FMU definitions live under
   `models/fmu/<model>/architecture/`; the system composition and its analyses
-  live in `models/ssp/<model>/architecture/System.sysml`, which passes the FMU
-  architecture directory to `build_fixture(includes=...)`.
+  live under `models/ssp/<model>/architecture/` (`System.sysml` only for
+  `GainOffset`), which passes the FMU architecture directory to
+  `build_fixture(includes=...)`.
 - Composition name of the exportable `SspModel` (`System`) and, for an FMU,
   the `FmuModel` definition name (`Generator`); that name is the exported
   `modelName`.
 - Do not redeclare a core definition (`SspModel`, `Analysis`, `Experiment`,
   `FmuMetadata`, `FmuModel`, `SspMetadata`, `ParameterInterface`,
-  `ParameterSet`): they come from `pycps_sysml2`'s packaged core definitions.
+  `ParameterSet`): they come from `pyssp_sysml_definitions`, which ships the
+  packaged core vocabulary (`pycps_sysml2.core_definitions()` re-exports it).
 - Every FMU component part definition specializes `FmuModel` explicitly
   (`part def Step :> FmuModel { attribute fmu_meta : StepFmu; }`); the marker
   is never left implicit or inferred from `fmu_meta`.

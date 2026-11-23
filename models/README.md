@@ -38,9 +38,9 @@ used as loop-resolution diagnostics, suitable for cross-engine comparison.
 | signal_sine_gain_add | Sine source through gain, then summed with a step source | Output = gain × sine + step | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_sine_gain_add/FIXTURE.md) |
 | signal_step_product | Step and sine sources multiplied | Output = step × sine | ssp4sim, OMSimulator, FMPy | Behavioral | [link](./ssp/signal_step_product/FIXTURE.md) |
 | signal_delay_detector | Step signal compared across direct and transformed paths | Direct and transformed paths stay time-aligned | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_delay_detector/FIXTURE.md) |
-| signal_parameter_inline_with_mapping | Step with inline SSV and external SSM mapping | Output tracks step configuration | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
-| signal_nested_pass_through | Step signal routed through a nested gain subsystem | Nested boundary output matches the source path | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_pass_through/FIXTURE.md) |
-| signal_nested_external_bindings | Nested system with external SSV+SSM bindings | Root step output routed to system connector | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_nested_external_bindings/FIXTURE.md) |
+| signal_parameter_inline_with_mapping | Step with inline SSV and external SSM mapping | Output tracks step configuration | ssp4sim | Behavioral | [link](./ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
+| signal_nested_pass_through | Step signal routed through a nested gain subsystem | Nested boundary output matches the source path | ssp4sim | Behavioral | [link](./ssp/signal_nested_pass_through/FIXTURE.md) |
+| signal_nested_external_bindings | Nested system with external SSV+SSM bindings | Root step output routed to system connector | ssp4sim | Behavioral | [link](./ssp/signal_nested_external_bindings/FIXTURE.md) |
 | signal_init_chain | Three-FMU strict chain with connected inputs | Start-time frontier matches each component's committed values | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_init_chain/FIXTURE.md) |
 | signal_init_chain_guard | Strict chain with a guard that rejects a zero connected input at init | Initialization aborts loudly rather than committing a default | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_init_chain_guard/FIXTURE.md) |
 | signal_init_loop | Two pass-through gains wired in a cycle | Loop fixed point reached by iteration, not ordering | ssp4sim, OMSimulator | Behavioral | [link](./ssp/signal_init_loop/FIXTURE.md) |
@@ -54,7 +54,7 @@ Multi-component SSPs exercising realistic coupling and scheduling.
 |-------|---------|----------|------------|------------|
 | dcmotor | DC motor model with electrical and mechanical subsystems | ssp4sim, OMSimulator | Regression | [link](./ssp/dcmotor/FIXTURE.md) |
 | ravs_v1 | Reference Aircraft Vehicle Systems (RAVS) v1; EMBRACE-derived multi-FMU coupling | ssp4sim, OMSimulator | Regression | [link](./ssp/ravs_v1/FIXTURE.md) |
-| ravs_v2 | Reference Aircraft Vehicle Systems (RAVS) v2; D16 aerospace hydraulic/thermal demo with a nested valve subsystem | ssp4sim, OMSimulator | Regression | [link](./ssp/ravs_v2/FIXTURE.md) |
+| ravs_v2 | Reference Aircraft Vehicle Systems (RAVS) v2; D16 aerospace hydraulic/thermal demo with a nested valve subsystem | OMSimulator | Regression | [link](./ssp/ravs_v2/FIXTURE.md) |
 
 ### Special-Purpose SSPs
 
@@ -88,6 +88,9 @@ hierarchy and are referenced by SSP fixtures during the build stage.
 | Modelica.Blocks.Math.Gain | Modelica | Signal gain multiplier |
 | Modelica.Blocks.Math.Add | Modelica | Signal summation |
 | Modelica.Blocks.Math.Product | Modelica | Signal multiplication |
+| DivideGuard | Modelica | Division-by-zero guard for loop initialization |
+| InitGuard | Modelica | Rejects a zero connected input at initialization |
+| LoopGain | Modelica | One hop of a cross-FMU algebraic loop |
 
 ## Test Level Definitions
 

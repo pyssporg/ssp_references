@@ -18,9 +18,9 @@ portability, not engine correctness. It asserts zero analyzer errors, not zero w
 `IMPLICIT_LIBRARY_IMPORT` fires for `Real` even with `private import ScalarValues::*;`,
 and `style_checks=False` removes naming warnings.
 
-Scope: 29 fixtures and 93 `.sysml` files carry an `architecture/` directory. The 12
-prepared Modelica fixtures under `models/fmu/` hold only an `fmu/` body and author no
-SysML; they are outside this gate. `models/ssp/GainOffset` reaches `Generator` through
+Scope: 35 fixtures and 119 `.sysml` files carry an `architecture/` directory. The 13
+prepared fixtures under `models/fmu/` author no SysML (five hold only an `fmu/` body,
+the rest also carry a `build.py` and Modelica source); they are outside this gate. `models/ssp/GainOffset` reaches `Generator` through
 the FMU root, so the gate mirrors `build_fixture(includes=...)` and adds
 `models/fmu/GainOffset/architecture` as a second `load_files` input. Alone the SSP root
 reports `UNDEFINED_SYMBOL` for `Generator`; with the include it reports nothing. The

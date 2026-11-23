@@ -12,9 +12,10 @@ status: current
 `pycps_sysml2` is the dialect's home; the other libraries implement it.
 `pyssp_sysml2` emits the SSP family, `pyfmi_interfaces` emits FMI artifacts
 from a parser-free reduction, and `pyfmi_sysml` is the composition layer that
-owns the SysML reader and the source-taking FMI commands. The dialect and the
-FMI emitter are base dependencies of `pyssp_workflow`, which imports none of
-them; the composition layer is installed when a fixture drives FMI from SysML.
+owns the SysML reader and the source-taking FMI commands. The FMI emitter is a
+base dependency of `pyssp_workflow`, which imports none of them; the dialect
+arrives transitively through `pyssp_sysml2` and `pyfmi_interfaces`, and the
+composition layer is installed when a fixture drives FMI from SysML.
 
 | Concern | Owner |
 |---|---|
@@ -34,8 +35,8 @@ them; the composition layer is installed when a fixture drives FMI from SysML.
   `pyssp_sysml2` and `pyfmi_interfaces` never import each other, and
   `pyfmi_sysml` is the only package that composes them.
 - **One dialect:** both the SSP and FMI dialects draw markers, parameters, and
-  variation from `pycps_sysml2`; `sysmlpy==0.96.4` is its only runtime
-  dependency.
+  variation from `pycps_sysml2`; `sysmlpy==0.96.4` and
+  `pyssp-sysml-definitions` are its only runtime dependencies.
 - **Exercised here:** `models/ssp/variation_*/build.py` and
   `tests/test_variation_cases.py` use the dialect and selection surface;
   `models/fmu/GainOffset/build.py` loads the canonical FMU architecture once

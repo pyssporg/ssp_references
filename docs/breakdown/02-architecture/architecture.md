@@ -55,14 +55,16 @@ runtime-ready exported SSP and the analysis data that exercises it.
 
 **Input:** A model directory under `models/ssp/<model_name>/` containing at
 minimum a `build.py` script and a `FIXTURE.md` fixture note. A SysML-authored
-system carries its composition at `architecture/System.sysml`
-(`part def ... :> SspModel` and, where analyses are defined,
-`part def ... :> Analysis` compositions). A SysML-authored FMU has a directory
-under `models/fmu/<model_name>/` that owns its complete definition
-(`architecture/*.sysml`: ports, metadata, and the component declared directly
-as `part def <name> :> FmuModel`) and `src/`; there is no composition root and
-no copy or link of the file in the system directory. Every part definition that
-names an FMU (`attribute fmu_meta`) specializes `FmuModel`; the marker is
+system carries its composition under `architecture/` — `<fixture>.sysml` or
+the `01-interfaces`–`05-analyses` split; only `GainOffset` uses
+`architecture/System.sysml` — with `part def ... :> SspModel` and, where
+analyses are defined, `part def ... :> Analysis` compositions. A SysML-authored
+FMU has a directory under `models/fmu/<model_name>/` that owns its complete
+definition (`architecture/*.sysml`: ports, metadata, and the component
+declared directly as `part def <name> :> FmuModel`) and `src/`; there is no
+composition root and no copy or link of the file in the system directory.
+Every part definition that names an FMU (`attribute fmu_meta`) specializes
+`FmuModel`; the marker is
 authored on each component, never inferred from the metadata attribute. The
 system build passes that directory to `build_fixture(includes=...)` (`DD-021`). A large architecture
 splits along its sections (`01-interfaces`, `02-parameters`, `03-components`,
@@ -100,10 +102,11 @@ model's own `build.py` in two phases: every `models/fmu/<model_name>/build.py`
 first, then every `models/ssp/<model_name>/build.py`. One model name may appear
 in both phases; a duplicate within a phase is an error. The FMU build exports
 the `FmuModel` definition; that definition's name is the exported `modelName`
-and the guid derives from it. The SSP build exports `System` with the canonical
-FMU architecture directory as an include. The model-level build
-script is the source of truth for
-how that particular fixture is exported and which analyses it generates.
+and the guid derives from it. For a SysML-authored FMU the SSP build exports
+`System` with the canonical FMU architecture directory as an include; other
+SSP fixtures declare their components against a prebuilt FMU body. The
+model-level build script is the source of truth for how that particular fixture
+is exported and which analyses it generates.
 SSP build scripts call `pyssp_workflow.authoring` for SysML derivation, and
 then apply the fixture's parameter-application form with `pyssp_standard`;
 variation scripts read the dialect through `pycps_sysml2`. The FMI build
@@ -299,7 +302,7 @@ artifact:
 ```
   models/fmu/<model>/architecture/*.sysml   (FMU definitions: ports, component :> FmuModel)
   models/fmu/<model>/src/                   (authored FMU source and provenance)
-  models/ssp/<model>/architecture/System.sysml    (SspModel + Analysis definitions)
+  models/ssp/<model>/architecture/*.sysml         (SspModel + Analysis definitions)
            |
            |  models/fmu/<model>/build.py  (exports the FmuModel definition)
            |  pyfmi_sysml -> pyfmi_interfaces (headers, modelDescription)

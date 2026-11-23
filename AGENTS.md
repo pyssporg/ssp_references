@@ -33,14 +33,16 @@ reproducible fixtures and cross-engine comparison results, not new simulation
 capability.
 
 - `models/ssp/<model>/` holds the authored fixture, `build.py`, and `FIXTURE.md`;
-  for SysML-authored fixtures the system composition lives in
-  `architecture/System.sysml`.
+  for SysML-authored fixtures the system composition lives under
+  `architecture/` (`<fixture>.sysml` or the `01`–`05` section split; only
+  `GainOffset` uses `architecture/System.sysml`).
 - `models/fmu/` holds only the FMU's side of a SysML-authored fixture:
   `architecture/*.sysml` (its complete definition, with the component declared
   directly as `part def ... :> FmuModel`), `src/`, `build.py`, and
   `FIXTURE.md`; a prepared fixture keeps its `fmu/` body and `references/`.
-  The SSP fixture consumes that architecture directory through
-  `build_fixture(includes=...)`; it does not copy or link the FMU file.
+  Where the FMU is SysML-authored (`GainOffset`), the SSP fixture consumes that
+  architecture directory through `build_fixture(includes=...)`; it does not
+  copy or link the FMU file.
   Generated FMI definitions (headers, `modelDescription.xml`) plus compiled or
   packaged outputs live under `artifacts/build/<model>/`. The build runs FMU
   then SSP: `run-all` builds every FMU before any SSP.
@@ -50,9 +52,11 @@ capability.
   from release wheels (`requirements.txt` pulls one `pyssp-workflow` reference
   that transitively carries the whole stack); cross-repo development installs
   each sibling as an editable checkout from the flat ecosystem workspace
-  (`pyssp_dev/repos/`). `pycps_sysml2` ships the dialect core definitions
-  (`definitions/core.sysml`), which fixtures load instead of redeclaring. Edits
-  belong in their own repositories.
+  (`pyssp_dev/repos/`). The dialect core vocabulary ships in
+  `pyssp_sysml_definitions` (`core.sysml`, package `PysspCore`);
+  `pycps_sysml2.core_definitions()` is a compatibility facade that re-exports
+  its path, and fixtures load it as one include instead of redeclaring it.
+  Edits belong in their own repositories.
 
 ## Hard constraints
 

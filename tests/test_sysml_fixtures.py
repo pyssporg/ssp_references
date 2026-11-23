@@ -44,7 +44,7 @@ EXPECTED: dict[str, dict] = {
         "form": "external-target-named",
     },
     "signal_step_gain": {
-        "analysis": "test_baseline",
+        "analysis": "baseline",
         "components": ["gain", "step"],
         "connections": [("step", "y", "gain", "u")],
         "subsystems": [],

@@ -386,8 +386,8 @@ To build a SysML-authored signal fixture and its analysis:
 python3 scripts/build_models.py run signal_step_gain
 ```
 
-This writes `artifacts/models/signal_step_gain/test_baseline/model/` and
-`artifacts/analyses/signal_step_gain/test_baseline/`.
+This writes `artifacts/models/signal_step_gain/baseline/model/` and
+`artifacts/analyses/signal_step_gain/baseline/`.
 
 To build every model at once:
 ```bash

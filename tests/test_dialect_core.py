@@ -1,15 +1,13 @@
 """Contract: no fixture redeclares a dialect core definition.
 
-``pycps_sysml2.core_definitions()`` ships ``SspModel``, ``Analysis``,
-``FmuModel``, ``ParameterInterface``, ``ParameterSet``, ``FmuMetadata``,
-``SspMetadata``, ``DefaultExperiment``, and ``Experiment``. Fixtures import them through the dialect
-library; a local copy shadows the packaged definition and drifts from the roles
-the library assigns to it. The system fixture additionally includes the canonical
-FMU architecture instead of copying it, so the FMU definitions arrive through the
-include and are not the system root's own. Definition storage is package
-scoped: the core lives in its own package, so its included keys are
-``<core package>::<name>``, while the FMU architecture shares the system's
-package and its definitions stay bare.
+``pycps_sysml2.core_definitions()`` ships the core role vocabulary. Fixtures
+import it through the dialect library; a local copy shadows the packaged
+definition and drifts from the roles the library assigns to it. The system
+fixture additionally includes the canonical FMU architecture instead of copying
+it, so the FMU definitions arrive through the include and are not the system
+root's own. Definition storage is package scoped: the core lives in its own
+package, so its included keys are ``<core package>::<name>``, while the FMU
+architecture shares the system's package and its definitions stay bare.
 """
 
 from __future__ import annotations
@@ -34,20 +32,24 @@ SYSML_GLOBS = (
     "examples/*/architecture/*.sysml",
 )
 
-#: Core definitions from ``pycps_sysml2.core_definitions()`` and the declaration
-#: prefix that would reintroduce each one locally.
-CORE_DEFINITION_PREFIXES = {
-    "SspModel": "part def SspModel",
-    "Analysis": "part def Analysis",
-    "FmuModel": "part def FmuModel",
-    "DefaultExperiment": "attribute def DefaultExperiment",
-    "Experiment": "attribute def Experiment",
-    "ParameterInterface": "port def ParameterInterface",
-    "SourcedMetadata": "attribute def SourcedMetadata",
-    "FmuMetadata": "attribute def FmuMetadata",
-    "SspMetadata": "attribute def SspMetadata",
-    "ParameterSet": "attribute def ParameterSet",
-}
+
+def _core_definition_prefixes() -> dict[str, str]:
+    """Every definition the packaged core declares, and its declaration prefix.
+
+    Derived from ``pycps_sysml2.core_definitions()`` rather than restated here so
+    a vocabulary change is covered without editing this test.
+    """
+    text = pycps_sysml2.core_definitions().read_text(encoding="utf-8")
+    declarations = re.findall(
+        r"^\s*(part def|attribute def|port def)\s+([A-Za-z_]\w*)",
+        text,
+        re.MULTILINE,
+    )
+    return {name: f"{kind} {name}" for kind, name in declarations}
+
+
+#: Core definitions and the declaration prefix that would reintroduce one locally.
+CORE_DEFINITION_PREFIXES = _core_definition_prefixes()
 
 #: Definitions the GainOffset system root receives from the canonical FMU
 #: architecture include rather than declaring itself. The FMU architecture

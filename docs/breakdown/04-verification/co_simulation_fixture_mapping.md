@@ -38,11 +38,11 @@ These are the main fast-running behavioral checks.
 
 | Fixture | Strategy Role | Detail |
 | --- | --- | --- |
-| `BouncingBall` | Simple reference model | [BouncingBall](../models/ssp/BouncingBall/FIXTURE.md) |
-| `VanDerPol` | Simple reference model | [VanDerPol](../models/ssp/VanDerPol/FIXTURE.md) |
-| `Dahlquist` | Simple reference model | [Dahlquist](../models/ssp/Dahlquist/FIXTURE.md) |
-| `Stair` | Simple reference model | [Stair](../models/ssp/Stair/FIXTURE.md) |
-| `Resource` | Simple reference model | [Resource](../models/ssp/Resource/FIXTURE.md) |
+| `BouncingBall` | Simple reference model | [BouncingBall](../../../models/ssp/BouncingBall/FIXTURE.md) |
+| `VanDerPol` | Simple reference model | [VanDerPol](../../../models/ssp/VanDerPol/FIXTURE.md) |
+| `Dahlquist` | Simple reference model | [Dahlquist](../../../models/ssp/Dahlquist/FIXTURE.md) |
+| `Stair` | Simple reference model | [Stair](../../../models/ssp/Stair/FIXTURE.md) |
+| `Resource` | Simple reference model | [Resource](../../../models/ssp/Resource/FIXTURE.md) |
 
 ### Composite SSP Fixtures
 
@@ -53,9 +53,9 @@ tests. v2 adds subsystem nesting and boundary connectors.
 
 | Fixture | Strategy Role | Detail |
 | --- | --- | --- |
-| `dcmotor` | Composite SSP model | [dcmotor](../models/ssp/dcmotor/FIXTURE.md) |
-| `ravs_v1` | Composite SSP model | [ravs_v1](../models/ssp/ravs_v1/FIXTURE.md) |
-| `ravs_v2` | Composite SSP model | [ravs_v2](../models/ssp/ravs_v2/FIXTURE.md) |
+| `dcmotor` | Composite SSP model | [dcmotor](../../../models/ssp/dcmotor/FIXTURE.md) |
+| `ravs_v1` | Composite SSP model | [ravs_v1](../../../models/ssp/ravs_v1/FIXTURE.md) |
+| `ravs_v2` | Composite SSP model | [ravs_v2](../../../models/ssp/ravs_v2/FIXTURE.md) |
 
 ### Reusable FMU Building Blocks
 
@@ -81,18 +81,18 @@ These fixtures now exist as SSP models under `models/ssp/`.
 
 | Fixture | Status | Detail |
 | --- | --- | --- |
-| `signal_step_gain` | Implemented | [signal_step_gain](../models/ssp/signal_step_gain/FIXTURE.md) |
-| `signal_step_add` | Implemented | [signal_step_add](../models/ssp/signal_step_add/FIXTURE.md) |
-| `signal_fanout_gain` | Implemented | [signal_fanout_gain](../models/ssp/signal_fanout_gain/FIXTURE.md) |
-| `signal_sine_gain_add` | Implemented | [signal_sine_gain_add](../models/ssp/signal_sine_gain_add/FIXTURE.md) |
-| `signal_step_product` | Implemented | [signal_step_product](../models/ssp/signal_step_product/FIXTURE.md) |
-| `signal_delay_detector` | Implemented | [signal_delay_detector](../models/ssp/signal_delay_detector/FIXTURE.md) |
-| `signal_algebraic_loop` | Implemented | [signal_algebraic_loop](../models/ssp/signal_algebraic_loop/FIXTURE.md) |
-| `signal_nested_algebraic_loop` | Implemented | [signal_nested_algebraic_loop](../models/ssp/signal_nested_algebraic_loop/FIXTURE.md) |
-| `signal_parameter_inline_with_mapping` | Implemented | [signal_parameter_inline_with_mapping](../models/ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
-| `signal_nested_pass_through` | Implemented | [signal_nested_pass_through](../models/ssp/signal_nested_pass_through/FIXTURE.md) |
-| `signal_nested_external_bindings` | Implemented | [signal_nested_external_bindings](../models/ssp/signal_nested_external_bindings/FIXTURE.md) |
-| `signal_nested_parameter_bindings` | Implemented | [signal_nested_parameter_bindings](../models/ssp/signal_nested_parameter_bindings/FIXTURE.md) |
+| `signal_step_gain` | Implemented | [signal_step_gain](../../../models/ssp/signal_step_gain/FIXTURE.md) |
+| `signal_step_add` | Implemented | [signal_step_add](../../../models/ssp/signal_step_add/FIXTURE.md) |
+| `signal_fanout_gain` | Implemented | [signal_fanout_gain](../../../models/ssp/signal_fanout_gain/FIXTURE.md) |
+| `signal_sine_gain_add` | Implemented | [signal_sine_gain_add](../../../models/ssp/signal_sine_gain_add/FIXTURE.md) |
+| `signal_step_product` | Implemented | [signal_step_product](../../../models/ssp/signal_step_product/FIXTURE.md) |
+| `signal_delay_detector` | Implemented | [signal_delay_detector](../../../models/ssp/signal_delay_detector/FIXTURE.md) |
+| `signal_algebraic_loop` | Implemented | [signal_algebraic_loop](../../../models/ssp/signal_algebraic_loop/FIXTURE.md) |
+| `signal_nested_algebraic_loop` | Implemented | [signal_nested_algebraic_loop](../../../models/ssp/signal_nested_algebraic_loop/FIXTURE.md) |
+| `signal_parameter_inline_with_mapping` | Implemented | [signal_parameter_inline_with_mapping](../../../models/ssp/signal_parameter_inline_with_mapping/FIXTURE.md) |
+| `signal_nested_pass_through` | Implemented | [signal_nested_pass_through](../../../models/ssp/signal_nested_pass_through/FIXTURE.md) |
+| `signal_nested_external_bindings` | Implemented | [signal_nested_external_bindings](../../../models/ssp/signal_nested_external_bindings/FIXTURE.md) |
+| `signal_nested_parameter_bindings` | Implemented | [signal_nested_parameter_bindings](../../../models/ssp/signal_nested_parameter_bindings/FIXTURE.md) |
 
 ### Initialization Fixtures
 

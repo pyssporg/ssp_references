@@ -9,6 +9,12 @@ installed from release wheels (`requirements.txt`), while the checked-in model
 directories hold the authored model definitions, fixture notes, and build
 metadata.
 
+This repository is not a Python distribution: it has no `pyproject.toml` or
+`setup.py` and is never pip-installed in the workspace. Its scripts and tests
+run from the repository root against the environment built from
+`requirements.txt` (or from editable sibling checkouts, see
+`requirements-dev.txt`).
+
 ## Layout
 
 ```text
@@ -83,7 +89,7 @@ It writes `build/examples/simple_chain/simple_chain.ssp` and
 `build/examples/simple_chain/ssp4sim.csv` (relative to the working directory;
 `--out DIR` changes the directory). The example has its own minimal
 [`requirements.txt`](examples/simple_chain/requirements.txt), which installs
-the pyssp packages from their GitHub repositories and pins the `ssp4sim`
+the pyssp packages from their GitHub releases and pins the `ssp4sim`
 wheel. See [`examples/simple_chain/README.md`](examples/simple_chain/README.md).
 
 ## Model Workflow
@@ -91,26 +97,30 @@ wheel. See [`examples/simple_chain/README.md`](examples/simple_chain/README.md).
 Each model directory under `models/ssp/<model_name>/` follows the same basic
 contract:
 
-- `architecture/System.sysml` is the authored system composition for migrated
-  fixtures: `part def System :> SspModel` and, where analyses are defined,
-  `part def ... :> Analysis`. A SysML-authored FMU owns its complete definition
-  under `models/fmu/<model>/architecture/`, declared directly as
-  `part def <name> :> FmuModel`; the system build passes that directory to
-  `build_fixture(includes=...)` and neither copies nor links the file. Every
+- The system composition lives under `architecture/` — `<fixture>.sysml` or
+  the `01`–`05` section split; only `GainOffset` uses
+  `architecture/System.sysml` — with `part def System :> SspModel` and, where
+  analyses are defined, `part def ... :> Analysis`. A SysML-authored FMU owns
+  its complete definition under `models/fmu/<model>/architecture/`, declared
+  directly as `part def <name> :> FmuModel`; the `GainOffset` system build
+  passes that directory to `build_fixture(includes=...)` and neither copies nor
+  links the file. Every
   part definition naming an FMU through `attribute fmu_meta` specializes
   `FmuModel` explicitly — the marker is authored, never inferred from the
   metadata attribute.
 - `part def <Model> :> SspModel` exports one SSP; `part def <Analysis> :> Analysis`
   supplies scenario data, a description, and one experiment (`startTime`,
-  `stopTime`, `stepSize`, optionally `tolerance`) and is never exported as an
+  `stopTime`, `stepSize`) and is never exported as an
   SSP. A model may author several analyses; each is built and registered as its
   own case. The SSD system binds its `startTime`/`stopTime` defaults through
   `attribute defaults : <X>DefaultExperiment;`, the core's `ssd:DefaultExperiment`
   mirror; an analysis authors `Experiment`, the FMI superset that adds
-  `stepSize` and `tolerance`.
+  `stepSize` and `tolerance`. The analysis descriptor still carries no
+  tolerance: tolerance is an FMU property, not an experiment field.
 - The dialect markers — `SspModel`, `Analysis`, `Experiment`, `FmuMetadata`,
   `FmuModel`, `SspMetadata`, `ParameterInterface`, `ParameterSet` — come from
-  `pycps_sysml2`'s packaged core definitions. `build.py` reaches them through
+  `pyssp_sysml_definitions`, the package that ships the core vocabulary
+  (`pycps_sysml2` re-exports its path). `build.py` reaches them through
   `pyssp_workflow.authoring`, whose `core_definitions=True` default adds the
   core as one include; extra definition roots go in `includes=`, one more
   `--architecture` each after the model root. A fixture must not redeclare one.
@@ -288,9 +298,11 @@ reference-model cases, the matching CSV baselines live beside their fixture:
   wheels. A tag that has not been released makes the dependency unresolvable.
   No feature extras exist: `pyssp_workflow` imports none of `pyssp_sysml2`,
   `pycps_sysml2`, or `pyfmi_interfaces`, and its only optional group is `dev`.
-  `requirements-dev.txt` replaces the wheels with editable checkouts but still
-  resolves those URLs.
-- `pyssp4sim` is pinned to the `v0.3.2` Linux `x86_64` wheel.
+  `requirements-dev.txt` composes `requirements.txt`, so it installs the same
+  release wheels; its comments describe the optional editable sibling
+  checkouts but it contains no editable lines itself.
+- `pyssp4sim` is pinned transitively by `pyssp-simulate` at `0.3.4`; there is
+  no direct `pyssp4sim` line in `requirements.txt`.
 - `OMSimulator` is installed from PyPI; its sdist can fail when nightly
   binaries have been removed, so a manual install may be needed.
 
@@ -406,6 +418,20 @@ Comparison metrics and manifests appear under `artifacts/comparisons/BouncingBal
 
 ```bash
 python3 -m pytest tests/
+```
+
+Test levels are selected with pytest markers (`level_static`, `level_unit`,
+`level_component`, `level_contract`, `level_integration`, `level_system`,
+`level_acceptance`); for example `python3 -m pytest tests/ -m level_contract`.
+
+### 6. Lint
+
+`ruff.toml` at the repository root supplies the shared ignore list. Install ruff
+in the same environment and run:
+
+```bash
+pip install ruff
+ruff check tests scripts
 ```
 
 ### Full pipeline (one-shot)

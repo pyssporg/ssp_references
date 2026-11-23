@@ -125,7 +125,12 @@ capability.
   `python3.11 -m venv venv && venv/bin/pip install -r requirements.txt`.
   Then `source venv/bin/activate`, or call `./venv/bin/python` directly.
 - Tests: `venv/bin/python -m pytest tests/` (the full suite takes about three
-  minutes).
+  minutes). Level markers select a subset, for example
+  `venv/bin/python -m pytest tests/ -m level_contract`; the marker names are
+  defined in `pytest.ini`.
+- Lint: `ruff check tests scripts`. The root `ruff.toml` supplies the shared
+  ignore list; ruff is not listed in the requirements files, so install it in
+  the venv separately.
 - Build: `venv/bin/python scripts/build_models.py list` / `run <model>` /
   `run-all`.
 - Simulate, then compare: `venv/bin/python scripts/run_simulations.py`, then

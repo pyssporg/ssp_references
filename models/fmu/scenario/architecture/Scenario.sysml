@@ -11,7 +11,9 @@ package Scenario {
   }
 
   attribute def ScenarioFmu :> FmuMetadata {
-    attribute source = "artifacts/build/scenario/scenario.fmu";
+    // The SSP packages the pinned body, so the source names it; the producer's
+    // output is verified against that body by models/fmu/scenario/build.py.
+    attribute source = "models/fmu/scenario/fmu";
     attribute implementation = "CoSimulation";
   }
 

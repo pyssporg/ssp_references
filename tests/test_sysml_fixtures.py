@@ -27,6 +27,12 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 SSD = "{http://ssp-standard.org/SSP1/SystemStructureDescription}"
 
+#: Fixtures whose FMU-side definitions live in a separate root, mirroring the
+#: ``build_fixture(includes=...)`` their ``build.py`` passes.
+INCLUDES: dict[str, tuple[Path, ...]] = {
+    "scenario": (REPO_ROOT / "models" / "fmu" / "scenario" / "architecture",),
+}
+
 
 # model -> analysis, expected components, two-element connections, subsystems, form
 EXPECTED: dict[str, dict] = {
@@ -341,6 +347,7 @@ def test_sysml_wiring(tmp_path: Path, model: str) -> None:
         REPO_ROOT / "models" / "ssp" / model / "architecture",
         output,
         "System",
+        includes=INCLUDES.get(model, ()),
     )
     system = _root(output)
     assert _components(system) == expected["components"]

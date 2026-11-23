@@ -49,11 +49,12 @@ CORE_LIBRARY = pycps_sysml2.core_definitions().parent
 KERNEL_LIBRARY = Path(sysmlpy.__file__).resolve().parent / "library" / "kernel"
 LIBRARIES = (CORE_LIBRARY, KERNEL_LIBRARY)
 
-# ``models/ssp/GainOffset/build.py`` reaches the FMU definitions through
+# ``models/ssp/<name>/build.py`` reaches the FMU definitions through
 # ``build_fixture(includes=...)`` on the canonical FMU architecture directory
 # instead of copying or linking them. The parser gate mirrors that include.
 CROSS_ROOT_INPUTS: dict[str, tuple[str, ...]] = {
     "models/ssp/GainOffset": ("models/fmu/GainOffset/architecture",),
+    "models/ssp/scenario": ("models/fmu/scenario/architecture",),
 }
 
 # sysmlpy limitation: the warning fires for ``Real`` even when the fixture

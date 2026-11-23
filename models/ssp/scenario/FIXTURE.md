@@ -17,11 +17,16 @@ records.
 
 ## Architecture Source
 
-- `architecture/scenario.sysml`
-- Exportable composition: `System :> SspModel`
-- Analysis composition: `baseline :> Analysis`
+- `architecture/scenario.sysml` authors the exportable composition
+  (`System :> SspModel`), the `baseline :> Analysis`, and the model-owned
+  `ScenarioSet`.
+- The FMU-side definitions (`ScenarioParameters`, `RealSignal`, `ScenarioFmu`,
+  `part def Scenario`) have one home,
+  `models/fmu/scenario/architecture/Scenario.sysml`. The build loads that
+  directory through `build_fixture(includes=...)`; it does not copy or link the
+  FMU file.
 - Parameter interface: `ScenarioParameters :> ParameterInterface` with
-  `scenario_input : String`.
+  `scenario_input : String`, declared together with the FMU.
 - Model-owned parameter set: `ScenarioSet :> ParameterSet` is applied inside
   `System`. The analysis is experiment-only.
 - No checked-in SSD, SSV, or SSM remains; the build generates them.

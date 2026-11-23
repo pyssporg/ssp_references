@@ -19,19 +19,24 @@ covers only the FMU side.
 
 ## Architecture Source
 
-- `architecture/Scenario.sysml` declares the FMU-side interface:
-  `ScenarioParameters :> ParameterInterface` (the String `scenario_input`),
-  `RealSignal`, `ScenarioFmu :> FmuMetadata`, and
-  `part def Scenario :> FmuModel` with the five Real outputs. It uses the same
-  package and definition names as
-  `models/ssp/scenario/architecture/scenario.sysml`, so the two views describe
-  one interface.
+- `architecture/Scenario.sysml` is the single declaration of the FMU-side
+  interface: `ScenarioParameters :> ParameterInterface` (the String
+  `scenario_input`), `RealSignal`, `ScenarioFmu :> FmuMetadata`, and
+  `part def Scenario :> FmuModel` with the five Real outputs.
+  `models/ssp/scenario/build.py` consumes this directory through
+  `build_fixture(includes=...)`; the SSP's own `architecture/scenario.sysml`
+  declares only the composition, the `ScenarioSet`, and the `baseline`
+  analysis.
 - The directory exists so `scripts/build_models.py` discovers the model: an FMU
   build script counts only next to an `architecture/` directory.
 - The producer, not `pyfmi_sysml`, emits the body. The architecture is the
-  declaration of what the producer must emit, and the check in `build.py` is
-  what holds the two together. `ScenarioFmu.source` names the built archive at
-  `artifacts/build/scenario/scenario.fmu`.
+  declaration of what the producer must emit; `build.py` checks that
+  declaration against the pinned `modelDescription.xml`, then checks the
+  packaged archive against the same pinned interface. `ScenarioFmu.source`
+  names the pinned body at `models/fmu/scenario/fmu`, because the SSP packages
+  that body to keep `artifacts/` reproducible; the built archive at
+  `artifacts/build/scenario/scenario.fmu` is verified against it, not used as
+  the source.
 - No definition, description, or binary under `fmu/` is hand-edited; the pinned
   body changes only through `--refresh`.
 
@@ -50,15 +55,18 @@ put its `src/` on `PYTHONPATH`. The build script:
 2. packages an FMI 2.0 CoSimulation archive at
    `artifacts/build/scenario/scenario.fmu` with
    `pyfmu_scenario.packaging.package_scenario` and the fixture GUID;
-3. compares the built interface against `fmu/modelDescription.xml`:
+3. compares the SysML declaration against `fmu/modelDescription.xml`: the
+   `scenario_input` String parameter and the five Real outputs (`Alt`, `Mach`,
+   `heat_load`, `Wgt_On_Whl`, `Aircraft_state`), naming the differing member;
+4. compares the built interface against the same `fmu/modelDescription.xml`:
    `modelName`/`modelIdentifier` `scenario`, `fmiVersion` 2.0, the same GUID,
    the six variables in order (names, causalities, variabilities, types, value
    references, and the `scenario_input` start text), and the same
    `ModelStructure/Outputs`;
-4. simulates the pinned body and the built archive with FMPy and compares the
+5. simulates the pinned body and the built archive with FMPy and compares the
    five output trajectories; when FMPy is not installed the check prints a skip
    reason instead of failing;
-5. prints what it produced and verified, and exits nonzero on any mismatch.
+6. prints what it produced and verified, and exits nonzero on any mismatch.
 
 The default run never writes into `fmu/`; it is verify-only.
 

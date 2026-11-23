@@ -6,9 +6,11 @@ into typed series, packaged as an FMI 2.0 CoSimulation archive, and placed at
 ``artifacts/build/scenario/scenario.fmu``. The checked-in fixture body at
 ``models/fmu/scenario/fmu`` is the reference the build must match.
 
-The default run is verify-only: it packages the archive, compares its interface
-against the pinned ``modelDescription.xml``, and simulates both bodies with
-FMPy when FMPy is installed. It never writes into ``fmu/``. ``--refresh``
+The default run is verify-only: it packages the archive, compares the SysML
+declaration in ``architecture/Scenario.sysml`` against the pinned
+``modelDescription.xml`` interface, compares the built interface against the
+same pinned one, and simulates both bodies with FMPy when FMPy is installed. It
+never writes into ``fmu/``. ``--refresh``
 extracts a freshly built ``modelDescription.xml`` and
 ``binaries/linux64/scenario.so`` into the pinned body, but only after the
 interface check passes, so the pinned body is never replaced by an incompatible
@@ -28,17 +30,22 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree
 
+import pycps_sysml2
 from pyfmu_scenario.grammar import parse_scenario
 from pyfmu_scenario.packaging import package_scenario
 
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]
+ARCHITECTURE_DIR = MODEL_DIR / "architecture"
 SCENARIO_FILE = MODEL_DIR / "scenario.txt"
 PINNED_DIR = MODEL_DIR / "fmu"
 PINNED_DESCRIPTION = PINNED_DIR / "modelDescription.xml"
 PINNED_BINARY = PINNED_DIR / "binaries" / "linux64" / "scenario.so"
 BUILD_DIR = REPO_ROOT / "artifacts" / "build" / "scenario"
 OUTPUT_FMU = BUILD_DIR / "scenario.fmu"
+
+#: The declared component; its name is the ``part def`` in the architecture.
+COMPONENT = "Scenario"
 
 #: The pinned body's GUID. The producer defaults to it; pass it explicitly so a
 #: producer default change cannot silently move the fixture identity.
@@ -114,6 +121,59 @@ def _compare_interface(
             f"ModelStructure/Outputs: pinned {pinned['outputs']} != "
             f"built {built['outputs']}"
         )
+    return problems
+
+
+def _read_declaration(directory: Path) -> dict[str, object]:
+    """Extract the interface the SysML declaration promises for the component."""
+    architecture = pycps_sysml2.load(directory, pycps_sysml2.core_definitions())
+    component = architecture.get_part_def(COMPONENT)
+    parameters = {}
+    outputs = {}
+    for port in component.ports.values():
+        port_def = architecture.resolve_port(port)
+        if port_def is None:
+            continue
+        if port.direction == "in":
+            for name, member in port_def.attributes.items():
+                parameters[name] = member.type_name
+        elif port.direction == "out":
+            (member,) = port_def.attributes.values()
+            outputs[port.name] = member.type_name
+    return {"parameters": parameters, "outputs": outputs}
+
+
+def _compare_declaration(
+    declared: dict[str, object], pinned: dict[str, object]
+) -> list[str]:
+    """Return every difference between the SysML declaration and the pinned interface."""
+    problems = []
+    for kind, declared_members in (
+        ("parameter", declared["parameters"]),
+        ("output", declared["outputs"]),
+    ):
+        pinned_members = {
+            str(variable["name"]): variable["type"]
+            for variable in pinned["variables"]
+            if variable["causality"] == kind
+        }
+        for name in sorted(set(declared_members) | set(pinned_members)):
+            if name not in declared_members:
+                problems.append(
+                    f"{kind} {name!r}: pinned interface declares it, "
+                    "the SysML declaration does not"
+                )
+            elif name not in pinned_members:
+                problems.append(
+                    f"{kind} {name!r}: the SysML declaration declares it, "
+                    "the pinned interface does not"
+                )
+            elif declared_members[name] != pinned_members[name]:
+                problems.append(
+                    f"{kind} {name!r}: declaration "
+                    f"{declared_members[name]!r} != pinned "
+                    f"{pinned_members[name]!r}"
+                )
     return problems
 
 
@@ -227,8 +287,11 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Packaged {archive}")
 
     pinned = _read_interface(PINNED_DESCRIPTION)
+    problems = _compare_declaration(
+        _read_declaration(ARCHITECTURE_DIR), pinned
+    )
     built = _built_description(archive)
-    problems = _compare_interface(pinned, built)
+    problems.extend(_compare_interface(pinned, built))
     problems.extend(_compare_trajectories(pinned, archive))
 
     if problems:

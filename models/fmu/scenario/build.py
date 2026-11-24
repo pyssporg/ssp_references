@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build and verify the pinned ``scenario`` FMU body.
 
-``pyfmu_scenario`` produces the FMU from ``scenario.txt``: the text is parsed
+``pyfmi_scenario`` produces the FMU from ``scenario.txt``: the text is parsed
 into typed series, packaged as an FMI 2.0 CoSimulation archive, and placed at
 ``artifacts/build/scenario/scenario.fmu``. The checked-in fixture body at
 ``models/fmu/scenario/fmu`` is the reference the build must match.
@@ -17,7 +17,7 @@ interface check passes, so the pinned body is never replaced by an incompatible
 build.
 
 Identity fields that the producer deliberately sets differently are ignored:
-``author`` and ``generationTool`` now name ``pyssporg``/``pyfmu-scenario``, and
+``author`` and ``generationTool`` now name ``pyssporg``/``pyfmi-scenario``, and
 ``generationDateAndTime`` is absent. The GUID and the FMI interface stay
 stable.
 """
@@ -31,8 +31,8 @@ from pathlib import Path
 from xml.etree import ElementTree
 
 import pycps_sysml
-from pyfmu_scenario.grammar import parse_scenario
-from pyfmu_scenario.packaging import package_scenario
+from pyfmi_scenario.grammar import parse_scenario
+from pyfmi_scenario.packaging import package_scenario
 
 MODEL_DIR = Path(__file__).resolve().parent
 REPO_ROOT = Path(__file__).resolve().parents[3]

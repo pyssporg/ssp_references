@@ -44,7 +44,7 @@ Implemented via IMP-CAND-G builder task. The review document is at
 `04-verification/simulation_registry_coverage_review.md`.
 
 Actions taken:
-- Added 3 missing models (dcmotor, pyfmu_csv_source_sink, scenario) to `simulation_registry.json`
+- Added 3 missing models (dcmotor, pyfmi_csv_source_sink, scenario) to `simulation_registry.json`
 - Added FMPy backend documentation to `models/README.md` (Backend Key + model tables)
 - Added `## Backends` sections to all 15 FIXTURE.md files
 - Created `04-verification/simulation_registry_coverage_review.md` with per-model rationale

@@ -428,7 +428,7 @@
       "build": "model"
     },
     {
-      "name": "pyfmu_csv_source_sink",
+      "name": "pyfmi_csv_source_sink",
       "compare_signals": [
         "source.y"
       ],

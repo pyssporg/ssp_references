@@ -1,21 +1,21 @@
-# pyfmu_csv_source_sink
+# pyfmi_csv_source_sink
 
 ## Origin
 
 Assembled locally from `input/signals.csv`, a generated `CsvSource` FMU, and
 the shared `models/fmu/Modelica.Blocks.Math.Gain` fixture. The `CsvSource` FMU
-is built by `pyfmu_csv` during the fixture build and is not checked in under
+is built by `pyfmi_csv` during the fixture build and is not checked in under
 `models/`.
 
 ## Overview
 
-`pyfmu_csv_source_sink` is a minimal SSP assembled from a `pyfmu_csv` source
+`pyfmi_csv_source_sink` is a minimal SSP assembled from a `pyfmi_csv` source
 FMU and a shared Modelica block sink FMU. Parameter form: external SSV with an
 inline mapping.
 
 ## Architecture Source
 
-- `architecture/pyfmu_csv_source_sink.sysml`
+- `architecture/pyfmi_csv_source_sink.sysml`
 - Exportable composition: `System :> SspModel`
 - Analysis composition: `baseline :> Analysis`
 - No legacy SSD, SSV, SSM, or `experiments.xml` is checked into the model
@@ -34,7 +34,7 @@ inline mapping.
 - `System` owns `ScenarioSet`; `ScenarioSet.k = 1.0` maps to `sink.k`.
 - The analysis is experiment-only; it applies no scenario set.
 - Tolerance is not part of the experiment; it comes from the composed FMUs.
-- Artifacts: `artifacts/analyses/pyfmu_csv_source_sink/baseline/`
+- Artifacts: `artifacts/analyses/pyfmi_csv_source_sink/baseline/`
 - Analyses are never exported as SSPs.
 
 ## Backends
@@ -84,6 +84,6 @@ SSP as-is.
   same extraction and model-exchange stripping as exported ones.
 - No `experiments.xml` is packaged; the analysis descriptor supplies the window
   source.
-- Exported model: `artifacts/models/pyfmu_csv_source_sink/baseline/model/`
-- Analysis artifacts: `artifacts/analyses/pyfmu_csv_source_sink/baseline/`
-- Build: `python3 scripts/build_models.py run pyfmu_csv_source_sink`
+- Exported model: `artifacts/models/pyfmi_csv_source_sink/baseline/model/`
+- Analysis artifacts: `artifacts/analyses/pyfmi_csv_source_sink/baseline/`
+- Build: `python3 scripts/build_models.py run pyfmi_csv_source_sink`

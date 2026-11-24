@@ -2,7 +2,7 @@
 id: IMP-101
 type: imp
 title: Scenario ownership strategy for SSP fixtures
-summary: One strategy selects whether a scenario parameter set is applied by the model, the analysis, or the build; pyfmu motivates the model-owned option.
+summary: One strategy selects whether a scenario parameter set is applied by the model, the analysis, or the build; pyfmi motivates the model-owned option.
 date: 2026-10-23
 status: selected
 pb_exempt: true
@@ -12,13 +12,13 @@ pb_exempt: true
 
 A scenario parameter set has three possible owners: the `SspModel`, the `Analysis`, or the fixture build.
 Fixtures use analysis-owned, model-owned, and fixed-body scenarios.
-`pyfmu_csv_source_sink` is the first model-owned fixture.
+`pyfmi_csv_source_sink` is the first model-owned fixture.
 A model-owned set fixes the scenario for all analyses.
 
 ## Evidence
 
-- **pyfmu build**: attaches the generated CsvSource FMU; applies no parameter set.
-- **pyfmu SysML**: `System` owns `ScenarioSet`; `baseline :> Analysis` is experiment-only.
+- **pyfmi build**: attaches the generated CsvSource FMU; applies no parameter set.
+- **pyfmi SysML**: `System` owns `ScenarioSet`; `baseline :> Analysis` is experiment-only.
 - **model-owned export works**: `generate ssp` writes `resources/parameter_sets/ScenarioSet.ssv` and a root binding.
 - **runtime equivalent**: the model-owned SSP simulated bit-identically to the legacy result; 1001 rows, max abs diff 0.0.
 - **model-owned analysis works**: `generate analysis` writes an experiment-only descriptor for a model-owned set.
@@ -67,7 +67,7 @@ A model-owned set fixes the scenario for all analyses.
 1. Evaluate options A, B, and C against the criteria.
 2. Select one strategy for fixed-scenario fixtures.
 3. Record the selection as a decision record.
-4. Scope the dialect change and the pyfmu migration as separate tasks.
+4. Scope the dialect change and the pyfmi migration as separate tasks.
 
 ## Expected Benefit
 
@@ -77,14 +77,14 @@ A model-owned set fixes the scenario for all analyses.
 ## Risk And Blast Radius
 
 - **Cross-repo**: `pyssp_sysml` dialect and tests.
-- **Repo**: `pyssp_workflow.authoring`, pyfmu build, tests, `FIXTURE.md`.
+- **Repo**: `pyssp_workflow.authoring`, pyfmi build, tests, `FIXTURE.md`.
 - **Artifact**: form changes from inline to external SSV plus mapping.
 - **Flexibility**: analyses over a model-owned scenario cannot vary the scenario.
 
 ## Open Questions
 
 - Does any fixture need multiple analyses with different scenarios over one model?
-- Must pyfmu keep the inline parameter form, or is external SSV plus mapping acceptable?
+- Must pyfmi keep the inline parameter form, or is external SSV plus mapping acceptable?
 - Should a model-owned set plus an analysis set be a hard error, or a disjoint merge?
 - Which fixtures move to model-owned: only fixed-scenario fixtures, or all?
 
@@ -94,7 +94,7 @@ A model-owned set fixes the scenario for all analyses.
 
 ## Excludes
 
-- The `pyfmu_csv_source_sink` migration itself; completed as the first case.
+- The `pyfmi_csv_source_sink` migration itself; completed as the first case.
 - The `pyssp_sysml` dialect implementation; a separate upstream task.
 - LS-REF packaging policy; retired by `AD-014`.
 - Build and runtime pipeline; see `INFO-002` and `INFO-008`.

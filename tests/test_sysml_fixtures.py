@@ -239,7 +239,7 @@ EXPECTED: dict[str, dict] = {
         ]},
         "form": "external+mapping",
     },
-    "pyfmu_csv_source_sink": {
+    "pyfmi_csv_source_sink": {
         "analysis": "baseline",
         "components": ["sink", "source"],
         "connections": [("source", "y", "sink", "u")],
@@ -381,11 +381,11 @@ def test_built_scenario_form(model: str) -> None:
     assert _form(system) == expected["form"]
 
 
-def test_pyfmu_csv_source_sink_structure_needs_no_fmu(tmp_path: Path) -> None:
+def test_pyfmi_csv_source_sink_structure_needs_no_fmu(tmp_path: Path) -> None:
     """The CSV fixture's SysML defines the full structure without an FMU."""
-    output = tmp_path / "pyfmu_csv_source_sink.ssd"
+    output = tmp_path / "pyfmi_csv_source_sink.ssd"
     derive_ssd_from_sysml(
-        REPO_ROOT / "models" / "ssp" / "pyfmu_csv_source_sink" / "architecture",
+        REPO_ROOT / "models" / "ssp" / "pyfmi_csv_source_sink" / "architecture",
         output,
         "System",
     )

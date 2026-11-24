@@ -32,7 +32,7 @@ pb_exempt: true
 | 11 | Stair | ✅ | ✅ | ssp4sim, OMSimulator | baseline | ✅ |
 | 12 | VanDerPol | ✅ | ✅ | ssp4sim, OMSimulator, FMPy | baseline, fast, slow | ✅ |
 | 13 | dcmotor | ✅ | ❌→✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ (added) |
-| 14 | pyfmu_csv_source_sink | ✅ | ❌→✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ (added) |
+| 14 | pyfmi_csv_source_sink | ✅ | ❌→✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ (added) |
 | 15 | scenario | ✅ | ❌→✅ | ssp4sim, OMSimulator, FMPy | baseline | ✅ (added) |
 
 ## Per-Model Rationale
@@ -85,7 +85,7 @@ pb_exempt: true
 
 ### Special-Purpose SSPs
 
-**14. pyfmu_csv_source_sink**
+**14. pyfmi_csv_source_sink**
 - **Test level:** Behavioral
 - **Backend rationale:** Three backends ensure CSV-backed source FMU packaging works across all engines. This fixture tests a specific packaging feature (bundling CSV data in an SSP) that could behave differently across engines.
 - **Registry verification:** ❌ Missing before review → ✅ Added during IMP-CAND-G.
@@ -98,7 +98,7 @@ pb_exempt: true
 ## Cross-Cutting Findings
 
 ### Finding 1: Missing Registry Entries
-Three on-disk SSP fixtures (dcmotor, pyfmu_csv_source_sink, scenario) had no corresponding registry entry. These were present in `models/ssp/` with valid `build.py` and `SystemStructure.ssd` files but were not included in `simulation_registry.json`. All three have been added with three-backend coverage.
+Three on-disk SSP fixtures (dcmotor, pyfmi_csv_source_sink, scenario) had no corresponding registry entry. These were present in `models/ssp/` with valid `build.py` and `SystemStructure.ssd` files but were not included in `simulation_registry.json`. All three have been added with three-backend coverage.
 
 **Action:** Added entries with `baseline` case and backends `ssp4sim`, `omsimulator`, `fmpy`.
 
@@ -133,7 +133,7 @@ All 12 models that were already in the registry have valid SSP roots on disk (Sy
 |--------|---------------|--------|
 | Backup registry | artifacts/simulation_registry.json.bak | Done |
 | Add dcmotor to registry | artifacts/simulation_registry.json | Done |
-| Add pyfmu_csv_source_sink to registry | artifacts/simulation_registry.json | Done |
+| Add pyfmi_csv_source_sink to registry | artifacts/simulation_registry.json | Done |
 | Add scenario to registry | artifacts/simulation_registry.json | Done |
 | Add FMPy to Backend Key in README | models/README.md | Done |
 | Update backend columns in README | models/README.md | Done |

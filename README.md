@@ -224,7 +224,7 @@ python3 scripts/run_comparisons.py
 by default. `run_comparisons.py` then compares each case using all backends
 listed in the corresponding `setup.json`, or a filtered backend subset when
 `--backend` is repeated. Cases that only have one backend, such as
-`pyfmu_csv_source_sink` and `scenario`, are simulated but not comparable.
+`pyfmi_csv_source_sink` and `scenario`, are simulated but not comparable.
 
 ### VV gate and reference baselines
 

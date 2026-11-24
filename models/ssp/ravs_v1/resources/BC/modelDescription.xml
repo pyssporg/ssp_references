@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <fmiModelDescription fmiVersion="2.0" modelName="EmbraceBoundaryConditions"
-    guid="56440bdf-bcbb-5e7c-ac56-22ba9dc96012" generationTool="pyfmu-csv"
+    guid="56440bdf-bcbb-5e7c-ac56-22ba9dc96012" generationTool="pyfmi-csv"
     variableNamingConvention="structured">
     <CoSimulation modelIdentifier="EmbraceBoundaryConditions"
         canHandleVariableCommunicationStepSize="true" />

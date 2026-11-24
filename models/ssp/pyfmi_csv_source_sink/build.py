@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build pyfmu_csv_source_sink and its baseline analysis.
+"""Build pyfmi_csv_source_sink and its baseline analysis.
 
 The SysML authors the composition, the ``System`` scenario, and the baseline
 experiment. The CsvSource FMU is generated from ``input/signals.csv`` and
@@ -11,7 +11,7 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
-from pyfmu_csv.packaging import package_fmu_from_csv
+from pyfmi_csv.packaging import package_fmu_from_csv
 from pyssp_standard import SSP
 from pyssp_workflow.authoring import build_fixture, report_builds
 from pyssp_workflow.fixture import BuiltFixture
@@ -23,7 +23,7 @@ SOURCE_CSV = Path(__file__).resolve().parent / "input" / "signals.csv"
 
 def _attach_source_fmu(build: BuiltFixture) -> None:
     """Attach the CsvSource FMU generated from ``input/signals.csv``."""
-    with tempfile.TemporaryDirectory(prefix="pyfmu_csv_source_sink_") as temp_dir:
+    with tempfile.TemporaryDirectory(prefix="pyfmi_csv_source_sink_") as temp_dir:
         fmu_path = Path(temp_dir) / "CsvSource.fmu"
         package_fmu_from_csv(SOURCE_CSV, fmu_path, "CsvSource")
         with SSP(build.model_dir, mode="a") as ssp:

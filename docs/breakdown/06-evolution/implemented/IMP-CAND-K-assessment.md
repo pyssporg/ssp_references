@@ -29,7 +29,7 @@ All four fixture classes are represented in the registry:
 | Composite | Present | Adequate |
 | Special-Purpose | Present | Adequate |
 
-All 15 on-disk models are registered in `artifacts/simulation_registry.json`. No models were found to be missing (IMP-CAND-G previously added dcmotor, pyfmu_csv_source_sink, and scenario to close the last gap). No new models are needed.
+All 15 on-disk models are registered in `artifacts/simulation_registry.json`. No models were found to be missing (IMP-CAND-G previously added dcmotor, pyfmi_csv_source_sink, and scenario to close the last gap). No new models are needed.
 
 ### Case Expansion
 

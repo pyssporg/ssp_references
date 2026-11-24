@@ -7,7 +7,7 @@
   "request": {
     "backend": "ssp4sim",
     "case": "baseline",
-    "model": "pyfmu_csv_source_sink",
+    "model": "pyfmi_csv_source_sink",
     "setup_manifest": "../setup.json"
   },
   "result": "result.csv",

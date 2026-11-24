@@ -63,7 +63,7 @@ SSPs that test specific packaging or runtime features.
 
 | Model | Purpose | Backends | Test Level | FIXTURE.md |
 |-------|---------|----------|------------|------------|
-| pyfmu_csv_source_sink | CSV-backed source and sink FMUs inside an SSP | ssp4sim | Behavioral | [link](./ssp/pyfmu_csv_source_sink/FIXTURE.md) |
+| pyfmi_csv_source_sink | CSV-backed source and sink FMUs inside an SSP | ssp4sim | Behavioral | [link](./ssp/pyfmi_csv_source_sink/FIXTURE.md) |
 | scenario | SSV/SSM parameter injection and structured scenario handling | ssp4sim | Behavioral | [link](./ssp/scenario/FIXTURE.md) |
 | variation_source_swap | Definition-level source swap: the `source` part selects Step or Sine | ssp4sim, OMSimulator | Behavioral | [link](./ssp/variation_source_swap/FIXTURE.md) |
 | variation_body_gain | Variant-body path: one Gain vs Product-then-Gain driven by Sine | Not registered | Build-level | [link](./ssp/variation_body_gain/FIXTURE.md) |

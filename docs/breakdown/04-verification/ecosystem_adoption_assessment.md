@@ -50,7 +50,7 @@ the remaining OMSimulator run is the parameter-mapping parsing gap in §4.
 | BouncingBall, Dahlquist, Resource, Stair, VanDerPol | All registered backends run |
 | Deterministic signal fixtures (`signal_*`) | All registered backends run, except the known OMSimulator/ssp4sim gaps in §4 |
 | dcmotor, ravs_v1 | Both registered backends run |
-| `pyfmu_csv_source_sink`, `scenario` | ssp4sim runs; these cases are registered for ssp4sim only |
+| `pyfmi_csv_source_sink`, `scenario` | ssp4sim runs; these cases are registered for ssp4sim only |
 | `signal_parameter_inline_with_mapping` | ssp4sim runs; OMSimulator fails on parameter-mapping parsing |
 
 `pyssp_simulate` was **not a regression** for the registered matrix. The cases
@@ -101,7 +101,7 @@ primitives, permutation runs, CLI.
 **Gaps and policy:**
 
 1. **OMSimulator runs in-process.** A malformed fixture can abort the host
-   process (`scenario`, `pyfmu_csv_source_sink`). The campaign runner isolates
+   process (`scenario`, `pyfmi_csv_source_sink`). The campaign runner isolates
    each simulation in a subprocess.
 2. **Comparison policy stays in the repository.** Signal selection, window,
    tolerances, and manifests are repository-specific; measurement and judgment

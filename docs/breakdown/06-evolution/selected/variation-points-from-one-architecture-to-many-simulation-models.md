@@ -75,7 +75,7 @@ Worked SysML shapes for each route, parsed with the pinned toolchain: `examples/
 
 ## Risk And Blast Radius
 
-- **Cross-repo**: `pyssp_sysml2` adapter, model, generator, CLI, tests; `pyssp_workflow.authoring` build loop and naming.
+- **Cross-repo**: `pyssp_sysml` adapter, model, generator, CLI, tests; `pyssp_workflow.authoring` build loop and naming.
 - **Repo**: registry schema, artifact layout, `FIXTURE.md` template, spike fixtures.
 - **Dependency**: the pinned `sysmlpy` release decides whether variant members survive parsing.
 - **Methodology**: 15288 alignment claims invite process-conformance scope; hold it as context.
@@ -95,6 +95,6 @@ Worked SysML shapes for each route, parsed with the pinned toolchain: `examples/
 
 ## Excludes
 
-- The adapter and generator implementation; an upstream `pyssp_sysml2` task.
+- The adapter and generator implementation; an upstream `pyssp_sysml` task.
 - Per-fixture migration; multi-SSD packaging stays unselected.
 - Comparison methodology and build pipeline; see `CP-001`, `INFO-002`, and `INFO-008`.

@@ -76,7 +76,7 @@ A model-owned set fixes the scenario for all analyses.
 
 ## Risk And Blast Radius
 
-- **Cross-repo**: `pyssp_sysml2` dialect and tests.
+- **Cross-repo**: `pyssp_sysml` dialect and tests.
 - **Repo**: `pyssp_workflow.authoring`, pyfmu build, tests, `FIXTURE.md`.
 - **Artifact**: form changes from inline to external SSV plus mapping.
 - **Flexibility**: analyses over a model-owned scenario cannot vary the scenario.
@@ -95,6 +95,6 @@ A model-owned set fixes the scenario for all analyses.
 ## Excludes
 
 - The `pyfmu_csv_source_sink` migration itself; completed as the first case.
-- The `pyssp_sysml2` dialect implementation; a separate upstream task.
+- The `pyssp_sysml` dialect implementation; a separate upstream task.
 - LS-REF packaging policy; retired by `AD-014`.
 - Build and runtime pipeline; see `INFO-002` and `INFO-008`.

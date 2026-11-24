@@ -2,14 +2,14 @@
 id: IMP-111
 type: imp
 title: Array attributes on signal ports
-summary: Expand a fixed-length array attribute on a non-flat signal port to one SSD connector per element in pyssp_sysml2, matching pyfmi_sysml2's FMI variable expansion and index base.
+summary: Expand a fixed-length array attribute on a non-flat signal port to one SSD connector per element in pyssp_sysml, matching pyfmi_sysml2's FMI variable expansion and index base.
 date: 2026-11-19
 status: suggested
 ---
 
 # Array attributes on signal ports
 
-`pyssp_sysml2` records attribute multiplicity but drops it when exporting SSD
+`pyssp_sysml` records attribute multiplicity but drops it when exporting SSD
 connectors; `pyfmi_sysml2` expands the same attribute into scalar FMI
 variables, so one port produces two different interfaces.
 
@@ -27,8 +27,8 @@ element, with names both exporters agree on.
 
 ## Evidence
 
-- `pycps_sysml2/model/model.py:92` stores `Attribute.multiplicity`.
-- `pyssp_sysml2/artifacts/ssd.py:205-217` emits one connector per attribute
+- `pycps_sysml/model/model.py:92` stores `Attribute.multiplicity`.
+- `pyssp_sysml/artifacts/ssd.py:205-217` emits one connector per attribute
   and never reads multiplicity; `:400-402` promises 1-based data-port indices.
 - Installed 0.5.0: `attribute X : Real[3]` emits `consumerFeed.X` only.
 - `pyfmi_sysml2/interface.py:197-213,293-295` and `Field.members` (`:104-128`)
@@ -46,9 +46,9 @@ element, with names both exporters agree on.
 
 ## Owner And Blocker
 
-`pyssp_sysml2` owns the SSD expansion; `pyfmi_sysml2` owns the index convention
-and the parity test; `pycps_sysml2` needs no change. Blocker: an agreed
-base-index rule. Cross-repo order: `pyssp_sysml2` expansion, `pyfmi_sysml2`
+`pyssp_sysml` owns the SSD expansion; `pyfmi_sysml2` owns the index convention
+and the parity test; `pycps_sysml` needs no change. Blocker: an agreed
+base-index rule. Cross-repo order: `pyssp_sysml` expansion, `pyfmi_sysml2`
 parity/default, then the `ssp_references` fixture pin.
 
 ## Traceability

@@ -30,7 +30,7 @@ import zipfile
 from pathlib import Path
 from xml.etree import ElementTree
 
-import pycps_sysml2
+import pycps_sysml
 from pyfmu_scenario.grammar import parse_scenario
 from pyfmu_scenario.packaging import package_scenario
 
@@ -126,7 +126,7 @@ def _compare_interface(
 
 def _read_declaration(directory: Path) -> dict[str, object]:
     """Extract the interface the SysML declaration promises for the component."""
-    architecture = pycps_sysml2.load(directory, pycps_sysml2.core_definitions())
+    architecture = pycps_sysml.load(directory, pycps_sysml.core_definitions())
     component = architecture.get_part_def(COMPONENT)
     parameters = {}
     outputs = {}

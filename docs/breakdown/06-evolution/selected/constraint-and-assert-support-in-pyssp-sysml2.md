@@ -1,17 +1,17 @@
 ---
 id: IMP-104
 type: imp
-title: Constraint and assert support in pyssp_sysml2
+title: Constraint and assert support in pyssp_sysml
 summary: Carry SysML constraint and assert elements through the parser adapter and evaluate them after variation selection, so illegal variant combinations fail at build time.
 date: 2026-10-30
 status: selected
 pb_exempt: true
 ---
 
-# Constraint and assert support in pyssp_sysml2
+# Constraint and assert support in pyssp_sysml
 
 SysML v2 `constraint def`, `constraint` usage, and `assert` are authoring-time legality rules.
-`sysmlpy` parses them. `pyssp_sysml2` captures them into the repo-owned model and evaluates them after variation selection.
+`sysmlpy` parses them. `pyssp_sysml` captures them into the repo-owned model and evaluates them after variation selection.
 `Architecture` carries constraint definitions and usages.
 `loader._merge_packages` merges them with the other authored kinds.
 `variation.resolve` selects after load; `parameters.constraints` evaluates the selected architecture.
@@ -40,11 +40,11 @@ Carry constraints through the adapter. Evaluate for a selected architecture. Rej
 
 ## Scope
 
-- `pyssp_sysml2`: `model/parser.py` capture; `model/model.py` and `model/loader.py` model and merge; new `parameters/constraints.py` or `variation.py` evaluation; `cli.py` rejection; `model/exporter.py` and `sysml/sync.py` erasure policy.
-- `pyssp_sysml2` tests and fixtures.
+- `pyssp_sysml`: `model/parser.py` capture; `model/model.py` and `model/loader.py` model and merge; new `parameters/constraints.py` or `variation.py` evaluation; `cli.py` rejection; `model/exporter.py` and `sysml/sync.py` erasure policy.
+- `pyssp_sysml` tests and fixtures.
 - `pyssp_workflow` authoring if the build surfaces rejection.
 - `ssp_references` fixtures and tests after the pin.
-- Gitlink order: `pyssp_sysml2`, `pyssp_workflow`, `ssp_references`.
+- Gitlink order: `pyssp_sysml`, `pyssp_workflow`, `ssp_references`.
 - Out of scope: full OCL/SysML semantics, constraint solving, runtime enforcement, SSP packaging, replacing build-time selection, changing the `sysmlpy` pin.
 
 ## Constraints
@@ -70,11 +70,11 @@ Carry constraints through the adapter. Evaluate for a selected architecture. Rej
 1. **Capture.** Model carries every constraint definition, usage, and assert. `parser.py`, `model.py`, `loader.py`, tests. Acceptance: name, parameters, expression, asserted flag; empty when absent; suite green.
 2. **Evaluate.** Public call and CLI reject illegal selection. New constraint module, `variation.py`, `cli.py`, tests. Acceptance: legal pass; illegal fail with named constraint; unknown variant and malformed expression distinct; no artifact on failure.
 3. **Migrate.** Two `build.py` and `tests/test_variation_cases.py`. Acceptance: legal builds byte-identical; pruned branches absent; adapter rejects; registry and gates unchanged.
-4. **Record and pin.** `pyssp_sysml2` docs, `pyssp_workflow` gitlink, root gitlink. Acceptance: upstream and `ssp_references` tests green; pin order recorded.
+4. **Record and pin.** `pyssp_sysml` docs, `pyssp_workflow` gitlink, root gitlink. Acceptance: upstream and `ssp_references` tests green; pin order recorded.
 
 ## Acceptance Criteria
 
-- `pytest` in `pyssp_sysml2` and `pyssp_workflow` passes.
+- `pytest` in `pyssp_sysml` and `pyssp_workflow` passes.
 - `python3 -m pytest tests/` in `ssp_references` passes.
 - `build_models.py run variation_conditional_requires variation_conditional_excludes` passes.
 - `artifacts/models/**/sine_two` and `artifacts/models/**/sine_high` stay absent.

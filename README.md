@@ -76,7 +76,7 @@ run from the repository root against the environment built from
 
 `examples/simple_chain/` is the smallest end-to-end path: a SysML architecture
 with two FMUs, exported to an SSP and simulated. It imports only the public
-surfaces of `pyssp_sysml2`, `pycps_sysml2` (the dialect core definitions), and
+surfaces of `pyssp_sysml`, `pycps_sysml` (the dialect core definitions), and
 `pyssp_simulate`.
 
 From the workspace root, in the workspace venv:
@@ -120,7 +120,7 @@ contract:
 - The dialect markers — `SspModel`, `Analysis`, `Experiment`, `FmuMetadata`,
   `FmuModel`, `SspMetadata`, `ParameterInterface`, `ParameterSet` — come from
   `pyssp_sysml_definitions`, the package that ships the core vocabulary
-  (`pycps_sysml2` re-exports its path). `build.py` reaches them through
+  (`pycps_sysml` re-exports its path). `build.py` reaches them through
   `pyssp_workflow.authoring`, whose `core_definitions=True` default adds the
   core as one include; extra definition roots go in `includes=`, one more
   `--architecture` each after the model root. A fixture must not redeclare one.
@@ -291,13 +291,13 @@ reference-model cases, the matching CSV baselines live beside their fixture:
   whole stack: its base dependencies transitively pin the eight pyssp and SysML
   distributions as GitHub release assets — the six pyssp capability libraries
   (`experimental-pyssp-standard`, `pyssp-workflow`, `pyssp-simulate`,
-  `pyssp-sysml2`, `pyssp-vv`, `sequence-extensions-flow`) plus the SysML
-  dialect library `pycps-sysml2` and the FMI artifact library `pyfmi-interfaces`.
+  `pyssp-sysml`, `pyssp-vv`, `sequence-extensions-flow`) plus the SysML
+  dialect library `pycps-sysml` and the FMI artifact library `pyfmi-interfaces`.
   Each wheel's metadata names its sibling dependencies as
   `releases/download/v<version>/` URLs, so the version graph travels inside the
   wheels. A tag that has not been released makes the dependency unresolvable.
-  No feature extras exist: `pyssp_workflow` imports none of `pyssp_sysml2`,
-  `pycps_sysml2`, or `pyfmi_interfaces`, and its only optional group is `dev`.
+  No feature extras exist: `pyssp_workflow` imports none of `pyssp_sysml`,
+  `pycps_sysml`, or `pyfmi_interfaces`, and its only optional group is `dev`.
   `requirements-dev.txt` composes `requirements.txt`, so it installs the same
   release wheels; its comments describe the optional editable sibling
   checkouts but it contains no editable lines itself.
@@ -308,7 +308,7 @@ reference-model cases, the matching CSV baselines live beside their fixture:
 
 If you work on another platform, expect to adjust dependencies manually.
 
-The campaign runner and `pyssp_sysml2` round-trip tool have their own
+The campaign runner and `pyssp_sysml` round-trip tool have their own
 environment constraints:
 
 - `scripts/run_campaign.py` requires Python 3.11+ and the
@@ -322,10 +322,10 @@ environment constraints:
   the top of `requirements-dev.txt` describe.
 - `scripts/check_sysml_roundtrip.py` is an artifact-only checker. It invokes
   an external `pyssp` executable and exchanges only `SystemStructure.ssd`
-  files; it does not import `pyssp_sysml2` or `pyssp_standard`. Point it at a
+  files; it does not import `pyssp_sysml` or `pyssp_standard`. Point it at a
   dedicated SysML tool environment with `--pyssp /path/to/venv/bin/pyssp` or
   the `PYSSP` environment variable. `requirements-sysml.txt` describes that
-  environment. The build stage also needs `pyssp_sysml2`, which the wheel set
+  environment. The build stage also needs `pyssp_sysml`, which the wheel set
   provides.
 
 The pyssp and sequence checkouts are siblings in the flat ecosystem workspace

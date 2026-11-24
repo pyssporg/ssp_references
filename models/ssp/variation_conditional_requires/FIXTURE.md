@@ -8,7 +8,7 @@ Authored in this repository under `architecture/`, adapted from the constrained-
 
 Two structural variation points, `SourceChoice` and `GainChoice`, with one legality rule between them: selecting the sine source requires the single gain stage. Four source/gain combinations exist; the rule admits three. The three legal analyses are built and registered, and the fourth (`sine_two`) is authored so the pruned branch is visible in the architecture but never reaches an SSP.
 
-The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis composes a configuration (`StepSingleSystem`, `StepTwoSystem`, `SineSingleSystem`, `SineTwoSystem`) that binds both points; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
+The `pyssp_sysml` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis composes a configuration (`StepSingleSystem`, `StepTwoSystem`, `SineSingleSystem`, `SineTwoSystem`) that binds both points; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 

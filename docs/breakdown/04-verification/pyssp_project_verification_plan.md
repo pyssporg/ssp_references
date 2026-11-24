@@ -25,17 +25,17 @@ tree in the flat ecosystem workspace (`pyssp_dev/repos/`); the former vendored
 |---|---|---|---|
 | pyssp_standard (canonical, experimental fork) | `experimental_pyssp_standard` | 467 | 5.6 s |
 | pyssp_simulate | same tree | 148 (147 pass, 1 cosim skip) | 10.0 s |
-| pyssp_sysml2 | same tree | 248 | 32 s |
+| pyssp_sysml | same tree | 248 | 32 s |
 | pyssp_workflow | `pyssp_workflow` | 74 | 4.2 s |
 | pyssp_vv | same tree | 122 | 2.2 s |
 | sequence_extensions | same tree | 434 | 14.0 s |
-| pycps_sysml2 | `pycps_sysml2` | not measured in this snapshot | not measured |
+| pycps_sysml | `pycps_sysml` | not measured in this snapshot | not measured |
 | pyfmi_interfaces | `pyfmi_interfaces` | not measured in this snapshot | not measured |
 | pyfmi_sysml | `pyfmi_sysml` | not measured in this snapshot | not measured |
 | root suite | `tests/` | 104 (1 strict-mode skip) | 101 s |
 
 Excluded: the pinned `experimental_pyssp_standard` copy that once nested inside
-`pyssp_sysml2` (gone with the vendored tree), the root suite's engine-free
+`pyssp_sysml` (gone with the vendored tree), the root suite's engine-free
 integration tests (see EVAL-001, EVAL-008), upstream CI matrices. The SysML
 libraries are pinned and installed but their suites were never run for this
 snapshot.
@@ -59,7 +59,7 @@ real engine from the cross-project suite, and `cosim` has never executed.
 |---|---|---|---|---|---|---|
 | pyssp_standard | static/unit/component/contract/system/acceptance | strong (XSD + exact structure + byte identity) | fakes hand-written, each now behaviour-pinned | good (epoch default, mode normalised) | levels + fixture provenance | good |
 | pyssp_simulate | unit/component/contract/integration/system | strong (analytic `y=t`, `t²/2`, exact sample grid) | **fixed** — fakes use the recorded real header | good (FMU manifest, event-row decision pinned) | levels + engine set selectable | good |
-| pyssp_sysml2 | static/unit/component/contract/system | strong (goldens + `pyssp_standard` validator + exact bytes) | n/a | **fixed** — injected clock, pinned guid/version, no checkout writes | levels, CI added | good |
+| pyssp_sysml | static/unit/component/contract/system | strong (goldens + `pyssp_standard` validator + exact bytes) | n/a | **fixed** — injected clock, pinned guid/version, no checkout writes | levels, CI added | good |
 | pyssp_workflow | static/unit/component/contract | strong at the derive argv and compare grid | derive stub now recorded, argv contract separate | good | levels | good |
 | pyssp_vv | static/unit/component/contract | strong (hand-computed metrics, known-answer digest) | **fixed** — `as_metric_view` contract | good | levels | good |
 | sequence_extensions | unit/component/integration/system | strong (invariants, independent e2e oracle) | n/a | medium — 12 tests quarantined as `flaky_timing` | levels + quarantine | good |
@@ -77,7 +77,7 @@ defects now go red, each at the level that owns the fault:
 | sequence_extensions | 1 | 0 | `test_settle.py` |
 | pyssp_workflow | 3 | 0 | argv contract, grid `time_points`, bundle `out_dir` |
 | pyssp_simulate | 5 | 0 | error paths, real-header contract, exact grid |
-| pyssp_sysml2 | 1 narrow | 0 | pinned FMI version/guid + byte-identical goldens |
+| pyssp_sysml | 1 narrow | 0 | pinned FMI version/guid + byte-identical goldens |
 | root seams | n/a | 0 | 3 of 4 seams shown red under injected drift |
 
 ## Target structure
@@ -146,7 +146,7 @@ Detail:
   OMSimulator header, and eight injected defects are caught.
 - `pyssp_standard` gained tree/codec contracts, archive and codec negative
   paths, fixture provenance, epoch-default packaging, and 457 tests.
-- `pyssp_sysml2` gained an injectable clock, pinned FMI version and guid, a
+- `pyssp_sysml` gained an injectable clock, pinned FMI version and guid, a
   warning for unapplied parameter sets, committed goldens validated by
   `pyssp_standard`, exact-text generation oracles, and its first CI workflow.
 - `sequence_extensions` gained settle/crash/cancellation coverage, an

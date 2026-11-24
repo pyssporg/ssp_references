@@ -3,7 +3,7 @@
 
 This script is intentionally artifact-only: it reads an SSD, invokes an
 external ``pyssp`` executable to generate SysML and to regenerate the SSD, and
-then compares the two XML documents. It does not import ``pyssp_sysml2`` or
+then compares the two XML documents. It does not import ``pyssp_sysml`` or
 ``pyssp_standard``, so the SysML tool can live in a different environment or
 track a different upstream revision.
 
@@ -13,7 +13,7 @@ Example:
         artifacts/models/signal_step_gain/baseline/SystemStructure.ssd \
         --output /tmp/sysml_roundtrip
 
-    # Use a tool environment with its own pyssp_sysml2/pyssp_standard versions
+    # Use a tool environment with its own pyssp_sysml/pyssp_standard versions
     python3 scripts/check_sysml_roundtrip.py ... \
         --pyssp /path/to/sysml-venv/bin/pyssp
 """
@@ -97,7 +97,7 @@ def _run_pyssp(command: str, arguments: list[str]) -> None:
     executable = shutil.which(command) if os.sep not in command else command
     if executable is None:
         raise SystemExit(
-            f"pyssp executable not found: {command!r}. Install pyssp_sysml2 in the "
+            f"pyssp executable not found: {command!r}. Install pyssp_sysml in the "
             "SysML tool environment or pass --pyssp /path/to/venv/bin/pyssp."
         )
     result = subprocess.run([executable, *arguments])

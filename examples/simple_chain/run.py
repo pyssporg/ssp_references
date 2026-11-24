@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Build and simulate a two-FMU SSP with the minimal pyssp packages.
 
-The only imports are the public surfaces of ``pyssp_sysml2`` (architecture to
-SSP), ``pycps_sysml2`` (the dialect core definitions the architecture imports),
+The only imports are the public surfaces of ``pyssp_sysml`` (architecture to
+SSP), ``pycps_sysml`` (the dialect core definitions the architecture imports),
 and ``pyssp_simulate`` (SSP to trajectories). No repository-local workflow or
 registry code is involved.
 """
@@ -12,9 +12,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from pycps_sysml2 import core_definitions
+from pycps_sysml import core_definitions
 from pyssp_simulate import SimulationSpec, simulate
-from pyssp_sysml2 import generate_ssp
+from pyssp_sysml import generate_ssp
 
 EXAMPLE_DIR = Path(__file__).resolve().parent
 REPO_ROOT = EXAMPLE_DIR.parents[1]

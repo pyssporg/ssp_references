@@ -6,7 +6,7 @@
 #   examples/simple_chain/build/venv/bin/pip install -r examples/simple_chain/requirements.txt
 #   examples/simple_chain/build/venv/bin/python examples/simple_chain/run.py
 #
-# The pyssp wheels are release assets. pyssp_sysml2's metadata names the
+# The pyssp wheels are release assets. pyssp_sysml's metadata names the
 # experimental-pyssp-standard fork as a direct URL, so that dependency arrives
 # transitively and needs no line here.
 

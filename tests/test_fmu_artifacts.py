@@ -54,7 +54,7 @@ SYSTEM_DEFINITION = SSP_ARCHITECTURE / "System.sysml"
 C_SOURCE = REPO_ROOT / "models" / "fmu" / "GainOffset" / "src" / "GainOffset.c"
 
 #: The member ``part def`` the FMU exports, and the GUID pyfmi_interfaces derives
-#: for it: ``uuid5(NAMESPACE_URL, "pyssp_sysml2/Generator")`` (the namespace
+#: for it: ``uuid5(NAMESPACE_URL, "pyssp_sysml/Generator")`` (the namespace
 #: string is frozen from the former library name).
 EXPORTED_MODEL = "Generator"
 EXPORTED_GUID = "{eca0627b-dad2-5d71-90b2-e450ef615122}"

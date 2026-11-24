@@ -8,7 +8,7 @@ Authored in this repository under `architecture/`, adapted from the exclusion sh
 
 One structural point, `SourceChoice`, and one attribute point, `ScenarioChoice`, with an exclusion between them: the sine source excludes the high-gain scenario. Four source/scenario combinations exist; the rule admits three. The three legal analyses are built and registered, and the fourth (`sine_high`) is authored so the pruned branch is visible in the architecture but never reaches an SSP.
 
-The `pyssp_sysml2` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis composes `StepSystem` or `SineSystem`, which binds the source point, and carries its own scenario feature value; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
+The `pyssp_sysml` adapter captures the SysML `constraint` and `assert` and evaluates them after variation selection. Each analysis composes `StepSystem` or `SineSystem`, which binds the source point, and carries its own scenario feature value; the adapter returns a plan with status `legal`, `violated`, or `invalid`, and `build.py` builds only the `legal` plans. Parameter form: external SSV + external SSM.
 
 ## Architecture Source
 

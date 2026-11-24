@@ -79,7 +79,7 @@ Full examples: `examples/model-configurations/`.
 
 ## Risk And Blast Radius
 
-- Cross-repo: `pyssp_sysml2` model, parser, selection, fixtures; `pyssp_workflow` if the build input changes.
+- Cross-repo: `pyssp_sysml` model, parser, selection, fixtures; `pyssp_workflow` if the build input changes.
 - Parser pin: the probe shows `sysmlpy` drops redefinition targets and variant-usage bodies; raw-tree recovery is mandatory.
 - Semantics: variant-usage specialization is standard, but the adapter must map a specialized usage back to its declared variant.
 - Artifact identity: B1 keeps `System`; B2 changes composition names, registry cases, and selection provenance.

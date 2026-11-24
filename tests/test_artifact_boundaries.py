@@ -12,7 +12,7 @@ def test_sysml_roundtrip_checker_does_not_import_model_libraries() -> None:
         encoding="utf-8"
     )
 
-    assert "import pyssp_sysml2" not in source
-    assert "from pyssp_sysml2" not in source
+    assert "import pyssp_sysml" not in source
+    assert "from pyssp_sysml" not in source
     assert "import pyssp_standard" not in source
     assert "from pyssp_standard" not in source

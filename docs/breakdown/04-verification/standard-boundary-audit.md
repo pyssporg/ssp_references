@@ -36,7 +36,7 @@ pb_exempt: true
   from `pyssp_vv.measure.build_figure_spec` and renders through `render_figure`.
 - Gate judgment lives in `pyssp_vv.judge`; `pass`, `fail`, and `invalid` stay distinct.
 - Model signal invariants live in `workflow/model_policy.py`, not a generic utility.
-- `pyssp_workflow.authoring` returns the `analysis.json` descriptor path; it does not mirror `pyssp_sysml2.artifacts.analysis.AnalysisArtifacts`.
+- `pyssp_workflow.authoring` returns the `analysis.json` descriptor path; it does not mirror `pyssp_sysml.artifacts.analysis.AnalysisArtifacts`.
 - Shared workflow records live in `utils.domain`; no duplicate `SimulationWindow`.
 
 ## Public API surfaces
@@ -51,7 +51,7 @@ pb_exempt: true
 - `pyssp_workflow`: the `authoring` functions, `binding.bind`,
   `compare.compare_csvs`, the `analysis` scenario readers, the `fixture` path
   helpers, and the optional node layer.
-- `pyssp_sysml2`: the `pyssp` CLI and documented generation functions.
+- `pyssp_sysml`: the `pyssp` CLI and documented generation functions.
 - `sequence_extensions`: `node`, `execute_flow`, `RunOptions`, and flow
   results.
 

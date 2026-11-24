@@ -92,7 +92,7 @@ def test_default_requirements_are_not_editable_and_use_no_mirror() -> None:
 
 
 def test_default_requirements_exclude_the_nested_pinned_copy() -> None:
-    # pyssp_sysml2 carried a pinned pyssp-standard copy that imports the same
+    # pyssp_sysml carried a pinned pyssp-standard copy that imports the same
     # pyssp_standard package; installing it next to the fork would collide.
     names = {name for name, _ in direct_references(REQUIREMENTS)}
     assert "pyssp-standard" not in names

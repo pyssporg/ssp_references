@@ -2,7 +2,7 @@
 id: IMP-112
 type: imp
 title: Mixed-direction signal ports
-summary: Carry direction per port-definition member so one signal port exposes its input and output connectors under one FMU name prefix, in pyssp_sysml2 and pyfmi_sysml2.
+summary: Carry direction per port-definition member so one signal port exposes its input and output connectors under one FMU name prefix, in pyssp_sysml and pyfmi_sysml2.
 date: 2026-11-19
 status: suggested
 ---
@@ -29,7 +29,7 @@ prefix.
 ## Evidence
 
 - `PortUsage.direction` carries `inout` and `None`
-  (`pycps_sysml2/model/model.py:135-149`, `parser.py:295-303`).
+  (`pycps_sysml/model/model.py:135-149`, `parser.py:295-303`).
 - `PortDefinition` stores only attributes; `_port_definition` reads only
   `element.attributes` (`model.py:339-343`, `loader.py:406-417`).
 - SSD export passes the usage direction to `to_fmi_direction_definition`,
@@ -49,10 +49,10 @@ prefix.
 
 ## Owner And Blocker
 
-`pycps_sysml2` captures member direction; `pyssp_sysml2` emits per-member
+`pycps_sysml` captures member direction; `pyssp_sysml` emits per-member
 kinds; `pyfmi_sysml2` derives per-member causality; fixtures pin the result.
 Blocker: the member-direction rule and its precedence over the usage
-direction. Cross-repo order: `pycps_sysml2`, `pyssp_sysml2`,
+direction. Cross-repo order: `pycps_sysml`, `pyssp_sysml`,
 `pyfmi_sysml2`, then the `ssp_references` pin.
 
 ## Traceability

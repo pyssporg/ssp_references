@@ -2,7 +2,7 @@
 id: EVAL-002
 type: eval
 title: Ecosystem Adoption Assessment
-summary: Fit of pyssp_simulate, pyssp_sysml2, pyssp_vv, and sequence_extensions to the fixture suite.
+summary: Fit of pyssp_simulate, pyssp_sysml, pyssp_vv, and sequence_extensions to the fixture suite.
 date: 2026-10-22
 status: current
 pb_exempt: true
@@ -11,7 +11,7 @@ pb_exempt: true
 # Ecosystem Adoption Assessment
 
 **Date:** 2026-10-22
-**Scope:** `pyssp_simulate` 0.2.0, `pyssp_sysml2` 0.1.1, `pyssp_vv` 0.1.0,
+**Scope:** `pyssp_simulate` 0.2.0, `pyssp_sysml` 0.1.1, `pyssp_vv` 0.1.0,
 `sequence_extensions` 3.0.0, evaluated against the 21 built fixtures in this
 repository.
 
@@ -30,7 +30,7 @@ boundaries:
 | Reference baselines | Plot input only | `scripts/workflow/reference.py` compares runs to reference CSVs through `pyssp_vv` |
 | Campaign orchestration | Sequential CLI loops | `scripts/run_campaign.py` via `sequence_extensions` (Python 3.11+) |
 | SysML v2 authoring | Round-trip checker only | `pyssp_workflow.authoring` → `pyssp` CLI for `SspModel` export and `Analysis` scenario generation |
-| Capability ownership | Local pipeline implementations | `pyssp_workflow` composition over `pyssp_standard` / `pyssp_simulate` / `pyssp_vv` / `pyssp_sysml2` |
+| Capability ownership | Local pipeline implementations | `pyssp_workflow` composition over `pyssp_standard` / `pyssp_simulate` / `pyssp_vv` / `pyssp_sysml` |
 
 The Build → Simulate → Compare stage contract is unchanged. Migrated fixtures
 add a model SSP plus analysis artifacts, and the build packages the scenario into
@@ -107,7 +107,7 @@ primitives, permutation runs, CLI.
    tolerances, and manifests are repository-specific; measurement and judgment
    come from `pyssp_vv.measure` and `pyssp_vv.judge`.
 
-### `pyssp_sysml2`
+### `pyssp_sysml`
 
 **Works:** `generate sysml` bootstraps a minimal SysML v2 architecture from an
 existing SSD; `generate ssd` regenerates a runnable SSD; the CLI and Python
@@ -133,12 +133,12 @@ self-contained, so it locally declares the core symbols it uses. It is preserved
 [`signal_step_gain.architecture.sysml`](../../reference/examples/signal_step_gain.architecture.sysml)
 as an evaluation artifact, not a build input.
 
-**Interface gap closed:** `pyssp_sysml2` now targets the refactored
+**Interface gap closed:** `pyssp_sysml` now targets the refactored
 `pyssp_standard` model API directly (`SSD.xml`, `SSV.xml`,
 `Connector.type_name`). No compatibility layer is added to `pyssp_standard`.
 
 **Tool boundary:** `check_sysml_roundtrip.py` no longer imports
-`pyssp_sysml2`/`pyssp_standard`. It invokes an external `pyssp` executable and
+`pyssp_sysml`/`pyssp_standard`. It invokes an external `pyssp` executable and
 exchanges only SSD files, so the SysML tool can run in a separate environment
 with its own library versions (ADR-006).
 
@@ -251,11 +251,11 @@ python3 scripts/check_sysml_roundtrip.py \
 | OMSimulator crashes abort the caller | pyssp_simulate | Open |
 | No reference-CSV comparison | pyssp_simulate | Patched in 0.1.1 |
 | No explicit comparison window | pyssp_simulate | Patched in 0.1.1 |
-| SSD → SysML → SSD loses metadata | pyssp_sysml2 | Patched in 0.1.1 |
-| No `SspModel`/`Analysis` role markers or analysis generation | pyssp_sysml2 | Implemented in pilot (ADR-009) |
+| SSD → SysML → SSD loses metadata | pyssp_sysml | Patched in 0.1.1 |
+| No `SspModel`/`Analysis` role markers or analysis generation | pyssp_sysml | Implemented in pilot (ADR-009) |
 | Scenario packaging in the build | pyssp_workflow | Implemented: `pyssp_workflow.binding` packaging forms (`DD-011`) |
 | Comparison and gate ownership | this repo → pyssp_vv | Migrated to `pyssp_vv.measure` and `pyssp_vv.judge` (DD-010) |
-| `pyssp_standard` version skew / LS-REF split | pyssp_sysml2 / pyssp_standard | Resolved by artifact boundary: pyssp_sysml2 targets the refactored API; checker invokes `pyssp` via CLI |
+| `pyssp_standard` version skew / LS-REF split | pyssp_sysml / pyssp_standard | Resolved by artifact boundary: pyssp_sysml targets the refactored API; checker invokes `pyssp` via CLI |
 | PyPI name collision | sequence_extensions | Patched: publishes as `sequence-extensions-flow` |
 | Broken `latest` ssp4sim wheel URL | ssp4sim / this repo | Pinned to `v0.3.2` |
 

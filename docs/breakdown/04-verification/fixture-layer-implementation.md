@@ -21,18 +21,18 @@ identical outcomes.
 |---|---|---|
 | fixture layout, case record, size budget, cwd-free paths | pyssp_standard | `tests/test_fixture_policy.py` (6) |
 | explicit level table | pyssp_standard | `tests/test_level_table.py` (3) |
-| fixture write guard | pyssp_standard, pyssp_sysml2, sequence_extensions, pyssp_simulate, pyssp_workflow, pyssp_vv | `support/fixture_guard.py` + session hooks |
-| committed-golden validation | pyssp_sysml2 | `test_golden_artifacts.py::test_golden_artifacts_are_reproducible_and_valid` |
-| update refusal in CI | pyssp_sysml2, sequence_extensions | code guard in the regeneration path |
-| golden provenance | pyssp_sysml2 (2 cases), sequence_extensions (2 flows + case set), pyssp_simulate (1 case) | `case.md` |
+| fixture write guard | pyssp_standard, pyssp_sysml, sequence_extensions, pyssp_simulate, pyssp_workflow, pyssp_vv | `support/fixture_guard.py` + session hooks |
+| committed-golden validation | pyssp_sysml | `test_golden_artifacts.py::test_golden_artifacts_are_reproducible_and_valid` |
+| update refusal in CI | pyssp_sysml, sequence_extensions | code guard in the regeneration path |
+| golden provenance | pyssp_sysml (2 cases), sequence_extensions (2 flows + case set), pyssp_simulate (1 case) | `case.md` |
 | level markers and invariant | root | `pytest.ini`, `tests/conftest.py:LEVEL_BY_FILE`, `tests/test_markers.py` (5) |
 | artifact corpus gate | root | `tests/test_artifact_corpus.py` (3) |
 | skip-remedy and write policy | root, pyssp_workflow, pyssp_vv, pyssp_simulate | `test_suite_policy.py` / `test_fixture_policy.py` |
-| inline-document extraction | pyssp_sysml2 | `tests/fixtures/<subject>/` (108 files) + AST gate |
+| inline-document extraction | pyssp_sysml | `tests/fixtures/<subject>/` (108 files) + AST gate |
 
 ### SysML documents moved out of test modules
 
-`pyssp_sysml2` embedded 2,234 lines of SysML, FMI XML, and SSV XML in test
+`pyssp_sysml` embedded 2,234 lines of SysML, FMI XML, and SSV XML in test
 modules, including 17 expected artifacts compared as `dedent(...)` literals. The
 documents now live in `tests/fixtures/<subject>/` — 15 subject directories, 108
 data files, 2,280 lines — loaded through `tests/fixture_files.py`
@@ -62,7 +62,7 @@ Counts after the change, two clean runs, identical:
 | pyssp_workflow | 71 | 74 |
 | pyssp_standard | 457 | 473 |
 | pyssp_simulate | 140 | 148 (147 pass, 1 cosim skip) |
-| pyssp_sysml2 | 241 | 258 |
+| pyssp_sysml | 241 | 258 |
 | pyssp_vv | 119 | 122 |
 | sequence_extensions | 428 | 434 |
 

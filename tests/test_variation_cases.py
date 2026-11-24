@@ -16,7 +16,7 @@ import json
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-import pycps_sysml2
+import pycps_sysml
 import pytest
 from pyssp_workflow.authoring import derive_ssd_from_sysml
 
@@ -211,14 +211,14 @@ def test_selection_produces_its_element_tree(tmp_path: Path, key: tuple[str, str
 @pytest.mark.parametrize("key", sorted(CASES))
 def test_case_names_the_analysis_configuration(key: tuple[str, str]) -> None:
     """Each case's selection and configuration match the adapter's plan."""
-    from pycps_sysml2.metadata.roles import SSP_ROLES
-    from pycps_sysml2.model import load
-    from pycps_sysml2.parameters.selection import analysis_plans
+    from pycps_sysml.metadata.roles import SSP_ROLES
+    from pycps_sysml.model import load
+    from pycps_sysml.parameters.selection import analysis_plans
 
     model, analysis = key
     architecture = load(
         REPO_ROOT / "models" / "ssp" / model / "architecture",
-        pycps_sysml2.core_definitions(),
+        pycps_sysml.core_definitions(),
     )
     plans = {plan.name: plan for plan in analysis_plans(architecture, roles=SSP_ROLES)}
     assert plans[analysis].status in {"legal", "violated"}, plans[analysis].detail
@@ -436,13 +436,13 @@ def test_every_analysis_is_legal_or_documented_violated(
     model: str, violated: set[str]
 ) -> None:
     """No analysis is invalid, and a configuration names the type it specializes."""
-    from pycps_sysml2.metadata.roles import SSP_ROLES, model_usage
-    from pycps_sysml2.model import load
-    from pycps_sysml2.parameters.selection import analysis_plans
+    from pycps_sysml.metadata.roles import SSP_ROLES, model_usage
+    from pycps_sysml.model import load
+    from pycps_sysml.parameters.selection import analysis_plans
 
     architecture = load(
         REPO_ROOT / "models" / "ssp" / model / "architecture",
-        pycps_sysml2.core_definitions(),
+        pycps_sysml.core_definitions(),
     )
     plans = analysis_plans(architecture, roles=SSP_ROLES)
     assert plans, "the architecture declares no analysis"

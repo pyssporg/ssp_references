@@ -65,7 +65,7 @@ the archive.
 ## Determinism
 
 `generation_time` is injected as `2026-01-01T00:00:00Z`, and the `guid` is the
-uuid5 derived from `pyssp_sysml2/Generator`; `modelName` and `modelIdentifier`
+uuid5 derived from `pyssp_sysml/Generator`; `modelName` and `modelIdentifier`
 are both `"Generator"`. The definition records
 `generationTool="pyfmi_interfaces tooling"` and emits real starts in shortest
 form (`2`, `1`). Two consecutive rebuilds produce an identical definition set
@@ -73,7 +73,7 @@ form (`2`, `1`). Two consecutive rebuilds produce an identical definition set
 archive on the same toolchain.
 
 Producing packages: `pyfmi_interfaces 0.5.1`, `pyfmi_sysml 0.2.0`,
-`pycps_sysml2 0.3.0`, `pyssp_standard 0.9.4.dev0`.
+`pycps_sysml 0.3.0`, `pyssp_standard 0.9.4.dev0`.
 
 Recorded hashes with `gcc (Ubuntu 13.4.0-6ubuntu1~22~ppa2) 13.4.0`:
 

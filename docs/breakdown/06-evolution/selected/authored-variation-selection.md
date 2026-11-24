@@ -21,7 +21,7 @@ The adapter also owns the legality condition, but each build re-implemented the 
 - `variation_conditional_requires/build.py` and `variation_conditional_excludes/build.py` carried `AUTHORED`, `SCOPED`, `SELECTIONS`, `PRUNED`, `_scoped`, `_selection_is_legal`, and `_validate_guard` around a four-row table.
 - The excludes build needed `MODEL_SCENARIOS` naming all four analyses, including the pruned one, because a model build required every composing analysis's attribute point.
 - `variation.resolve` accepted a bare selection key while `constraints._bind` looked up the authored binding path, so `--select source=…` resolved variation but failed constraint evaluation with `no selection for 'sut.source'`.
-- `pyssp_sysml2` now exposes `analysis_plans` and `resolve_selected`; both conditional builds are reduced to a plan lookup and an explicit expected partition.
+- `pyssp_sysml` now exposes `analysis_plans` and `resolve_selected`; both conditional builds are reduced to a plan lookup and an explicit expected partition.
 
 ## Current Pain Or Risk
 
@@ -47,7 +47,7 @@ The adapter also owns the legality condition, but each build re-implemented the 
 ## Proposed Improvement
 
 1. Add `pyssp_selection` to every analysis in the six variation architectures. Done.
-2. Parse and plan it in `pyssp_sysml2.parameters.selection`; canonicalize keys in `variation.resolve_selected`. Done.
+2. Parse and plan it in `pyssp_sysml.parameters.selection`; canonicalize keys in `variation.resolve_selected`. Done.
 3. Scope required attribute points to the target composition. Done.
 4. Make `build_fixture` forward one selection map to both derivations. Done.
 5. Pin the expected legal and violated analyses in the two conditional builds. Done.
@@ -60,7 +60,7 @@ The adapter also owns the legality condition, but each build re-implemented the 
 
 ## Risk And Blast Radius
 
-- **Cross-repo**: `pyssp_sysml2` selection, variation, constraints, and artifacts; `pyssp_workflow.authoring`; six fixtures and tests.
+- **Cross-repo**: `pyssp_sysml` selection, variation, constraints, and artifacts; `pyssp_workflow.authoring`; six fixtures and tests.
 - **Dialect**: `pyssp_selection` is a repo convention, not standard SysML; it must stay documented and validated.
 - **Artifact provenance**: `selection.json` records the analysis's authored selection, so the global scenario table disappears.
 - **Framework drift**: selection stays build-time and per analysis; no runtime switch.

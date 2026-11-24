@@ -1,6 +1,6 @@
 """Contract: no fixture redeclares a dialect core definition.
 
-``pycps_sysml2.core_definitions()`` ships the core role vocabulary. Fixtures
+``pycps_sysml.core_definitions()`` ships the core role vocabulary. Fixtures
 import it through the dialect library; a local copy shadows the packaged
 definition and drifts from the roles the library assigns to it. The system
 fixture additionally includes the canonical FMU architecture instead of copying
@@ -15,9 +15,9 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import pycps_sysml2
-from pycps_sysml2.metadata import is_fmu_model, is_ssp_model, validate_role_markers
-from pycps_sysml2.parameters import validate_marker_definitions
+import pycps_sysml
+from pycps_sysml.metadata import is_fmu_model, is_ssp_model, validate_role_markers
+from pycps_sysml.parameters import validate_marker_definitions
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 GAINOFFSET_ARCHITECTURE = REPO_ROOT / "models" / "ssp" / "GainOffset" / "architecture"
@@ -36,10 +36,10 @@ SYSML_GLOBS = (
 def _core_definition_prefixes() -> dict[str, str]:
     """Every definition the packaged core declares, and its declaration prefix.
 
-    Derived from ``pycps_sysml2.core_definitions()`` rather than restated here so
+    Derived from ``pycps_sysml.core_definitions()`` rather than restated here so
     a vocabulary change is covered without editing this test.
     """
-    text = pycps_sysml2.core_definitions().read_text(encoding="utf-8")
+    text = pycps_sysml.core_definitions().read_text(encoding="utf-8")
     declarations = re.findall(
         r"^\s*(part def|attribute def|port def)\s+([A-Za-z_]\w*)",
         text,
@@ -71,7 +71,7 @@ def _core_definition_package() -> str:
     """The package the packaged core definitions declare themselves in."""
     match = re.search(
         r"^\s*package\s+(\w+)",
-        pycps_sysml2.core_definitions().read_text(encoding="utf-8"),
+        pycps_sysml.core_definitions().read_text(encoding="utf-8"),
         re.MULTILINE,
     )
     assert match is not None, "packaged core definitions declare no package"
@@ -107,7 +107,7 @@ def test_every_fmu_component_specializes_fmu_model() -> None:
     """Drift caught: an FMU component carries fmu_meta but stays implicit."""
     implicit = []
     for directory in sorted({path.parent for path in _physical_sysml_files()}):
-        architecture = pycps_sysml2.load(directory, pycps_sysml2.core_definitions())
+        architecture = pycps_sysml.load(directory, pycps_sysml.core_definitions())
         implicit.extend(
             f"{directory}: 'part def {definition.name}' carries fmu_meta but "
             "does not specialize FmuModel"
@@ -121,9 +121,9 @@ def test_every_fmu_component_specializes_fmu_model() -> None:
 
 def test_fixture_resolves_core_markers_through_the_include_path() -> None:
     """Drift caught: the include path stops resolving the core or FMU definitions."""
-    architecture = pycps_sysml2.load(
+    architecture = pycps_sysml.load(
         GAINOFFSET_ARCHITECTURE,
-        pycps_sysml2.core_definitions(),
+        pycps_sysml.core_definitions(),
         GAINOFFSET_FMU_ARCHITECTURE,
     )
 

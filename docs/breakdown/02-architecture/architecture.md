@@ -80,7 +80,7 @@ keep its legacy SSD and resources as the model body and author only the analysis
 in SysML; the `SspModel` composition is then a boundary marker, selects the
 body with `ssp_meta.source`, and is never exported. The markers themselves are
 not authored in the fixture: the build passes the packaged core
-(`pycps_sysml2.core_definitions()` or
+(`pycps_sysml.core_definitions()` or
 `pyssp_sysml_definitions.core_definitions()`) as one include, so their stored
 keys are `PysspCore::<name>` while `Definition.name` stays bare. The fixture
 check rejects a local redeclaration (`ADR-019`), and included names are
@@ -109,7 +109,7 @@ model-level build script is the source of truth for how that particular fixture
 is exported and which analyses it generates.
 SSP build scripts call `pyssp_workflow.authoring` for SysML derivation, and
 then apply the fixture's parameter-application form with `pyssp_standard`;
-variation scripts read the dialect through `pycps_sysml2`. The FMI build
+variation scripts read the dialect through `pycps_sysml`. The FMI build
 loads the architecture once through `pyfmi_sysml.load_architecture` and
 drives the `pyfmi_interfaces` emitters from that one parse (`ADR-013`,
 `DD-011`).
@@ -258,8 +258,8 @@ Evaluation tools follow the same rule. The SysML authoring path invokes an
 external `pyssp` executable through `pyssp_workflow.authoring` and exchanges
 SysML, SSD, SSV, SSM, and SSP artifacts. The round-trip checker remains an
 independent artifact-only adapter over SSD files. Build scripts read the
-architecture through `pycps_sysml2` or the `pyfmi_sysml` composition layer
-and never import `pyssp_sysml2` internals.
+architecture through `pycps_sysml` or the `pyfmi_sysml` composition layer
+and never import `pyssp_sysml` internals.
 This keeps the `pyssp` CLI runnable in a separate environment with its own
 versions, as long as the exchanged artifacts remain standard-conformant.
 
@@ -271,20 +271,20 @@ maintained in `INFO-003`.
 Four libraries implement one dialect (`INFO-012`):
 
 ```
-sysmlpy -> pycps_sysml2 -> pyssp_sysml2 -> SSD, SSV, SSM, SSP
+sysmlpy -> pycps_sysml -> pyssp_sysml -> SSD, SSV, SSM, SSP
                         -> pyfmi_sysml -> pyfmi_interfaces -> FMI 2.0 CS artifacts
-pyssp_sysml2, pyfmi_interfaces -> pyssp_standard (documents, validation, archive)
+pyssp_sysml, pyfmi_interfaces -> pyssp_standard (documents, validation, archive)
 ```
 
 | Library | Owns | Imports |
 |---|---|---|
-| `pycps_sysml2` | the dialect home: parsing, IR, markers, parameters, variation, constraints | `sysmlpy` only |
-| `pyssp_sysml2` | SSP implementer: SSD/SSV/SSM/SSP emission, SSD→SysML synthesis | `pycps_sysml2`, `pyssp_standard` |
-| `pyfmi_sysml` | SysML composition: one-parse loading, reduction, source-taking FMI commands | `pycps_sysml2`, `pyfmi_interfaces`, `pyfmi_interop`, `pyssp_sysml_definitions` |
+| `pycps_sysml` | the dialect home: parsing, IR, markers, parameters, variation, constraints | `sysmlpy` only |
+| `pyssp_sysml` | SSP implementer: SSD/SSV/SSM/SSP emission, SSD→SysML synthesis | `pycps_sysml`, `pyssp_standard` |
+| `pyfmi_sysml` | SysML composition: one-parse loading, reduction, source-taking FMI commands | `pycps_sysml`, `pyfmi_interfaces`, `pyfmi_interop`, `pyssp_sysml_definitions` |
 | `pyfmi_interfaces` | FMI 2.0 CS implementer: reduction model, modelDescription, C headers, Modelica connectors, FMI headers, FMU emission | `pyssp_standard` |
 
 Only SSD, SSV, SSM, SSP, and result CSV cross a library border; internal
-modules never do (`ADR-006`, `ADR-011`). `pyssp_sysml2` and
+modules never do (`ADR-006`, `ADR-011`). `pyssp_sysml` and
 `pyfmi_interfaces` are siblings: neither imports the other; `pyfmi_sysml` is
 the composition layer above the FMI emitter.
 
@@ -461,8 +461,8 @@ The following architectural violations are not allowed:
 8. **Library borders exchange standard artifacts first.** The SysML authoring
    path invokes the `pyssp` CLI through `pyssp_workflow.authoring` and exchanges
    SysML/SSP artifacts. Build scripts import the public dialect and
-   composition surfaces (`pycps_sysml2`, `pyfmi_sysml`), never
-   `pyssp_sysml2` internals. When a Python object must cross, it belongs to the
+   composition surfaces (`pycps_sysml`, `pyfmi_sysml`), never
+   `pyssp_sysml` internals. When a Python object must cross, it belongs to the
    producer's public API; internal model objects and compatibility shims do
    not. See `ADR-006`, `ADR-007`, `ADR-011`, and `ADR-015`.
 

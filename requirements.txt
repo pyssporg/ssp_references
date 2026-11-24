@@ -6,8 +6,8 @@
 # the SysML bundle and the flow engine are base dependencies, so a plain
 # install is complete. This one direct reference transitively pins the eight
 # pyssp and SysML distributions: six capability libraries
-# (experimental-pyssp-standard, pyssp-workflow, pyssp-simulate, pyssp-sysml2,
-# pyssp-vv, sequence-extensions-flow) plus the SysML dialect (pycps-sysml2) and
+# (experimental-pyssp-standard, pyssp-workflow, pyssp-simulate, pyssp-sysml,
+# pyssp-vv, sequence-extensions-flow) plus the SysML dialect (pycps-sysml) and
 # FMI artifact (pyfmi-interfaces) libraries. Each arrives as a PEP 508 direct
 # reference to a GitHub release wheel named by the wheel's metadata; the
 # release tag is always v<version>, so an unreleased tag fails the install

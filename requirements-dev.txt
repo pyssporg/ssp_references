@@ -19,10 +19,10 @@
 #   python3 -m pip install -e ../pyssp_workflow
 #   python3 -m pip install -e ../experimental_pyssp_standard
 #   python3 -m pip install -e ../pyssp_simulate
-#   python3 -m pip install -e ../pyssp_sysml2
+#   python3 -m pip install -e ../pyssp_sysml
 #   python3 -m pip install -e ../pyssp_vv
 #   python3 -m pip install -e ../sequence_extensions
-#   python3 -m pip install -e ../pycps_sysml2
+#   python3 -m pip install -e ../pycps_sysml
 #   python3 -m pip install -e ../pyfmi_interfaces
 #   python3 -m pip install -e ../pyfmi_sysml
 #   python3 -m pip install -e ../pyfmu_scenario

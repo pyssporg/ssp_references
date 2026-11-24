@@ -14,7 +14,7 @@ pb_exempt: true
 
 | Package | Modules | LOC | Root before | Root after | Verdict |
 |---|---:|---:|---:|---:|---|
-| pyssp_sysml2 | 26 | 8.6k | 19 | 2 | restructured |
+| pyssp_sysml | 26 | 8.6k | 19 | 2 | restructured |
 | pyssp_standard | 100 | 8.0k | 11 | 1 | restructured |
 | pyssp_simulate | 13 | 2.3k | 7 | 7 | already segmented |
 | pyssp_vv | 19 | 2.0k | 2 | 2 | already segmented |
@@ -26,13 +26,13 @@ pb_exempt: true
 `pyssp_simulate` and `pyssp_workflow` already split their backends and
 `authoring`/`analysis`/`nodes`; a further split moves no concept.
 
-## pyssp_sysml2
+## pyssp_sysml
 
 Before: 19 of 23 modules at the root, 90 % of package LOC there, eight modules
 over 400 lines; the parser adapter, dialect, and generators were indistinguishable.
 
 ```
-src/pyssp_sysml2/
+src/pyssp_sysml/
 ├── __init__.py, cli.py
 ├── core/        control.py paths.py fmi_helpers.py
 ├── model/       model.py loader.py exporter.py      (was sysml_model/)
@@ -93,6 +93,6 @@ Red evidence, each reverted: a stray root module, a missing `__init__.py`, a
 
 Not done: splitting the four modules over 600 lines needs a semantic seam per
 file, not a folder move; the ratchet records the debt. Splitting
-`sequence_extensions/flow/` would only rename imports. Counts: pyssp_sysml2
+`sequence_extensions/flow/` would only rename imports. Counts: pyssp_sysml
 252 → 258, pyssp_standard 467 → 473, the other four unchanged. All suites green
 twice from a clean `--basetemp`; `ruff` clean; `pb check --strict` passes.

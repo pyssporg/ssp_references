@@ -53,7 +53,7 @@ this repository's own dialect parser. It loads each fixture's
 `sysmlpy.analyze(..., library=[PysspCore, ScalarValues])`. `sysmlpy` 0.96.4
 generates its grammar from the OMG SysML v2 2026-05 specification, so a fixture
 that parses and resolves there is valid SysML v2, not merely valid input to
-`pycps_sysml2`. The gate asserts zero analyzer errors and reports every
+`pycps_sysml`. The gate asserts zero analyzer errors and reports every
 unexpected finding as `fixture`, `file:line`, `code`, and `message`.
 
 The gate is deterministic and needs no network. Two deviations from a plain
@@ -94,7 +94,7 @@ without it caches an empty index for the rest of the process.
 
 ## Transitional tests
 
-`test_legacy_sysml_shims.py` is a contract test for the `pyssp_sysml2` v0.4.0
+`test_legacy_sysml_shims.py` is a contract test for the `pyssp_sysml` v0.4.0
 re-export shims. It is deleted when the shims are removed in v0.5.0.
 
 `test_fmu_artifacts.py` is the contract test for the SysML-authored `GainOffset`
@@ -108,6 +108,6 @@ the FMU definitions, `models/ssp/GainOffset/architecture/` holds only
 `build_fixture(includes=...)` on that canonical directory — never a copy or a
 link. The exported identity (`modelName="Generator"`, its derived GUID, and
 `MODEL_NAME` in the C source) must match the built `modelDescription.xml`.
-Redeclaring a `pycps_sysml2` core definition is caught by
+Redeclaring a `pycps_sysml` core definition is caught by
 `test_dialect_core.py`. The public FMI 2.0 headers come from
 `pyfmi_interfaces.fmi2_headers()`.

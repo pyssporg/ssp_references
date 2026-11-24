@@ -38,14 +38,14 @@ from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 
-import pycps_sysml2
+import pycps_sysml
 import pytest
 import sysmlpy
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 MODELS_DIR = REPO_ROOT / "models"
 
-CORE_LIBRARY = pycps_sysml2.core_definitions().parent
+CORE_LIBRARY = pycps_sysml.core_definitions().parent
 KERNEL_LIBRARY = Path(sysmlpy.__file__).resolve().parent / "library" / "kernel"
 LIBRARIES = (CORE_LIBRARY, KERNEL_LIBRARY)
 

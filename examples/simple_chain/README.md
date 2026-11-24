@@ -33,14 +33,14 @@ tolerance.
 ## Setup
 
 Activate the workspace venv from the root `README.md`, which supplies
-`pyssp_sysml2`, `pycps_sysml2`, `pyssp_simulate`, and the `ssp4sim` backend:
+`pyssp_sysml`, `pycps_sysml`, `pyssp_simulate`, and the `ssp4sim` backend:
 
 ```bash
 source .venv-experimental/bin/activate
 ```
 
 This example's `requirements.txt` pins its standalone release-wheel set:
-`pyssp_sysml2` `v0.5.0` (which pulls `experimental-pyssp-standard`
+`pyssp_sysml` `v0.5.0` (which pulls `experimental-pyssp-standard`
 `v0.9.3.dev0` transitively), `pyssp_simulate` `v0.3.0`, and `ssp4sim`
 `v0.3.4`.
 
@@ -48,7 +48,7 @@ This example's `requirements.txt` pins its standalone release-wheel set:
 
 `architecture/simple_chain.sysml` uses the `PysspCore` dialect roles owned by
 `pyssp_sysml_definitions` and re-exported by
-`pycps_sysml2.core_definitions()`
+`pycps_sysml.core_definitions()`
 (`repos/pyssp_sysml_definitions/src/pyssp_sysml_definitions/core.sysml`):
 
 - `Sine` and `Gain` are `FmuModel`s. Each `fmu_meta :> FmuMetadata` names its

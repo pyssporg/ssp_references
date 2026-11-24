@@ -10,9 +10,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from pycps_sysml2.metadata.roles import SSP_ROLES
-from pycps_sysml2.model import load
-from pycps_sysml2.parameters.selection import analysis_plans
+from pycps_sysml.metadata.roles import SSP_ROLES
+from pycps_sysml.model import load
+from pycps_sysml.parameters.selection import analysis_plans
 from pyssp_workflow.analysis import read_scenario
 from pyssp_workflow.authoring import build_fixture, report_builds
 from pyssp_workflow.binding import bind

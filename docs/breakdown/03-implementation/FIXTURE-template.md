@@ -49,7 +49,7 @@ Required for SysML-authored fixtures.
 - Do not redeclare a core definition (`SspModel`, `Analysis`, `Experiment`,
   `FmuMetadata`, `FmuModel`, `SspMetadata`, `ParameterInterface`,
   `ParameterSet`): they come from `pyssp_sysml_definitions`, which ships the
-  packaged core vocabulary (`pycps_sysml2.core_definitions()` re-exports it).
+  packaged core vocabulary (`pycps_sysml.core_definitions()` re-exports it).
 - Every FMU component part definition specializes `FmuModel` explicitly
   (`part def Step :> FmuModel { attribute fmu_meta : StepFmu; }`); the marker
   is never left implicit or inferred from `fmu_meta`.

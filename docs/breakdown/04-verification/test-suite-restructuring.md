@@ -17,10 +17,10 @@ gates. EVAL-012 records what was built, the red evidence, and the gaps.
 ## Scope
 
 Six vendored suites plus the root suite. Before the change: 457 tests in
-`pyssp_standard`, 140 in `pyssp_simulate`, 241 in `pyssp_sysml2`, 71 in
+`pyssp_standard`, 140 in `pyssp_simulate`, 241 in `pyssp_sysml`, 71 in
 `pyssp_workflow`, 119 in `pyssp_vv`, 428 in `sequence_extensions`, 87 in the
 root suite. Counts after are in EVAL-012. Excluded: the pinned
-`experimental_pyssp_standard` copy that once nested inside `pyssp_sysml2` (an
+`experimental_pyssp_standard` copy that once nested inside `pyssp_sysml` (an
 editable dependency, since removed with the vendored tree), engine
 installation.
 
@@ -88,7 +88,7 @@ idioms pinned by an explicit allowlist.
 | Suite | Before | After |
 |---|---|---|
 | pyssp_standard | `tests/__fixture__/{embrace,mixed_example.ssd,…}` | `tests/fixtures/<case>/` with `case.md`; `support/fixtures.py` accessors |
-| pyssp_sysml2 | `tests/golden/<case>/` | same paths, plus `case.md` and committed-byte validation |
+| pyssp_sysml | `tests/golden/<case>/` | same paths, plus `case.md` and committed-byte validation |
 | sequence_extensions | `tests/e2e/{cases,ref}` + fixed `out/` | `case.md` per flow; one case set for the inputs; per-worker scratch |
 | pyssp_simulate | `tests/fixtures/omsimulator_result.csv` | `fixtures/omsimulator-recording/input.csv` + `case.md` |
 | pyssp_workflow, pyssp_vv | inline literals only | values unchanged; `tests/README.md` states the policy |

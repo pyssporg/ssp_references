@@ -40,11 +40,11 @@ library to satisfy a consumer.
 
 | Boundary | Entry point | Reads | Writes | Must not |
 | --- | --- | --- | --- | --- |
-| Authoring | `pyssp_workflow.authoring` → external `pyssp` | `architecture/*.sysml`, FMU sources | Derived `.ssp`, SSD, SSV, SSM, analysis descriptor | Import `pyssp_sysml2` / `pyssp_vv`, mutate source SysML |
+| Authoring | `pyssp_workflow.authoring` → external `pyssp` | `architecture/*.sysml`, FMU sources | Derived `.ssp`, SSD, SSV, SSM, analysis descriptor | Import `pyssp_sysml` / `pyssp_vv`, mutate source SysML |
 | Build | `scripts/build_models.py` → `models/fmu/<model>/build.py` then `models/ssp/<model>/build.py` | Model directories: FMU definitions under `models/fmu/<model>/architecture/`, passed to the system build as an include; system composition under `models/ssp/<model>/architecture/`; FMU sources, legacy `.ssv` / `.ssm` | FMI definition, binary, and archive under `artifacts/build/<model>/`; runnable SSP at `artifacts/models/<model>/<analysis>/<build>/`; analysis artifacts at `artifacts/analyses/<model>/<analysis>/` | Simulate, write comparison output, modify `artifacts/simulation_registry.json` |
 | Simulate | `scripts/run_simulations.py` → `pyssp_workflow` / `pyssp_simulate` | Runnable SSP, analysis descriptor, `artifacts/simulation_registry.json` | `setup.json`, `artifacts/simulation/<model>/<analysis>/<backend>/result.csv`, `simulation.json`, `config.json`, logs | Rebuild the SSP, inject a scenario, mutate build artifacts, run comparisons |
 | Compare | `scripts/run_comparisons.py` → `pyssp_vv` target | `simulation.json` run manifests, `result.csv`, `setup.json`, registry reference entries | `artifacts/comparisons/<model>/<analysis>/<pair>/comparison.json`, `metrics.csv`, batch summary | Re-run simulations, rebuild SSPs, modify simulation outputs |
-| SysML checker | `scripts/check_sysml_roundtrip.py` → external `pyssp` | `SystemStructure.ssd` | Generated SysML and regenerated SSD under the requested output directory | Import `pyssp_sysml2` / `pyssp_standard`, modify the source SSD, read simulation or comparison artifacts |
+| SysML checker | `scripts/check_sysml_roundtrip.py` → external `pyssp` | `SystemStructure.ssd` | Generated SysML and regenerated SSD under the requested output directory | Import `pyssp_sysml` / `pyssp_standard`, modify the source SSD, read simulation or comparison artifacts |
 
 ## Artifact Classes
 
@@ -99,9 +99,9 @@ editable checkout from its own tree in the flat ecosystem workspace
 | `experimental_pyssp_standard` | Build and SSP XML inspection |
 | `pyfmi_interfaces` | FMI artifact emission from the parser-free reduction |
 | `pyfmi_sysml` | SysML composition and the source-taking FMI commands |
-| `pycps_sysml2` | SysML dialect behind the authoring stage |
+| `pycps_sysml` | SysML dialect behind the authoring stage |
 | `pyssp_simulate` | Simulate |
-| `pyssp_sysml2` | Authoring (CLI) and SysML round-trip checker |
+| `pyssp_sysml` | Authoring (CLI) and SysML round-trip checker |
 | `sequence_extensions` | Build/simulation/compare campaign orchestration |
 | `pyssp_vv` | Measurement, judgment, evidence, and reporting |
 
@@ -113,11 +113,11 @@ package stays `pyssp_standard`.
 
 | Tool | Dependency expectation | Environment |
 | --- | --- | --- |
-| Authoring | `pyssp_workflow.authoring` + external `pyssp` CLI (`pyssp_sysml2`) | Runtime venv or a separate SysML environment via `PYSSP` |
+| Authoring | `pyssp_workflow.authoring` + external `pyssp` CLI (`pyssp_sysml`) | Runtime venv or a separate SysML environment via `PYSSP` |
 | Build | `pyssp_workflow` + `pyssp_standard` with the refactored model API | Runtime venv |
 | Simulate | `pyssp_workflow` + `pyssp_simulate` plus the selected engines | Runtime venv |
 | Compare | `pyssp_workflow` + `pyssp_vv` measurement and judgment | Runtime venv or a compatible environment |
-| SysML checker | `pyssp_sysml2` targeting the refactored `pyssp_standard` API | Separate environment allowed |
+| SysML checker | `pyssp_sysml` targeting the refactored `pyssp_standard` API | Separate environment allowed |
 
 Each row is satisfied by the release wheel URLs in `requirements.txt` by
 default; `requirements-dev.txt` composes that default so cross-repo development

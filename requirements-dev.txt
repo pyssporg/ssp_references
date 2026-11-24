@@ -17,7 +17,7 @@
 # From this repository's root the siblings sit one level up:
 #
 #   python3 -m pip install -e ../pyssp_workflow
-#   python3 -m pip install -e ../experimental_pyssp_standard
+#   python3 -m pip install -e ../pyssp_standard_exp
 #   python3 -m pip install -e ../pyssp_simulate
 #   python3 -m pip install -e ../pyssp_sysml
 #   python3 -m pip install -e ../pyssp_vv

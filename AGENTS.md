@@ -99,11 +99,11 @@ capability.
     them by hand;
   - run `python3 $PB check --strict --root docs/breakdown`
     and `... node-size --strict --root docs/breakdown` after edits.
-- `experimental_pyssp_standard` is the experimental fork
-  (`pyssporg/experimental_pyssp_standard`), not the release line; it is the
+- `pyssp_standard_exp` is the experimental fork
+  (`pyssporg/pyssp_standard_exp`), not the release line; it is the
   canonical editable `pyssp_standard` checkout in the flat ecosystem workspace
-  (`repos/experimental_pyssp_standard`). The pinned
-  `pyssp_sysml/3rd_party/experimental_pyssp_standard` copy that once nested
+  (`repos/pyssp_standard_exp`). The pinned
+  `pyssp_sysml/3rd_party/pyssp_standard_exp` copy that once nested
   here is gone with the vendored tree; local changes belong in the canonical
   checkout.
 - `pycps_sysml`, `pyfmi_interfaces`, and `pyfmi_sysml` are separate sibling

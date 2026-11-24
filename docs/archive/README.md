@@ -64,7 +64,7 @@ Records live in the cold-storage archive; extract one with `pb archive read <ID>
   The pinned `pyssp_standard` checkout is the organization's experimental fork, not the release line.
 - **ADR-013** — SysML Authors Structure and Experiment; pyssp_standard Applies Parameter Form · accepted · 2026-10-23 · `ADR-013`
   SysML defines wiring and the experiment; the fixture build applies the parameter form with pyssp_standard, including nested boundary wiring.
-- **ADR-014** — Experimental Fork Is Named experimental_pyssp_standard Everywhere a Name Is Visible · accepted · 2026-11-04 · `ADR-014`
+- **ADR-014** — Experimental Fork Is Named pyssp_standard_exp Everywhere a Name Is Visible · accepted · 2026-11-04 · `ADR-014`
   Checkout path and distribution name carry the `experimental_` marker; only the import package stays `pyssp_standard`.
 - **ADR-015** — SysML Stack Splits Into Dialect, SSP, and FMI Libraries · accepted · 2026-11-05 · `ADR-015`
   One dialect library serves two artifact libraries; pyssp_sysml2 and pyfmi_sysml2 are siblings and never import each other.

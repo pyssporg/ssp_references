@@ -55,7 +55,7 @@ Carry constraints through the adapter. Evaluate for a selected architecture. Rej
 - Fail loud on unknown variant, missing parameter, or non-boolean result.
 - `constraint def` is a definition; `assert` is the obligation.
 - Support the variant-legality subset. No general expression language.
-- Do not edit the nested `experimental_pyssp_standard` copy (removed with the vendored tree); local changes belong in `repos/experimental_pyssp_standard`.
+- Do not edit the nested `pyssp_standard_exp` copy (removed with the vendored tree); local changes belong in `repos/pyssp_standard_exp`.
 - Authority: implementer may choose A or B, must record the choice, report deviations, and keep the SSP artifact schema unchanged.
 
 ## Design Choice

@@ -96,7 +96,7 @@ editable checkout from its own tree in the flat ecosystem workspace
 | Repo (flat workspace, `pyssp_dev/repos/`) | Used by |
 | --- | --- |
 | `pyssp_workflow` | Composition layer and single install reference: authoring, analysis, fixture, binding, compare, nodes, development tree |
-| `experimental_pyssp_standard` | Build and SSP XML inspection |
+| `pyssp_standard_exp` | Build and SSP XML inspection |
 | `pyfmi_interfaces` | FMI artifact emission from the parser-free reduction |
 | `pyfmi_sysml` | SysML composition and the source-taking FMI commands |
 | `pycps_sysml` | SysML dialect behind the authoring stage |
@@ -106,9 +106,9 @@ editable checkout from its own tree in the flat ecosystem workspace
 | `pyssp_vv` | Measurement, judgment, evidence, and reporting |
 
 The vendored checkout is the organization's experimental fork,
-`pyssporg/experimental_pyssp_standard` (branch `alpha`), not the released
+`pyssporg/pyssp_standard_exp` (branch `alpha`), not the released
 `pyssporg/pyssp_standard`. The checkout directory and distribution are named
-`experimental_pyssp_standard` / `experimental-pyssp-standard`; only the import
+`pyssp_standard_exp` / `experimental-pyssp-standard`; only the import
 package stays `pyssp_standard`.
 
 | Tool | Dependency expectation | Environment |

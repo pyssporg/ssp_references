@@ -23,7 +23,7 @@ tree in the flat ecosystem workspace (`pyssp_dev/repos/`); the former vendored
 
 | Project | Path (flat workspace, `repos/`) | Tests | Runtime |
 |---|---|---|---|
-| pyssp_standard (canonical, experimental fork) | `experimental_pyssp_standard` | 467 | 5.6 s |
+| pyssp_standard (canonical, experimental fork) | `pyssp_standard_exp` | 467 | 5.6 s |
 | pyssp_simulate | same tree | 148 (147 pass, 1 cosim skip) | 10.0 s |
 | pyssp_sysml | same tree | 248 | 32 s |
 | pyssp_workflow | `pyssp_workflow` | 74 | 4.2 s |
@@ -34,7 +34,7 @@ tree in the flat ecosystem workspace (`pyssp_dev/repos/`); the former vendored
 | pyfmi_sysml | `pyfmi_sysml` | not measured in this snapshot | not measured |
 | root suite | `tests/` | 104 (1 strict-mode skip) | 101 s |
 
-Excluded: the pinned `experimental_pyssp_standard` copy that once nested inside
+Excluded: the pinned `pyssp_standard_exp` copy that once nested inside
 `pyssp_sysml` (gone with the vendored tree), the root suite's engine-free
 integration tests (see EVAL-001, EVAL-008), upstream CI matrices. The SysML
 libraries are pinned and installed but their suites were never run for this

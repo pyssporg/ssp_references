@@ -57,4 +57,4 @@ direction. Cross-repo order: `pycps_sysml`, `pyssp_sysml`,
 
 ## Traceability
 
-- Fixtures: `models/ssp/ravs_v1`, `models/ssp/ravs_v2`; related `IMP-111`; sources `github.com/pyssporg/{pycps_sysml2,pyssp_sysml2,pyfmi_sysml2}`.
+- Fixtures: `models/ssp/ravs_v1`, `models/ssp/ravs_v2`; related `IMP-111`; sources `github.com/pyssporg/{pycps_sysml,pyssp_sysml,pyfmi_sysml2}`.

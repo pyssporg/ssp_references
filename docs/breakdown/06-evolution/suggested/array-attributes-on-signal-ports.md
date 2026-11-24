@@ -54,4 +54,4 @@ parity/default, then the `ssp_references` fixture pin.
 ## Traceability
 
 - Fixtures: `models/ssp/ravs_v1`, `models/ssp/ravs_v2`; related `IMP-110`.
-- Sources: `github.com/pyssporg/{pyssp_sysml2,pyfmi_sysml2,pycps_sysml2}`.
+- Sources: `github.com/pyssporg/{pyssp_sysml,pyfmi_sysml2,pycps_sysml}`.

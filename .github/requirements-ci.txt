@@ -1,0 +1,8 @@
+# Dependencies for the CI suite tier (static level only).
+#
+# The static suite needs pytest and the dialect library. It does not import the
+# simulation, FMI, or SSP stack, so requirements.txt (the full runtime bundle)
+# is not installed here. pycps_sysml pulls its two pinned dependencies
+# (sysmlpy, pyssp-sysml-definitions) transitively.
+pytest==9.2.0
+pycps_sysml @ https://github.com/pyssporg/pycps_sysml/releases/download/v0.4.0/pycps_sysml-0.4.0-py3-none-any.whl

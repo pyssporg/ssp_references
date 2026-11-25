@@ -1,0 +1,45 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  static:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.11"
+
+      - name: Install the CI dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r .github/requirements-ci.txt
+
+      # Only the static level is collected by path: the component, contract,
+      # integration, and system modules import the simulation/FMI/SSP stack at
+      # module scope, and the integration/system levels need native FMU/SSP
+      # tooling and the generated artifact corpus. Collecting them here would
+      # turn this tier into a full-stack job.
+      #
+      # The strict generated-corpus test is deselected because it demands build
+      # and simulation output that this tier does not produce; it stays with the
+      # build/simulate/compare workflow. The tracked-corpus tests still run.
+      - name: Run the static suite
+        run: |
+          python -m pytest \
+            -m level_static \
+            --deselect tests/test_artifact_corpus.py::test_generated_corpus_exists_in_strict_mode \
+            tests/test_artifact_boundaries.py \
+            tests/test_artifact_corpus.py \
+            tests/test_dialect_core.py \
+            tests/test_install_requirements.py \
+            tests/test_markers.py \
+            tests/test_suite_policy.py

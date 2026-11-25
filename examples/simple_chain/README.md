@@ -40,9 +40,9 @@ source .venv-experimental/bin/activate
 ```
 
 This example's `requirements.txt` pins its standalone release-wheel set:
-`pyssp_sysml` `v0.5.0` (which pulls `experimental-pyssp-standard`
-`v0.9.3.dev0` transitively), `pyssp_simulate` `v0.3.0`, and `ssp4sim`
-`v0.3.4`.
+`pyssp_sysml` `v0.7.0` (which pulls `experimental-pyssp-standard`
+`v0.9.4.dev0` transitively), `pyssp_simulate` `v0.4.0`, and `ssp4sim`
+`v0.3.6`.
 
 ## What the definition encodes
 

@@ -301,7 +301,7 @@ reference-model cases, the matching CSV baselines live beside their fixture:
   `requirements-dev.txt` composes `requirements.txt`, so it installs the same
   release wheels; its comments describe the optional editable sibling
   checkouts but it contains no editable lines itself.
-- `pyssp4sim` is pinned transitively by `pyssp-simulate` at `0.3.4`; there is
+- `pyssp4sim` is pinned transitively by `pyssp-simulate` at `0.3.6`; there is
   no direct `pyssp4sim` line in `requirements.txt`.
 - `OMSimulator` is installed from PyPI; its sdist can fail when nightly
   binaries have been removed, so a manual install may be needed.
